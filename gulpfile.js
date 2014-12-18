@@ -8,10 +8,18 @@ var gulp = require('gulp')
 , fs = require('fs')
 
 , VIEWS = [
+    './src/views/main.html',
+    './src/views/question-infoPage.html',
+    './src/views/question-multiChoice.html',
+    './src/views/question-pictureChoice.html',
+    './src/views/question-rateIt.html'
   ]
 , FILES = [
     './src/app.js',
-    './src/views.js'
+    './src/views.js',
+    './src/controllers/default.js',
+    './src/directives/swiper.js',
+    './src/services/backend.js'
   ]
 , BANNER = './src/header.txt'
 , MAIN = 'engageform.js';
