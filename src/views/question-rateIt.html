@@ -1,0 +1,14 @@
+<h2 class="theme-question-color">{{ question.text }}</h2>
+<img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}" />
+
+<div class="list list__rating list_rating--stars">
+  <span ng-click="sendAnswer(5, $event)" ng-class="{'item__selected': questionAnswer.selected >= 5}"><i class="fa"></i></span>
+  <span ng-click="sendAnswer(4, $event)" ng-class="{'item__selected': questionAnswer.selected >= 4}"><i class="fa"></i></span>
+  <span ng-click="sendAnswer(3, $event)" ng-class="{'item__selected': questionAnswer.selected >= 3}"><i class="fa"></i></span>
+  <span ng-click="sendAnswer(2, $event)" ng-class="{'item__selected': questionAnswer.selected >= 2}"><i class="fa"></i></span>
+  <span ng-click="sendAnswer(1, $event)" ng-class="{'item__selected': questionAnswer.selected >= 1}"><i class="fa"></i></span>
+</div>
+
+<div class="rating__results theme-question-color" data-ng-if="questionAnswer.average">
+  <span>Średnia: {{ questionAnswer.average | number:1 }}</span>
+</div>

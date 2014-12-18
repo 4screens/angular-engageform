@@ -1,0 +1,15 @@
+<div class="swiper engageform-swiper-directive">
+  <a class="arrow-left" href="#"></a> 
+  <a class="arrow-right" href="#"></a>
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide" data-ng-repeat="page in question.infoPages">
+        <h2 class="theme-question-color">{{ page.title }}</h2>
+        <img data-ng-if="!!page.imageFile" data-ng-src="{{ currentQuestion.answerMedia( page.imageFile ) }}" />
+        <div data-ng-if="!!page.youTubeId" data-youtube-video data-video-id="page.youTubeId"></div>
+        <p data-ng-if="!!page.description" data-ng-bind="page.description"></p>
+      </div>
+    </div>
+  </div>
+  <div class="pagination"></div>
+</div>

@@ -1,0 +1,27 @@
+<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile" />
+
+<div id="four-screens-application">
+  <div class="theme-background-image-file  theme-background-color"></div>
+  <div class="four-screens__embed-container theme-main-font">
+    <div ng-repeat="question in questions" class=" questionnaire animate-if">
+      <div class="four-screens__content wrapper" data-ng-include="'views/engageform/question-' + question.type + '.html'" data-ng-show="$index == currentQuestion.index()">
+      </div>
+    </div>
+    <div class="four-screens__footer">
+      <div class="progress" data-ng-if="currentQuestion.index() > -1">
+        <span class="progress__bar">
+          <span class="progress__bar--line theme-button-color" ng-class="{'progress__bar--full-size': (((currentQuestion.index() + 1)  / questions.length )*100) == 100 }" style="width: {{( (currentQuestion.index() + 1)  / questions.length )*100 | number:0 }}%">
+        </span>
+        <div class="progress__numbering" >
+          ({{ currentQuestion.index() + 1 }} z {{ questions.length }}) 
+        </div>
+      </div>  
+      <button class="progress__btn progress__btn--prev theme-button-color theme-question-color" data-ng-show="hasPrev()" data-ng-click="prev()">
+        <span>&laquo; PREV</span>
+      </button>
+      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next()">
+        <span>NEXT &raquo;</span>
+      </button>
+    </div>
+  </div>
+</div>

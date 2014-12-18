@@ -1,0 +1,12 @@
+<h2 class="theme-question-color">{{ question.text }}</h2>
+<img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}" />
+
+<div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer" data-ng-class="{'questionnaire__answer--correct': questionAnswer.status[ answer._id ].correct, 'questionnaire__answer--wrong': questionAnswer.status[ answer._id ].wrong, 'questionnaire__answer--selected': questionAnswer.status[ answer._id ].selected }">
+  <label>
+    {{answer.text}}
+    <span data-ng-if="!!questionAnswer.stats">
+      {{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }} %
+    <span>
+  </label>
+  <span class="questionnaire__precent-bar theme-progress-background-color" data-ng-if="!!questionAnswer.stats" style="width:{{!!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:0}}%"></span>
+</div>

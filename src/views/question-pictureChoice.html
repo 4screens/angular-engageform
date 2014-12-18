@@ -1,0 +1,20 @@
+<h2 class="theme-question-color">{{ question.text }}</h2>
+<img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}" />
+
+<div ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choise"
+    data-ng-class="{'questionnaire__answer--correct': answer._id==questionAnswer.correct, 'questionnaire__answer--wrong': questionAnswer.selected==answer._id && !!questionAnswer.correct, 'questionnaire__answer--selected': questionAnswer.selected==answer._id && !questionAnswer.correct}"
+    data-ng-click="sendAnswer( answer._id )">
+   <figure>
+      <div class="wrapper ir">
+        <img data-ng-src="{{ currentQuestion.answerMedia( answer.imageFile ) }}" />
+      </div>
+      <figcaption>
+        {{ answer.text }}
+      </figcaption>
+      <div class="results" ng-if="!!questionAnswer && !!questionAnswer.stats">
+        <span>
+          {{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}<span class="precent">%</span>
+        <span>
+      </div>      
+    </figure>
+</div>
