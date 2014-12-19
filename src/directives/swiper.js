@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('4screens.engageform').directive( 'engageformSwiperDirective',
-  function( $timeout ) {
+  function( $timeout, $window ) {
     return {
       restrict: 'C',
       link: function ( scope ) {
@@ -25,6 +25,11 @@ angular.module('4screens.engageform').directive( 'engageformSwiperDirective',
                 instance = new Swiper( '.engageform-swiper-directive', params );
                 scope.swipeNext = instance.swipeNext;
                 scope.swipePrev = instance.swipePrev;
+                scope.goto = function( url ) {
+                  if( !!url ) {
+                    $window.open( url );
+                  }
+                };
               });
             });
           });
