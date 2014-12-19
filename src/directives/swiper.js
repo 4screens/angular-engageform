@@ -9,7 +9,7 @@ angular.module('4screens.engageform').directive( 'engageformSwiperDirective',
           , params = {
               slideElement: 'article',
               slidesPerView: 1,
-              pagination: '.pagination',
+              pagination: '.pagination-swiper',
               calculateHeight: true,
               roundLengths: true,
               resizeReInit: true
