@@ -4,7 +4,7 @@
   <div class="theme-background-image-file  theme-background-color"></div>
   <div class="four-screens__embed-container theme-main-font">
     <div ng-repeat="question in questions" class=" questionnaire animate-if">
-      <div class="four-screens__content wrapper" data-ng-include="'views/engageform/question-' + question.type + '.html'" data-ng-show="$index == currentQuestion.index()">
+      <div class="four-screens__content wrapper" data-ng-include="'views/engageform/question-' + question.type + '.html'" data-ng-if="$index == currentQuestion.index()">
       </div>
     </div>
     <div class="four-screens__footer">

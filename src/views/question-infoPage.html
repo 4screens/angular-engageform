@@ -1,19 +1,17 @@
-<div class="swiper questionnaire__answer">
-  <a class="swiper swiper-arrow swiper-arrow__left" href="#"></a> 
-  <a class="swiper swiper-arrow swiper-arrow__right" href="#"></a>
+<div class="swiper">
+  <a class="swiper swiper-arrow swiper-arrow__left" data-ng-click="swipePrev()"></a> 
+  <a class="swiper swiper-arrow swiper-arrow__right" data-ng-click="swipeNext()"></a>
   <div class="swiper-container engageform-swiper-directive">
     <div class="swiper-wrapper">
       <article class="swiper-slide" data-ng-repeat="page in question.infoPages">
         <h2 class="theme-question-color">{{ page.title }}</h2>
         <figure>
-          <div class="wrapper ir-169" data-ng-if="!!page.imageFile || !!page.youTubeId">
+          <div class="wrapper ir-16-10" data-ng-if="!!page.imageFile || !!page.youTubeId">
             <img data-ng-if="!!page.imageFile" data-ng-src="{{ currentQuestion.answerMedia( page.imageFile ) }}" />
             <div data-ng-if="!!page.youTubeId" data-youtube-video data-video-id="page.youTubeId"></div>
           </div>
-          <figcaption data-ng-if="!!page.description">
-            <p data-ng-bind="page.description"></p>
-          </figcaption>
         </figure>
+        <p class="theme-answer-color theme-answer-background-color" data-ng-if="!!page.description" data-ng-bind="page.description" ></p>
       </article>
     </div>
   </div>
