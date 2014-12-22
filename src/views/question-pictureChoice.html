@@ -1,4 +1,4 @@
-<h2 class="theme-question-color">{{ question.text }}</h2>
+<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2>
 <img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}" />
 
 <div ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choise"

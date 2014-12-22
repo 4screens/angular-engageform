@@ -19,6 +19,7 @@ var gulp = require('gulp')
     './src/views.js',
     './src/controllers/default.js',
     './src/directives/swiper.js',
+    './src/filters/nl2br.js',
     './src/services/backend.js'
   ]
 , BANNER = './src/header.txt'

@@ -1,4 +1,4 @@
-<h2 class="theme-question-color">{{ question.text }}</h2>
+<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2>
 <img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}" />
 
 <div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer" data-ng-class="{'questionnaire__answer--correct': questionAnswer.status[ answer._id ].correct, 'questionnaire__answer--wrong': questionAnswer.status[ answer._id ].wrong, 'questionnaire__answer--selected': questionAnswer.status[ answer._id ].selected }">
