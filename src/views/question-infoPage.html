@@ -4,14 +4,16 @@
   <div class="swiper-container engageform-swiper-directive">
     <div class="swiper-wrapper">
       <article class="swiper-slide" data-ng-repeat="page in question.infoPages">
-        <h2 class="theme-question-color">{{ page.title }}</h2>
-        <figure>
-          <div class="wrapper ir-16-10" data-ng-if="!!page.imageFile || !!page.youTubeId">
-            <img data-ng-if="!!page.imageFile" data-ng-src="{{ currentQuestion.answerMedia( page.imageFile ) }}" data-ng-click="goto( page.url )" />
-            <div data-ng-if="!!page.youTubeId" data-youtube-video data-video-id="page.youTubeId"></div>
-          </div>
-        </figure>
-        <p class="swiper-slide__description theme-answer-color theme-answer-background-color" data-ng-if="!!page.description" data-ng-bind="page.description" data-ng-click="goto( page.url )"></p>
+        <a data-ng-href="{{ page.url }}" target="_blank" data-ng-class="{'disabled': !page.url}">
+          <h2 class="theme-question-color">{{ page.title }}</h2>
+          <figure>
+            <div class="wrapper ir-16-10" data-ng-if="!!page.imageFile || !!page.youTubeId">
+              <img data-ng-if="!!page.imageFile" data-ng-src="{{ currentQuestion.answerMedia( page.imageFile ) }}" />
+              <div data-ng-if="!!page.youTubeId" data-youtube-video data-video-id="page.youTubeId"></div>
+            </div>
+          </figure>
+          <p class="swiper-slide__description theme-answer-color theme-answer-background-color" data-ng-if="!!page.description" data-ng-bind="page.description"></p>
+        </a>
       </article>
     </div>
   </div>
