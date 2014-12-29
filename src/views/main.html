@@ -1,10 +1,11 @@
 <link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile" />
 
 <div id="four-screens-application">
-  <div class="theme-background-image-file  theme-background-color"></div>
-  <div class="four-screens__embed-container theme-main-font">
-    <div ng-repeat="question in questions" class=" questionnaire animate-if">
-      <div class="four-screens__content wrapper" data-ng-include="'views/engageform/question-' + question.type + '.html'" data-ng-if="$index == currentQuestion.index()">
+  <div class="theme-background-image-file theme-background-color"></div>
+  <div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass">
+
+    <div ng-repeat="question in questions" class=" questionnaire animate-if" data-ng-if="$index == currentQuestion.index()">
+      <div class="four-screens__content wrapper" data-ng-include="'views/engageform/question-' + question.type + '.html'">
       </div>
     </div>
     <div class="four-screens__footer">

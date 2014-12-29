@@ -49,6 +49,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
       EngageformBackendService.navigation.prev();
       $scope.sentAnswer();
+      $scope.wayAnimateClass = 'way-animation__prev';
     };
     $scope.hasPrev = function() {
       if( false ) {
@@ -64,6 +65,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
       EngageformBackendService.navigation.next();
       $scope.sentAnswer();
+      $scope.wayAnimateClass = 'way-animation__next';
     };
     $scope.hasNext = function() {
       if( false ) {
