@@ -1,20 +1,21 @@
 <h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2>
 <img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}" />
 
-<div ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choise"
-    data-ng-class="{'questionnaire__answer--correct': answer._id==questionAnswer.correct, 'questionnaire__answer--wrong': questionAnswer.selected==answer._id && !!questionAnswer.correct, 'questionnaire__answer--selected': questionAnswer.selected==answer._id && !questionAnswer.correct}"
+<div ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choise "
+    data-ng-class="{'questionnaire__answer--selected':  questionAnswer.selected === answer._id, 'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id  }"
     data-ng-click="sendAnswer( answer._id )">
-   <figure>
+   <figure class="theme-answer-background-color">
       <div class="wrapper ir">
         <img data-ng-src="{{ currentQuestion.answerMedia( answer.imageFile ) }}" />
       </div>
-      <figcaption>
+      <figcaption class="theme-question-color">
         {{ answer.text }}
       </figcaption>
       <div class="results" ng-if="!!questionAnswer && !!questionAnswer.stats">
         <span>
           {{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}<span class="precent">%</span>
+          <i class="fa" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer != false" data-ng-class="{'fa-check': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, 'fa-times': !questionAnswer.status[ answer._id ].correct }"></i>
         <span>
-      </div>      
+      </div>
     </figure>
 </div>
