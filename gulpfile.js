@@ -9,6 +9,7 @@ var gulp = require('gulp')
 
 , VIEWS = [
     './src/views/main.html',
+    './src/views/question-forms.html',
     './src/views/question-infoPage.html',
     './src/views/question-multiChoice.html',
     './src/views/question-pictureChoice.html',
