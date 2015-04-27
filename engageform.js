@@ -17,27 +17,32 @@ angular.module( '4screens.engageform',[
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/main.html',
-    '<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile"><div id="four-screens-application"><div class="theme-background-image-file  theme-background-color"></div><div class="four-screens__embed-container theme-main-font"><div ng-repeat="question in questions" class=" questionnaire animate-if"><div class="four-screens__content wrapper" data-ng-include="\'views/engageform/question-\' + question.type + \'.html\'" data-ng-if="$index == currentQuestion.index()"></div></div><div class="four-screens__footer"><div class="progress" data-ng-if="currentQuestion.index() > -1"><span class="progress__bar"><span class="progress__bar--line theme-button-color" ng-class="{\'progress__bar--full-size\': (((currentQuestion.index() + 1)  / questions.length )*100) == 100 }" style="width: {{( (currentQuestion.index() + 1)  / questions.length )*100 | number:0 }}%"></span><div class="progress__numbering">({{ currentQuestion.index() + 1 }} z {{ questions.length }})</div></span></div><button class="progress__btn progress__btn--prev theme-button-color theme-question-color" data-ng-show="hasPrev()" data-ng-click="prev()"><span>&laquo; PREV</span></button> <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next()"><span>NEXT &raquo;</span></button></div></div></div>');
+    '<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile"><div id="four-screens-application"><div class="theme-background-image-file theme-background-color"></div><div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass"><div ng-repeat="question in questions" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()"><div class="four-screens__content wrapper" data-ng-include="\'views/engageform/question-\' + question.type + \'.html\'"></div></div><div class="four-screens__footer"><div class="progress" data-ng-if="currentQuestion.index() > -1"><span class="progress__bar"><span class="progress__bar--line theme-button-color" ng-class="{\'progress__bar--full-size\': (((currentQuestion.index() + 1) / questions.length )*100) == 100 }" style="width: {{( (currentQuestion.index() + 1) / questions.length )*100 | number:0 }}%"></span><div class="progress__numbering">({{ currentQuestion.index() + 1 }} z {{ questions.length }})</div></span></div><button class="progress__btn progress__btn--prev theme-button-color theme-question-color" data-ng-show="hasPrev()" data-ng-click="prev()"><span>&laquo; PREV</span></button> <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next()"><span>NEXT &raquo;</span></button></div></div></div>');
+}]);
+
+angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
+  $templateCache.put('views/engageform/question-forms.html',
+    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><form action class="form"><fieldset><div class="form__field" data-ng-repeat="input in question.forms.inputs"><label for="{{input._id}}" data-ng-bind="input.label"></label> <input type="email" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'email\'"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'text\'"> <input type="phone" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'phone\'"> <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'url\'"> <textarea name="{{input._id}}" id cols="30" rows="10" data-ng-if="input.type==\'textarea\'" placeholder="{{input.label}}"></textarea></div><div class="form__field"><input name="{{input._id}}" type="submit" value="send" class="theme-button-color theme-question-color"></div></fieldset></form>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-infoPage.html',
-    '<div class="swiper"><a class="swiper swiper-arrow swiper-arrow__left" data-ng-click="swipePrev()"></a> <a class="swiper swiper-arrow swiper-arrow__right" data-ng-click="swipeNext()"></a><div class="swiper-container engageform-swiper-directive"><div class="swiper-wrapper"><article class="swiper-slide" data-ng-repeat="page in question.infoPages"><h2 class="theme-question-color">{{ page.title }}</h2><figure><div class="wrapper ir-16-10" data-ng-if="!!page.imageFile || !!page.youTubeId"><img data-ng-if="!!page.imageFile" data-ng-src="{{ currentQuestion.answerMedia( page.imageFile ) }}" data-ng-click="goto( page.url )"><div data-ng-if="!!page.youTubeId" data-youtube-video data-video-id="page.youTubeId"></div></div></figure><p class="swiper-slide__description theme-answer-color theme-answer-background-color" data-ng-if="!!page.description" data-ng-bind="page.description" data-ng-click="goto( page.url )"></p></article></div></div><div class="pagination-swiper"></div></div>');
+    '<div class="swiper"><a class="swiper swiper-arrow swiper-arrow__left" data-ng-click="swipePrev()"></a> <a class="swiper swiper-arrow swiper-arrow__right" data-ng-click="swipeNext()"></a><div class="swiper-container engageform-swiper-directive"><div class="swiper-wrapper"><article class="swiper-slide" data-ng-repeat="page in question.infoPages"><a data-ng-href="{{ page.url }}" target="_blank" data-ng-class="{\'disabled\': !page.url}"><h2 class="theme-question-color" data-ng-bind-html="page.title | nl2br"></h2><figure><div class="wrapper ir-16-10" data-ng-if="!!page.imageFile || !!page.youTubeId"><img data-ng-if="!!page.imageFile" data-ng-src="{{ currentQuestion.answerMedia( page.imageFile ) }}"><div data-ng-if="!!page.youTubeId" data-youtube-video data-video-id="page.youTubeId"></div></div></figure><p class="swiper-slide__description theme-answer-color theme-answer-background-color" data-ng-if="!!page.description" data-ng-bind-html="page.description | nl2br"></p></a></article></div></div><div class="pagination-swiper"></div></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-multiChoice.html',
-    '<h2 class="theme-question-color">{{ question.text }}</h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer" data-ng-class="{\'questionnaire__answer--correct\': questionAnswer.status[ answer._id ].correct, \'questionnaire__answer--wrong\': questionAnswer.status[ answer._id ].wrong, \'questionnaire__answer--selected\': questionAnswer.status[ answer._id ].selected }"><label>{{answer.text}} <span data-ng-if="!!questionAnswer.stats">{{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }} % <span></span></span></label> <span class="questionnaire__precent-bar theme-progress-background-color" data-ng-if="!!questionAnswer.stats" style="width:{{!!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:0}}%"></span></div>');
+    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer theme-answer-background-color" data-ng-class="{\'questionnaire__answer--selected\': questionAnswer.selected === answer._id, \'questionnaire__answer--notcorrect\': !!questionAnswer.selected && questionAnswer.selected !== answer._id }"><label class="theme-answer-color">{{answer.text}} <span data-ng-if="!!questionAnswer.stats">{{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }} % <i class="fa" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer != false" data-ng-class="{\'fa-check\': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, \'fa-times\': !questionAnswer.status[ answer._id ].correct }"></i> <span></span></span></label></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-pictureChoice.html',
-    '<h2 class="theme-question-color">{{ question.text }}</h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><div ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choise" data-ng-class="{\'questionnaire__answer--correct\': answer._id==questionAnswer.correct, \'questionnaire__answer--wrong\': questionAnswer.selected==answer._id && !!questionAnswer.correct, \'questionnaire__answer--selected\': questionAnswer.selected==answer._id && !questionAnswer.correct}" data-ng-click="sendAnswer( answer._id )"><figure><div class="wrapper ir"><img data-ng-src="{{ currentQuestion.answerMedia( answer.imageFile ) }}"></div><figcaption>{{ answer.text }}</figcaption><div class="results" ng-if="!!questionAnswer && !!questionAnswer.stats"><span>{{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}<span class="precent">%</span> <span></span></span></div></figure></div>');
+    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><div ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choise" data-ng-class="{\'questionnaire__answer--selected\': questionAnswer.selected === answer._id, \'questionnaire__answer--notcorrect\': !!questionAnswer.selected && questionAnswer.selected !== answer._id }" data-ng-click="sendAnswer( answer._id )"><figure class="theme-answer-background-color"><div class="wrapper ir"><img data-ng-src="{{ currentQuestion.answerMedia( answer.imageFile ) }}"></div><figcaption class="theme-question-color">{{ answer.text }}</figcaption><div class="results" ng-if="!!questionAnswer && !!questionAnswer.stats"><span>{{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}<span class="precent">%</span> <i class="fa" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer != false" data-ng-class="{\'fa-check\': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, \'fa-times\': !questionAnswer.status[ answer._id ].correct }"></i> <span></span></span></div></figure></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-rateIt.html',
-    '<h2 class="theme-question-color">{{ question.text }}</h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><div class="list list__rating list_rating--stars"><span ng-click="sendAnswer(5, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 5}"><i class="fa"></i></span> <span ng-click="sendAnswer(4, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 4}"><i class="fa"></i></span> <span ng-click="sendAnswer(3, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 3}"><i class="fa"></i></span> <span ng-click="sendAnswer(2, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 2}"><i class="fa"></i></span> <span ng-click="sendAnswer(1, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 1}"><i class="fa"></i></span></div><div class="rating__results theme-question-color" data-ng-if="questionAnswer.average"><span>Średnia: {{ questionAnswer.average | number:1 }}</span></div>');
+    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><div class="list list__rating list_rating--stars"><span ng-click="sendAnswer(5, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 5}"><i class="fa"></i></span> <span ng-click="sendAnswer(4, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 4}"><i class="fa"></i></span> <span ng-click="sendAnswer(3, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 3}"><i class="fa"></i></span> <span ng-click="sendAnswer(2, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 2}"><i class="fa"></i></span> <span ng-click="sendAnswer(1, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 1}"><i class="fa"></i></span></div><div class="rating__results theme-question-color" data-ng-if="questionAnswer.average"><span>Średnia: {{ questionAnswer.average | number:1 }}</span></div>');
 }]);
 
 'use strict';
@@ -91,6 +96,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
       EngageformBackendService.navigation.prev();
       $scope.sentAnswer();
+      $scope.wayAnimateClass = 'way-animation__prev';
     };
     $scope.hasPrev = function() {
       if( false ) {
@@ -106,6 +112,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
       EngageformBackendService.navigation.next();
       $scope.sentAnswer();
+      $scope.wayAnimateClass = 'way-animation__next';
     };
     $scope.hasNext = function() {
       if( false ) {
@@ -128,7 +135,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 'use strict';
 
 angular.module('4screens.engageform').directive( 'engageformSwiperDirective',
-  ["$timeout", "$window", function( $timeout, $window ) {
+  ["$timeout", function( $timeout ) {
     return {
       restrict: 'C',
       link: function ( scope ) {
@@ -152,11 +159,6 @@ angular.module('4screens.engageform').directive( 'engageformSwiperDirective',
                 instance = new Swiper( '.engageform-swiper-directive', params );
                 scope.swipeNext = instance.swipeNext;
                 scope.swipePrev = instance.swipePrev;
-                scope.goto = function( url ) {
-                  if( !!url ) {
-                    $window.open( url );
-                  }
-                };
               });
             });
           });
@@ -165,6 +167,16 @@ angular.module('4screens.engageform').directive( 'engageformSwiperDirective',
     };
   }]
 );
+
+'use strict';
+
+angular.module('4screens.engageform').filter( 'nl2br', ["$sce", function( $sce ) {
+  return function( message ) {
+    return $sce.trustAsHtml(
+      ( message + '' ).replace( /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2' )
+    );
+  };
+}]);
 
 'use strict';
 
