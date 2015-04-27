@@ -1,0 +1,17 @@
+<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2>
+<img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}" />
+<form action="" class="form">
+  <fieldset>
+    <div class="form__field" data-ng-repeat="input in question.forms.inputs">
+      <label for="{{input._id}}" data-ng-bind="input.label"></label>
+      <input type="email" placeholder="{{input.label}}"  name="{{input._id}}" data-ng-if="input.type=='email'">
+      <input type="text" placeholder="{{input.label}}"  name="{{input._id}}" data-ng-if="input.type=='text'">
+      <input type="phone" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='phone'">
+      <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='url'">
+      <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}"></textarea>
+    </div>
+    <div class="form__field">
+      <input name="{{input._id}}" type="submit"  value="send" class="theme-button-color theme-question-color">  
+    </div>
+  </fieldset>
+</form>
