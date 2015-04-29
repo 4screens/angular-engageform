@@ -34,3 +34,5 @@ atlassian-ide-plugin.xml
 
 bower_components/
 .tmp
+*.sublime-workspace
+*.sublime-project
