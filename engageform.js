@@ -17,12 +17,12 @@ angular.module( '4screens.engageform',[
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/main.html',
-    '<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile"><div id="four-screens-application"><div class="theme-background-image-file theme-background-color"></div><div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass"><div ng-repeat="question in questions" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()"><div class="four-screens__content wrapper" data-ng-include="\'views/engageform/question-\' + question.type + \'.html\'"></div></div><div class="four-screens__footer"><div class="progress" data-ng-if="currentQuestion.index() > -1"><span class="progress__bar"><span class="progress__bar--line theme-button-color" ng-class="{\'progress__bar--full-size\': (((currentQuestion.index() + 1) / questions.length )*100) == 100 }" style="width: {{( (currentQuestion.index() + 1) / questions.length )*100 | number:0 }}%"></span><div class="progress__numbering">({{ currentQuestion.index() + 1 }} z {{ questions.length }})</div></span></div><button class="progress__btn progress__btn--prev theme-button-color theme-question-color" data-ng-show="hasPrev()" data-ng-click="prev()"><span>&laquo; PREV</span></button> <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next()"><span>NEXT &raquo;</span></button></div></div></div>');
+    '<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile"><div id="four-screens-application"><div class="theme-background-image-file theme-background-color"></div><div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass"><div ng-repeat="question in questions" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()"><div class="four-screens__content wrapper" data-ng-class="{\'wide\': question.type == \'pictureChoice\'}" data-ng-include="\'views/engageform/question-\' + question.type + \'.html\'"></div></div><div class="four-screens__footer"><div class="progress" data-ng-if="currentQuestion.index() > -1"><span class="progress__bar"><span class="progress__bar--line theme-button-color" ng-class="{\'progress__bar--full-size\': (((currentQuestion.index() + 1) / questions.length )*100) == 100 }" style="width: {{( (currentQuestion.index() + 1) / questions.length )*100 | number:0 }}%"></span></span></div><span class="four-screens__footer-logo"></span> <button class="progress__btn progress__btn--prev" data-ng-show="hasPrev()" data-ng-click="prev()"><span><i class="fa fa-chevron-left"></i></span></button> <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next()"><span>NEXT &raquo;</span></button></div></div></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-forms.html',
-    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><form action class="form"><fieldset><div class="form__field" data-ng-repeat="input in question.forms.inputs"><label for="{{input._id}}" data-ng-bind="input.label"></label> <input type="email" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'email\'"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'text\'"> <input type="phone" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'phone\'"> <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'url\'"> <textarea name="{{input._id}}" id cols="30" rows="10" data-ng-if="input.type==\'textarea\'" placeholder="{{input.label}}"></textarea></div><div class="form__field"><input name="{{input._id}}" type="submit" value="send" class="theme-button-color theme-question-color"></div></fieldset></form>');
+    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><form action name="form{{question._id}}" class="form"><fieldset><div class="form__field" data-ng-repeat="input in question.forms.inputs"><label for="{{input._id}}" data-ng-bind="input.label"></label> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'email\'" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$" data-ng-model="currentQuestion.inputs()[input._id]"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'text\'" data-ng-model="currentQuestion.inputs()[input._id]"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'phone\'" pattern="[a-z0-9._%+-]$" data-ng-model="currentQuestion.inputs()[input._id]"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'url\'" data-ng-model="currentQuestion.inputs()[input._id]"> <textarea name="{{input._id}}" id cols="30" rows="10" data-ng-if="input.type==\'textarea\'" placeholder="{{input.label}}" ng-model="currentQuestion.inputs()[input._id]"></textarea></div></fieldset></form>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -42,7 +42,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-rateIt.html',
-    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><div class="list list__rating list_rating--stars"><span ng-click="sendAnswer(5, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 5}"><i class="fa"></i></span> <span ng-click="sendAnswer(4, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 4}"><i class="fa"></i></span> <span ng-click="sendAnswer(3, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 3}"><i class="fa"></i></span> <span ng-click="sendAnswer(2, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 2}"><i class="fa"></i></span> <span ng-click="sendAnswer(1, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 1}"><i class="fa"></i></span></div><div class="rating__results theme-question-color" data-ng-if="questionAnswer.average"><span>Średnia: {{ questionAnswer.average | number:1 }}</span></div>');
+    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><div class="list list__rating list_rating--stars"><span ng-click="sendAnswer(5, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 5}"><i class="fa"></i></span> <span ng-click="sendAnswer(4, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 4}"><i class="fa"></i></span> <span ng-click="sendAnswer(3, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 3}"><i class="fa"></i></span> <span ng-click="sendAnswer(2, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 2}"><i class="fa"></i></span> <span ng-click="sendAnswer(1, $event)" ng-class="{\'item__selected\': questionAnswer.selected >= 1}"><i class="fa"></i></span></div><div class="rating__results theme-question-color"><span data-ng-if="questionAnswer.average">Średnia: {{ questionAnswer.average | number:1 }}</span></div>');
 }]);
 
 'use strict';
@@ -93,7 +93,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if( false ) {
         // move prev slide
       }
-
+      $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.navigation.prev();
       $scope.sentAnswer();
       $scope.wayAnimateClass = 'way-animation__prev';
@@ -109,11 +109,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if( false ) {
         // move next slide
       }
-
+      
+      sendDataForm( $scope.currentQuestion.inputs() );
+      $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.navigation.next();
       $scope.sentAnswer();
       $scope.wayAnimateClass = 'way-animation__next';
     };
+
     $scope.hasNext = function() {
       if( false ) {
         // move next slide
@@ -127,10 +130,25 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       settings: EngageformBackendService.question.settings,
       mainMedia: EngageformBackendService.question.mainMedia,
       answers: EngageformBackendService.question.answers,
+      inputs: EngageformBackendService.question.inputs,
       answerMedia: EngageformBackendService.question.answerMedia
     };
+
+    function sendDataForm( data ) {
+      var inputs = [];
+      
+      for( var property in data ) {
+        if( data.hasOwnProperty( property ) ) {
+          inputs.push( { _id: property, value: data[property] });
+        }
+      }
+      
+      if(!!inputs.length) {
+        $scope.sendAnswer( inputs );
+      }
+    }
   }]
-);
+); 
 
 'use strict';
 
@@ -187,7 +205,8 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       , _questionIndex = 0
       , _cache = {}
       , USER_IDENTIFIER = 'ui'
-      , QUESTION_SENT_ANSWER = 'qsa_';
+      , QUESTION_SENT_ANSWER = 'qsa_'
+      , hashTime = new Date().getTime();
 
     _cache[ USER_IDENTIFIER ] = CommonLocalStorageService.get( USER_IDENTIFIER );
 
@@ -228,8 +247,9 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         },
         getStaticThemeCssFile: function() {
           _quiz.theme = _quiz.theme || {};
+
           if( !!_quiz.theme.customThemeCssFile ) {
-            return CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + _quiz.theme.customThemeCssFile;
+            return CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + _quiz.theme.customThemeCssFile + '?' + hashTime;
           }
           return null;
         }
@@ -244,6 +264,10 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         },
         mainMedia: function() {
           return getMainMediaFromCurrentQuestion();
+        },
+        inputs: function() {
+          _questions[ _questionIndex ].inputs = _questions[ _questionIndex ].inputs || {};
+          return _questions[ _questionIndex ].inputs;
         },
         answers: function() {
           return _questions[ _questionIndex ].answers;
@@ -277,6 +301,11 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           if( [ 'pictureChoice', 'multiChoice' ].indexOf( _questions[ _questionIndex ].type ) > -1  ) {
             values.selectedAnswerId = value;
           }
+
+          if( _questions[ _questionIndex ].type === 'forms' ) {
+            values.inputs = value;
+          }
+
           if( _cache[ USER_IDENTIFIER ] ) {
             values.userIdent = _cache[ USER_IDENTIFIER ];
           }
@@ -295,7 +324,12 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
                 correct: data.correctAnswerId,
                 stats: data.stats
               });
+            } else if ( _questions[ _questionIndex ].type === 'forms' ) {
+                CommonLocalStorageService.set( QUESTION_SENT_ANSWER + values.quizQuestionId, {
+                inputs: values.inputs
+              });
             }
+
             return data;
           });
         }
