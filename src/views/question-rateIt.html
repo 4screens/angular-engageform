@@ -9,6 +9,6 @@
   <span ng-click="sendAnswer(1, $event)" ng-class="{'item__selected': questionAnswer.selected >= 1}"><i class="fa"></i></span>
 </div>
 
-<div class="rating__results theme-question-color" data-ng-if="questionAnswer.average">
-  <span>Średnia: {{ questionAnswer.average | number:1 }}</span>
+<div class="rating__results theme-question-color">
+  <span data-ng-if="questionAnswer.average">Średnia: {{ questionAnswer.average | number:1 }}</span>
 </div>
