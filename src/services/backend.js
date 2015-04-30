@@ -7,7 +7,8 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       , _questionIndex = 0
       , _cache = {}
       , USER_IDENTIFIER = 'ui'
-      , QUESTION_SENT_ANSWER = 'qsa_';
+      , QUESTION_SENT_ANSWER = 'qsa_'
+      , hashTime = new Date().getTime();
 
     _cache[ USER_IDENTIFIER ] = CommonLocalStorageService.get( USER_IDENTIFIER );
 
@@ -48,8 +49,9 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         },
         getStaticThemeCssFile: function() {
           _quiz.theme = _quiz.theme || {};
+
           if( !!_quiz.theme.customThemeCssFile ) {
-            return CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + _quiz.theme.customThemeCssFile;
+            return CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + _quiz.theme.customThemeCssFile + '?' + hashTime;
           }
           return null;
         }
