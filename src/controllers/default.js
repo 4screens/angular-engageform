@@ -46,7 +46,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if( false ) {
         // move prev slide
       }
-
+      $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.navigation.prev();
       $scope.sentAnswer();
       $scope.wayAnimateClass = 'way-animation__prev';
@@ -62,11 +62,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if( false ) {
         // move next slide
       }
-
+      
+      sendDataForm( $scope.currentQuestion.inputs() );
+      $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.navigation.next();
       $scope.sentAnswer();
       $scope.wayAnimateClass = 'way-animation__next';
     };
+
     $scope.hasNext = function() {
       if( false ) {
         // move next slide
@@ -80,7 +83,22 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       settings: EngageformBackendService.question.settings,
       mainMedia: EngageformBackendService.question.mainMedia,
       answers: EngageformBackendService.question.answers,
+      inputs: EngageformBackendService.question.inputs,
       answerMedia: EngageformBackendService.question.answerMedia
     };
+
+    function sendDataForm( data ) {
+      var inputs = [];
+      
+      for( var property in data ) {
+        if( data.hasOwnProperty( property ) ) {
+          inputs.push( { _id: property, value: data[property] });
+        }
+      }
+      
+      if(!!inputs.length) {
+        $scope.sendAnswer( inputs );
+      }
+    }
   }
-);
+); 

@@ -67,6 +67,10 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         mainMedia: function() {
           return getMainMediaFromCurrentQuestion();
         },
+        inputs: function() {
+          _questions[ _questionIndex ].inputs = _questions[ _questionIndex ].inputs || {};
+          return _questions[ _questionIndex ].inputs;
+        },
         answers: function() {
           return _questions[ _questionIndex ].answers;
         },
@@ -99,6 +103,11 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           if( [ 'pictureChoice', 'multiChoice' ].indexOf( _questions[ _questionIndex ].type ) > -1  ) {
             values.selectedAnswerId = value;
           }
+
+          if( _questions[ _questionIndex ].type === 'forms' ) {
+            values.inputs = value;
+          }
+
           if( _cache[ USER_IDENTIFIER ] ) {
             values.userIdent = _cache[ USER_IDENTIFIER ];
           }
@@ -117,7 +126,12 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
                 correct: data.correctAnswerId,
                 stats: data.stats
               });
+            } else if ( _questions[ _questionIndex ].type === 'forms' ) {
+                CommonLocalStorageService.set( QUESTION_SENT_ANSWER + values.quizQuestionId, {
+                inputs: values.inputs
+              });
             }
+
             return data;
           });
         }
