@@ -1,7 +1,9 @@
 <h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2>
-<img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}" />
+<div class="header__wrapper ir-169" data-ng-if="!!currentQuestion.mainMedia()">
+  <img data-ng-src="{{ currentQuestion.mainMedia().src }}" />  
+</div>
 
-<div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer theme-answer-background-color" data-ng-class="{'questionnaire__answer--selected': questionAnswer.selected === answer._id, 'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id }">
+<div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer theme-answer-background-color theme-answer-border-color" data-ng-class="{'questionnaire__answer--selected': questionAnswer.selected === answer._id, 'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id }">
   <label class="theme-answer-color">
     {{answer.text}}
     <span data-ng-if="!!questionAnswer.stats">
