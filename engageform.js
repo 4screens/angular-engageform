@@ -22,7 +22,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-forms.html',
-    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><form action name="form{{question._id}}" class="form"><fieldset><div class="form__field" data-ng-repeat="input in question.forms.inputs"><label for="{{input._id}}" data-ng-bind="input.label"></label> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'email\'" data-ng-model="currentQuestion.inputs()[input._id]"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'text\'" data-ng-model="currentQuestion.inputs()[input._id]"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'phone\'" data-ng-model="currentQuestion.inputs()[input._id]"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'url\'" data-ng-model="currentQuestion.inputs()[input._id]"> <textarea name="{{input._id}}" id cols="30" rows="10" data-ng-if="input.type==\'textarea\'" placeholder="{{input.label}}" ng-model="currentQuestion.inputs()[input._id]"></textarea></div></fieldset></form>');
+    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2><img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}"><form action name="form{{question._id}}" class="form"><fieldset><div class="form__field" data-ng-repeat="input in question.forms.inputs"><label for="{{input._id}}" data-ng-bind="input.label"></label> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'email\'" data-ng-model="currentQuestion.inputs()[input._id]"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'text\'" data-ng-model="currentQuestion.inputs()[input._id]"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'phone\'" data-ng-model="currentQuestion.inputs()[input._id]"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'url\'" data-ng-model="currentQuestion.inputs()[input._id]"> <textarea name="{{input._id}}" id cols="30" rows="10" data-ng-if="input.type==\'textarea\'" placeholder="{{input.label}}" ng-model="currentQuestion.inputs()[input._id]"></textarea></div></fieldset><div class="hint"><i class="fa fa-info-circle"></i>&nbsp;<span>Type your answer above. Press next to continue.</span></div></form>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -86,6 +86,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
       EngageformBackendService.question.sendAnswer( value ).then(function() {
         $scope.sentAnswer();
+        if ($scope.hasNext()) {
+          $scope.next();
+        }
       });
     };
 

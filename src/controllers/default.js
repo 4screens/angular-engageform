@@ -39,6 +39,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
       EngageformBackendService.question.sendAnswer( value ).then(function() {
         $scope.sentAnswer();
+        if ($scope.hasNext()) {
+          $scope.next();
+        }
       });
     };
 
