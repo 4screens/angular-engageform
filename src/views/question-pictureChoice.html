@@ -13,11 +13,11 @@
         <figcaption class="theme-question-color">
           {{ answer.text }}
         </figcaption>
-        <div class="results" ng-if="!!questionAnswer && !!questionAnswer.stats">
+        <div class="results theme-answer-color" ng-if="!!questionAnswer && !!questionAnswer.stats">
           <span>
             {{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}<span class="precent">%</span>
-            <i class="fa" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer != false" data-ng-class="{'fa-check': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, 'fa-times': !questionAnswer.status[ answer._id ].correct }"></i>
-          <span>
+          </span>
+          <i class="fa" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer != false" data-ng-class="{'fa-check': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, 'fa-times': !questionAnswer.status[ answer._id ].correct }"></i>
         </div>
       </figure>
   </div>
