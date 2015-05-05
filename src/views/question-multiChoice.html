@@ -1,4 +1,4 @@
-<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2>
+<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
 <div class="header__wrapper ir-169" data-ng-if="!!currentQuestion.mainMedia()">
   <img data-ng-src="{{ currentQuestion.mainMedia().src }}" />  
 </div>

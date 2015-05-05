@@ -1,4 +1,4 @@
-<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br"></h2>
+<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
 <img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}" />
 <form action="" name="form{{question._id}}" class="form">
   <fieldset>
