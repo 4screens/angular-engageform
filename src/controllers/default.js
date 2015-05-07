@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  function( CONFIG, EngageformBackendService, $scope, $routeParams ) {
+  function( CONFIG, EngageformBackendService, $scope, $routeParams, $timeout ) {
 
     EngageformBackendService.quiz.get( $routeParams.engageFormId ).then(function( quiz ) {
       $scope.quiz = quiz;
@@ -38,11 +38,17 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
 
       EngageformBackendService.question.sendAnswer( value ).then(function() {
-        $scope.sentAnswer();
         if ($scope.hasNext()) {
-          $scope.next();
+          $timeout( function () {
+            $scope.next();
+          }, $scope.questionAnswer.selected ? 0 : 2000 );
         }
+        $scope.sentAnswer();
       });
+    };
+
+    $scope.formatAnswers = function ( val ) {
+      return !!val ? (100 * val) : 0;
     };
 
     $scope.prev = function() {
