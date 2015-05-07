@@ -139,7 +139,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       questions: {
         get: function() {
           return SettingsEngageformService.getQuestions( _quiz._id ).then(function( questions ) {
-            _questions = questions;
+            _questions = _.sortBy( questions, 'position' );
             return questions;
           });
         }
