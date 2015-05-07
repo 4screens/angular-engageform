@@ -4,6 +4,7 @@
 </div>
 
 <div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer theme-answer-background-color theme-answer-border-color" data-ng-class="{'questionnaire__answer--selected': questionAnswer.selected === answer._id, 'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id }">
+  <div class="answer__bar theme-answer-background-result-color" style="width:{{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}%"></div>
   <label class="theme-answer-color">
     {{answer.text}}
     <span data-ng-if="!!questionAnswer.stats">

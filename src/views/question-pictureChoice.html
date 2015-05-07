@@ -6,9 +6,14 @@
   <div ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choise "
       data-ng-class="{'questionnaire__answer--selected':  questionAnswer.selected === answer._id, 'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id  }"
       data-ng-click="sendAnswer( answer._id )">
-     <figure class="theme-answer-background-color theme-answer-border-color">
+     <figure class="theme-answer-background-color theme-answer-border-color" ng-init="resutls = !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1">
         <div class="wrapper ir">
           <img data-ng-src="{{ currentQuestion.answerMedia( answer.imageFile ) }}" />
+          <div class="answer__bar theme-answer-background-result-color" style="-moz-transform: translate(50%, {{100 - resutls}}% );
+                                          -webkit-transform: translate(50%, {{100 - resutls}}%);
+                                          -o-transform: translate(50%, {{100 - resutls}}%);
+                                          -ms-transform: translate(50%, {{100 - resutls}}%);
+                                          transform: translate(50%, {{100 - resutls}}%);"></div>
         </div>
         <figcaption class="theme-question-color">
           {{ answer.text }}
