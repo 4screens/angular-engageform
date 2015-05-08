@@ -21,7 +21,8 @@ var gulp = require('gulp')
     './src/controllers/default.js',
     './src/directives/swiper.js',
     './src/filters/nl2br.js',
-    './src/services/backend.js'
+    './src/services/backend.js',
+    './src/services/cloudinary.js'
   ]
 , BANNER = './src/header.txt'
 , MAIN = 'engageform.js';
