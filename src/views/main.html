@@ -1,38 +1,40 @@
 <link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile" />
 
-<div id="four-screens-application">
-  <picture data-ng-if="quiz.theme.backgroundImageFile" class="theme-background-image-file-wrapper theme-background-brightness theme-background-color">
-    <source 
-      media="(min-width: 1021px)" 
-      data-ng-srcset="{{ getImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }},
-              {{ getImgUrl( quiz.theme.backgroundImageFile, 1920, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
-              {{ getImgUrl( quiz.theme.backgroundImageFile, 1920, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
-    >
-    <source 
-      media="(min-width: 769px)" 
-      data-ng-srcset="{{ getImgUrl( quiz.theme.backgroundImageFile, 1020, '1.0', quiz.theme.backgroundImageBlur ) }},
-              {{ getImgUrl( quiz.theme.backgroundImageFile, 1020, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
-              {{ getImgUrl( quiz.theme.backgroundImageFile, 1020, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
-    >
-    <source 
-      media="(min-width: 481px)" 
-      data-ng-srcset="{{ getImgUrl( quiz.theme.backgroundImageFile, 768, '1.0', quiz.theme.backgroundImageBlur ) }},
-              {{ getImgUrl( quiz.theme.backgroundImageFile, 768, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
-              {{ getImgUrl( quiz.theme.backgroundImageFile, 768, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
-    >
-    <source 
-      media="(min-width: 0px)" 
-      data-ng-srcset="{{ getImgUrl( quiz.theme.backgroundImageFile, 480, '1.0', quiz.theme.backgroundImageBlur ) }},
-              {{ getImgUrl( quiz.theme.backgroundImageFile, 480, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
-              {{ getImgUrl( quiz.theme.backgroundImageFile, 480, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
-    >
-    <img 
-      data-ng-src="{{ getImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }}" 
-      data-ng-srcset="{{ getImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }},
-              {{ getImgUrl( quiz.theme.backgroundImageFile, 1920, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
-              {{ getImgUrl( quiz.theme.backgroundImageFile, 1920, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
-    >
-  </picture>
+<div id="four-screens-application" class="{{screenType}}">
+  <div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color">
+    <picture data-ng-if="quiz.theme.backgroundImageFile" ng-class="position-{{quiz.theme.backgroundImagePosition}}">
+      <source 
+        media="(min-width: 1021px)" 
+        data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }},
+                        {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
+                        {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
+      >
+      <source 
+        media="(min-width: 769px)" 
+        data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, '1.0', quiz.theme.backgroundImageBlur ) }},
+                        {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
+                        {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
+      >
+      <source 
+        media="(min-width: 481px)" 
+        data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, '1.0', quiz.theme.backgroundImageBlur ) }},
+                        {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
+                        {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
+      >
+      <source 
+        media="(min-width: 0px)" 
+        data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, '1.0', quiz.theme.backgroundImageBlur ) }},
+                        {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
+                        {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
+      >
+      <img 
+        data-ng-src="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }}" 
+        data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }},
+                        {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
+                        {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
+      >
+    </picture>
+  </div>
   <div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass">
     <div ng-repeat="question in questions" class=" questionnaire animate-if" data-ng-if="$index == currentQuestion.index()">
       <div class="four-screens__content wrapper" data-ng-class="{'content__type--forms': question.type == 'forms', 'content__type--info-page': question.type == 'infoPage' , 'content__type--multi-choice': question.type == 'multiChoice', 'content__type--picture-choise': question.type == 'pictureChoice' , 'content__type--rate-it': question.type == 'rateIt' }" data-ng-include="'views/engageform/question-' + question.type + '.html'">
@@ -52,7 +54,7 @@
         <span><i class="fa fa-chevron-left"></i></span>
       </button>
       <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next()">
-        <span>NEXT &raquo;</span>
+        <span>NEXT <i class="fa fa-chevron-right"></i></span>
       </button>
     </div>
   </div>

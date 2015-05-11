@@ -8,7 +8,26 @@
           <h2 class="theme-question-color" data-ng-bind-html="page.title | nl2br"></h2>
           <figure>
             <div class="wrapper ir-16-10" data-ng-if="!!page.imageFile || !!page.youTubeId">
-              <img data-ng-if="!!page.imageFile" data-ng-src="{{ currentQuestion.answerMedia( page.imageFile ) }}" />
+              <picture data-ng-if="!!page.imageFile" class="main-media-image">
+                <source 
+                  media="(min-width: 481px)" 
+                  data-ng-srcset="{{ getImgUrl( currentQuestion.answerMedia( page.imageFile ), 680, '1.0' ) }},
+                                  {{ getImgUrl( currentQuestion.answerMedia( page.imageFile ), 680, '1.5' ) }} 1.5x,
+                                  {{ getImgUrl( currentQuestion.answerMedia( page.imageFile ), 680, '2.0' ) }} 2.0x"
+                >
+                <source 
+                  media="(min-width: 0px)" 
+                  data-ng-srcset="{{ getImgUrl( currentQuestion.answerMedia( page.imageFile ), 480, '1.0' ) }},
+                                  {{ getImgUrl( currentQuestion.answerMedia( page.imageFile ), 480, '1.5' ) }} 1.5x,
+                                  {{ getImgUrl( currentQuestion.answerMedia( page.imageFile ), 480, '2.0' ) }} 2.0x"
+                >
+                <img 
+                  data-ng-src="{{ getImgUrl( currentQuestion.answerMedia( page.imageFile ), 680, '1.0' ) }}" 
+                  data-ng-srcset="{{ getImgUrl( currentQuestion.answerMedia( page.imageFile ), 680, '1.0' ) }},
+                                  {{ getImgUrl( currentQuestion.answerMedia( page.imageFile ), 680, '1.5' ) }} 1.5x,
+                                  {{ getImgUrl( currentQuestion.answerMedia( page.imageFile ), 680, '2.0' ) }} 2.0x"
+                >
+              </picture>
               <div data-ng-if="!!page.youTubeId" data-youtube-video data-video-id="page.youTubeId"></div>
             </div>
           </figure>

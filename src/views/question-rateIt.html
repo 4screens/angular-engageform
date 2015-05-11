@@ -1,5 +1,24 @@
 <h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
-<img data-ng-if="!!currentQuestion.mainMedia()" data-ng-src="{{ currentQuestion.mainMedia().src }}" />
+<picture data-ng-if="!!currentQuestion.mainMedia()" class="main-media-image">
+  <source 
+    media="(min-width: 481px)" 
+    data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
+                    {{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
+                    {{ getImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
+  >
+  <source 
+    media="(min-width: 0px)" 
+    data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 480, '1.0' ) }},
+                    {{ getImgUrl( currentQuestion.mainMedia().src, 480, '1.5' ) }} 1.5x,
+                    {{ getImgUrl( currentQuestion.mainMedia().src, 480, '2.0' ) }} 2.0x"
+  >
+  <img 
+    data-ng-src="{{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
+    data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
+                    {{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
+                    {{ getImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
+  >
+</picture>
 
 <div class="list list__rating">
   <span ng-click="sendAnswer(5, $event)" class="theme-answer-color" ng-class="{'item__selected': questionAnswer.selected >= 5}"><i class="fa"></i></span>

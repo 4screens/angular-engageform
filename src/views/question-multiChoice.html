@@ -1,6 +1,25 @@
 <h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
 <div class="header__wrapper ir-169" data-ng-if="!!currentQuestion.mainMedia()">
-  <img data-ng-src="{{ currentQuestion.mainMedia().src }}" />  
+  <picture class="main-media-image">
+    <source 
+      media="(min-width: 481px)" 
+      data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
+                      {{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
+                      {{ getImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
+    >
+    <source 
+      media="(min-width: 0px)" 
+      data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 480, '1.0' ) }},
+                      {{ getImgUrl( currentQuestion.mainMedia().src, 480, '1.5' ) }} 1.5x,
+                      {{ getImgUrl( currentQuestion.mainMedia().src, 480, '2.0' ) }} 2.0x"
+    >
+    <img 
+      data-ng-src="{{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
+      data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
+                      {{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
+                      {{ getImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
+    >
+  </picture>
 </div>
 
 <div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer" data-ng-class="{

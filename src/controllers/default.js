@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout ) {
+  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window ) {
 
     EngageformBackendService.quiz.get( $routeParams.engageFormId ).then(function( quiz ) {
       $scope.quiz = quiz;
@@ -10,21 +10,24 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.questions = _.sortBy( questions, 'position' );
         $scope.sentAnswer();
       });
-
-      /*
-      * ToDo :
-      * - detect viewport orientation
-      * - bind resize event on window
-      * - more / less mediaQuery breakpoints ?
-      * - add CloudinaryService to other images
-      *
-      * if ( $scope.quiz.theme.backgroundImageFile ) { ... }
-      */
-
     });
 
-    $scope.getImgUrl = function ( src, w, dpr, blur ) {
+    function checkScreenType() {
+      if(!$scope.$$phase) {
+        $scope.$apply(function () { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; });
+      }
+    };
+
+    angular.element( $window ).bind( 'resize', function () {
+      checkScreenType();
+    } );
+    checkScreenType();
+
+    $scope.getBgImgUrl = function ( src, w, dpr, blur ) {
       return CloudinaryService.getImgUrl( CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + src, w, dpr, blur );
+    }
+    $scope.getImgUrl = function ( src, w, dpr, blur ) {
+      return CloudinaryService.getImgUrl( src, w, dpr, blur );
     }
 
     $scope.sentAnswer = function() {
