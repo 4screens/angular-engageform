@@ -13,15 +13,13 @@
     }">
         <div class="wrapper ir">
           <img data-ng-src="{{ currentQuestion.answerMedia( answer.imageFile ) }}" />
-          <div class="answer__bar theme-answer-background-result-color" style="
+          <div class="answer__bar" style="
             -moz-transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}% );
             -webkit-transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}%);
             -o-transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}%);
             -ms-transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}%);
             transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}%);
-          "
-          data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id,
-                          'theme-answer-background-result-color': questionAnswer.selected !== answer._id }">
+          " data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id, 'theme-answer-background-result-color': questionAnswer.selected !== answer._id }">
           </div>
           }
         </div>
