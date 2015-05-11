@@ -27,7 +27,7 @@
   'theme-answer-background-color theme-answer-border-color': questionAnswer.selected !== answer._id,
   'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id
 }">
-  <div class="answer__bar theme-answer-background-result-color" style="width:{{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}%"></div>
+  <div class="answer__bar" style="width:{{ !!questionAnswer.stats[answer._id] ? (100 *   questionAnswer.stats[answer._id]) : 0 | number:1 }}%" data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id, 'theme-answer-background-result-color': questionAnswer.selected !== answer._id }"></div>
   <label data-ng-class="{
     'theme-question-color': questionAnswer.selected === answer._id,
     'theme-answer-color': questionAnswer.selected !== answer._id

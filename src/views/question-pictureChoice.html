@@ -38,9 +38,8 @@
                               {{ getImgUrl( currentQuestion.answerMedia( answer.imageFile ), 300, '1.5' ) }} 1.5x,
                               {{ getImgUrl( currentQuestion.answerMedia( answer.imageFile ), 300, '2.0' ) }} 2.0x"
             >
-            </picture>
-
-          <div class="answer__bar theme-answer-background-result-color" style="
+          </picture>
+          <div class="answer__bar" data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id, 'theme-answer-background-result-color': questionAnswer.selected !== answer._id }" style="
             -moz-transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}% );
             -webkit-transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}%);
             -o-transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}%);
