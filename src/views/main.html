@@ -2,7 +2,7 @@
 
 <div id="four-screens-application" class="{{screenType}}">
   <div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color">
-    <picture data-ng-if="quiz.theme.backgroundImageFile" ng-class="position-{{quiz.theme.backgroundImagePosition}}">
+    <picture data-ng-if="quiz.theme.backgroundImageFile" class="position-{{quiz.theme.backgroundImagePosition}}">
       <source 
         media="(min-width: 1021px)" 
         data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }},

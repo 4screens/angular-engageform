@@ -12,6 +12,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       });
     });
 
+    $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide';
     function checkScreenType() {
       if(!$scope.$$phase) {
         $scope.$apply(function () { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; });
@@ -21,7 +22,6 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     angular.element( $window ).bind( 'resize', function () {
       checkScreenType();
     } );
-    checkScreenType();
 
     $scope.getBgImgUrl = function ( src, w, dpr, blur ) {
       return CloudinaryService.getImgUrl( CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + src, w, dpr, blur );
