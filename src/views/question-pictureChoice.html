@@ -19,7 +19,11 @@
             -o-transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}%);
             -ms-transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}%);
             transform: translate(50%, {{100 - formatAnswers(questionAnswer.stats[answer._id]) | number:1}}%);
-          "></div>
+          "
+          data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id,
+                          'theme-answer-background-result-color': questionAnswer.selected !== answer._id }">
+          </div>
+          }
         </div>
         <figcaption data-ng-class="{
           'theme-question-color': questionAnswer.selected === answer._id,
