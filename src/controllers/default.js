@@ -12,16 +12,34 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       });
     });
 
-    $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide';
+    function setScreenType() { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; }
+
     function checkScreenType() {
-      if(!$scope.$$phase) {
-        $scope.$apply(function () { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; });
+      if (!$scope.$$phase) {
+        $scope.$apply( setScreenType );
       }
+    };
+
+    $scope.scaleEmbedCfg = {
+      minFontSize: .7,
+      maxWidth: 680,
+      maxHeight: 850
+    };
+
+    function scaleEmbed( cfg, ww, wh ) {
+      var fzw = Math.min( ww / cfg.maxWidth, 1 )
+        , fzh = Math.min( wh / cfg.maxHeight, 1 ) 
+        , fz = Math.max( cfg.minFontSize, Math.min( fzw, fzh ) );
+      angular.element($window.document.querySelector('html')).css( 'font-size', Math.round( fz * 100 ) + '%' );
     };
 
     angular.element( $window ).bind( 'resize', function () {
       checkScreenType();
+      scaleEmbed( $scope.scaleEmbedCfg, $window.innerWidth, $window.innerHeight );
     } );
+
+    setScreenType();
+    scaleEmbed( $scope.scaleEmbedCfg, $window.innerWidth, $window.innerHeight );
 
     $scope.getBgImgUrl = function ( src, w, dpr, blur ) {
       return CloudinaryService.getImgUrl( CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + src, w, dpr, blur );
