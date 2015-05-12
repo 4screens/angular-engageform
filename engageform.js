@@ -71,14 +71,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.scaleEmbedCfg = {
       minFontSize: .7,
       maxWidth: 680,
-      maxHeight: 850
+      maxHeight: 880
     };
 
     function scaleEmbed( cfg, ww, wh ) {
       var fzw = Math.min( ww / cfg.maxWidth, 1 )
         , fzh = Math.min( wh / cfg.maxHeight, 1 ) 
         , fz = Math.max( cfg.minFontSize, Math.min( fzw, fzh ) );
-      angular.element($window.document.querySelector('html')).css( 'font-size', Math.round( fz * 100 ) + '%' );
+      angular.element($window.document.querySelector('html')).css( 'font-size', Math.floor( fz * 1000 ) / 10 + '%' );
     };
 
     angular.element( $window ).bind( 'resize', function () {
