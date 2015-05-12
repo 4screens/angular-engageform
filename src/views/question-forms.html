@@ -19,21 +19,21 @@
                     {{ getImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
   >
 </picture>
-<form action="" name="form" class="form">
+<form action="" name="form" class="form" formnovalidate>
   <fieldset>
     <div class="form__field" data-ng-repeat="input in question.forms.inputs">
       <label for="{{input._id}}" data-ng-bind="input.label"></label>
-      <input type="email" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='email'" data-ng-model="currentQuestion.inputs()[input._id]" required>
+      <input type="email" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='email'" data-ng-model="currentQuestion.inputs()[input._id]" required formnovalidate>
 
-      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='text'"  data-ng-model="currentQuestion.inputs()[input._id]" >
+      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='text'"  data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate>
       
-      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='phone'" data-ng-model="currentQuestion.inputs()[input._id]">
+      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='phone'" data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate>
       
-      <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='url'" data-ng-model="currentQuestion.inputs()[input._id]" >
+      <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='url'" data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate >
     
-      <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" ng-model="currentQuestion.inputs()[input._id]" required></textarea>
+      <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" ng-model="currentQuestion.inputs()[input._id]" required formnovalidate></textarea>
 
-      <div ng-messages="form[input._id].$error" ng-messages-multiple class="message theme-question-color  text-right">
+      <div ng-messages="form[input._id].$error" ng-messages-multiple class="message text-right">
         <div ng-message="required">
           This field is required
         </div>
