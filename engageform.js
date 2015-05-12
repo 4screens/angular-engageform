@@ -23,7 +23,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-forms.html',
-    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><picture data-ng-if="!!currentQuestion.mainMedia()" class="main-media-image"><source media="(min-width: 481px)" data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"><source media="(min-width: 0px)" data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 480, \'1.0\' ) }}, {{ getImgUrl( currentQuestion.mainMedia().src, 480, \'1.5\' ) }} 1.5x, {{ getImgUrl( currentQuestion.mainMedia().src, 480, \'2.0\' ) }} 2.0x"><img data-ng-src="{{ getImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture><form action name="form" class="form" formnovalidate=""><fieldset><div class="form__field" data-ng-repeat="input in question.forms.inputs"><label for="{{input._id}}" data-ng-bind="input.label"></label> <input type="email" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'email\'" data-ng-model="currentQuestion.inputs()[input._id]" required formnovalidate=""> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'text\'" data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate=""> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'phone\'" data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate=""> <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'url\'" data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate=""> <textarea name="{{input._id}}" id cols="30" rows="10" data-ng-if="input.type==\'textarea\'" placeholder="{{input.label}}" ng-model="currentQuestion.inputs()[input._id]" required formnovalidate=""></textarea><div ng-messages="form[input._id].$error" ng-messages-multiple="" class="message theme-question-color text-right"><div ng-message="required">This field is required</div><div ng-message="email">Your field has an invalid email address</div><div ng-message="number">Only numbers</div><div ng-message="url">Your field has a invalid url address</div></div></div></fieldset><div class="hint"><i class="fa fa-info-circle"></i>&nbsp;<span>Type your answer above. Press next to continue.</span></div></form>');
+    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><picture data-ng-if="!!currentQuestion.mainMedia()" class="main-media-image"><source media="(min-width: 481px)" data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"><source media="(min-width: 0px)" data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 480, \'1.0\' ) }}, {{ getImgUrl( currentQuestion.mainMedia().src, 480, \'1.5\' ) }} 1.5x, {{ getImgUrl( currentQuestion.mainMedia().src, 480, \'2.0\' ) }} 2.0x"><img data-ng-src="{{ getImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture><form action name="form" class="form" formnovalidate><fieldset><div class="form__field" data-ng-repeat="input in question.forms.inputs"><label for="{{input._id}}" data-ng-bind="input.label"></label> <input type="email" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'email\'" data-ng-model="currentQuestion.inputs()[input._id]" required formnovalidate> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'text\'" data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'phone\'" data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate> <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'url\'" data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate> <textarea name="{{input._id}}" id cols="30" rows="10" data-ng-if="input.type==\'textarea\'" placeholder="{{input.label}}" ng-model="currentQuestion.inputs()[input._id]" required formnovalidate></textarea><div ng-messages="form[input._id].$error" ng-messages-multiple class="message text-right"><div ng-message="required">This field is required</div><div ng-message="email">Your field has an invalid email address</div><div ng-message="number">Only numbers</div><div ng-message="url">Your field has a invalid url address</div></div></div></fieldset><div class="hint"><i class="fa fa-info-circle"></i>&nbsp;<span>Type your answer above. Press next to continue.</span></div></form>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -60,16 +60,34 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       });
     });
 
-    $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide';
+    function setScreenType() { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; }
+
     function checkScreenType() {
-      if(!$scope.$$phase) {
-        $scope.$apply(function () { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; });
+      if (!$scope.$$phase) {
+        $scope.$apply( setScreenType );
       }
+    };
+
+    $scope.scaleEmbedCfg = {
+      minFontSize: .7,
+      maxWidth: 680,
+      maxHeight: 850
+    };
+
+    function scaleEmbed( cfg, ww, wh ) {
+      var fzw = Math.min( ww / cfg.maxWidth, 1 )
+        , fzh = Math.min( wh / cfg.maxHeight, 1 ) 
+        , fz = Math.max( cfg.minFontSize, Math.min( fzw, fzh ) );
+      angular.element($window.document.querySelector('html')).css( 'font-size', Math.round( fz * 100 ) + '%' );
     };
 
     angular.element( $window ).bind( 'resize', function () {
       checkScreenType();
+      scaleEmbed( $scope.scaleEmbedCfg, $window.innerWidth, $window.innerHeight );
     } );
+
+    setScreenType();
+    scaleEmbed( $scope.scaleEmbedCfg, $window.innerWidth, $window.innerHeight );
 
     $scope.getBgImgUrl = function ( src, w, dpr, blur ) {
       return CloudinaryService.getImgUrl( CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + src, w, dpr, blur );
