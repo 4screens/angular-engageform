@@ -11,7 +11,7 @@ angular.module('4screens.engageform').factory(
         getImgUrl: function ( src, w, dpr, blur ) {
           var blur = typeof blur !== 'undefined' && blur !== '0' ? ',e_blur:' + parseInt( blur, 10 ) * 100 + '/' : '/'
           , dpr = ',dpr_' + dpr;
-
+          
           return cloudinaryUrl + 'w_' + parseInt( w, 10 ) + ',c_limit' + dpr + blur + src;
         }
       };
