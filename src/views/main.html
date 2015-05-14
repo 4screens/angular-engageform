@@ -49,14 +49,20 @@
         </span>
       </div>
       <div class="progress__numbering" >
-        ({{ currentQuestion.index() + 1 }} of {{ questions.length }}) 
+        ({{ currentQuestion.index() + 1 }} of {{ questions.length }})
       </div>
       <a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a>
-      <button class="progress__btn progress__btn--prev" data-ng-show="hasPrev()" data-ng-hide="!quiz.settings.allowQuestionNavigation" data-ng-click="prev()">
+
+      <button class="progress__btn progress__btn--prev" data-ng-show="hasPrev() && quiz.settings.allowQuestionNavigation" data-ng-click="prev()">
         <span><i class="fa fa-chevron-left"></i></span>
       </button>
+
       <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next()">
         <span>NEXT <i class="fa fa-chevron-right"></i></span>
+      </button>
+
+      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="!hasNext()" data-ng-click="submitQuiz()">
+        <span>SUBMIT <i class="fa fa-check"></i></span>
       </button>
     </div>
   </div>

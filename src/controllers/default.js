@@ -2,8 +2,9 @@
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window ) {
+    var quizId = $routeParams.engageFormId;
 
-    EngageformBackendService.quiz.get( $routeParams.engageFormId ).then(function( quiz ) {
+    EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
@@ -83,10 +84,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         if ($scope.hasNext()) {
           $timeout( function () {
             $scope.next();
-          }, $scope.questionAnswer.selected ? 0 : 2000 );
+          }, 2000 );
         }
         $scope.sentAnswer();
       });
+    };
+
+    $scope.submitQuiz = function() {
+      return EngageformBackendService.quiz.submit( quizId );
     };
 
     $scope.formatAnswers = function ( val ) {

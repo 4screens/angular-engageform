@@ -3,7 +3,7 @@
 angular.module('4screens.engageform').factory( 'EngageformBackendService',
   function( CONFIG, CommonLocalStorageService, SettingsEngageformService, $q ) {
     var _quiz
-      , _questions
+      , _questions = []
       , _questionIndex = 0
       , _cache = {}
       , USER_IDENTIFIER = 'ui'
@@ -54,6 +54,9 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
             return CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + _quiz.theme.customThemeCssFile + '?' + hashTime;
           }
           return null;
+        },
+        submit: function( engageFormId ) {
+          return SettingsEngageformService.submitQuiz( engageFormId, _cache[ USER_IDENTIFIER ] );
         }
       },
       question: {
@@ -92,11 +95,6 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           var deferred, values = {};
           values.quizQuestionId = _questions[ _questionIndex ]._id;
 
-          if( !!CommonLocalStorageService.get( QUESTION_SENT_ANSWER + values.quizQuestionId ) ) {
-            deferred = $q.defer();
-            deferred.resolve();
-            return deferred.promise;
-          }
           if( _questions[ _questionIndex ].type === 'rateIt' ) {
             values.rateItValue = parseInt( value );
           }
@@ -146,22 +144,22 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       },
       navigation: {
         prev: function() {
-          if( _questionIndex - 1 >= 0 ) {
+          if( this.hasPrev() ) {
             _questionIndex--;
           }
         },
         hasPrev: function() {
           // data-ng-show="currentQuiz.settings.allowQuestionNavigation" ng-if="getPrevQuestionIndex() !== undefined" ng-click="showPrevQuestion()"
-          return true;
+          return _questionIndex > 0;
         },
         next: function() {
-          if( _questionIndex + 1 <= _questions.length - 1 ) {
+          if( this.hasNext() ) {
             _questionIndex++;
           }
         },
         hasNext: function() {
           // data-ng-show="currentQuestion.type === 'infoPage' || (currentQuestion.answered && (currentQuestion.settings.showAnswers || currentQuestion.settings.showCorrectAnswer))" ng-if="!!getNextQuestionIndex()"
-          return true;
+          return _questionIndex < _questions.length - 1;
         }
       }
     };
