@@ -1,28 +1,30 @@
 <h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
-<div class="header__wrapper ir-169" data-ng-if="!!currentQuestion.mainMedia()" >
-  <picture class="main-media-image">
-    <source 
-      media="(min-width: 481px)" 
-      data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
-                      {{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
-                      {{ getImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
+<div class="header__wrapper" data-ng-if="!!currentQuestion.mainMedia()" >
+  <picture class="main-media-image"
+    data-ng-class="{'no-transform': !question.imageData, 'transform': question.imageData}"
+    data-ng-init="mainMediaImgWidth = question.imageData.width < 100 ? question.imageData.width : 100 "
+  >
+    <img data-ng-style="{
+        'width': mainMediaImgWidth + '%',
+        'left' : (question.imageData.left > 0 ? question.imageData.left : 0) + '%',
+        'top'  : (question.imageData.top  > 0 ? question.imageData.top  : 0) + '%'
+      }"
+      data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, '1.0' ) }}" 
+      data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, '1.0' ) }},
+                      {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, '1.5' ) }} 1.5x,
+                      {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, '2.0' ) }} 2.0x"
     >
-    <source 
-      media="(min-width: 0px)" 
-      data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 480, '1.0' ) }},
-                      {{ getImgUrl( currentQuestion.mainMedia().src, 480, '1.5' ) }} 1.5x,
-                      {{ getImgUrl( currentQuestion.mainMedia().src, 480, '2.0' ) }} 2.0x"
-    >
-    <img 
-      data-ng-src="{{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
-      data-ng-srcset="{{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
-                      {{ getImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
-                      {{ getImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
+    <img class="placeholder"
+      data-ng-style="{'width': mainMediaImgWidth + '%'}"
+      data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, '1.0' ) }}" 
+      data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, '1.0' ) }},
+                      {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, '1.5' ) }} 1.5x,
+                      {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, '2.0' ) }} 2.0x"
     >
   </picture>
 </div>
 <div class="list">
-  <div ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choise "
+  <div data-ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choise "
       data-ng-class="{'questionnaire__answer--selected':  questionAnswer.selected === answer._id, 'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id  }"
       data-ng-click="sendAnswer( answer._id )">
      <figure data-ng-class="{
@@ -53,7 +55,7 @@
         }">
           {{ answer.text }}
         </figcaption>
-        <div class="results" ng-if="!!questionAnswer && !!questionAnswer.stats" data-ng-class="{
+        <div class="results" data-ng-if="!!questionAnswer && !!questionAnswer.stats" data-ng-class="{
           'theme-question-color': questionAnswer.selected === answer._id,
           'theme-answer-color': questionAnswer.selected !== answer._id
         }">

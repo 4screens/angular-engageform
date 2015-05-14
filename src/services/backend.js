@@ -34,7 +34,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
 
       _cache.mainMedia[ _questions[_questionIndex]._id ] = {
         '$key': _questions[_questionIndex]._id,
-        src: CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + _questions[_questionIndex].imageFile
+        src: _questions[_questionIndex].imageFile.slice( 0, 4 ) !== 'http' ? CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + _questions[_questionIndex].imageFile : _questions[_questionIndex].imageFile
       };
       return _cache.mainMedia[ _questions[_questionIndex]._id ];
     }

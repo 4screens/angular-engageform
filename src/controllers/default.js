@@ -26,12 +26,12 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       maxHeight: 880
     };
 
-    function scaleEmbed( cfg, ww, wh ) {
+    function scaleEmbed ( cfg, ww, wh ) {
       var fzw = Math.min( ww / cfg.maxWidth, 1 )
         , fzh = Math.min( wh / cfg.maxHeight, 1 ) 
         , fz = Math.max( cfg.minFontSize, Math.min( fzw, fzh ) );
       angular.element($window.document.querySelector('html')).css( 'font-size', Math.floor( fz * 1000 ) / 10 + '%' );
-    };
+    }
 
     angular.element( $window ).bind( 'resize', function () {
       checkScreenType();
@@ -46,6 +46,12 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     }
     $scope.getImgUrl = function ( src, w, dpr, blur ) {
       return CloudinaryService.getImgUrl( src, w, dpr, blur );
+    }
+
+    $scope.getMainImgUrl = function ( src, w, dpr ) {
+      var trs = $scope.questions[$scope.currentQuestion.index()].imageData
+        , baseWidth = 620;
+      return !trs ? CloudinaryService.getImgUrl( src, w, dpr ) : CloudinaryService.getMainImgUrl( src, w * ( trs.width / 100 || 1 ), baseWidth, trs.containerHeight, Math.round( baseWidth * trs.left * -1 / 100 ) || 0, Math.round( trs.containerHeight * trs.top * -1 / 100 ) || 0 );
     }
 
     $scope.sentAnswer = function() {
