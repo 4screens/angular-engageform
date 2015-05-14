@@ -49,8 +49,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     }
 
     $scope.getMainImgUrl = function ( src, w, dpr ) {
-      var trs = $scope.questions[$scope.currentQuestion.index()].imageData;
-      return CloudinaryService.getImgUrl( src, w * ( trs.width / 100 || 1 ) , dpr );
+      var trs = $scope.questions[$scope.currentQuestion.index()].imageData
+        , baseWidth = 620;
+      return !trs ? CloudinaryService.getImgUrl( src, w, dpr ) : CloudinaryService.getMainImgUrl( src, w * ( trs.width / 100 || 1 ), baseWidth, trs.containerHeight, Math.round( baseWidth * trs.left * -1 / 100 ) || 0, Math.round( trs.containerHeight * trs.top * -1 / 100 ) || 0 );
     }
 
     $scope.sentAnswer = function() {
