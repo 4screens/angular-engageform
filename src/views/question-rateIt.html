@@ -19,8 +19,7 @@
                     {{ getImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
   >
 </picture>
-
-<div class="list list__rating">
+<div class="list list__rating list__rating--stars">
   <span ng-click="sendAnswer(5, $event)" class="theme-answer-color" ng-class="{'item__selected': questionAnswer.selected >= 5}"><i class="fa"></i></span>
   <span ng-click="sendAnswer(4, $event)" class="theme-answer-color" ng-class="{'item__selected': questionAnswer.selected >= 4}"><i class="fa"></i></span>
   <span ng-click="sendAnswer(3, $event)" class="theme-answer-color" ng-class="{'item__selected': questionAnswer.selected >= 3}"><i class="fa"></i></span>
