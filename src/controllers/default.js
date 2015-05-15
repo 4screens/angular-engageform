@@ -65,8 +65,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     $scope.sentAnswer = function() {
       $scope.questionAnswer = EngageformBackendService.question.sentAnswer() || {};
+      $scope.questionAnswer.status = $scope.questionAnswer.status || {};
 
-      $scope.questionAnswer.status = {};
       _.forEach( $scope.currentQuestion.answers(), function( value ) {
         $scope.questionAnswer.status[ value._id ] = {};
         if( value._id === $scope.questionAnswer.selected ) {
@@ -88,13 +88,16 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $event.preventDefault();
       }
 
-      EngageformBackendService.question.sendAnswer( value ).then(function() {
+      EngageformBackendService.question.sendAnswer( value ).then(function( data ) {
+        if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
+          $scope.sentAnswer();
+        }
         if ($scope.hasNext()) {
           $timeout( function () {
             $scope.next();
           }, 2000 );
         }
-        $scope.sentAnswer();
+
       });
     };
 
@@ -107,38 +110,36 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.prev = function() {
-      if( false ) {
-        // move prev slide
-      }
-      $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.navigation.prev();
       $scope.sentAnswer();
       $scope.wayAnimateClass = 'way-animation__prev';
     };
     $scope.hasPrev = function() {
-      if( false ) {
-        // move next slide
-      }
-
       return EngageformBackendService.navigation.hasPrev();
     };
-    $scope.next = function() {
-      if( false ) {
-        // move next slide
+    $scope.next = function( $event ) {
+      if( !!$scope.currentQuestion.requiredAnswer() ) {
+        console.log($scope.questionAnswer);
+        if( $scope.questionAnswer.selected ) {
+          EngageformBackendService.navigation.next();
+          $scope.sentAnswer();
+          $scope.wayAnimateClass = 'way-animation__next';
+          $scope.requiredMessage = '';
+        } else if( !!$scope.questionAnswer && !!$scope.questionAnswer.form && !!$scope.questionAnswer.form.$valid ) {
+          $scope.questionAnswer.selected = true;
+          sendDataForm( $scope.questionAnswer.status, $event );
+        } else {
+          $scope.requiredMessage = 'The answer is requirements. Answer the question.';
+        }
+      } else {
+        EngageformBackendService.navigation.next();
+        $scope.sentAnswer();
+
+        $scope.wayAnimateClass = 'way-animation__next';
       }
-      
-      sendDataForm( $scope.currentQuestion.inputs() );
-      $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
-      EngageformBackendService.navigation.next();
-      $scope.sentAnswer();
-      $scope.wayAnimateClass = 'way-animation__next';
     };
 
     $scope.hasNext = function() {
-      if( false ) {
-        // move next slide
-      }
-
       return EngageformBackendService.navigation.hasNext();
     };
 
@@ -148,10 +149,11 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       mainMedia: EngageformBackendService.question.mainMedia,
       answers: EngageformBackendService.question.answers,
       inputs: EngageformBackendService.question.inputs,
-      answerMedia: EngageformBackendService.question.answerMedia
+      answerMedia: EngageformBackendService.question.answerMedia,
+      requiredAnswer: EngageformBackendService.question.requiredAnswer
     };
 
-    function sendDataForm( data ) {
+    function sendDataForm( data, $event ) {
       var inputs = [];
       
       for( var property in data ) {
@@ -161,7 +163,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
       
       if(!!inputs.length) {
-        $scope.sendAnswer( inputs );
+        $scope.sendAnswer( inputs, $event );
       }
     }
   }

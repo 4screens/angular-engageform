@@ -71,11 +71,14 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           return getMainMediaFromCurrentQuestion();
         },
         inputs: function() {
-          _questions[ _questionIndex ].inputs = _questions[ _questionIndex ].inputs || {};
-          return _questions[ _questionIndex ].inputs;
+          _questions[ _questionIndex ].forms = _questions[ _questionIndex ].forms || {};
+          return _questions[ _questionIndex ].forms.inputs;
         },
         answers: function() {
           return _questions[ _questionIndex ].answers;
+        },
+        requiredAnswer: function() {
+          return _questions[ _questionIndex ].requiredAnswer;
         },
         answerMedia: function( filename ) {
           return CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + filename;
@@ -125,8 +128,13 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
                 stats: data.stats
               });
             } else if ( _questions[ _questionIndex ].type === 'forms' ) {
-                CommonLocalStorageService.set( QUESTION_SENT_ANSWER + values.quizQuestionId, {
-                inputs: values.inputs
+              var status = {};
+              _.forEach( values.inputs, function( input ) {
+                selected: true,
+                status[ input._id ] = input.value;
+              });
+              CommonLocalStorageService.set( QUESTION_SENT_ANSWER + values.quizQuestionId, {
+                status: status
               });
             }
 
