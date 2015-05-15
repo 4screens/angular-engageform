@@ -21,6 +21,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
     };
 
+    $scope.makeTimes = function ( s ) {
+      var a = new Array();
+      for ( var i = 0; i < s; i++ ) {
+        a.push( i );
+      }
+      return a;
+    };
+
     $scope.scaleEmbedCfg = {
       minFontSize: .7,
       maxWidth: 680,

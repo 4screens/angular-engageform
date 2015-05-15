@@ -22,14 +22,31 @@
                     {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, '2.0' ) }} 2.0x"
   >
 </picture>
-<div class="list list__rating list__rating--stars">
-  <span data-ng-click="sendAnswer(5, $event)" class="theme-answer-color" data-ng-class="{'item__selected': questionAnswer.selected >= 5}"><i class="fa"></i></span>
-  <span data-ng-click="sendAnswer(4, $event)" class="theme-answer-color" data-ng-class="{'item__selected': questionAnswer.selected >= 4}"><i class="fa"></i></span>
-  <span data-ng-click="sendAnswer(3, $event)" class="theme-answer-color" data-ng-class="{'item__selected': questionAnswer.selected >= 3}"><i class="fa"></i></span>
-  <span data-ng-click="sendAnswer(2, $event)" class="theme-answer-color" data-ng-class="{'item__selected': questionAnswer.selected >= 2}"><i class="fa"></i></span>
-  <span data-ng-click="sendAnswer(1, $event)" class="theme-answer-color" data-ng-class="{'item__selected': questionAnswer.selected >= 1}"><i class="fa"></i></span>
+<div
+  class="list list__rating list__rating--{{question.rateIt.rateType || 'star'}}"
+  data-ng-init="AA = makeTimes(question.rateIt.maxRateItValue)"
+>
+  <span
+    data-ng-click="sendAnswer(AA.length - $index, $event)"
+    class="theme-answer-color"
+    data-ng-class="{'item__selected': questionAnswer.selected >= AA.length - $index}"
+    data-ng-repeat="r in AA"
+  >
+    <i class="fa"></i>
+    <span class="number">{{AA.length - $index}}</span>
+  </span>
 </div>
 
-<div class="rating__results theme-question-color">
-  <span data-ng-if="questionAnswer.average">Średnia: {{ questionAnswer.average | number:1 }}</span>
+<div class="footer-rating">
+  <div class="cell">
+    <div class="rating__label theme-question-color text-left"><span>{{question.rateIt.minLabel}}</span></div>
+  </div>
+  <div class="cell">
+    <div class="rating__results theme-question-color">
+      <span data-ng-if="questionAnswer.average">Average: {{ questionAnswer.average | number:1 }}</span>
+    </div>
+  </div>
+  <div class="cell">
+    <div class="rating__label theme-question-color text-right"><span>{{question.rateIt.maxLabel}}</span></div>
+  </div>
 </div>
