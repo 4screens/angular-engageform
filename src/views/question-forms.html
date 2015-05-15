@@ -26,15 +26,15 @@
   <fieldset>
     <div class="form__field" data-ng-repeat="input in question.forms.inputs">
       <label for="{{input._id}}" data-ng-bind="input.label"></label>
-      <input type="email" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='email'" data-ng-model="currentQuestion.inputs()[input._id]" required formnovalidate>
+      <input type="email" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='email'" data-ng-model="questionAnswer.status[input._id]"  formnovalidate ng-required="!!currentQuestion.requiredAnswer">
 
-      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='text'"  data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate>
+      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='text'"  data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
       
-      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='phone'" data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate>
+      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='phone'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
       
-      <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='url'" data-ng-model="currentQuestion.inputs()[input._id]" formnovalidate >
+      <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='url'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
     
-      <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" data-ng-model="currentQuestion.inputs()[input._id]" required formnovalidate></textarea>
+      <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer"></textarea>
 
       <div data-ng-messages="form[input._id].$error" data-ng-messages-multiple class="message text-right">
         <div data-ng-message="required">
@@ -51,6 +51,7 @@
         </div>
       </div>
     </div>
+    <input type="text" name="form" data-ng-model="questionAnswer.form" data-ng-init="questionAnswer.form=form" /> 
   </fieldset>
   <div class="hint">
     <i class="fa fa-info-circle"></i>&nbsp;<span>Type your answer above. Press next to continue.</span>

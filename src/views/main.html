@@ -42,6 +42,9 @@
         </div>
       </div>
     </div>
+    <div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{'is-active': !!requiredMessage }" >
+      {{requiredMessage}}
+    </div>
     <div class="four-screens__footer">
       <div class="progress" data-ng-if="currentQuestion.index() > -1">
         <span class="progress__bar">
@@ -57,7 +60,7 @@
         <span><i class="fa fa-chevron-left"></i></span>
       </button>
 
-      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next()">
+      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next($event)">
         <span>NEXT <i class="fa fa-chevron-right"></i></span>
       </button>
 
