@@ -24,7 +24,7 @@
 </picture>
 <div
   class="list list__rating list__rating--{{question.rateIt.rateType || 'star'}}"
-  data-ng-init="AA = makeTimes(question.rateIt.maxRateItValue)"
+  data-ng-init="AA = makeTimes(question.rateIt.maxRateItValue || 5)"
 >
   <span
     data-ng-click="sendAnswer(AA.length - $index, $event)"
