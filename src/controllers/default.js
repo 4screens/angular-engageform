@@ -19,10 +19,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if (!$scope.$$phase) {
         $scope.$apply( setScreenType );
       }
-    };
+    }
 
     $scope.makeTimes = function ( s ) {
-      var a = new Array();
+      var a = [];
       for ( var i = 0; i < s; i++ ) {
         a.push( i );
       }
@@ -30,7 +30,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.scaleEmbedCfg = {
-      minFontSize: .7,
+      minFontSize: 0.7,
       maxWidth: 680,
       maxHeight: 880
     };
@@ -52,16 +52,17 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     $scope.getBgImgUrl = function ( src, w, dpr, blur ) {
       return CloudinaryService.getImgUrl( CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + src, w, dpr, blur );
-    }
+    };
+
     $scope.getImgUrl = function ( src, w, dpr, blur ) {
       return CloudinaryService.getImgUrl( src, w, dpr, blur );
-    }
+    };
 
     $scope.getMainImgUrl = function ( src, w, dpr ) {
       var trs = $scope.questions[$scope.currentQuestion.index()].imageData
         , baseWidth = 620;
       return !trs ? CloudinaryService.getImgUrl( src, w, dpr ) : CloudinaryService.getMainImgUrl( src, w * ( trs.width / 100 || 1 ), baseWidth, trs.containerHeight, Math.round( baseWidth * trs.left * -1 / 100 ) || 0, Math.round( trs.containerHeight * trs.top * -1 / 100 ) || 0 );
-    }
+    };
 
     $scope.sentAnswer = function() {
       $scope.questionAnswer = EngageformBackendService.question.sentAnswer() || {};
@@ -88,7 +89,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $event.preventDefault();
       }
 
-      EngageformBackendService.question.sendAnswer( value ).then(function( data ) {
+      EngageformBackendService.question.sendAnswer( value ).then( function() {
         if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
           $scope.sentAnswer();
         }
@@ -119,7 +120,6 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
     $scope.next = function( $event ) {
       if( !!$scope.currentQuestion.requiredAnswer() ) {
-        console.log($scope.questionAnswer);
         if( $scope.questionAnswer.selected ) {
           EngageformBackendService.navigation.next();
           $scope.sentAnswer();
