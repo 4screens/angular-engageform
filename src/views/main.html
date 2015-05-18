@@ -36,23 +36,34 @@
     </picture>
   </div>
   <div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass">
-    <div data-ng-repeat="question in questions" class=" questionnaire animate-if" data-ng-if="$index == currentQuestion.index()">
+    <div data-ng-repeat="question in questions | questionsFilter" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()">
       <div class="question-content-wrapper">
-        <div class="four-screens__content wrapper" data-ng-class="{'content__type--forms': question.type == 'forms', 'content__type--info-page': question.type == 'infoPage' , 'content__type--multi-choice': question.type == 'multiChoice', 'content__type--picture-choise': question.type == 'pictureChoice' , 'content__type--rate-it': question.type == 'rateIt' }" data-ng-include="'views/engageform/question-' + question.type + '.html'">
+        <div
+          class="four-screens__content wrapper"
+          data-ng-class="{
+            'content__type--forms': question.type == 'forms',
+            'content__type--info-page': question.type == 'infoPage' ,
+            'content__type--multi-choice': question.type == 'multiChoice',
+            'content__type--picture-choise': question.type == 'pictureChoice',
+            'content__type--rate-it': question.type == 'rateIt',
+            'content__type--start-page': question.type == 'startPage',
+            'content__type--end-page': question.type == 'endPage'
+          }"
+          data-ng-include="'views/engageform/question-' + question.type + '.html'">
         </div>
       </div>
     </div>
     <div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{'is-active': !!requiredMessage }" >
       {{requiredMessage}}
     </div>
-    <div class="four-screens__footer">
+    <div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== 'startPage' && questions[currentQuestion.index()].type !== 'endPage'">
       <div class="progress" data-ng-if="currentQuestion.index() > -1">
         <span class="progress__bar">
           <span class="progress__bar--line theme-button-color" data-ng-class="{'progress__bar--full-size': (((currentQuestion.index() + 1)  / questions.length )*100) == 100 }" style="width: {{( (currentQuestion.index() + 1)  / questions.length )*100 | number:0 }}%">
         </span>
       </div>
       <div class="progress__numbering" >
-        ({{ currentQuestion.index() + 1 }} of {{ questions.length }})
+        ({{ currentQuestion.index() }} of {{ questions.length - 1 - _.where(questions, {type: 'endPage'}).length }})
       </div>
       <a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a>
 
@@ -64,8 +75,8 @@
         <span>NEXT <i class="fa fa-chevron-right"></i></span>
       </button>
 
-      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="!hasNext()" data-ng-click="submitQuiz()">
-        <span>SUBMIT <i class="fa fa-check"></i></span>
+      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="questions.length === currentQuestion.index() + 1" data-ng-click="submitQuiz()">
+        <span>SUBMIT&nbsp;<i class="fa fa-check"></i></span>
       </button>
     </div>
   </div>

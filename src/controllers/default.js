@@ -2,7 +2,8 @@
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window ) {
-    var quizId = $routeParams.engageFormId;
+    var nextQuestionTimeout
+      , quizId = $routeParams.engageFormId;
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
@@ -93,10 +94,12 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
           $scope.sentAnswer();
         }
-        if ($scope.hasNext()) {
-          $timeout( function () {
+
+        if ($scope.hasNext() && !nextQuestionTimeout) { console.log('jest next i nima timeout');
+          nextQuestionTimeout = $timeout( function () { console.log('rob timeout');
             $scope.next();
-          }, 2000 );
+            nextQuestionTimeout = null;
+          }, 800 );
         }
 
       });
