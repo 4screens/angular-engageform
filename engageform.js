@@ -22,6 +22,11 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
+  $templateCache.put('views/engageform/question-endPage.html',
+    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="main-content-description theme-question-color" data-ng-if="!!question.description"><p>{{question.description}}</p></div><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-init="mainMediaImgWidth = question.imageData.width < 100 ? question.imageData.width : 100"><img data-ng-style="{ \'width\': mainMediaImgWidth + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'2.0\' ) }} 2.0x"> <img class="placeholder" data-ng-style="{\'width\': mainMediaImgWidth + \'%\'}" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'2.0\' ) }} 2.0x"></picture><div class="text-center"><button class="btn btn--round-corner btn--normal theme-button-color theme-question-color">{{question.coverPage.buttonText}}</button></div>');
+}]);
+
+angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-forms.html',
     '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-init="mainMediaImgWidth = question.imageData.width < 100 ? question.imageData.width : 100"><img data-ng-style="{ \'width\': mainMediaImgWidth + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'2.0\' ) }} 2.0x"> <img class="placeholder" data-ng-style="{\'width\': mainMediaImgWidth + \'%\'}" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'2.0\' ) }} 2.0x"></picture><form action name="form" class="form" formnovalidate=""><fieldset><div class="form__field" data-ng-repeat="input in question.forms.inputs"><label for="{{input._id}}" data-ng-bind="input.label"></label> <input type="email" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'email\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate="" ng-required="!!currentQuestion.requiredAnswer"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'text\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate="" ng-required="!!currentQuestion.requiredAnswer"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'phone\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate="" ng-required="!!currentQuestion.requiredAnswer"> <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'url\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate="" ng-required="!!currentQuestion.requiredAnswer"> <textarea name="{{input._id}}" id cols="30" rows="10" data-ng-if="input.type==\'textarea\'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate="" ng-required="!!currentQuestion.requiredAnswer"></textarea><div data-ng-messages="form[input._id].$error" data-ng-messages-multiple class="message text-right"><div data-ng-message="required">This field is required</div><div data-ng-message="email">Your field has an invalid email address</div><div data-ng-message="number">Only numbers</div><div data-ng-message="url">Your field has a invalid url address</div></div></div><input type="text" class="hidden" name="form" data-ng-model="questionAnswer.form" data-ng-init="questionAnswer.form=form"></fieldset><div class="hint"><i class="fa fa-info-circle"></i>&nbsp;<span>Type your answer above. Press next to continue.</span></div></form>');
 }]);
@@ -46,6 +51,11 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
     '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-init="mainMediaImgWidth = question.imageData.width < 100 ? question.imageData.width : 100"><img data-ng-style="{ \'width\': mainMediaImgWidth + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'2.0\' ) }} 2.0x"> <img class="placeholder" data-ng-style="{\'width\': mainMediaImgWidth + \'%\'}" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'2.0\' ) }} 2.0x"></picture><div class="list list__rating list__rating--{{question.rateIt.rateType || \'star\'}}" data-ng-init="AA = makeTimes(question.rateIt.maxRateItValue || 5)"><span data-ng-click="sendAnswer(AA.length - $index, $event)" class="theme-answer-color" data-ng-class="{\'item__selected\': questionAnswer.selected >= AA.length - $index}" data-ng-repeat="r in AA"><i class="fa"></i> <span class="number">{{AA.length - $index}}</span></span></div><div class="footer-rating"><div class="cell"><div class="rating__label theme-question-color text-left"><span>{{question.rateIt.minLabel}}</span></div></div><div class="cell"><div class="rating__results theme-question-color"><span data-ng-if="questionAnswer.average">Average: {{ questionAnswer.average | number:1 }}</span></div></div><div class="cell"><div class="rating__label theme-question-color text-right"><span>{{question.rateIt.maxLabel}}</span></div></div></div>');
 }]);
 
+angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
+  $templateCache.put('views/engageform/question-startPage.html',
+    '<h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="main-content-description theme-question-color" data-ng-if="!!question.description"><p>{{question.description}}</p></div><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-init="mainMediaImgWidth = question.imageData.width < 100 ? question.imageData.width : 100"><img data-ng-style="{ \'width\': mainMediaImgWidth + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'2.0\' ) }} 2.0x"> <img class="placeholder" data-ng-style="{\'width\': mainMediaImgWidth + \'%\'}" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 620, \'2.0\' ) }} 2.0x"></picture><div class="text-center"><button class="btn btn--round-corner btn--normal theme-button-color theme-question-color">{{question.coverPage.buttonText || "Let\'s get started"}}</button></div>');
+}]);
+
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
@@ -67,10 +77,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if (!$scope.$$phase) {
         $scope.$apply( setScreenType );
       }
-    };
+    }
 
     $scope.makeTimes = function ( s ) {
-      var a = new Array();
+      var a = [];
       for ( var i = 0; i < s; i++ ) {
         a.push( i );
       }
@@ -78,7 +88,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.scaleEmbedCfg = {
-      minFontSize: .7,
+      minFontSize: 0.7,
       maxWidth: 680,
       maxHeight: 880
     };
@@ -100,16 +110,17 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     $scope.getBgImgUrl = function ( src, w, dpr, blur ) {
       return CloudinaryService.getImgUrl( CONFIG.backend.domain.replace( ':subdomain', '' ) + '/uploads/' + src, w, dpr, blur );
-    }
+    };
+
     $scope.getImgUrl = function ( src, w, dpr, blur ) {
       return CloudinaryService.getImgUrl( src, w, dpr, blur );
-    }
+    };
 
     $scope.getMainImgUrl = function ( src, w, dpr ) {
       var trs = $scope.questions[$scope.currentQuestion.index()].imageData
         , baseWidth = 620;
       return !trs ? CloudinaryService.getImgUrl( src, w, dpr ) : CloudinaryService.getMainImgUrl( src, w * ( trs.width / 100 || 1 ), baseWidth, trs.containerHeight, Math.round( baseWidth * trs.left * -1 / 100 ) || 0, Math.round( trs.containerHeight * trs.top * -1 / 100 ) || 0 );
-    }
+    };
 
     $scope.sentAnswer = function() {
       $scope.questionAnswer = EngageformBackendService.question.sentAnswer() || {};
@@ -136,7 +147,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $event.preventDefault();
       }
 
-      EngageformBackendService.question.sendAnswer( value ).then(function( data ) {
+      EngageformBackendService.question.sendAnswer( value ).then( function() {
         if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
           $scope.sentAnswer();
         }
@@ -167,7 +178,6 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
     $scope.next = function( $event ) {
       if( !!$scope.currentQuestion.requiredAnswer() ) {
-        console.log($scope.questionAnswer);
         if( $scope.questionAnswer.selected ) {
           EngageformBackendService.navigation.next();
           $scope.sentAnswer();
