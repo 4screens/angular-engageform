@@ -11,6 +11,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.questions = _.sortBy( questions, 'position' );
         $scope.sentAnswer();
+
+        $scope.normalQuestionsAmmount = $scope.questions.length - (_.where( $scope.questions, { type: 'startPage' } ).length || 0) - (_.where( $scope.questions, { type: 'endPage' } ).length || 0);
       });
     });
 
@@ -95,8 +97,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           $scope.sentAnswer();
         }
 
-        if ($scope.hasNext() && !nextQuestionTimeout) { console.log('jest next i nima timeout');
-          nextQuestionTimeout = $timeout( function () { console.log('rob timeout');
+        if ($scope.hasNext() && !nextQuestionTimeout) {
+          nextQuestionTimeout = $timeout( function () {
             $scope.next();
             nextQuestionTimeout = null;
           }, 800 );
@@ -106,6 +108,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.submitQuiz = function() {
+      // ToDo add message, after merge and move next() to then
+      $scope.next();
       return EngageformBackendService.quiz.submit( quizId );
     };
 

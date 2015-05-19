@@ -59,11 +59,11 @@
     <div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== 'startPage' && questions[currentQuestion.index()].type !== 'endPage'">
       <div class="progress" data-ng-if="currentQuestion.index() > -1">
         <span class="progress__bar">
-          <span class="progress__bar--line theme-button-color" data-ng-class="{'progress__bar--full-size': (((currentQuestion.index() + 1)  / questions.length )*100) == 100 }" style="width: {{( (currentQuestion.index() + 1)  / questions.length )*100 | number:0 }}%">
+          <span class="progress__bar--line theme-button-color" data-ng-class="{'progress__bar--full-size': ((currentQuestion.index() / normalQuestionsAmmount )*100) == 100 }" style="width: {{( currentQuestion.index() / normalQuestionsAmmount )*100 | number:0 }}%">
         </span>
       </div>
       <div class="progress__numbering" >
-        ({{ currentQuestion.index() }} of {{ questions.length - 1 - _.where(questions, {type: 'endPage'}).length }})
+        ({{ currentQuestion.index() }} of {{ normalQuestionsAmmount }})
       </div>
       <a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a>
 
@@ -71,11 +71,11 @@
         <span><i class="fa fa-chevron-left"></i></span>
       </button>
 
-      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next($event)">
+      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext() && currentQuestion.index() < normalQuestionsAmmount" data-ng-click="next($event)">
         <span>NEXT <i class="fa fa-chevron-right"></i></span>
       </button>
 
-      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="questions.length === currentQuestion.index() + 1" data-ng-click="submitQuiz()">
+      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="currentQuestion.index() === normalQuestionsAmmount" data-ng-click="submitQuiz()">
         <span>SUBMIT&nbsp;<i class="fa fa-check"></i></span>
       </button>
     </div>
