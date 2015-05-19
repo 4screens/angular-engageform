@@ -31,7 +31,17 @@
     class="theme-answer-color"
     data-ng-class="{'item__selected': questionAnswer.selected >= AA.length - $index}"
     data-ng-repeat="r in AA"
-  >
+    data-ng-if="question.rateIt.rateType !== 'number'">
+    <i class="fa"></i>
+    <span class="number">{{AA.length - $index}}</span>
+  </span>
+
+  <span
+    data-ng-click="sendAnswer(AA.length - $index, $event)"
+    class="theme-answer-color"
+    data-ng-class="{'item__selected': questionAnswer.selected == AA.length - $index}"
+    data-ng-repeat="r in AA"
+    data-ng-if="question.rateIt.rateType === 'number'">
     <i class="fa"></i>
     <span class="number">{{AA.length - $index}}</span>
   </span>
