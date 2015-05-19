@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('4screens.engageform').factory( 'EngageformBackendService',
-  function( CONFIG, CommonLocalStorageService, SettingsEngageformService, $q ) {
+  function( CONFIG, CommonLocalStorageService, SettingsEngageformService, $q, $filter ) {
     var _quiz
       , _questions = []
       , _questionIndex = 0
@@ -145,7 +145,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       questions: {
         get: function() {
           return SettingsEngageformService.getQuestions( _quiz._id ).then(function( questions ) {
-            _questions = _.sortBy( questions, 'position' );
+            _questions = $filter('questionsFilter')( _.sortBy( questions, 'position' ));
             return questions;
           });
         }

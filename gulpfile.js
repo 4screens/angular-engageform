@@ -13,7 +13,9 @@ var gulp = require('gulp')
     './src/views/question-infoPage.html',
     './src/views/question-multiChoice.html',
     './src/views/question-pictureChoice.html',
-    './src/views/question-rateIt.html'
+    './src/views/question-rateIt.html',
+    './src/views/question-startPage.html',
+    './src/views/question-endPage.html'
   ]
 , FILES = [
     './src/app.js',
@@ -21,6 +23,7 @@ var gulp = require('gulp')
     './src/controllers/default.js',
     './src/directives/swiper.js',
     './src/filters/nl2br.js',
+    './src/filters/questions-order.js',
     './src/services/backend.js',
     './src/services/cloudinary.js'
   ]

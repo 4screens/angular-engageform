@@ -2,7 +2,8 @@
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window ) {
-    var quizId = $routeParams.engageFormId;
+    var nextQuestionTimeout
+      , quizId = $routeParams.engageFormId;
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
@@ -10,6 +11,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.questions = _.sortBy( questions, 'position' );
         $scope.sentAnswer();
+
+        $scope.normalQuestionsAmmount = $scope.questions.length - (_.where( $scope.questions, { type: 'startPage' } ).length || 0) - (_.where( $scope.questions, { type: 'endPage' } ).length || 0);
       });
     });
 
@@ -93,17 +96,23 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
           $scope.sentAnswer();
         }
-        if ($scope.hasNext()) {
-          $timeout( function () {
+
+        if ($scope.hasNext() && !nextQuestionTimeout) {
+          nextQuestionTimeout = $timeout( function () {
             $scope.next();
-          }, 1000 );
+            nextQuestionTimeout = null;
+          }, 800 );
         }
 
       });
     };
 
     $scope.submitQuiz = function() {
-      return EngageformBackendService.quiz.submit( quizId );
+      return EngageformBackendService.quiz.submit( quizId ).then( function () {
+        $scope.next();
+      } ).catch( function ( res ) {
+        $scope.requiredMessage = res.data.msg || 'Unexpected error';
+      } );
     };
 
     $scope.formatAnswers = function ( val ) {
