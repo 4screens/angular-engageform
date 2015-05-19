@@ -96,7 +96,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         if ($scope.hasNext()) {
           $timeout( function () {
             $scope.next();
-          }, 2000 );
+          }, 1000 );
         }
 
       });
