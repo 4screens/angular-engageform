@@ -37,9 +37,6 @@
       <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer"></textarea>
 
       <div data-ng-messages="form[input._id].$error" data-ng-messages-multiple class="message text-right">
-        <div data-ng-message="required">
-          This field is required
-        </div>
         <div data-ng-message="email">
           Your field has an invalid email address
         </div>
