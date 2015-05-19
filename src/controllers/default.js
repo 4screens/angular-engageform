@@ -65,8 +65,6 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       var trs = $scope.questions[$scope.currentQuestion.index()].imageData
         , baseWidth = parseInt( CONFIG.backend.mainImageContainerBaseWidth, 10 ) || 540;
 
-      $scope.mainImageContainerHeight = Math.round( w / baseWidth * trs.containerHeight );
-
       return !trs ? CloudinaryService.getImgUrl( src, w, dpr ) : CloudinaryService.getMainImgUrl(
         src,
         w * ( trs.width / 100 || 1 ),

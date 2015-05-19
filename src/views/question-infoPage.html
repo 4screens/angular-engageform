@@ -11,10 +11,9 @@
               <picture class="main-media-image"
                 data-ng-class="{'no-transform': !question.imageData, 'transform': question.imageData}"
                 data-ng-init="mainMediaImgWidth = question.imageData.width < 100 ? question.imageData.width : 100 "
-                data-ng-style="{'min-height': mainImageContainerHeight + 'px'}"
               >
                 <img data-ng-style="{
-                    'width': mainMediaImgWidth + '%',
+                    'max-width': mainMediaImgWidth + '%',
                     'left' : (question.imageData.left > 0 ? question.imageData.left : 0) + '%',
                     'top'  : (question.imageData.top  > 0 ? question.imageData.top  : 0) + '%'
                   }"
@@ -24,7 +23,7 @@
                                   {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
                 >
                 <img class="placeholder"
-                  data-ng-style="{'width': mainMediaImgWidth + '%'}"
+                  data-ng-style="{'max-width': mainMediaImgWidth + '%'}"
                   data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
                   data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
                                   {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
