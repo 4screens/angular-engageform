@@ -187,7 +187,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           $scope.questionAnswer.selected = true;
           sendDataForm( $scope.questionAnswer.status, $event );
         } else {
-          $scope.requiredMessage = 'The answer is requirements. Answer the question.';
+          $scope.requiredMessage = 'Answer is required to proceed to next question';
         }
       } else {
         EngageformBackendService.navigation.next();
