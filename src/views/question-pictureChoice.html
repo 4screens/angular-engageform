@@ -1,27 +1,30 @@
 <h2 class="theme-question-color" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
 <div class="header__wrapper" data-ng-if="!!currentQuestion.mainMedia()" >
-<picture class="main-media-image"
-  data-ng-class="{'no-transform': !question.imageData, 'transform': question.imageData}"
-  data-ng-init="mainMediaImgWidth = question.imageData.width < 100 ? question.imageData.width : 100 "
->
-  <img data-ng-style="{
-      'max-width': mainMediaImgWidth + '%',
-      'left' : (question.imageData.left > 0 ? question.imageData.left : 0) + '%',
-      'top'  : (question.imageData.top  > 0 ? question.imageData.top  : 0) + '%'
-    }"
-    data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
-    data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
-                    {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
-                    {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
+  <picture class="main-media-image"
+    data-ng-class="{'no-transform': !question.imageData, 'transform': question.imageData}"
+    data-ng-init="mainMediaImgWidth = question.imageData.width < 100 ? ( question.imageData.left + question.imageData.width > 100 ? 100 - question.imageData.left : ( question.imageData.width + Math.min(question.imageData.left, 0) ) ) : 100 "
   >
-  <img class="placeholder"
-    data-ng-style="{'max-width': mainMediaImgWidth + '%'}"
-    data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
-    data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
-                    {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
-                    {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
-  >
-</picture>
+    <img data-ng-style="{
+        'width': mainMediaImgWidth + '%',
+        'left' : (question.imageData.left > 0 ? question.imageData.left : 0) + '%',
+        'top'  : (question.imageData.top  > 0 ? question.imageData.top  : 0) + '%'
+      }"
+      data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
+      data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
+                      {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
+                      {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
+    >
+    <img class="placeholder"
+      data-ng-style="{
+        'width': mainMediaImgWidth + '%',
+        'margin-top': ( question.imageData.top > 0 ? question.imageData.top : 0 ) + '%'
+      }"
+      data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
+      data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
+                      {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
+                      {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
+    >
+  </picture>
 </div>
 <div class="list">
   <div data-ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choice "
