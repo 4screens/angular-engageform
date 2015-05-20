@@ -30,7 +30,7 @@
 
       <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='text'"  data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
       
-      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='phone'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
+      <input type="tel" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='phone'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
       
       <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='url'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
     
