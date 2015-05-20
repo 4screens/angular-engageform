@@ -24,7 +24,7 @@
 </picture>
 </div>
 <div class="list">
-  <div data-ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choise "
+  <div data-ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choice "
       data-ng-class="{'questionnaire__answer--selected':  questionAnswer.selected === answer._id, 'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id  }"
       data-ng-click="sendAnswer( answer._id )">
      <figure data-ng-class="{

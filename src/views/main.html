@@ -37,14 +37,14 @@
   </div>
   <div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass">
     <div data-ng-repeat="question in questions | questionsFilter" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()">
-      <div class="question-content-wrapper">
+      <div class="question-content-wrapper question-content-wrapper--{{question.type}}">
         <div
           class="four-screens__content wrapper"
           data-ng-class="{
             'content__type--forms': question.type == 'forms',
             'content__type--info-page': question.type == 'infoPage' ,
             'content__type--multi-choice': question.type == 'multiChoice',
-            'content__type--picture-choise': question.type == 'pictureChoice',
+            'content__type--picture-choice': question.type == 'pictureChoice',
             'content__type--rate-it': question.type == 'rateIt',
             'content__type--start-page': question.type == 'startPage',
             'content__type--end-page': question.type == 'endPage'
