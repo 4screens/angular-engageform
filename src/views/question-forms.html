@@ -35,9 +35,9 @@
       <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='url'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
     
       <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer"></textarea>
-
-      <div data-ng-messages="form[input._id].$error" data-ng-messages-multiple class="message text-right">
-        <div data-ng-message="email">
+      
+      <div data-ng-messages="form[input._id].$error" data-ng-messages-multiple class="message text-right" data-ng-class="{'is-active': !!form[input._id].$error.email || !!form[input._id].$error.url}">
+        <div data-ng-message="email" >
           Your field has an invalid email address
         </div>
         <div data-ng-message="number">
