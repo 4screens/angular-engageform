@@ -62,10 +62,12 @@
           'theme-question-color': questionAnswer.selected === answer._id,
           'theme-answer-color': questionAnswer.selected !== answer._id
         }">
-          <span>
+          <span class="results__precent">
             {{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}<span class="precent">%</span>
           </span>
-          <i class="fa" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer != false" data-ng-class="{'fa-check': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, 'fa-times': !questionAnswer.status[ answer._id ].correct }"></i>
+          <span class="results__triangle" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer != false" data-ng-class="{'is-correct': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, 'is-incorrect': !questionAnswer.status[ answer._id ].correct }">
+            <i class="fa" data-ng-class="{'fa-check': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, 'fa-times': !questionAnswer.status[ answer._id ].correct }"></i>  
+          </span>
         </div>
       </figure>
   </div>
