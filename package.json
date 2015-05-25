@@ -1,7 +1,7 @@
 {
   "name": "4screens-engageform",
   "description": "Angular 4screens engageform client",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "scripts": {
     "test": "karma start"
   },
