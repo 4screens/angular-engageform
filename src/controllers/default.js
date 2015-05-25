@@ -75,6 +75,26 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       );
     };
 
+    $scope.mainMediaImg = function() {
+      var _imageData = $scope.questions[$scope.currentQuestion.index()].imageData
+        , _width
+        , baseWidth = parseInt( CONFIG.backend.mainImageContainerBaseWidth, 10 ) || 540;
+
+      if ( _imageData.width < 100 ) {
+        if ( _imageData.left + _imageData.width > 100 ) {
+          _width = 100 - _imageData.left;
+        } else {
+          _width = _imageData.width + Math.min( _imageData.left, 0 );
+        }
+      } else {
+        _width = 100;
+      }
+      return {
+        width: _width,
+        paddingBottom: Math.round( _imageData.containerHeight / baseWidth * 100 )
+      };
+    };
+
     $scope.sentAnswer = function() {
       $scope.questionAnswer = EngageformBackendService.question.sentAnswer() || {};
       $scope.questionAnswer.status = $scope.questionAnswer.status || {};
