@@ -99,6 +99,13 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           var deferred, values = {};
           values.quizQuestionId = _questions[ _questionIndex ]._id;
 
+          // If the question is already answered and the quiz's settings don't allow changing it, don't go any further.
+          if( !_quiz.settings.allowAnswerChange && !!CommonLocalStorageService.get( QUESTION_SENT_ANSWER + values.quizQuestionId ) ) {
+            deferred = $q.defer();
+            deferred.resolve();
+            return deferred.promise;
+          }
+
           if( _questions[ _questionIndex ].type === 'rateIt' ) {
             values.rateItValue = parseInt( value );
           }
