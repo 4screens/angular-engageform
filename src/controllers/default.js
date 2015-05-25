@@ -79,6 +79,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       var _imageData = $scope.questions[$scope.currentQuestion.index()].imageData
         , _width
         , baseWidth = parseInt( CONFIG.backend.mainImageContainerBaseWidth, 10 ) || 540;
+        
+      if ( !$scope.questions[$scope.currentQuestion.index()].imageData ) {
+        return null;
+      }
 
       if ( _imageData.width < 100 ) {
         if ( _imageData.left + _imageData.width > 100 ) {

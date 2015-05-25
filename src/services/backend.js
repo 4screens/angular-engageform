@@ -4,6 +4,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
   function( CONFIG, CommonLocalStorageService, SettingsEngageformService, $q, $filter ) {
     var _quiz
       , _questions = []
+      , _normalQuestionsAmmount
       , _questionIndex = 0
       , _cache = {}
       , USER_IDENTIFIER = 'ui'
@@ -146,6 +147,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         get: function() {
           return SettingsEngageformService.getQuestions( _quiz._id ).then(function( questions ) {
             _questions = $filter('questionsFilter')( _.sortBy( questions, 'position' ));
+            _normalQuestionsAmmount = _questions.length - (_.where( _questions, { type: 'startPage' } ).length || 0) - (_.where( _questions, { type: 'endPage' } ).length || 0);
             return questions;
           });
         }
@@ -167,7 +169,8 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         },
         hasNext: function() {
           // data-ng-show="currentQuestion.type === 'infoPage' || (currentQuestion.answered && (currentQuestion.settings.showAnswers || currentQuestion.settings.showCorrectAnswer))" ng-if="!!getNextQuestionIndex()"
-          return _questionIndex < _questions.length - 1;
+          // return _questionIndex < _questions.length - 1;
+          return _questionIndex < _normalQuestionsAmmount;
         }
       }
     };

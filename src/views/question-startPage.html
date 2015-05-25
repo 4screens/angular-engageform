@@ -4,7 +4,7 @@
 </div>
 
 <picture class="main-media-image"
-  data-ng-if="!!currentQuestion.mainMedia()"
+  data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()"
   data-ng-class="{'no-transform': !question.imageData, 'transform': question.imageData}"
   data-ng-style="{'padding-bottom': mainMediaImg().paddingBottom + '%'}"
 >
