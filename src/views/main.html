@@ -66,18 +66,30 @@
         ({{ currentQuestion.index() }} of {{ normalQuestionsAmmount }})
       </div>
       <a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a>
-
-      <button class="progress__btn progress__btn--prev" data-ng-show="hasPrev()" data-ng-click="prev()">
-        <span><i class="fa fa-chevron-left"></i></span>
-      </button>
-
-      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext() && currentQuestion.index() < normalQuestionsAmmount" data-ng-click="next($event)">
-        <span>NEXT <i class="fa fa-chevron-right"></i></span>
-      </button>
-
-      <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="currentQuestion.index() === normalQuestionsAmmount" data-ng-click="submitQuiz()">
-        <span>SUBMIT</span>
-      </button>
-    </div>
   </div>
+
+  <div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== 'startPage' && questions[currentQuestion.index()].type !== 'endPage'">
+    <div class="progress" data-ng-if="currentQuestion.index() > -1">
+      <span class="progress__bar">
+        <span class="progress__bar--line theme-button-color" data-ng-class="{'progress__bar--full-size': ((currentQuestion.index() / normalQuestionsAmmount )*100) == 100 }" style="width: {{( currentQuestion.index() / normalQuestionsAmmount )*100 | number:0 }}%">
+      </span>
+    </div>
+    <div class="progress__numbering" >
+      ({{ currentQuestion.index() }} of {{ normalQuestionsAmmount }})
+    </div>
+    <a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a>
+
+    <button class="progress__btn progress__btn--prev" data-ng-show="hasPrev()" data-ng-click="prev()">
+      <span><i class="fa fa-chevron-left"></i></span>
+    </button>
+
+    <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext() && currentQuestion.index() < normalQuestionsAmmount" data-ng-click="next($event)">
+      <span>NEXT <i class="fa fa-chevron-right"></i></span>
+    </button>
+
+    <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="currentQuestion.index() === normalQuestionsAmmount" data-ng-click="submitQuiz()">
+      <span>SUBMIT</span>
+    </button>
+  </div>
+  
 </div>
