@@ -59,7 +59,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window ) {
+  ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", "previewMode", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode ) {
     var nextQuestionTimeout
       , quizId = $routeParams.engageFormId;
 
@@ -98,7 +98,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     function scaleEmbed ( cfg, ww, wh ) {
       var fzw = Math.min( ww / cfg.maxWidth, 1 )
-        , fzh = Math.min( wh / cfg.maxHeight, 1 ) 
+        , fzh = Math.min( wh / cfg.maxHeight, 1 )
         , fz = Math.max( cfg.minFontSize, Math.min( fzw, fzh ) );
       angular.element($window.document.querySelector('html')).css( 'font-size', Math.floor( fz * 1000 ) / 10 + '%' );
     }
@@ -137,7 +137,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       var _imageData = $scope.questions[$scope.currentQuestion.index()].imageData
         , _width
         , baseWidth = parseInt( CONFIG.backend.mainImageContainerBaseWidth, 10 ) || 540;
-        
+
       if ( !$scope.questions[$scope.currentQuestion.index()].imageData ) {
         return null;
       }
@@ -218,13 +218,13 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return EngageformBackendService.navigation.hasPrev();
     };
     $scope.next = function( $event ) {
-      if( !!$scope.currentQuestion.requiredAnswer() ) {
+      if( $scope.currentQuestion.requiredAnswer() && !previewMode ) {
         if( $scope.questionAnswer.selected ) {
           EngageformBackendService.navigation.next();
           $scope.sentAnswer();
           $scope.wayAnimateClass = 'way-animation__next';
           $scope.requiredMessage = '';
-        } else if( !!$scope.questionAnswer && !!$scope.questionAnswer.form && !!$scope.questionAnswer.form.$valid ) {
+        } else if( $scope.questionAnswer && $scope.questionAnswer.form && $scope.questionAnswer.form.$valid ) {
           $scope.questionAnswer.selected = true;
           sendDataForm( $scope.questionAnswer.status, $event );
         } else {
@@ -254,19 +254,19 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     function sendDataForm( data, $event ) {
       var inputs = [];
-      
+
       for( var property in data ) {
         if( data.hasOwnProperty( property ) ) {
           inputs.push( { _id: property, value: data[property] });
         }
       }
-      
+
       if(!!inputs.length) {
         $scope.sendAnswer( inputs, $event );
       }
     }
   }]
-); 
+);
 
 'use strict';
 
