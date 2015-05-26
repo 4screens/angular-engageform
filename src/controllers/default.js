@@ -9,6 +9,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       $scope.quiz = quiz;
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
+        $scope.wayAnimateClass = 'way-animation__next';
         $scope.questions = _.sortBy( questions, 'position' );
         $scope.sentAnswer();
 
