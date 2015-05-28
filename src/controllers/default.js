@@ -134,7 +134,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           nextQuestionTimeout = $timeout( function () {
             $scope.next();
             nextQuestionTimeout = null;
-          }, 800 );
+          }, 200 );
         }
 
       });
