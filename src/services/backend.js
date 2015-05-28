@@ -8,10 +8,12 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       , _questionIndex = 0
       , _cache = {}
       , USER_IDENTIFIER = 'ui'
+      , USER_IDENTIFIER_GLOBAL = 'uig'
       , QUESTION_SENT_ANSWER = 'qsa_'
       , hashTime = new Date().getTime();
 
     _cache[ USER_IDENTIFIER ] = CommonLocalStorageService.get( USER_IDENTIFIER );
+    _cache[ USER_IDENTIFIER_GLOBAL ] = CommonLocalStorageService.get( USER_IDENTIFIER_GLOBAL );
 
     function getMainMediaFromCurrentQuestion() {
       // cache
@@ -57,7 +59,15 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           return null;
         },
         submit: function( engageFormId ) {
-          return SettingsEngageformService.submitQuiz( engageFormId, _cache[ USER_IDENTIFIER ] );
+          return SettingsEngageformService.submitQuiz( engageFormId, _cache[ USER_IDENTIFIER ], _cache[ USER_IDENTIFIER_GLOBAL ] ).then(function() {
+
+            // Clear LS and _cache
+            CommonLocalStorageService.clearAll();
+            CommonLocalStorageService.set( USER_IDENTIFIER_GLOBAL, _cache[ USER_IDENTIFIER_GLOBAL ] );
+
+            _cache = {};
+            _cache[ USER_IDENTIFIER_GLOBAL ] = CommonLocalStorageService.get( USER_IDENTIFIER_GLOBAL );
+          });
         }
       },
       question: {
@@ -178,6 +188,18 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           // data-ng-show="currentQuestion.type === 'infoPage' || (currentQuestion.answered && (currentQuestion.settings.showAnswers || currentQuestion.settings.showCorrectAnswer))" ng-if="!!getNextQuestionIndex()"
           // return _questionIndex < _questions.length - 1;
           return _questionIndex < _normalQuestionsAmmount;
+        }
+      },
+      user: {
+        check: function() {
+          if ( !_cache[ USER_IDENTIFIER_GLOBAL ]) {
+            SettingsEngageformService.getGlobalUserIndent().then(function( res ) {
+              _cache[ USER_IDENTIFIER_GLOBAL ] = res;
+              CommonLocalStorageService.set( USER_IDENTIFIER_GLOBAL, _cache[ USER_IDENTIFIER_GLOBAL ] );
+
+              return _cache[ USER_IDENTIFIER_GLOBAL ];
+            });
+          }
         }
       }
     };

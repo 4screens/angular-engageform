@@ -140,8 +140,17 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       });
     };
 
+    $scope.checkUser = function () {
+      return EngageformBackendService.user.check();
+    };
+    // Check if globalUserIdent exist, otherwise get one
+    $scope.checkUser();
+
     $scope.submitQuiz = function() {
       return EngageformBackendService.quiz.submit( quizId ).then( function () {
+      } ).then( function() {
+        // No res here
+        // Todo: show EndPage
         $scope.next();
       } ).catch( function ( res ) {
         $scope.requiredMessage = res.data.msg || 'Unexpected error';
@@ -208,5 +217,6 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.sendAnswer( inputs, $event );
       }
     }
+
   }
 );
