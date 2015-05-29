@@ -30,6 +30,12 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       EngageformBackendService.setUserResults(results);
     }
 
+    var a = {
+      data: '"{"account":"5446210ac07487952e8bf773","finished":true,"globalUserIdent":"62473bc9-b060-453d-8ef4-8782fd2cdbc4","id":"5552139df9dfb10100116269-85c5af94-ee6c-424e-bbd0-cdab0b66819b","lastUpdated":"2015-05-29T10:29:12.151Z","questions":{"5554b51dbdf9420100873ee9":{"account":"5446210ac07487952e8bf773","inputs":[],"points":1,"quizId":"5552139df9dfb10100116269","quizQuestionId":"5554b51dbdf9420100873ee9","selectedAnswerId":"55645b0d2ad8d20100d78374","time":"2015-05-29T10:29:09.167Z","userIdent":"85c5af94-ee6c-424e-bbd0-cdab0b66819b"},"55645b142ad8d20100d78376":{"account":"5446210ac07487952e8bf773","inputs":[],"points":0,"quizId":"5552139df9dfb10100116269","quizQuestionId":"55645b142ad8d20100d78376","rateItValue":5,"time":"2015-05-29T10:29:10.760Z","userIdent":"85c5af94-ee6c-424e-bbd0-cdab0b66819b"},"55648a8490310d0100ab5bb6":{"account":"5446210ac07487952e8bf773","inputs":[],"points":0,"quizId":"5552139df9dfb10100116269","quizQuestionId":"55648a8490310d0100ab5bb6","selectedAnswerId":"55648a9290310d0100ab5bbb","time":"2015-05-29T10:29:12.148Z","userIdent":"85c5af94-ee6c-424e-bbd0-cdab0b66819b"}},"quizId":"5552139df9dfb10100116269","userIdent":"85c5af94-ee6c-424e-bbd0-cdab0b66819b","$$hashKey":"object:135"}"'
+    };
+
+    receiveMessage(a);
+
     $window.addEventListener('message', receiveMessage, false);
 
     $scope.makeTimes = function ( s ) {
