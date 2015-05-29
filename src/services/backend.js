@@ -46,8 +46,50 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
     function _formUserResult(id) {
       var answer = _userResults.questions && _userResults.questions[id] ? _userResults.questions[id] : _userResults[id];
       var question = _questions[ _questionIndex ];
+      var result = null;
 
-      console.log(question, answer);
+      if (typeof answer === 'undefined') {
+        return result;
+      }
+
+      switch(question.type) {
+        case 'multiChoice':
+          if (!!answer.selectedAnswerId) {
+            result = {
+              selected: answer.selectedAnswerId
+            };
+          }
+          break;
+        case 'pictureChoice':
+          if (!!answer.selectedAnswerId) {
+            result = {
+              selected: answer.selectedAnswerId
+            };
+          }
+          break;
+        case 'rateIt':
+          if (!!answer.rateItValue) {
+            result = {
+              selected: answer.rateItValue
+            };
+          }
+          break;
+        case 'forms':
+          if (!!answer.inputs.length) {
+            result = {
+              status: {}
+            };
+
+            for (var input in answer.inputs) {
+              result.status[answer.inputs[input]._id] = answer.inputs[input].value;
+            }
+          }
+          break;
+        default:
+          break;
+      }
+
+      return result;
     }
 
     return {
