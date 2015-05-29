@@ -7,6 +7,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       , _normalQuestionsAmmount
       , _questionIndex = 0
       , _cache = {}
+      , _userResults = null
       , USER_IDENTIFIER = 'ui'
       , USER_IDENTIFIER_GLOBAL = 'uig'
       , QUESTION_SENT_ANSWER = 'qsa_'
@@ -28,7 +29,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         _cache.mainMedia[ _questions[_questionIndex]._id ] = null;
         return _cache.mainMedia[ _questions[_questionIndex]._id ];
       }
-      
+
       // contains main media?
       if( !_questions[_questionIndex].imageFile ) {
         _cache.mainMedia[ _questions[_questionIndex]._id ] = null;
@@ -42,7 +43,18 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       return _cache.mainMedia[ _questions[_questionIndex]._id ];
     }
 
+    function _formUserResult(id) {
+      var answer = _userResults.questions && _userResults.questions[id] ? _userResults.questions[id] : _userResults[id];
+      var question = _questions[ _questionIndex ];
+
+      console.log(question, answer);
+    }
+
     return {
+      setUserResults: function(results){
+        _userResults = results ? results : null;
+        return;
+      },
       quiz: {
         get: function( engageFormId ) {
           return SettingsEngageformService.get( engageFormId ).then(function( quiz ) {
@@ -95,10 +107,17 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           return CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + filename;
         },
         sentAnswer: function() {
-          var key = QUESTION_SENT_ANSWER + _questions[ _questionIndex ]._id
-            , value;
+          var value,
+              id = _questions[ _questionIndex ]._id;
 
-          value = CommonLocalStorageService.get( key );
+          if (!!_userResults) {
+            value = _formUserResult(id);
+          } else {
+            var key = QUESTION_SENT_ANSWER + id;
+
+            value = CommonLocalStorageService.get( key );
+          }
+
           if( !!value ) {
             return value;
           }
