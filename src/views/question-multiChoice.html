@@ -16,21 +16,28 @@
     >
   </picture>
 </div>
-
-<div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer" data-ng-class="{
-  'theme-button-color questionnaire__answer--selected': questionAnswer.selected === answer._id,
-  'theme-answer-background-color theme-answer-border-color': questionAnswer.selected !== answer._id,
-  'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id
+<div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer" 
+  data-ng-class="{'theme-button-color questionnaire__answer--selected': questionAnswer.selected === answer._id,
+                  'theme-answer-background-color theme-answer-border-color': questionAnswer.selected !== answer._id,
+                  'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id
 }">
-  <div class="answer__bar" style="width:{{ !!questionAnswer.stats[answer._id] ? (100 *   questionAnswer.stats[answer._id]) : 0 | number:1 }}%" data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id, 'theme-answer-background-result-color': questionAnswer.selected !== answer._id }"></div>
+  <div class="answer__bar" 
+       style="width:{{ !!questionAnswer.stats[answer._id] ? (100 *   questionAnswer.stats[answer._id]) : 0 | number:1 }}%" 
+       data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id, 'theme-answer-background-result-color': questionAnswer.selected !== answer._id }"
+       data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false && !!questionAnswer.stats" 
+       >
+  </div>
   <label data-ng-class="{
     'theme-question-color': questionAnswer.selected === answer._id,
     'theme-answer-color': questionAnswer.selected !== answer._id
   }">
     {{answer.text}}
     <span data-ng-if="!!questionAnswer.stats" class="theme-question-result-color-text ng-animate">
-      {{ formatAnswers(questionAnswer.stats[answer._id]) | number:1 }} %
-      <i class="fa" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer != false" data-ng-class="{'fa-check': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, 'fa-times': !questionAnswer.status[ answer._id ].correct }"></i>
+      <span data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false "> 
+        {{ formatAnswers(questionAnswer.stats[answer._id]) | number:1 }} %
+      </span>
+      <i class="fa" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer !== false" 
+         data-ng-class="{'fa-check': questionAnswer.correct === answer._id, 'fa-times': questionAnswer.correct !== answer._id }"></i>
     <span>
   </label>
 </div>
