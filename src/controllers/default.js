@@ -26,7 +26,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     }
 
     function receiveMessage(event){
-      EngageformBackendService.setUserResults(event.data);
+      var results = JSON.parse(event.data);
+      EngageformBackendService.setUserResults(results);
     }
 
     $window.addEventListener('message', receiveMessage, false);
