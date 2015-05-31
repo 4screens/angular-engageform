@@ -25,6 +25,13 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
     }
 
+    function receiveMessage(event){
+      var results = JSON.parse(event.data);
+      EngageformBackendService.setUserResults(results);
+    }
+
+    $window.addEventListener('message', receiveMessage, false);
+
     $scope.makeTimes = function ( s ) {
       var a = [];
       for ( var i = 0; i < s; i++ ) {
