@@ -43,10 +43,10 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       return _cache.mainMedia[ _questions[_questionIndex]._id ];
     }
 
-    function _formUserResult(id) {
-      var answer = _userResults.questions && _userResults.questions[id] ? _userResults.questions[id] : _userResults[id];
-      var question = _questions[ _questionIndex ];
-      var result = null;
+    function _formUserResult( id ) {
+      var answer = _userResults.questions && _userResults.questions[id] ? _userResults.questions[id] : _userResults[id],
+          question = _questions[ _questionIndex ],
+          result = null;
 
       if (typeof answer === 'undefined') {
         return result;
@@ -93,7 +93,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
     }
 
     return {
-      setUserResults: function(results){
+      setUserResults: function( results ){
         _userResults = results ? results : null;
         return;
       },
@@ -153,7 +153,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
               id = _questions[ _questionIndex ]._id;
 
           if (!!_userResults) {
-            value = _formUserResult(id);
+            value = _formUserResult( id );
           } else {
             var key = QUESTION_SENT_ANSWER + id;
 
