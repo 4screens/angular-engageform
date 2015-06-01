@@ -236,6 +236,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       requiredAnswer: EngageformBackendService.question.requiredAnswer
     };
 
+    $scope.progressBarWidth = function() {
+      return ( ( $scope.currentQuestion.index() / $scope.normalQuestionsAmmount ) * 100 );
+    };
+
     function sendDataForm( data, $event ) {
       var inputs = [];
 
