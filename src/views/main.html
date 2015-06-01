@@ -54,6 +54,7 @@
       </div>
     </div>
   </div>
+  <div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{'is-active': !!requiredMessage }" >{{requiredMessage}}</div>
   <div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== 'startPage' && questions[currentQuestion.index()].type !== 'endPage'">
     <div class="progress" data-ng-if="currentQuestion.index() > -1">
       <span class="progress__bar">

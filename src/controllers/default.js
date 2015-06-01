@@ -201,7 +201,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       } else if( !previewMode ) {
         // if( $scope.currentQuestion.requiredAnswer() && !previewMode ) {
 
-        if( $scope.questionAnswer.selected ) {
+        // Is required and selected or is not required
+        if( ($scope.currentQuestion.requiredAnswer() && $scope.questionAnswer.selected) || (!$scope.currentQuestion.requiredAnswer()) ) {
           EngageformBackendService.navigation.next();
           $scope.sentAnswer();
           $scope.wayAnimateClass = 'way-animation__next';
@@ -209,17 +210,17 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         } else if( $scope.questionAnswer && $scope.questionAnswer.form && $scope.questionAnswer.form.$valid ) {
           $scope.questionAnswer.selected = true;
           sendDataForm( $scope.questionAnswer.status, $event );
-        } else if($scope.currentQuestion.requiredAnswer()){
+        } else {
           $scope.requiredMessage = 'Answer is required to proceed to next question';
         }
 
       } else {
+        // Preview mode
         EngageformBackendService.navigation.next();
         $scope.sentAnswer();
 
         $scope.wayAnimateClass = 'way-animation__next';
       }
-
     };
 
     $scope.hasNext = function() {
