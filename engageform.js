@@ -99,8 +99,22 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     }
 
     function receiveMessage( event ){
-      var results = JSON.parse( event.data );
-      EngageformBackendService.setUserResults( results );
+      var results;
+
+      if ( !event.data.length ) {
+        return;
+      }
+
+      results = JSON.parse( event.data );
+      if ( previewMode ) {
+        $scope.$apply(function() {
+          EngageformBackendService.setUserResults( results );
+        });
+      } else if ( summaryMode ) {
+        $scope.$apply(function() {
+          EngageformBackendService.setAnswersResults( results );
+        });
+      }
     }
 
     $window.addEventListener( 'message', receiveMessage, false );
@@ -231,6 +245,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.checkUser();
 
     $scope.submitQuiz = function() {
+      if (summaryMode) {
+        return false;
+      }
       return EngageformBackendService.quiz.submit( quizId ).then( function () {
       } ).then( function() {
         // No res here
@@ -374,6 +391,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       , _questionIndex = 0
       , _cache = {}
       , _userResults = null
+      , _answerResults = null
       , USER_IDENTIFIER = 'ui'
       , USER_IDENTIFIER_GLOBAL = 'uig'
       , QUESTION_SENT_ANSWER = 'qsa_'
@@ -407,6 +425,19 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         src: _questions[_questionIndex].imageFile.slice( 0, 4 ) !== 'http' ? CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + _questions[_questionIndex].imageFile : _questions[_questionIndex].imageFile
       };
       return _cache.mainMedia[ _questions[_questionIndex]._id ];
+    }
+
+    function _formAnswerResult( id ) {
+      var index;
+
+      index = _.findIndex( _answerResults, function( answer ) {
+        return answer.stats.questionId === id;
+      } );
+      if (index < 0) {
+        return;
+      }
+
+      return _answerResults[index];
     }
 
     function _formUserResult( id ) {
@@ -461,6 +492,10 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
     return {
       setUserResults: function( results ){
         _userResults = results ? results : null;
+        return;
+      },
+      setAnswersResults: function( results ){
+        _answerResults = results ? results : null;
         return;
       },
       quiz: {
@@ -520,7 +555,11 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
 
           if (!!_userResults) {
             value = _formUserResult( id );
-          } else {
+          }
+          else if (!!_answerResults) {
+            value = _formAnswerResult( id );
+          }
+          else {
             var key = QUESTION_SENT_ANSWER + id;
 
             value = CommonLocalStorageService.get( key );

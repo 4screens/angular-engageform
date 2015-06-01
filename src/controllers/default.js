@@ -41,8 +41,22 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     }
 
     function receiveMessage( event ){
-      var results = JSON.parse( event.data );
-      EngageformBackendService.setUserResults( results );
+      var results;
+
+      if ( !event.data.length ) {
+        return;
+      }
+
+      results = JSON.parse( event.data );
+      if ( previewMode ) {
+        $scope.$apply(function() {
+          EngageformBackendService.setUserResults( results );
+        });
+      } else if ( summaryMode ) {
+        $scope.$apply(function() {
+          EngageformBackendService.setAnswersResults( results );
+        });
+      }
     }
 
     $window.addEventListener( 'message', receiveMessage, false );
@@ -173,6 +187,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.checkUser();
 
     $scope.submitQuiz = function() {
+      if (summaryMode) {
+        return false;
+      }
       return EngageformBackendService.quiz.submit( quizId ).then( function () {
       } ).then( function() {
         // No res here
