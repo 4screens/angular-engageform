@@ -59,7 +59,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", "previewMode", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode ) {
+  ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", "previewMode", "summaryMode", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode, summaryMode ) {
     var nextQuestionTimeout
       , quizId = $routeParams.engageFormId;
 
@@ -69,6 +69,21 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.wayAnimateClass = 'way-animation__next';
         $scope.questions = _.sortBy( questions, 'position' );
+
+        if ( summaryMode ) {
+          _.map($scope.questions, function( question ) {
+            if ( !!question.settings && typeof question.settings.showAnswers !== 'undefined') {
+              question.settings.showAnswers = true;
+            }
+
+            if ( typeof question.requiredAnswer !== 'undefined' ) {
+              question.requiredAnswer = false;
+            }
+
+            return question;
+          });
+        }
+
         $scope.sentAnswer();
 
         $scope.normalQuestionsAmmount = $scope.questions.length - (_.where( $scope.questions, { type: 'startPage' } ).length || 0) - (_.where( $scope.questions, { type: 'endPage' } ).length || 0);
@@ -188,6 +203,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if( $event ) {
         $event.stopPropagation();
         $event.preventDefault();
+      }
+
+      if ( summaryMode ) {
+        return false;
       }
 
       EngageformBackendService.question.sendAnswer( value ).then( function() {
