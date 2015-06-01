@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode ) {
+  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode, summaryMode ) {
     var nextQuestionTimeout
       , quizId = $routeParams.engageFormId
       , endPage;
@@ -12,6 +12,21 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.wayAnimateClass = 'way-animation__next';
         $scope.questions = _.sortBy( questions, 'position' );
+
+        if ( summaryMode ) {
+          _.map($scope.questions, function( question ) {
+            if ( !!question.settings && typeof question.settings.showAnswers !== 'undefined') {
+              question.settings.showAnswers = true;
+            }
+
+            if ( typeof question.requiredAnswer !== 'undefined' ) {
+              question.requiredAnswer = false;
+            }
+
+            return question;
+          });
+        }
+
         endPage = _.find( $scope.questions, { type: 'endPage' } );
         $scope.sentAnswer();
 
@@ -28,8 +43,22 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     }
 
     function receiveMessage( event ){
-      var results = JSON.parse( event.data );
-      EngageformBackendService.setUserResults( results );
+      var results;
+
+      if ( !event.data.length ) {
+        return;
+      }
+
+      results = JSON.parse( event.data );
+      if ( previewMode ) {
+        $scope.$apply(function() {
+          EngageformBackendService.setUserResults( results );
+        });
+      } else if ( summaryMode ) {
+        $scope.$apply(function() {
+          EngageformBackendService.setAnswersResults( results );
+        });
+      }
     }
 
     $window.addEventListener( 'message', receiveMessage, false );
@@ -134,6 +163,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $event.preventDefault();
       }
 
+      if ( summaryMode ) {
+        return false;
+      }
+
       EngageformBackendService.question.sendAnswer( value ).then( function() {
         if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
           $scope.sentAnswer();
@@ -167,6 +200,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.checkUser();
 
     $scope.submitQuiz = function( $event ) {
+      if (summaryMode) {
+        return false;
+      }
       if( !$scope.requiredMessage || ($scope.requiredMessage && $scope.requiredMessage.length < 1) ) {
         $scope.next( $event );
 
@@ -197,8 +233,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if($scope.questions[$scope.currentQuestion.index()].type === 'startPage') {
         EngageformBackendService.navigation.next();
         $scope.wayAnimateClass = 'way-animation__next';
+        $scope.sentAnswer();
 
-      } else if( !previewMode ) {
+      } else if( !previewMode && !summaryMode ) {
         // if( $scope.currentQuestion.requiredAnswer() && !previewMode ) {
 
         // Is required and selected or is not required
