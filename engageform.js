@@ -291,8 +291,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if($scope.questions[$scope.currentQuestion.index()].type === 'startPage') {
         EngageformBackendService.navigation.next();
         $scope.wayAnimateClass = 'way-animation__next';
+        $scope.sentAnswer();
 
-      } else if( !previewMode ) {
+      } else if( !previewMode && !summaryMode ) {
         // if( $scope.currentQuestion.requiredAnswer() && !previewMode ) {
 
         // Is required and selected or is not required
