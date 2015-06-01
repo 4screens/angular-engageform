@@ -3,7 +3,8 @@
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode ) {
     var nextQuestionTimeout
-      , quizId = $routeParams.engageFormId;
+      , quizId = $routeParams.engageFormId
+      , endPage;
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
@@ -11,6 +12,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.wayAnimateClass = 'way-animation__next';
         $scope.questions = _.sortBy( questions, 'position' );
+        endPage = _.find( $scope.questions, { type: 'endPage' } );
         $scope.sentAnswer();
 
         $scope.normalQuestionsAmmount = $scope.questions.length - (_.where( $scope.questions, { type: 'startPage' } ).length || 0) - (_.where( $scope.questions, { type: 'endPage' } ).length || 0);
@@ -150,18 +152,31 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.checkUser = function () {
       return EngageformBackendService.user.check();
     };
+
+    $scope.goToEndPage = function() {
+      if (endPage) {
+        EngageformBackendService.navigation.next();
+        $scope.wayAnimateClass = 'way-animation__next';
+      } else {
+        // ToDo: auto create end page if there is none (implement in console or suros ?)
+        console.log('There is no End Page.');
+      }
+    };
+
     // Check if globalUserIdent exist, otherwise get one
     $scope.checkUser();
 
-    $scope.submitQuiz = function() {
-      return EngageformBackendService.quiz.submit( quizId ).then( function () {
-      } ).then( function() {
-        // No res here
-        // Todo: show EndPage
-        $scope.next();
-      } ).catch( function ( res ) {
-        $scope.requiredMessage = res.data.msg || 'Unexpected error';
-      } );
+    $scope.submitQuiz = function( $event ) {
+      if( !$scope.requiredMessage || ($scope.requiredMessage && $scope.requiredMessage.length < 1) ) {
+        $scope.next( $event );
+
+        return EngageformBackendService.quiz.submit( quizId ).then( function () {
+        } ).then( function() {
+          $scope.goToEndPage();
+        } ).catch( function ( res ) {
+          $scope.requiredMessage = res.data.msg || 'Unexpected error';
+        } );
+      }
     };
 
     $scope.formatAnswers = function ( val ) {
@@ -177,7 +192,15 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return EngageformBackendService.navigation.hasPrev();
     };
     $scope.next = function( $event ) {
-      if( $scope.currentQuestion.requiredAnswer() && !previewMode ) {
+
+      // Do not valid anything it's a startPage
+      if($scope.questions[$scope.currentQuestion.index()].type === 'startPage') {
+        EngageformBackendService.navigation.next();
+        $scope.wayAnimateClass = 'way-animation__next';
+
+      } else if( !previewMode ) {
+        // if( $scope.currentQuestion.requiredAnswer() && !previewMode ) {
+
         if( $scope.questionAnswer.selected ) {
           EngageformBackendService.navigation.next();
           $scope.sentAnswer();
@@ -186,15 +209,17 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         } else if( $scope.questionAnswer && $scope.questionAnswer.form && $scope.questionAnswer.form.$valid ) {
           $scope.questionAnswer.selected = true;
           sendDataForm( $scope.questionAnswer.status, $event );
-        } else {
+        } else if($scope.currentQuestion.requiredAnswer()){
           $scope.requiredMessage = 'Answer is required to proceed to next question';
         }
+
       } else {
         EngageformBackendService.navigation.next();
         $scope.sentAnswer();
 
         $scope.wayAnimateClass = 'way-animation__next';
       }
+
     };
 
     $scope.hasNext = function() {

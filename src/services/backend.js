@@ -248,7 +248,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         hasNext: function() {
           // data-ng-show="currentQuestion.type === 'infoPage' || (currentQuestion.answered && (currentQuestion.settings.showAnswers || currentQuestion.settings.showCorrectAnswer))" ng-if="!!getNextQuestionIndex()"
           // return _questionIndex < _questions.length - 1;
-          return _questionIndex < _normalQuestionsAmmount;
+          return _questionIndex < _normalQuestionsAmmount + 1; //couse of 1endPage
         }
       },
       user: {
