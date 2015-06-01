@@ -53,25 +53,15 @@
         </div>
       </div>
     </div>
-    <div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{'is-active': !!requiredMessage }" >
-      {{requiredMessage}}
-    </div>
-    <div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== 'startPage' && questions[currentQuestion.index()].type !== 'endPage'">
-      <div class="progress" data-ng-if="currentQuestion.index() > -1">
-        <span class="progress__bar">
-          <span class="progress__bar--line theme-button-color" data-ng-class="{'progress__bar--full-size': ((currentQuestion.index() / normalQuestionsAmmount )*100) == 100 }" style="width: {{( currentQuestion.index() / normalQuestionsAmmount )*100 | number:0 }}%">
-        </span>
-      </div>
-      <div class="progress__numbering" >
-        ({{ currentQuestion.index() }} of {{ normalQuestionsAmmount }})
-      </div>
-      <a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a>
   </div>
-
+  <div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{'is-active': !!requiredMessage }" >{{requiredMessage}}</div>
   <div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== 'startPage' && questions[currentQuestion.index()].type !== 'endPage'">
     <div class="progress" data-ng-if="currentQuestion.index() > -1">
       <span class="progress__bar">
-        <span class="progress__bar--line theme-button-color" data-ng-class="{'progress__bar--full-size': ((currentQuestion.index() / normalQuestionsAmmount )*100) == 100 }" style="width: {{( currentQuestion.index() / normalQuestionsAmmount )*100 | number:0 }}%">
+        <span class="progress__bar--line theme-button-color" 
+              data-ng-class="{'progress__bar--full-size': progressBarWidth() === 100 }" 
+              ng-style="{'width': progressBarWidth()+'%'}">
+        </span>
       </span>
     </div>
     <div class="progress__numbering" >
@@ -87,9 +77,8 @@
       <span>NEXT <i class="fa fa-chevron-right"></i></span>
     </button>
 
-    <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="currentQuestion.index() === normalQuestionsAmmount" data-ng-click="submitQuiz()">
+    <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="currentQuestion.index() === normalQuestionsAmmount" data-ng-click="submitQuiz($event)">
       <span>SUBMIT</span>
     </button>
   </div>
-  
 </div>
