@@ -219,6 +219,11 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return !!val ? (100 * val) : 0;
     };
 
+    $scope.formatAnswersTransform = function ( val ) {
+      var valueTransform = !!val ? ( val * 100 ) : 0;
+      return 'translate(-50%,' + (100 - valueTransform) + '%)';
+    };
+
     $scope.prev = function() {
       EngageformBackendService.navigation.prev();
       $scope.sentAnswer();
