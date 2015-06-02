@@ -9,7 +9,7 @@
       'left' : (question.imageData.left > 0 ? question.imageData.left : 0) + '%',
       'top'  : (question.imageData.top  > 0 ? question.imageData.top  : 0) + '%'
     }"
-    data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
+    data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}"
     data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
                     {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
                     {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
@@ -19,17 +19,20 @@
   <fieldset>
     <div class="form__field" data-ng-repeat="input in question.forms.inputs">
       <label for="{{input._id}}" data-ng-bind="input.label"></label>
-      <input type="email" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='email'" data-ng-model="questionAnswer.status[input._id]"  formnovalidate ng-required="!!currentQuestion.requiredAnswer">
+      <input type="email" validate-full-email placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='email'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
 
       <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='text'"  data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
-      
+
       <input type="tel" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='phone'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
-      
+
       <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='url'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
-    
+
       <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer"></textarea>
-      
-      <div data-ng-messages="form[input._id].$error" data-ng-messages-multiple class="message text-right" data-ng-class="{'is-active': !!form[input._id].$error.email || !!form[input._id].$error.url}">
+
+      <div data-ng-messages="form[input._id].$error" class="message text-right" data-ng-class="{'is-active': !!form[input._id].$error.fullEmail || !!form[input._id].$error.url}">
+        <div data-ng-message="fullEmail" >
+          Your field has an invalid email address
+        </div>
         <div data-ng-message="email" >
           Your field has an invalid email address
         </div>
@@ -41,7 +44,7 @@
         </div>
       </div>
     </div>
-    <input type="text" class="hidden" name="form" data-ng-model="questionAnswer.form" data-ng-init="questionAnswer.form=form" /> 
+    <input type="text" class="hidden" name="form" data-ng-model="questionAnswer.form" data-ng-init="questionAnswer.form=form" />
   </fieldset>
   <div class="hint">
     <i class="fa fa-info-circle"></i>&nbsp;<span>Type your answer above. Press next to continue.</span>
