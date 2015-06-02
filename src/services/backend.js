@@ -131,7 +131,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           return null;
         },
         submit: function( engageFormId ) {
-          return SettingsEngageformService.submitQuiz( engageFormId, _cache[ USER_IDENTIFIER ], _cache[ USER_IDENTIFIER_GLOBAL ] ).then(function() {
+          return SettingsEngageformService.submitQuiz( engageFormId, _cache[ USER_IDENTIFIER ], _cache[ USER_IDENTIFIER_GLOBAL ] ).then(function( res ) {
 
             // Clear LS and _cache
             CommonLocalStorageService.clearAll();
@@ -139,6 +139,8 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
 
             _cache = {};
             _cache[ USER_IDENTIFIER_GLOBAL ] = CommonLocalStorageService.get( USER_IDENTIFIER_GLOBAL );
+
+            return res;
           });
         }
       },

@@ -2,15 +2,15 @@
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode, summaryMode ) {
-    var nextQuestionTimeout
-      , quizId = $routeParams.engageFormId
-      , endPage;
+    var nextQuestionTimeout, quizId = $routeParams.engageFormId;
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.wayAnimateClass = 'way-animation__next';
+
+        // Get questions
         $scope.questions = _.sortBy( questions, 'position' );
 
         if ( summaryMode ) {
@@ -27,10 +27,22 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           });
         }
 
-        endPage = _.find( $scope.questions, { type: 'endPage' } );
-        $scope.sentAnswer();
+        // Group questions
+        $scope.endPages = _.groupBy( $scope.questions, { type: 'endPage' } ).true;
+        $scope.startPages = _.groupBy( $scope.questions, { type: 'startPage' } ).true;
+        $scope.normalQuestions = _.groupBy( $scope.questions, function( e ) { return e.type !== 'endPage' && e.type !== 'startPage'; } ).true;
 
-        $scope.normalQuestionsAmmount = $scope.questions.length - (_.where( $scope.questions, { type: 'startPage' } ).length || 0) - (_.where( $scope.questions, { type: 'endPage' } ).length || 0);
+        // Restack question
+        $scope.questions = $scope.startPages.length ? new Array($scope.startPages[0]) : [];
+        $scope.questions = $scope.questions.concat( $scope.normalQuestions );
+        if($scope.endPages.length) {
+          $scope.questions.push($scope.endPages[0]);
+        }
+
+        // Just temporary
+        $scope.normalQuestionsAmmount = $scope.normalQuestions.length;
+
+        $scope.sentAnswer();
       });
     });
 
@@ -172,7 +184,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           $scope.sentAnswer();
         }
 
-        if ($scope.hasNext() && !nextQuestionTimeout) {
+        // console.log( $scope.currentQuestion.index(), $scope.normalQuestionsAmmount );
+        if ($scope.hasNext() && !nextQuestionTimeout && $scope.currentQuestion.index() < $scope.normalQuestionsAmmount) {
           nextQuestionTimeout = $timeout( function () {
             $scope.next();
             nextQuestionTimeout = null;
@@ -186,13 +199,53 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return EngageformBackendService.user.check();
     };
 
-    $scope.goToEndPage = function() {
-      if (endPage) {
+    $scope.pickCorrectEndPage = function( val ) {
+      console.log( val );
+      console.log('picking correct end page');
+      if(typeof val === 'number') {
+        // Type score
+        console.log('SCORE');
+        _.some( $scope.endPages, function( e ) {
+          if( e.coverPage.scoreRange.min <= val && e.coverPage.scoreRange.max >= val ) {
+            console.log('good end Page');
+            console.log( e );
+            $scope.questions.splice( -1, 1, e );
+            return true;
+          }
+        } );
+      } else {
+        // Type outcome
+        console.log('OUTCOME');
+      }
+    };
+
+    $scope.goToEndPage = function( data ) {
+      var scored;
+      console.log( data );
+
+      if ($scope.endPages && $scope.endPages.length > 1) {
+        // Pick best endPage, just place it in endPages Array as first ele
+        switch($scope.quiz.type) {
+        case 'score':
+          scored = 0;
+          if(_.size( data.questions ) > 0) {
+            for(var q in data.questions) {
+              scored += data.questions[q].points;
+            }
+          }
+          console.log( scored );
+          $scope.pickCorrectEndPage(Number( scored ));
+          break;
+        case 'outcome':
+          //$scope.pickCorrectEndPage(String(data.));
+          break;
+        }
+
         EngageformBackendService.navigation.next();
         $scope.wayAnimateClass = 'way-animation__next';
       } else {
-        // ToDo: auto create end page if there is none (implement in console or suros ?)
-        console.log('There is no End Page.');
+        $scope.requiredMessage = 'Thank you!';
+        $scope.submitQuiz();
       }
     };
 
@@ -206,12 +259,13 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if( !$scope.requiredMessage || ($scope.requiredMessage && $scope.requiredMessage.length < 1) ) {
         $scope.next( $event );
 
-        return EngageformBackendService.quiz.submit( quizId ).then( function () {
-        } ).then( function() {
-          $scope.goToEndPage();
-        } ).catch( function ( res ) {
-          $scope.requiredMessage = res.data.msg || 'Unexpected error';
-        } );
+        return EngageformBackendService.quiz.submit( quizId )
+          .then( function( res ) {
+            $scope.goToEndPage( res );
+          } )
+          .catch( function ( res ) {
+            $scope.requiredMessage = res.data.msg || 'Unexpected error';
+          } );
       }
     };
 
