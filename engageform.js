@@ -11,14 +11,14 @@ angular.module( '4screens.engageform',[
   'LocalStorageModule',
   'youtube-embed',
   'ngMessages'
-]).config(["localStorageServiceProvider", function( localStorageServiceProvider ) {
+]).config([ 'localStorageServiceProvider', function( localStorageServiceProvider ) {
   // localStorageService
   localStorageServiceProvider.prefix = '4screens.engageform';
-}]);
+} ]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/main.html',
-    '<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile"><div id="four-screens-application" class="{{screenType}}"><div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color"><picture data-ng-if="quiz.theme.backgroundImageFile" class="position-{{quiz.theme.backgroundImagePosition}}"><source media="(min-width: 1021px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 769px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 481px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 0px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><img data-ng-src="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"></picture></div><div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass"><div data-ng-repeat="question in questions | questionsFilter" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()"><div class="question-content-wrapper question-content-wrapper--{{question.type}}"><div class="four-screens__content wrapper" data-ng-class="{ \'content__type--forms\': question.type == \'forms\', \'content__type--info-page\': question.type == \'infoPage\' , \'content__type--multi-choice\': question.type == \'multiChoice\', \'content__type--picture-choice\': question.type == \'pictureChoice\', \'content__type--rate-it\': question.type == \'rateIt\', \'content__type--start-page\': question.type == \'startPage\', \'content__type--end-page\': question.type == \'endPage\' }" data-ng-include="\'views/engageform/question-\' + question.type + \'.html\'"></div></div></div></div><div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{\'is-active\': !!requiredMessage }">{{requiredMessage}}</div><div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== \'startPage\' && questions[currentQuestion.index()].type !== \'endPage\'"><div class="progress" data-ng-if="currentQuestion.index() > -1"><span class="progress__bar"><span class="progress__bar--line theme-button-color" data-ng-class="{\'progress__bar--full-size\': progressBarWidth() === 100 }" ng-style="{\'width\': progressBarWidth()+\'%\'}"></span></span></div><div class="progress__numbering">({{ currentQuestion.index() }} of {{ normalQuestionsAmmount }})</div><a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a> <button class="progress__btn progress__btn--prev" data-ng-show="hasPrev()" data-ng-click="prev()"><span><i class="fa fa-chevron-left"></i></span></button> <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="hasNext() && currentQuestion.index() < normalQuestionsAmmount" data-ng-click="next($event)"><span>NEXT <i class="fa fa-chevron-right"></i></span></button> <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="currentQuestion.index() === normalQuestionsAmmount" data-ng-click="submitQuiz($event)"><span>SUBMIT</span></button></div></div>');
+    '<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile"><div id="four-screens-application" class="{{screenType}}"><div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color"><picture data-ng-if="quiz.theme.backgroundImageFile" class="position-{{quiz.theme.backgroundImagePosition}}"><source media="(min-width: 1021px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 769px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 481px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 0px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><img data-ng-src="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"></picture></div><div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass"><div data-ng-repeat="question in questions | questionsFilter" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()"><div class="question-content-wrapper question-content-wrapper--{{question.type}}"><div class="four-screens__content wrapper" data-ng-class="{ \'content__type--forms\': question.type == \'forms\', \'content__type--info-page\': question.type == \'infoPage\' , \'content__type--multi-choice\': question.type == \'multiChoice\', \'content__type--picture-choice\': question.type == \'pictureChoice\', \'content__type--rate-it\': question.type == \'rateIt\', \'content__type--start-page\': question.type == \'startPage\', \'content__type--end-page\': question.type == \'endPage\' }" data-ng-include="\'views/engageform/question-\' + question.type + \'.html\'"></div></div></div></div><div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{\'is-active\': !!requiredMessage }">{{requiredMessage}}</div><div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== \'startPage\' && questions[currentQuestion.index()].type !== \'endPage\'"><div class="progress"><span class="progress__bar"><span class="progress__bar--line theme-button-color" data-ng-class="{\'progress__bar--full-size\': progressBarWidth() === 100 }" ng-style="{\'width\': progressBarWidth()+\'%\'}"></span></span></div><div class="progress__numbering">({{ pagination.curr() }} of {{ pagination.last }})</div><a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a> <button class="progress__btn progress__btn--prev" data-ng-show="hasPrev()" data-ng-click="prev()"><span><i class="fa fa-chevron-left"></i></span></button> <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="pagination.curr() < pagination.last" data-ng-click="next($event)"><span>NEXT <i class="fa fa-chevron-right"></i></span></button> <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="pagination.curr() >= pagination.last" data-ng-click="submitQuiz($event)"><span>SUBMIT</span></button></div></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -60,15 +60,17 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", "previewMode", "summaryMode", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode, summaryMode ) {
-    var nextQuestionTimeout
-      , quizId = $routeParams.engageFormId
-      , endPage;
+    var nextQuestionTimeout, quizId = $routeParams.engageFormId;
+
+    $scope.pagination = { curr: 0, last: 0 };
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.wayAnimateClass = 'way-animation__next';
+
+        // Get questions
         $scope.questions = _.sortBy( questions, 'position' );
 
         if ( summaryMode ) {
@@ -85,10 +87,27 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           });
         }
 
-        endPage = _.find( $scope.questions, { type: 'endPage' } );
-        $scope.sentAnswer();
+        // Group questions
+        $scope.endPages = _.groupBy( $scope.questions, { type: 'endPage' } ).true || [];
+        $scope.startPages = _.groupBy( $scope.questions, { type: 'startPage' } ).true || [];
+        $scope.normalQuestions = _.groupBy( $scope.questions, function( e ) { return e.type !== 'endPage' && e.type !== 'startPage'; } ).true || [];
 
-        $scope.normalQuestionsAmmount = $scope.questions.length - (_.where( $scope.questions, { type: 'startPage' } ).length || 0) - (_.where( $scope.questions, { type: 'endPage' } ).length || 0);
+        // Restack question
+        $scope.questions = $scope.startPages.length ? new Array($scope.startPages[0]) : [];
+        $scope.questions = $scope.questions.concat( $scope.normalQuestions );
+
+        // Helper
+        $scope.normalQuestionsAmmount = $scope.normalQuestions.length;
+
+        // Pagination
+        $scope.pagination = {
+          curr: function () {
+            return $scope.currentQuestion.index() + ( $scope.startPages.length ? 0 : 1 );
+          },
+          last: $scope.normalQuestions.length
+        };
+
+        $scope.sentAnswer();
       });
     });
 
@@ -136,9 +155,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     function scaleEmbed ( cfg, ww, wh ) {
-      var fzw = Math.min( ww / cfg.maxWidth, 1 )
-        , fzh = Math.min( wh / cfg.maxHeight, 1 )
-        , fz = Math.max( cfg.minFontSize, Math.min( fzw, fzh ) );
+      var fzw = Math.min( ww / cfg.maxWidth, 1 ), fzh = Math.min( wh / cfg.maxHeight, 1 ), fz = Math.max( cfg.minFontSize, Math.min( fzw, fzh ) );
       angular.element($window.document.querySelector('html')).css( 'font-size', Math.floor( fz * 1000 ) / 10 + '%' );
     }
 
@@ -225,12 +242,12 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         return false;
       }
 
-      EngageformBackendService.question.sendAnswer( value ).then( function() {
+      return EngageformBackendService.question.sendAnswer( value ).then( function() {
         if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
           $scope.sentAnswer();
         }
 
-        if ($scope.hasNext() && !nextQuestionTimeout) {
+        if ($scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last) {
           nextQuestionTimeout = $timeout( function () {
             $scope.next();
             nextQuestionTimeout = null;
@@ -244,32 +261,87 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return EngageformBackendService.user.check();
     };
 
-    $scope.goToEndPage = function() {
-      if (endPage) {
-        EngageformBackendService.navigation.next();
-        $scope.wayAnimateClass = 'way-animation__next';
-      } else {
-        // ToDo: auto create end page if there is none (implement in console or suros ?)
-        console.log('There is no End Page.');
+    $scope.pickCorrectEndPage = function( res ) {
+      var correctEndPage, globalMaxScore = 0;
+      $scope.wayAnimateClass = '';
+
+      switch( $scope.quiz.type ) {
+      case 'score':
+        if(res.hasOwnProperty('totalScore') && $scope.endPages.length) {
+          // TEMPORATY, TODO: Answers should return Max avaiable score!
+          globalMaxScore = 10;
+          correctEndPage = _.filter( $scope.endPages, function( e ) {
+            if( e.coverPage && e.coverPage.scoreRange && e.coverPage.scoreRange.min <= res.totalScore / globalMaxScore * 100 && e.coverPage.scoreRange.max >= res.totalScore / globalMaxScore * 100 ) {
+              return e;
+            }
+          } );
+
+          if(correctEndPage.length) {
+            $scope.questions.push( correctEndPage[0] );
+          }
+        }
+        break;
+
+      case 'outcome':
+        if(res.hasOwnProperty('outcome') && $scope.endPages.length) {
+          correctEndPage = _.filter( $scope.endPages, function( e ) {
+            if( e.coverPage && e.coverPage.outcome && e.coverPage.outcome === res.outcome ) {
+              return e;
+            }
+          } );
+
+          if(correctEndPage) {
+            $scope.questions.push( correctEndPage[0] );
+          }
+        }
+        break;
+
+      default:
+        // Only 1 endPage exist
+        if($scope.endPages.length) {
+          $scope.questions.push($scope.endPages[0]);
+        }
+        break;
       }
+
+      $scope.wayAnimateClass = 'way-animation__next';
     };
 
     // Check if globalUserIdent exist, otherwise get one
     $scope.checkUser();
+
+    function submitQuizXHR( quizId ) {
+      return EngageformBackendService.quiz.submit( quizId )
+        .then( function( res ) {
+          $scope.pickCorrectEndPage( res );
+
+          if( _.where( $scope.questions, { type: 'endPage' } ).length ) {
+            // EngageformBackendService.navigation.next();
+            $scope.next();
+          } else {
+            $scope.requiredMessage = 'Thank you!';
+          }
+
+        } )
+        .catch( function ( res ) {
+          $scope.requiredMessage = res.data.msg || 'Unexpected error';
+        } );
+    }
 
     $scope.submitQuiz = function( $event ) {
       if (summaryMode) {
         return false;
       }
       if( !$scope.requiredMessage || ($scope.requiredMessage && $scope.requiredMessage.length < 1) ) {
-        $scope.next( $event );
 
-        return EngageformBackendService.quiz.submit( quizId ).then( function () {
-        } ).then( function() {
-          $scope.goToEndPage();
-        } ).catch( function ( res ) {
-          $scope.requiredMessage = res.data.msg || 'Unexpected error';
-        } );
+        if($scope.questions[$scope.currentQuestion.index()].type === 'forms') {
+          $scope.questionAnswer.selected = true;
+          sendDataForm( $scope.questionAnswer.status, $event ).then(function( r ) {
+            submitQuizXHR( quizId );
+          });
+        } else {
+          submitQuizXHR( quizId );
+        }
       }
     };
 
@@ -290,6 +362,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.hasPrev = function() {
       return EngageformBackendService.navigation.hasPrev();
     };
+
     $scope.next = function( $event ) {
 
       // Do not valid anything it's a startPage
@@ -299,7 +372,6 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.sentAnswer();
 
       } else if( !previewMode && !summaryMode ) {
-        // if( $scope.currentQuestion.requiredAnswer() && !previewMode ) {
 
         // Is required and selected or is not required
         if( ($scope.currentQuestion.requiredAnswer() && $scope.questionAnswer.selected) || (!$scope.currentQuestion.requiredAnswer()) ) {
@@ -338,7 +410,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.progressBarWidth = function() {
-      return ( ( $scope.currentQuestion.index() / $scope.normalQuestionsAmmount ) * 100 );
+      return ( ( $scope.pagination.curr / $scope.pagination.last ) * 100 );
     };
 
     function sendDataForm( data, $event ) {
@@ -351,7 +423,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
 
       if(!!inputs.length) {
-        $scope.sendAnswer( inputs, $event );
+        return $scope.sendAnswer( inputs, $event );
       }
     }
 
@@ -550,7 +622,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           return null;
         },
         submit: function( engageFormId ) {
-          return SettingsEngageformService.submitQuiz( engageFormId, _cache[ USER_IDENTIFIER ], _cache[ USER_IDENTIFIER_GLOBAL ] ).then(function() {
+          return SettingsEngageformService.submitQuiz( engageFormId, _cache[ USER_IDENTIFIER ], _cache[ USER_IDENTIFIER_GLOBAL ] ).then(function( res ) {
 
             // Clear LS and _cache
             CommonLocalStorageService.clearAll();
@@ -558,6 +630,8 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
 
             _cache = {};
             _cache[ USER_IDENTIFIER_GLOBAL ] = CommonLocalStorageService.get( USER_IDENTIFIER_GLOBAL );
+
+            return res;
           });
         }
       },
