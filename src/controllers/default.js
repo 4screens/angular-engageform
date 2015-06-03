@@ -4,7 +4,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode, summaryMode ) {
     var nextQuestionTimeout, quizId = $routeParams.engageFormId;
 
-    $scope.pagination = { curr: 0, last: 0 };
+    $scope.pagination = { curr: function() {}, last: 0 };
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
@@ -352,7 +352,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.progressBarWidth = function() {
-      return ( ( $scope.pagination.curr / $scope.pagination.last ) * 100 );
+      return ( ( $scope.pagination.curr() / $scope.pagination.last ) * 100 );
     };
 
     function sendDataForm( data, $event ) {
