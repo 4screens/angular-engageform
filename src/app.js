@@ -6,7 +6,7 @@ angular.module( '4screens.engageform',[
   'LocalStorageModule',
   'youtube-embed',
   'ngMessages'
-]).config(function( localStorageServiceProvider ) {
+]).config([ 'localStorageServiceProvider', function( localStorageServiceProvider ) {
   // localStorageService
   localStorageServiceProvider.prefix = '4screens.engageform';
-});
+} ]);

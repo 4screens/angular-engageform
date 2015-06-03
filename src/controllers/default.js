@@ -4,6 +4,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode, summaryMode ) {
     var nextQuestionTimeout, quizId = $routeParams.engageFormId;
 
+    $scope.pagination = { curr: 0, last: 0 };
+
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
@@ -28,19 +30,24 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         }
 
         // Group questions
-        $scope.endPages = _.groupBy( $scope.questions, { type: 'endPage' } ).true;
-        $scope.startPages = _.groupBy( $scope.questions, { type: 'startPage' } ).true;
-        $scope.normalQuestions = _.groupBy( $scope.questions, function( e ) { return e.type !== 'endPage' && e.type !== 'startPage'; } ).true;
+        $scope.endPages = _.groupBy( $scope.questions, { type: 'endPage' } ).true || [];
+        $scope.startPages = _.groupBy( $scope.questions, { type: 'startPage' } ).true || [];
+        $scope.normalQuestions = _.groupBy( $scope.questions, function( e ) { return e.type !== 'endPage' && e.type !== 'startPage'; } ).true || [];
 
         // Restack question
         $scope.questions = $scope.startPages.length ? new Array($scope.startPages[0]) : [];
         $scope.questions = $scope.questions.concat( $scope.normalQuestions );
-        if($scope.endPages.length) {
-          $scope.questions.push($scope.endPages[0]);
-        }
 
-        // Just temporary
+        // Helper
         $scope.normalQuestionsAmmount = $scope.normalQuestions.length;
+
+        // Pagination
+        $scope.pagination = {
+          curr: function () {
+            return $scope.currentQuestion.index() + ( $scope.startPages.length ? 0 : 1 );
+          },
+          last: $scope.normalQuestions.length
+        };
 
         $scope.sentAnswer();
       });
@@ -90,9 +97,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     function scaleEmbed ( cfg, ww, wh ) {
-      var fzw = Math.min( ww / cfg.maxWidth, 1 )
-        , fzh = Math.min( wh / cfg.maxHeight, 1 )
-        , fz = Math.max( cfg.minFontSize, Math.min( fzw, fzh ) );
+      var fzw = Math.min( ww / cfg.maxWidth, 1 ), fzh = Math.min( wh / cfg.maxHeight, 1 ), fz = Math.max( cfg.minFontSize, Math.min( fzw, fzh ) );
       angular.element($window.document.querySelector('html')).css( 'font-size', Math.floor( fz * 1000 ) / 10 + '%' );
     }
 
@@ -179,13 +184,12 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         return false;
       }
 
-      EngageformBackendService.question.sendAnswer( value ).then( function() {
+      return EngageformBackendService.question.sendAnswer( value ).then( function() {
         if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
           $scope.sentAnswer();
         }
 
-        // console.log( $scope.currentQuestion.index(), $scope.normalQuestionsAmmount );
-        if ($scope.hasNext() && !nextQuestionTimeout && $scope.currentQuestion.index() < $scope.normalQuestionsAmmount) {
+        if ($scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last) {
           nextQuestionTimeout = $timeout( function () {
             $scope.next();
             nextQuestionTimeout = null;
@@ -199,73 +203,87 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return EngageformBackendService.user.check();
     };
 
-    $scope.pickCorrectEndPage = function( val ) {
-      console.log( val );
-      console.log('picking correct end page');
-      if(typeof val === 'number') {
-        // Type score
-        console.log('SCORE');
-        _.some( $scope.endPages, function( e ) {
-          if( e.coverPage.scoreRange.min <= val && e.coverPage.scoreRange.max >= val ) {
-            console.log('good end Page');
-            console.log( e );
-            $scope.questions.splice( -1, 1, e );
-            return true;
-          }
-        } );
-      } else {
-        // Type outcome
-        console.log('OUTCOME');
-      }
-    };
+    $scope.pickCorrectEndPage = function( res ) {
+      var correctEndPage, globalMaxScore = 0;
+      $scope.wayAnimateClass = '';
 
-    $scope.goToEndPage = function( data ) {
-      var scored;
-      console.log( data );
-
-      if ($scope.endPages && $scope.endPages.length > 1) {
-        // Pick best endPage, just place it in endPages Array as first ele
-        switch($scope.quiz.type) {
-        case 'score':
-          scored = 0;
-          if(_.size( data.questions ) > 0) {
-            for(var q in data.questions) {
-              scored += data.questions[q].points;
+      switch( $scope.quiz.type ) {
+      case 'score':
+        if(res.hasOwnProperty('totalScore') && $scope.endPages.length) {
+          // TEMPORATY, TODO: Answers should return Max avaiable score!
+          globalMaxScore = 10;
+          correctEndPage = _.filter( $scope.endPages, function( e ) {
+            if( e.coverPage && e.coverPage.scoreRange && e.coverPage.scoreRange.min <= res.totalScore / globalMaxScore * 100 && e.coverPage.scoreRange.max >= res.totalScore / globalMaxScore * 100 ) {
+              return e;
             }
-          }
-          console.log( scored );
-          $scope.pickCorrectEndPage(Number( scored ));
-          break;
-        case 'outcome':
-          //$scope.pickCorrectEndPage(String(data.));
-          break;
-        }
+          } );
 
-        EngageformBackendService.navigation.next();
-        $scope.wayAnimateClass = 'way-animation__next';
-      } else {
-        $scope.requiredMessage = 'Thank you!';
-        $scope.submitQuiz();
+          if(correctEndPage.length) {
+            $scope.questions.push( correctEndPage[0] );
+          }
+        }
+        break;
+
+      case 'outcome':
+        if(res.hasOwnProperty('outcome') && $scope.endPages.length) {
+          correctEndPage = _.filter( $scope.endPages, function( e ) {
+            if( e.coverPage && e.coverPage.outcome && e.coverPage.outcome === res.outcome ) {
+              return e;
+            }
+          } );
+
+          if(correctEndPage) {
+            $scope.questions.push( correctEndPage[0] );
+          }
+        }
+        break;
+
+      default:
+        // Only 1 endPage exist
+        if($scope.endPages.length) {
+          $scope.questions.push($scope.endPages[0]);
+        }
+        break;
       }
+
+      $scope.wayAnimateClass = 'way-animation__next';
     };
 
     // Check if globalUserIdent exist, otherwise get one
     $scope.checkUser();
+
+    function submitQuizXHR( quizId ) {
+      return EngageformBackendService.quiz.submit( quizId )
+        .then( function( res ) {
+          $scope.pickCorrectEndPage( res );
+
+          if( _.where( $scope.questions, { type: 'endPage' } ).length ) {
+            // EngageformBackendService.navigation.next();
+            $scope.next();
+          } else {
+            $scope.requiredMessage = 'Thank you!';
+          }
+
+        } )
+        .catch( function ( res ) {
+          $scope.requiredMessage = res.data.msg || 'Unexpected error';
+        } );
+    }
 
     $scope.submitQuiz = function( $event ) {
       if (summaryMode) {
         return false;
       }
       if( !$scope.requiredMessage || ($scope.requiredMessage && $scope.requiredMessage.length < 1) ) {
-        $scope.next( $event );
 
-        return EngageformBackendService.quiz.submit( quizId )
-          .then( function( res ) {
-            $scope.goToEndPage( res );
-          } )
-          .catch( function ( res ) {
-            $scope.requiredMessage = res.data.msg || 'Unexpected error';
-          } );
+        if($scope.questions[$scope.currentQuestion.index()].type === 'forms') {
+          $scope.questionAnswer.selected = true;
+          sendDataForm( $scope.questionAnswer.status, $event ).then(function( r ) {
+            submitQuizXHR( quizId );
+          });
+        } else {
+          submitQuizXHR( quizId );
+        }
       }
     };
 
@@ -286,6 +304,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.hasPrev = function() {
       return EngageformBackendService.navigation.hasPrev();
     };
+
     $scope.next = function( $event ) {
 
       // Do not valid anything it's a startPage
@@ -295,7 +314,6 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.sentAnswer();
 
       } else if( !previewMode && !summaryMode ) {
-        // if( $scope.currentQuestion.requiredAnswer() && !previewMode ) {
 
         // Is required and selected or is not required
         if( ($scope.currentQuestion.requiredAnswer() && $scope.questionAnswer.selected) || (!$scope.currentQuestion.requiredAnswer()) ) {
@@ -334,7 +352,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.progressBarWidth = function() {
-      return ( ( $scope.currentQuestion.index() / $scope.normalQuestionsAmmount ) * 100 );
+      return ( ( $scope.pagination.curr / $scope.pagination.last ) * 100 );
     };
 
     function sendDataForm( data, $event ) {
@@ -347,7 +365,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
 
       if(!!inputs.length) {
-        $scope.sendAnswer( inputs, $event );
+        return $scope.sendAnswer( inputs, $event );
       }
     }
 
