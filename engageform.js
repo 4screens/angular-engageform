@@ -23,7 +23,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-endPage.html',
-    '<h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="main-content-description theme-question-color text-center" data-ng-if="!!question.description"><p>{{question.description}}</p></div><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture><div class="text-center main-footer"><a class="btn btn--round-corner btn--normal theme-button-color theme-question-color" rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}" data-ng-href="{{question.coverPage.link}}">{{question.coverPage.buttonText}}</a></div>');
+    '<h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="main-content-description theme-question-color text-center" data-ng-if="!!question.description"><p>{{question.description}}</p></div><picture class="main-media-image" data-ng-if="!!mainMediaImg() && mainMediaImg().src" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( mainMediaImg().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( mainMediaImg().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( mainMediaImg().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( mainMediaImg().src, 680, \'2.0\' ) }} 2.0x"></picture><div class="text-center main-footer"><a class="btn btn--round-corner btn--normal theme-button-color theme-question-color" rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}" data-ng-href="{{question.coverPage.link}}">{{question.coverPage.buttonText}}</a></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -219,9 +219,13 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       } else {
         _width = 100;
       }
+
+      console.log( _imageData );
+
       return {
         width: _width,
-        paddingBottom: Math.round( _imageData.containerHeight / baseWidth * 100 )
+        paddingBottom: Math.round( _imageData.containerHeight / baseWidth * 100 ),
+        src: $scope.questions[$scope.currentQuestion.index()].imageFile
       };
     };
 
