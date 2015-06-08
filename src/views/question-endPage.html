@@ -1,3 +1,7 @@
+<div class="scored theme-question-color" data-ng-if="quiz.type === 'score'">
+  You scored <span class="scored-text"><span class="scored-text-fill" data-ng-style="{height: ( 100 - scoredPoints ) + '%'}">{{scoredPoints || 0}}</span>{{ (scoredPoints || 0) + '%'}}</span>
+</div>
+
 <h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
 <div class="main-content-description theme-question-color text-center" data-ng-if="!!question.description">
   <p>{{question.description}}</p>  
@@ -23,3 +27,4 @@
 <div class="text-center main-footer" data-ng-if="question.coverPage.link">
   <a class="btn btn--round-corner btn--normal theme-button-color theme-question-color" rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}" data-ng-href="{{question.coverPage.link}}">{{question.coverPage.buttonText}}</a>
 </div>
+

@@ -223,22 +223,21 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.pickCorrectEndPage = function( res ) {
-      var correctEndPage, globalMaxScore = 0;
+      var correctEndPage;
       $scope.wayAnimateClass = '';
 
       switch( $scope.quiz.type ) {
       case 'score':
         if(res.hasOwnProperty('totalScore') && $scope.endPages.length) {
-          // TEMPORATY, TODO: Answers should return Max avaiable score!
-          globalMaxScore = 10;
           correctEndPage = _.filter( $scope.endPages, function( e ) {
-            if( e.coverPage && e.coverPage.scoreRange && e.coverPage.scoreRange.min <= res.totalScore / globalMaxScore * 100 && e.coverPage.scoreRange.max >= res.totalScore / globalMaxScore * 100 ) {
+            if( e.coverPage && e.coverPage.scoreRange && e.coverPage.scoreRange.min <= res.totalScore / res.maxScore * 100 && e.coverPage.scoreRange.max >= res.totalScore / res.maxScore * 100 ) {
               return e;
             }
           } );
 
           if(correctEndPage.length) {
             $scope.questions.push( correctEndPage[0] );
+            $scope.showScore( Math.ceil( res.totalScore / res.maxScore * 100 ) );
           }
         }
         break;
@@ -314,6 +313,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           submitQuizXHR( quizId );
         }
       }
+    };
+
+    $scope.showScore = function( s ) {
+      $scope.scoredPoints = s;
     };
 
     $scope.formatAnswers = function ( val ) {
