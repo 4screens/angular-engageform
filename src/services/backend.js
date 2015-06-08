@@ -285,6 +285,12 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
               return _cache[ USER_IDENTIFIER_GLOBAL ];
             });
           }
+        },
+        get: function() {
+          return {
+            uid: _cache[ USER_IDENTIFIER ],
+            guid: _cache[ USER_IDENTIFIER_GLOBAL ]
+          };
         }
       }
     };
