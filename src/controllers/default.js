@@ -161,9 +161,11 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       } else {
         _width = 100;
       }
+
       return {
         width: _width,
-        paddingBottom: Math.round( _imageData.containerHeight / baseWidth * 100 )
+        paddingBottom: Math.round( _imageData.containerHeight / baseWidth * 100 ),
+        src: $scope.questions[$scope.currentQuestion.index()].imageFile
       };
     };
 
