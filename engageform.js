@@ -94,12 +94,13 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
         // No normal questions
         if( $scope.normalQuestions.length < 1 ) {
+          var _msgType = ( $scope.quiz.type === 'outcome' || $scope.quiz.type === 'score' ) ? 'quiz' : $scope.quiz.type;
           $scope.endPages.length = $scope.startPages.length = $scope.normalQuestions.length = $scope.questions.length = 0;
 
           $scope.questions.push({
             type: 'endPage',
-            text: 'You can\'t complete this ' + ( ( $scope.quiz.type === 'outcome' || $scope.quiz.type === 'score' ) ? 'quiz' : $scope.quiz.type ),
-            description: 'Sorry, but this quiz dont\'t have any questions, you are unable to complete it :('
+            text: 'You can\'t complete this ' + _msgType,
+            description: 'Sorry, but this ' + _msgType + ' dont\'t have any questions, you are unable to complete it :('
           });
           return;
         }
