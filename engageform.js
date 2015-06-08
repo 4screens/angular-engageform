@@ -261,6 +261,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return EngageformBackendService.user.check();
     };
 
+    $scope.getUser = function() {
+      return EngageformBackendService.user.get();
+    };
+
     $scope.pickCorrectEndPage = function( res ) {
       var correctEndPage, globalMaxScore = 0;
       $scope.wayAnimateClass = '';
@@ -329,10 +333,20 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     }
 
     $scope.submitQuiz = function( $event ) {
-      if (summaryMode) {
+      if ( summaryMode ) {
         return false;
       }
+
+      $scope.requiredMessage = '';
+      
+      // Check if there is userIdent (user choose at least 1 answer)
+      if( !$scope.getUser().uid ) {
+        $scope.requiredMessage = 'You need to answer at least one question to finish quiz';
+        return false;
+      }
+
       if( !$scope.requiredMessage || ($scope.requiredMessage && $scope.requiredMessage.length < 1) ) {
+        $scope.requiredMessage = '';
 
         if($scope.questions[$scope.currentQuestion.index()].type === 'forms') {
           $scope.questionAnswer.selected = true;
@@ -776,6 +790,12 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
               return _cache[ USER_IDENTIFIER_GLOBAL ];
             });
           }
+        },
+        get: function() {
+          return {
+            uid: _cache[ USER_IDENTIFIER ],
+            guid: _cache[ USER_IDENTIFIER_GLOBAL ]
+          };
         }
       }
     };
