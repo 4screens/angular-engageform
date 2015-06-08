@@ -98,7 +98,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
           $scope.questions.push({
             type: 'endPage',
-            text: 'You can\'t complete this quiz',
+            text: 'You can\'t complete this ' + ( ( $scope.quiz.type === 'outcome' || $scope.quiz.type === 'score' ) ? 'quiz' : $scope.quiz.type ),
             description: 'Sorry, but this quiz dont\'t have any questions, you are unable to complete it :('
           });
           return;
