@@ -23,7 +23,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-endPage.html',
-    '<h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="main-content-description theme-question-color text-center" data-ng-if="!!question.description"><p>{{question.description}}</p></div><picture class="main-media-image" data-ng-if="!!mainMediaImg() && mainMediaImg().src" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( mainMediaImg().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( mainMediaImg().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( mainMediaImg().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( mainMediaImg().src, 680, \'2.0\' ) }} 2.0x"></picture><div class="text-center main-footer" data-ng-if="question.coverPage.link"><a class="btn btn--round-corner btn--normal theme-button-color theme-question-color" rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}" data-ng-href="{{question.coverPage.link}}">{{question.coverPage.buttonText}}</a></div>');
+    '<div class="scored theme-question-color" data-ng-if="quiz.type === \'score\'">You scored <span class="scored-text"><span class="scored-text-fill" data-ng-style="{height: ( 100 - scoredPoints ) + \'%\'}">{{scoredPoints || 0}}</span>{{ (scoredPoints || 0) + \'%\'}}</span></div><h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="main-content-description theme-question-color text-center" data-ng-if="!!question.description"><p>{{question.description}}</p></div><picture class="main-media-image" data-ng-if="!!mainMediaImg() && mainMediaImg().src" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( mainMediaImg().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( mainMediaImg().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( mainMediaImg().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( mainMediaImg().src, 680, \'2.0\' ) }} 2.0x"></picture><div class="text-center main-footer" data-ng-if="question.coverPage.link"><a class="btn btn--round-corner btn--normal theme-button-color theme-question-color" rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}" data-ng-href="{{question.coverPage.link}}">{{question.coverPage.buttonText}}</a></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -281,22 +281,21 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.pickCorrectEndPage = function( res ) {
-      var correctEndPage, globalMaxScore = 0;
+      var correctEndPage;
       $scope.wayAnimateClass = '';
 
       switch( $scope.quiz.type ) {
       case 'score':
         if(res.hasOwnProperty('totalScore') && $scope.endPages.length) {
-          // TEMPORATY, TODO: Answers should return Max avaiable score!
-          globalMaxScore = 10;
           correctEndPage = _.filter( $scope.endPages, function( e ) {
-            if( e.coverPage && e.coverPage.scoreRange && e.coverPage.scoreRange.min <= res.totalScore / globalMaxScore * 100 && e.coverPage.scoreRange.max >= res.totalScore / globalMaxScore * 100 ) {
+            if( e.coverPage && e.coverPage.scoreRange && e.coverPage.scoreRange.min <= res.totalScore / res.maxScore * 100 && e.coverPage.scoreRange.max >= res.totalScore / res.maxScore * 100 ) {
               return e;
             }
           } );
 
           if(correctEndPage.length) {
             $scope.questions.push( correctEndPage[0] );
+            $scope.showScore( Math.ceil( res.totalScore / res.maxScore * 100 ) );
           }
         }
         break;
@@ -372,6 +371,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           submitQuizXHR( quizId );
         }
       }
+    };
+
+    $scope.showScore = function( s ) {
+      $scope.scoredPoints = s;
     };
 
     $scope.formatAnswers = function ( val ) {
