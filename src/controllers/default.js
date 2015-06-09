@@ -62,6 +62,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           last: $scope.normalQuestions.length
         };
 
+        // Sync questions
+        EngageformBackendService.questions.sync($scope.questions, $scope.currentQuestion.index());
+
         $scope.sentAnswer();
       });
     });
@@ -263,6 +266,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         }
         break;
       }
+
+      // Sync backend questions array
+      EngageformBackendService.questions.sync($scope.questions, $scope.currentQuestion.index());
 
       $scope.wayAnimateClass = 'way-animation__next';
     };

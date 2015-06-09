@@ -252,6 +252,10 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
             _normalQuestionsAmmount = _questions.length - (_.where( _questions, { type: 'startPage' } ).length || 0) - (_.where( _questions, { type: 'endPage' } ).length || 0);
             return questions;
           });
+        },
+        sync: function( qa, qi ) {
+          _questions = qa;
+          _questionIndex = qi;
         }
       },
       navigation: {

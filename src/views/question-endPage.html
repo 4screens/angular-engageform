@@ -8,7 +8,7 @@
 </div>
 
 <picture class="main-media-image"
-  data-ng-if="!!mainMediaImg() && mainMediaImg().src"
+  data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()"
   data-ng-class="{'no-transform': !question.imageData, 'transform': question.imageData}"
   data-ng-style="{'padding-bottom': mainMediaImg().paddingBottom + '%'}"
 >
@@ -17,10 +17,10 @@
       'left' : (question.imageData.left > 0 ? question.imageData.left : 0) + '%',
       'top'  : (question.imageData.top  > 0 ? question.imageData.top  : 0) + '%'
     }"
-    data-ng-src="{{ getMainImgUrl( mainMediaImg().src, 680, '1.0' ) }}" 
-    data-ng-srcset="{{ getMainImgUrl( mainMediaImg().src, 680, '1.0' ) }},
-                    {{ getMainImgUrl( mainMediaImg().src, 680, '1.5' ) }} 1.5x,
-                    {{ getMainImgUrl( mainMediaImg().src, 680, '2.0' ) }} 2.0x"
+    data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
+    data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
+                    {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
+                    {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
   >
 </picture>
 
