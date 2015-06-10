@@ -32,11 +32,11 @@
     'theme-answer-color': questionAnswer.selected !== answer._id
   }">
     {{answer.text}}
-    <span data-ng-if="!!questionAnswer.stats" class="theme-question-result-color-text ng-animate">
-      <span data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false "> 
+    <span class="theme-question-result-color-text ng-animate">
+      <span data-ng-if="question.settings.showAnswers"> 
         {{ formatAnswers(questionAnswer.stats[answer._id]) | number:1 }} %
       </span>
-      <i class="fa" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer !== false" 
+      <i class="fa" data-ng-if="question.settings.showCorrectAnswer" 
          data-ng-class="{'fa-check': questionAnswer.correct === answer._id, 'fa-times': questionAnswer.correct !== answer._id }"></i>
     <span>
   </label>

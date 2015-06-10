@@ -192,7 +192,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       });
     };
 
-    $scope.sendAnswer = function( value, $event ) {
+    $scope.sendAnswer = function( value, $event, force ) {
       if( $event ) {
         $event.stopPropagation();
         $event.preventDefault();
@@ -207,9 +207,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           $scope.sentAnswer();
         }
 
-        if ($scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last) {
+        if (!$scope.currentQuestion.settings('showAnswers') && !$scope.currentQuestion.settings('showCorrectAnswer') && $scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last) {
           nextQuestionTimeout = $timeout( function () {
-            $scope.next();
+            typeof force === 'undefinded' ? $scope.next() : $scope.next( null, true );
             nextQuestionTimeout = null;
           }, 200 );
         }
@@ -283,7 +283,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
           if( _.where( $scope.questions, { type: 'endPage' } ).length ) {
             // EngageformBackendService.navigation.next();
-            $scope.next();
+            $scope.next( null, true );
           } else {
             $scope.requiredMessage = 'Thank you!';
           }
@@ -343,18 +343,19 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return EngageformBackendService.navigation.hasPrev();
     };
 
-    $scope.next = function( $event ) {
+    $scope.next = function( $event, force ) {
 
       // Do not valid anything it's a startPage
-      if($scope.questions[$scope.currentQuestion.index()].type === 'startPage') {
+      if($scope.questions[$scope.currentQuestion.index()].type === 'startPage' || typeof force !== 'undefined') {
         EngageformBackendService.navigation.next();
         $scope.wayAnimateClass = 'way-animation__next';
+        $scope.requiredMessage = '';
         $scope.sentAnswer();
 
       } else if( !previewMode && !summaryMode ) {
 
         // Is required and selected or is not required
-        if( ($scope.currentQuestion.requiredAnswer() && $scope.questionAnswer.selected) || (!$scope.currentQuestion.requiredAnswer()) ) {
+        if( !$scope.questionAnswer.form && ( ($scope.currentQuestion.requiredAnswer() && $scope.questionAnswer.selected) || !$scope.currentQuestion.requiredAnswer()) ) {
           EngageformBackendService.navigation.next();
           $scope.sentAnswer();
           $scope.wayAnimateClass = 'way-animation__next';
@@ -403,7 +404,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
 
       if(!!inputs.length) {
-        return $scope.sendAnswer( inputs, $event );
+        return $scope.sendAnswer( inputs, $event, true );
+      } else {
+        $scope.next( null, true );
       }
     }
 

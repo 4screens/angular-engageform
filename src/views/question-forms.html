@@ -19,15 +19,15 @@
   <fieldset>
     <div class="form__field" data-ng-repeat="input in question.forms.inputs">
       <label for="{{input._id}}" data-ng-bind="input.label"></label>
-      <input type="email" validate-full-email placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='email'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
+      <input type="email" validate-full-email placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='email'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()">
 
-      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='text'"  data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
+      <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='text'"  data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()">
 
-      <input type="tel" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='phone'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
+      <input type="tel" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='phone'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()">
 
-      <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='url'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer">
+      <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type=='url'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()">
 
-      <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="!!currentQuestion.requiredAnswer"></textarea>
+      <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()"></textarea>
 
       <div data-ng-messages="form[input._id].$error" class="message text-right" data-ng-class="{'is-active': !!form[input._id].$error.fullEmail || !!form[input._id].$error.url}">
         <div data-ng-message="fullEmail" >
