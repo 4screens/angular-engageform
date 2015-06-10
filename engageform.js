@@ -28,12 +28,12 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-forms.html',
-    '<h2 class="theme-question-color text-left" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture><form action name="form" class="form" formnovalidate=""><fieldset><div class="form__field" data-ng-repeat="input in question.forms.inputs"><label for="{{input._id}}" data-ng-bind="input.label"></label> <input type="email" validate-full-email="" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'email\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate="" ng-required="!!currentQuestion.requiredAnswer"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'text\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate="" ng-required="!!currentQuestion.requiredAnswer"> <input type="tel" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'phone\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate="" ng-required="!!currentQuestion.requiredAnswer"> <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'url\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate="" ng-required="!!currentQuestion.requiredAnswer"> <textarea name="{{input._id}}" id cols="30" rows="10" data-ng-if="input.type==\'textarea\'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate="" ng-required="!!currentQuestion.requiredAnswer"></textarea><div data-ng-messages="form[input._id].$error" class="message text-right" data-ng-class="{\'is-active\': !!form[input._id].$error.fullEmail || !!form[input._id].$error.url}"><div data-ng-message="fullEmail">Your field has an invalid email address</div><div data-ng-message="email">Your field has an invalid email address</div><div data-ng-message="number">Only numbers</div><div data-ng-message="url">Your field has a invalid url address</div></div></div><input type="text" class="hidden" name="form" data-ng-model="questionAnswer.form" data-ng-init="questionAnswer.form=form"></fieldset><div class="hint"><i class="fa fa-info-circle"></i>&nbsp;<span>Type your answer above. Press next to continue.</span></div></form>');
+    '<h2 class="theme-question-color text-left" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture><form action name="form" class="form" formnovalidate><fieldset><div class="form__field" data-ng-repeat="input in question.forms.inputs"><label for="{{input._id}}" data-ng-bind="input.label"></label> <input type="email" validate-full-email placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'email\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()"> <input type="text" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'text\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()"> <input type="tel" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'phone\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()"> <input type="url" placeholder="{{input.label}}" name="{{input._id}}" data-ng-if="input.type==\'url\'" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()"> <textarea name="{{input._id}}" id cols="30" rows="10" data-ng-if="input.type==\'textarea\'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()"></textarea><div data-ng-messages="form[input._id].$error" class="message text-right" data-ng-class="{\'is-active\': !!form[input._id].$error.fullEmail || !!form[input._id].$error.url}"><div data-ng-message="fullEmail">Your field has an invalid email address</div><div data-ng-message="email">Your field has an invalid email address</div><div data-ng-message="number">Only numbers</div><div data-ng-message="url">Your field has a invalid url address</div></div></div><input type="text" class="hidden" name="form" data-ng-model="questionAnswer.form" data-ng-init="questionAnswer.form=form"></fieldset><div class="hint"><i class="fa fa-info-circle"></i>&nbsp;<span>Type your answer above. Press next to continue.</span></div></form>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-multiChoice.html',
-    '<h2 class="theme-question-color text-left" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="header__wrapper" data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()"><picture class="main-media-image" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture></div><div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer" data-ng-class="{\'theme-button-color questionnaire__answer--selected\': questionAnswer.selected === answer._id, \'theme-answer-background-color theme-answer-border-color\': questionAnswer.selected !== answer._id, \'questionnaire__answer--notcorrect\': !!questionAnswer.selected && questionAnswer.selected !== answer._id }"><div class="answer__bar" ng-style="{\'width\': formatAnswers(questionAnswer.stats[answer._id])+\'%\'}" data-ng-class="{\'theme-answer-select-background-result-color\': questionAnswer.selected === answer._id, \'theme-answer-background-result-color\': questionAnswer.selected !== answer._id }" data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false && !!questionAnswer.stats"></div><label data-ng-class="{ \'theme-question-color\': questionAnswer.selected === answer._id, \'theme-answer-color\': questionAnswer.selected !== answer._id }">{{answer.text}} <span data-ng-if="!!questionAnswer.stats" class="theme-question-result-color-text ng-animate"><span data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false">{{ formatAnswers(questionAnswer.stats[answer._id]) | number:1 }} %</span> <i class="fa" data-ng-if="!!question.settings.showCorrectAnswer && question.settings.showCorrectAnswer !== false" data-ng-class="{\'fa-check\': questionAnswer.correct === answer._id, \'fa-times\': questionAnswer.correct !== answer._id }"></i> <span></span></span></label></div>');
+    '<h2 class="theme-question-color text-left" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="header__wrapper" data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()"><picture class="main-media-image" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture></div><div data-ng-click="sendAnswer( answer._id )" data-ng-repeat="answer in question.answers" class="questionnaire__answer" data-ng-class="{\'theme-button-color questionnaire__answer--selected\': questionAnswer.selected === answer._id, \'theme-answer-background-color theme-answer-border-color\': questionAnswer.selected !== answer._id, \'questionnaire__answer--notcorrect\': !!questionAnswer.selected && questionAnswer.selected !== answer._id }"><div class="answer__bar" ng-style="{\'width\': formatAnswers(questionAnswer.stats[answer._id])+\'%\'}" data-ng-class="{\'theme-answer-select-background-result-color\': questionAnswer.selected === answer._id, \'theme-answer-background-result-color\': questionAnswer.selected !== answer._id }" data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false && !!questionAnswer.stats"></div><label data-ng-class="{ \'theme-question-color\': questionAnswer.selected === answer._id, \'theme-answer-color\': questionAnswer.selected !== answer._id }">{{answer.text}} <span class="theme-question-result-color-text ng-animate"><span data-ng-if="question.settings.showAnswers">{{ formatAnswers(questionAnswer.stats[answer._id]) | number:1 }} %</span> <i class="fa" data-ng-if="question.settings.showCorrectAnswer" data-ng-class="{\'fa-check\': questionAnswer.correct === answer._id, \'fa-times\': questionAnswer.correct !== answer._id }"></i> <span></span></span></label></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -245,7 +245,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       });
     };
 
-    $scope.sendAnswer = function( value, $event ) {
+    $scope.sendAnswer = function( value, $event, force ) {
       if( $event ) {
         $event.stopPropagation();
         $event.preventDefault();
@@ -260,9 +260,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           $scope.sentAnswer();
         }
 
-        if ($scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last) {
+        if (!$scope.currentQuestion.settings('showAnswers') && !$scope.currentQuestion.settings('showCorrectAnswer') && $scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last) {
           nextQuestionTimeout = $timeout( function () {
-            $scope.next();
+            typeof force === 'undefinded' ? $scope.next() : $scope.next( null, true );
             nextQuestionTimeout = null;
           }, 200 );
         }
@@ -336,7 +336,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
           if( _.where( $scope.questions, { type: 'endPage' } ).length ) {
             // EngageformBackendService.navigation.next();
-            $scope.next();
+            $scope.next( null, true );
           } else {
             $scope.requiredMessage = 'Thank you!';
           }
@@ -396,18 +396,19 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return EngageformBackendService.navigation.hasPrev();
     };
 
-    $scope.next = function( $event ) {
+    $scope.next = function( $event, force ) {
 
       // Do not valid anything it's a startPage
-      if($scope.questions[$scope.currentQuestion.index()].type === 'startPage') {
+      if($scope.questions[$scope.currentQuestion.index()].type === 'startPage' || typeof force !== 'undefined') {
         EngageformBackendService.navigation.next();
         $scope.wayAnimateClass = 'way-animation__next';
+        $scope.requiredMessage = '';
         $scope.sentAnswer();
 
       } else if( !previewMode && !summaryMode ) {
 
         // Is required and selected or is not required
-        if( ($scope.currentQuestion.requiredAnswer() && $scope.questionAnswer.selected) || (!$scope.currentQuestion.requiredAnswer()) ) {
+        if( !$scope.questionAnswer.form && ( ($scope.currentQuestion.requiredAnswer() && $scope.questionAnswer.selected) || !$scope.currentQuestion.requiredAnswer()) ) {
           EngageformBackendService.navigation.next();
           $scope.sentAnswer();
           $scope.wayAnimateClass = 'way-animation__next';
@@ -456,7 +457,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
 
       if(!!inputs.length) {
-        return $scope.sendAnswer( inputs, $event );
+        return $scope.sendAnswer( inputs, $event, true );
+      } else {
+        $scope.next( null, true );
       }
     }
 
