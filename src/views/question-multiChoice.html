@@ -32,7 +32,7 @@
     'theme-answer-color': questionAnswer.selected !== answer._id
   }">
     {{answer.text}}
-    <span class="theme-question-result-color-text ng-animate">
+    <span class="theme-question-result-color-text ng-animate" data-ng-if="!!questionAnswer.stats">
       <span data-ng-if="question.settings.showAnswers"> 
         {{ formatAnswers(questionAnswer.stats[answer._id]) | number:1 }} %
       </span>
