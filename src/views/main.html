@@ -65,16 +65,18 @@
     </div>
     <a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a>
 
-    <button class="progress__btn progress__btn--prev" data-ng-show="hasPrev()" data-ng-click="prev()">
-      <span><i class="fa fa-chevron-left"></i></span>
+    <button class="progress__btn progress__btn--prev fa-stack fa-lg" data-ng-show="hasPrev()" data-ng-click="prev()">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-angle-left"></i>
     </button>
 
-    <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="pagination.curr() < pagination.last" data-ng-click="next($event)">
-      <span>NEXT <i class="fa fa-chevron-right"></i></span>
+    <button class="progress__btn progress__btn--next fa-stack fa-lg" data-ng-show="pagination.curr() < pagination.last" data-ng-click="next($event)">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-angle-right"></i>
     </button>
 
-    <button class="progress__btn progress__btn--next theme-button-color theme-question-color" data-ng-show="pagination.curr() >= pagination.last" data-ng-click="submitQuiz($event)">
-      <span>SUBMIT</span>
+    <button class="progress__btn progress__btn--submit theme-button-color theme-question-color" data-ng-show="pagination.curr() >= pagination.last" data-ng-click="submitQuiz($event)">
+      <span>submit</span>
     </button>
   </div>
 </div>
