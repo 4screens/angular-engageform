@@ -28,3 +28,6 @@
   <a class="btn btn--round-corner btn--normal theme-button-color theme-question-color" rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}" data-ng-href="{{question.coverPage.link}}">{{question.coverPage.buttonText}}</a>
 </div>
 
+<div class="text-center main-footer" data-ng-if="!question.coverPage.link">
+  <span class="btn btn--round-corner btn--normal theme-button-color theme-question-color" title="{{question.coverPage.buttonText}}">{{question.coverPage.buttonText}}</span>
+</div>
