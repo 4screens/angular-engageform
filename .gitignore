@@ -1,0 +1,11 @@
+.idea
+bower_components
+build
+node_modules
+typings
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Build files... dont needed here
+engageform*
