@@ -3,32 +3,32 @@
 <div id="four-screens-application" class="{{screenType}}">
   <div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color">
     <picture data-ng-if="quiz.theme.backgroundImageFile" class="position-{{quiz.theme.backgroundImagePosition}}">
-      <source 
-        media="(min-width: 1021px)" 
+      <source
+        media="(min-width: 1021px)"
         data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }},
                         {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
                         {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
       >
-      <source 
-        media="(min-width: 769px)" 
+      <source
+        media="(min-width: 769px)"
         data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, '1.0', quiz.theme.backgroundImageBlur ) }},
                         {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
                         {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
       >
-      <source 
-        media="(min-width: 481px)" 
+      <source
+        media="(min-width: 481px)"
         data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, '1.0', quiz.theme.backgroundImageBlur ) }},
                         {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
                         {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
       >
-      <source 
-        media="(min-width: 0px)" 
+      <source
+        media="(min-width: 0px)"
         data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, '1.0', quiz.theme.backgroundImageBlur ) }},
                         {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
                         {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
       >
-      <img 
-        data-ng-src="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }}" 
+      <img
+        data-ng-src="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }}"
         data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }},
                         {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.5', quiz.theme.backgroundImageBlur ) }} 1.5x,
                         {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '2.0', quiz.theme.backgroundImageBlur ) }} 2.0x"
@@ -37,7 +37,7 @@
   </div>
   <div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass">
     <div data-ng-repeat="question in questions | questionsFilter" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()">
-      <div class="question-content-wrapper question-content-wrapper--{{question.type}}">
+      <div class="question-content-wrapper question-content-wrapper--{{question.type}}" higher-than-window>
         <div
           class="four-screens__content wrapper"
           data-ng-class="{
@@ -57,8 +57,8 @@
   <div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== 'startPage' && questions[currentQuestion.index()].type !== 'endPage'">
     <div class="progress">
       <span class="progress__bar">
-        <span class="progress__bar--line theme-button-color" 
-              data-ng-class="{'progress__bar--full-size': progressBarWidth() === 100 }" 
+        <span class="progress__bar--line theme-button-color"
+              data-ng-class="{'progress__bar--full-size': progressBarWidth() === 100 }"
               data-ng-style="{'width': progressBarWidth()+'%'}">
         </span>
       </span>

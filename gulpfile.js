@@ -21,6 +21,7 @@ var gulp = require('gulp')
     './src/views.js',
     './src/controllers/default.js',
     './src/directives/swiper.js',
+    './src/directives/higher-than-window.js',
     './src/filters/nl2br.js',
     './src/filters/questions-order.js',
     './src/services/backend.js',
