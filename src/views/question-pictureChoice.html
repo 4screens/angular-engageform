@@ -60,9 +60,9 @@
             {{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}<span class="precent">%</span>
           </span>
           <span class="results__triangle" 
-              data-ng-if="question.settings.showCorrectAnswer && question.settings.showCorrectAnswer !== false" 
+              data-ng-if="question.settings.showCorrectAnswer && question.settings.showCorrectAnswer !== false && questionAnswer.selected === answer._id " 
               data-ng-class="{'is-correct': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, 'is-incorrect': !questionAnswer.status[ answer._id ].correct }">
-            <i class="fa" data-ng-class="{'fa-check': !!questionAnswer.status[ answer._id ].correct, 'fa-times': !questionAnswer.status[ answer._id ].correct }"></i>
+            <i class="fa" data-ng-class="{'fa-check': questionAnswer.status[ answer._id ].correct, 'fa-times': !questionAnswer.status[ answer._id ].correct }"></i>
           </span>
         </div>
       </figure>
