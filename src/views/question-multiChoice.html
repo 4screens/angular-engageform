@@ -36,7 +36,7 @@
       <span data-ng-if="question.settings.showAnswers"> 
         {{ formatAnswers(questionAnswer.stats[answer._id]) | number:1 }} %
       </span>
-      <i class="fa" data-ng-if="question.settings.showCorrectAnswer" 
+      <i class="fa" data-ng-if="question.settings.showCorrectAnswer && questionAnswer.selected === answer._id" 
          data-ng-class="{'fa-check': questionAnswer.correct === answer._id, 'fa-times': questionAnswer.correct !== answer._id }"></i>
     <span>
   </label>
