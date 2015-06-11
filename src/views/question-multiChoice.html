@@ -24,7 +24,7 @@
   <div class="answer__bar" 
        ng-style="{'width': formatAnswers(questionAnswer.stats[answer._id])+'%'}" 
        data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id, 'theme-answer-background-result-color': questionAnswer.selected !== answer._id }"
-       data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false && !!questionAnswer.stats" 
+       data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false" 
        >
   </div>
   <label data-ng-class="{
@@ -32,8 +32,8 @@
     'theme-answer-color': questionAnswer.selected !== answer._id
   }">
     {{answer.text}}
-    <span class="theme-question-result-color-text ng-animate" data-ng-if="!!questionAnswer.stats">
-      <span data-ng-if="question.settings.showAnswers"> 
+    <span class="theme-question-result-color-text ng-animate">
+      <span data-ng-if="question.settings.showAnswers && questionAnswer.selected"> 
         {{ formatAnswers(questionAnswer.stats[answer._id]) | number:1 }} %
       </span>
       <i class="fa" data-ng-if="question.settings.showCorrectAnswer && questionAnswer.selected === answer._id" 
