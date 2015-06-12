@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, previewMode, summaryMode ) {
+  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $q, previewMode, summaryMode ) {
     var nextQuestionTimeout, quizId = $routeParams.engageFormId;
 
     $scope.pagination = { curr: function() {}, last: 0 };
@@ -406,7 +406,13 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       if(!!inputs.length) {
         return $scope.sendAnswer( inputs, $event, true );
       } else {
-        $scope.next( null, true );
+        if($scope.pagination.curr() >= $scope.pagination.last) {
+          var deferred = $q.defer();
+          deferred.resolve();
+          return deferred.promise;
+        } else {
+          $scope.next( null, true );
+        }
       }
     }
 
