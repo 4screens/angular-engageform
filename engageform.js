@@ -59,7 +59,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     $scope.pagination = { curr: function() {}, last: 0 };
 
-    EngageformBackendService.quiz.get( previewMode || summaryMode ? quizId + '?preview' : quizId ).then(function( quiz ) {
+    EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
@@ -618,40 +618,40 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       }
 
       switch(question.type) {
-        case 'multiChoice':
-          if (!!answer.selectedAnswerId) {
-            result = {
-              selected: answer.selectedAnswerId
-            };
-          }
-          break;
-        case 'pictureChoice':
-          if (!!answer.selectedAnswerId) {
-            result = {
-              selected: answer.selectedAnswerId
-            };
-          }
-          break;
-        case 'rateIt':
-          if (!!answer.rateItValue) {
-            result = {
-              selected: answer.rateItValue
-            };
-          }
-          break;
-        case 'forms':
-          if (!!answer.inputs.length) {
-            result = {
-              status: {}
-            };
+      case 'multiChoice':
+        if (!!answer.selectedAnswerId) {
+          result = {
+            selected: answer.selectedAnswerId
+          };
+        }
+        break;
+      case 'pictureChoice':
+        if (!!answer.selectedAnswerId) {
+          result = {
+            selected: answer.selectedAnswerId
+          };
+        }
+        break;
+      case 'rateIt':
+        if (!!answer.rateItValue) {
+          result = {
+            selected: answer.rateItValue
+          };
+        }
+        break;
+      case 'forms':
+        if (!!answer.inputs.length) {
+          result = {
+            status: {}
+          };
 
-            for (var input in answer.inputs) {
-              result.status[answer.inputs[input]._id] = answer.inputs[input].value;
-            }
+          for (var input in answer.inputs) {
+            result.status[answer.inputs[input]._id] = answer.inputs[input].value;
           }
-          break;
-        default:
-          break;
+        }
+        break;
+      default:
+        break;
       }
 
       return result;
@@ -660,6 +660,10 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
     return {
       setUserResults: function( results ){
         _userResults = results ? results : null;
+        if (results && results.userIdent) {
+          _cache[ USER_IDENTIFIER ] = results.userIdent;
+          CommonLocalStorageService.set( USER_IDENTIFIER, _cache[ USER_IDENTIFIER ] );
+        }
         return;
       },
       setAnswersResults: function( results ){
@@ -690,6 +694,12 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
 
             _cache = {};
             _cache[ USER_IDENTIFIER_GLOBAL ] = CommonLocalStorageService.get( USER_IDENTIFIER_GLOBAL );
+
+            if(_userResults) {
+              res.outcome = _userResults.outcome;
+              res.totalScore = _userResults.totalScore;
+              res.maxScore = _userResults.maxScore;
+            }
 
             return res;
           });
