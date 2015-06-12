@@ -6,7 +6,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     $scope.pagination = { curr: function() {}, last: 0 };
 
-    EngageformBackendService.quiz.get( previewMode || summaryMode ? quizId + '?preview' : quizId ).then(function( quiz ) {
+    EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
