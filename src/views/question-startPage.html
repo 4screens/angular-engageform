@@ -20,8 +20,18 @@
   >
 </picture>
 
+<div class="quiz-icon quiz-icon-big" data-ng-if="!currentQuestion.mainMedia() && currentQuestion.settings('showMainMedia')">
+  <i class="fa theme-question-color" data-ng-class="{
+    'fa-bar-chart': quiz.type === 'poll',
+    'fa-edit': quiz.type === 'survey',
+    'fa-trophy': quiz.type === 'score',
+    'fa-group': quiz.type === 'outcome'
+  }"></i>
+</div>
+
 <div class="text-center main-footer">
   <button class="btn btn--round-corner btn--normal theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next($event)">{{question.coverPage.buttonText || "Let's get started"}}</button>
+  <button class="btn btn--round-corner btn--normal theme-button-color theme-question-color" data-ng-show="!hasNext()">{{question.coverPage.buttonText || "Let's get started"}}</button>
 </div>
 
 
