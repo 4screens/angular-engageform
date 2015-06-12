@@ -34,22 +34,18 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.startPages = _.groupBy( $scope.questions, { type: 'startPage' } ).true || [];
         $scope.normalQuestions = _.groupBy( $scope.questions, function( e ) { return e.type !== 'endPage' && e.type !== 'startPage'; } ).true || [];
 
-        // No normal questions
-        if( $scope.normalQuestions.length < 1 ) {
-          var _msgType = ( $scope.quiz.type === 'outcome' || $scope.quiz.type === 'score' ) ? 'quiz' : $scope.quiz.type;
-          $scope.endPages.length = $scope.startPages.length = $scope.normalQuestions.length = $scope.questions.length = 0;
-
-          $scope.questions.push({
-            type: 'endPage',
-            text: 'You can\'t complete this ' + _msgType,
-            description: 'Sorry, but this ' + _msgType + ' dont\'t have any questions, you are unable to complete it :('
-          });
-          return;
-        }
-
         // Restack question
         $scope.questions = $scope.startPages.length ? new Array($scope.startPages[0]) : [];
         $scope.questions = $scope.questions.concat( $scope.normalQuestions );
+
+        // No normal questions
+        if( $scope.normalQuestions.length < 1 ) {
+
+          // If poll or surver and only 1 endPage
+          if( ( $scope.quiz.type === 'poll' || $scope.quiz.type === 'survey' ) && $scope.endPages.length === 1 ) {
+            $scope.questions.push($scope.endPages[0]);
+          }
+        }
 
         // Helper
         $scope.normalQuestionsAmmount = $scope.normalQuestions.length;
@@ -277,6 +273,12 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.checkUser();
 
     function submitQuizXHR( quizId ) {
+      // Check if there is userIdent (user choose at least 1 answer)
+      if( !$scope.getUser().uid ) {
+        $scope.requiredMessage = 'You need to answer at least one question to finish quiz';
+        return false;
+      }
+
       return EngageformBackendService.quiz.submit( quizId )
         .then( function( res ) {
           $scope.pickCorrectEndPage( res );
@@ -300,12 +302,6 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
 
       $scope.requiredMessage = '';
-
-      // Check if there is userIdent (user choose at least 1 answer)
-      if( !$scope.getUser().uid ) {
-        $scope.requiredMessage = 'You need to answer at least one question to finish quiz';
-        return false;
-      }
 
       if( !$scope.requiredMessage || ($scope.requiredMessage && $scope.requiredMessage.length < 1) ) {
         $scope.requiredMessage = '';
