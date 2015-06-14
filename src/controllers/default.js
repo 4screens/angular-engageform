@@ -390,6 +390,22 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return ( ( $scope.pagination.curr() / $scope.pagination.last ) * 100 );
     };
 
+    $scope.socialShare = function() {
+      var cq = $scope.questions[$scope.currentQuestion.index()];
+      return cq.type !== 'endPage' ? false : {
+        enabled: cq.coverPage.showSocialShares ? true : false,
+        // Adjust atributes to server response (title, desc, img, etc.)
+        title: cq.coverPage.socialShareTitle || 
+          ( $scope.questions[0].type === 'startPage' && $scope.questions[0].title ? $scope.questions[0].title : 'ShareTitle' ),
+        description: cq.coverPage.socialShareDescription || 
+          ( $scope.questions[0].type === 'startPage' && $scope.questions[0].description ? $scope.questions[0].description : 'ShareDescription' ),
+        picture: cq.coverPage.socialSharePicture || 
+          ( $scope.questions[0].type === 'startPage' && $scope.questions[0].imageFile ? $scope.questions[0].imageFile : '' ),
+        url: cq.coverPage.socialShareUrl || $window.location.href,
+        href: $window.location.href
+      };
+    };
+
     function sendDataForm( data, $event ) {
       var inputs = [];
 

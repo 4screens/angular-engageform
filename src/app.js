@@ -5,8 +5,11 @@ angular.module( '4screens.engageform',[
   '4screens.settings',
   'LocalStorageModule',
   'youtube-embed',
+  'djds4rce.angular-socialshare',
   'ngMessages'
 ]).config([ 'localStorageServiceProvider', function( localStorageServiceProvider ) {
   // localStorageService
   localStorageServiceProvider.prefix = '4screens.engageform';
-} ]);
+} ]).run(function( $FB ){
+  $FB.init('1600144180240924');
+});

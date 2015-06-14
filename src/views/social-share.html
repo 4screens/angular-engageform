@@ -1,0 +1,26 @@
+<section class="social-share">
+  <div facebook class="social-share-item facebookShare"
+    data-title="{{ socialShare().title }}"
+    data-description="{{ socialShare().description }}"
+    data-picture-url="{{ socialShare().picture }}"
+    data-url="{{ socialShare().url }}"
+    data-href="{{ socialShare().href }}"
+    data-shares="sharesFb"
+  >{{ sharesFb }}</div>
+
+  <div twitter class="social-share-item"
+    data-lang="en"
+    data-count="horizontal"
+    data-url="{{ socialShare().url }}"
+    data-size="medium"
+    data-text="{{ socialShare().title + ' ' + socialShare().description }}"
+  ></div>
+
+  <div linkedin class="social-share-item linkedinShare"
+    data-url='{{ socialShare().url }}'
+    data-title='{{ socialShare().title }}'
+    data-summary="{{ socialShare().description }}"
+    data-shares='sharesLd'
+  >{{ sharesLd }}</div>
+
+</section>
