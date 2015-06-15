@@ -15,10 +15,7 @@ angular.module( '4screens.engageform',[
 ]).config([ 'localStorageServiceProvider', function( localStorageServiceProvider ) {
   // localStorageService
   localStorageServiceProvider.prefix = '4screens.engageform';
-} ]).run(["$FB", function( $FB ){
-  // ToDo: move to cfg
-  $FB.init('911589325564446');
-}]);
+} ]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/main.html',
@@ -57,7 +54,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/social-share.html',
-    '<section class="social-share" style="position: fixed; top: -999px;"><div facebook style="display:none!important;" class="social-share-item facebookShare sr-only" data-shares="sharesFb"></div><div class="social-share-item facebookShare" data-ng-click="socialShare().facebook.share()"><div class="facebookButton"><div class="pluginButton"><div class="pluginButtonContainer"><div class="pluginButtonImage"><button type="button"><i class="pluginButtonIcon img sp_plugin-button-2x sx_plugin-button-2x_favblue"></i></button></div><span class="pluginButtonLabel">Share</span></div></div></div><div class="facebookCount"><div class="pluginCountButton pluginCountNum"><span><span>{{ sharesFb }}</span></span></div><div class="pluginCountButtonNub"><s></s><i></i></div></div></div><div twitter class="social-share-item" data-lang="en" data-count="horizontal" data-url="{{ socialShare().link }}" data-size="medium" data-text="{{ socialShare().title + \' \' + socialShare().description }}"></div><script type="IN/Share" data-url="http://www.google.com" data-counter="right" data-onsuccess="linkedinShareSuccess" class="social-share-item"></script></section>');
+    '<section class="social-shares--icons"><a class="social-shares--icons__fb" data-ng-click="socialShare().facebook.share()"><i class="fa fa-facebook"></i></a><a class="social-shares--icons__twitter" href="https://twitter.com/intent/tweet?text={{ socialShare().link + \' \' + socialShare().title + \' \' + socialShare().description }}"><i class="fa fa-twitter"></i></a><a class="social-shares--icons__linkedin" data-ng-click="socialShare().linkedin.share()"><i class="fa fa-linkedin"></i></a></section>');
 }]);
 
 'use strict';
@@ -142,6 +139,11 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       var results;
 
       if ( !event.data.length ) {
+        return;
+      }
+
+      // Ignore fb, twttr messages 
+      if ( event.origin.indexOf('facebook') || event.origin.indexOf('twitter') ) {
         return;
       }
 
@@ -481,13 +483,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           }
 
           // Init linkedin
-          window.linkedinShareSuccess = function() {
+          // Broken callback function
+          /*window.linkedinShareSuccess = function() {
             return $http
               .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'linkedin' ).replace( ':quizId', cq.quizId) )
               .then(function( res ) { console.log( res ); })
               .catch(function( res ) { console.log( res ); })
             ;
-          };
+          };*/
         }
       };
       sso.facebook = {
@@ -496,7 +499,16 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
             CONFIG.backend.answers.domain + CONFIG.backend.share.facebook + '?quizId=' + cq.quizId + '&description=' + sso.description + '&name=' + sso.title,
             '_blank',
             'toolbar=no,scrollbars=no,resizable=yes,width=460,height=280'
-            );
+          );
+        }
+      };
+      sso.linkedin = {
+        share: function () {
+          window.open(
+            'https://www.linkedin.com/shareArticle?mini=true&url=' + sso.link + '&title=' + sso.title + '&summary' + sso.description,
+            '_blank',
+            'toolbar=no,scrollbars=no,resizable=yes,width=550,height=500'
+          );
         }
       };
 
@@ -566,18 +578,38 @@ angular.module('4screens.engageform').directive( 'engageformSwiperDirective',
 
 'use strict';
 
-angular.module('4screens.engageform').directive( 'higherThanWindow', ["$document", "$window", function( $document, $window ) {
+angular.module('4screens.engageform').directive( 'higherThanWindow', ["$document", "$window", "$timeout", function( $document, $window, $timeout ) {
   var $body = angular.element( $document.find('body').eq( 0 ) );
 
   return {
     link: function( scope, element ) {
-      scope.$applyAsync( function() {
-        if (element[0].clientHeight > $window.innerHeight) {
-          $body.addClass('higher-than-window');
-        } else {
-          $body.removeClass('higher-than-window');
-        }
-      });
+      function checkHeight () {
+        scope.$applyAsync(function() {
+          var height = element[0].clientHeight;
+
+          // Add class on the body
+          // FIXME: Shouldn't really be a part of the directive.
+          if (element[0].clientHeight > $window.innerHeight) {
+            $body.addClass('higher-than-window');
+          } else {
+            $body.removeClass('higher-than-window');
+          }
+
+          // Inform the parent window (in the embedded environment) about size change.
+          // FIXME: Shouldn't really be a part of the directive.
+          $window.parent.postMessage( height, '*' );
+
+          // When the app is embedded, the embed script can change the window size, what leads to resize of
+          // some elements. It has impact on the element's height, so it has to be checked again.
+          $timeout(function() {
+            if ( height !== element[0].clientHeight ) {
+              checkHeight();
+            }
+          }, 50 );
+        })
+      }
+
+      checkHeight();
     }
   };
 }]);
