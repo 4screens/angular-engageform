@@ -10,7 +10,4 @@ angular.module( '4screens.engageform',[
 ]).config([ 'localStorageServiceProvider', function( localStorageServiceProvider ) {
   // localStorageService
   localStorageServiceProvider.prefix = '4screens.engageform';
-} ]).run(function( $FB ){
-  // ToDo: move to cfg
-  $FB.init('911589325564446');
-});
+} ]);

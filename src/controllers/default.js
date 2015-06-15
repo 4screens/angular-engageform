@@ -83,6 +83,11 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         return;
       }
 
+      // Ignore fb, twttr messages 
+      if ( event.origin.indexOf('facebook') || event.origin.indexOf('twitter') ) {
+        return;
+      }
+
       results = JSON.parse( event.data );
       if ( previewMode ) {
         $scope.$apply(function() {
@@ -419,13 +424,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           }
 
           // Init linkedin
-          window.linkedinShareSuccess = function() {
+          // Broken callback function
+          /*window.linkedinShareSuccess = function() {
             return $http
               .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'linkedin' ).replace( ':quizId', cq.quizId) )
               .then(function( res ) { console.log( res ); })
               .catch(function( res ) { console.log( res ); })
             ;
-          };
+          };*/
         }
       };
       sso.facebook = {
@@ -434,7 +440,16 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
             CONFIG.backend.answers.domain + CONFIG.backend.share.facebook + '?quizId=' + cq.quizId + '&description=' + sso.description + '&name=' + sso.title,
             '_blank',
             'toolbar=no,scrollbars=no,resizable=yes,width=460,height=280'
-            );
+          );
+        }
+      };
+      sso.linkedin = {
+        share: function () {
+          window.open(
+            'https://www.linkedin.com/shareArticle?mini=true&url=' + sso.link + '&title=' + sso.title + '&summary' + sso.description,
+            '_blank',
+            'toolbar=no,scrollbars=no,resizable=yes,width=550,height=500'
+          );
         }
       };
 

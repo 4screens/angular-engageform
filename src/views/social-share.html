@@ -1,33 +1,15 @@
-<!-- ToDo: Remove inline styles -->
-<section class="social-share" style="position: fixed; top: -999px;">
+<section class="social-shares--icons">
+
   <!-- Facebook -->
-  <div facebook style="display:none!important;" class="social-share-item facebookShare sr-only" data-shares="sharesFb"></div>
-  <div class="social-share-item facebookShare" data-ng-click="socialShare().facebook.share()">
-    <div class="facebookButton">
-      <div class="pluginButton">
-        <div class="pluginButtonContainer">
-          <div class="pluginButtonImage">
-            <button type="button">
-              <i class="pluginButtonIcon img sp_plugin-button-2x sx_plugin-button-2x_favblue"></i>
-            </button>
-          </div>
-        <span class="pluginButtonLabel">Share</span>
-      </div>
-    </div>
-  </div>
-  <div class="facebookCount"><div class="pluginCountButton pluginCountNum"><span><span>{{ sharesFb }}</span></span></div><div class="pluginCountButtonNub"><s></s><i></i></div></div></div>
+  <a class="social-shares--icons__fb" data-ng-click="socialShare().facebook.share()"><i class="fa fa-facebook"></i></a>
 
   <!-- Twitter -->
-  <div twitter class="social-share-item"
-    data-lang="en"
-    data-count="horizontal"
-    data-url="{{ socialShare().link }}"
-    data-size="medium"
-    data-text="{{ socialShare().title + ' ' + socialShare().description }}"
-  ></div>
+  <a class="social-shares--icons__twitter" href="https://twitter.com/intent/tweet?text={{ socialShare().link + ' ' + socialShare().title + ' ' + socialShare().description }}"><i class="fa fa-twitter"></i></a>
 
   <!-- LinkedIn -->
-  <!-- ToDo: Fix success callback, change data-url -->
-  <script type="IN/Share" data-url="http://www.google.com" data-counter="right" data-onsuccess="linkedinShareSuccess" class="social-share-item"></script>
+  <a class="social-shares--icons__linkedin" data-ng-click="socialShare().linkedin.share()"><i class="fa fa-linkedin"></i></a>
 
+  <!-- ToDo: Fix success callback
+  <script type="IN/Share" data-url="{{socialShare().title}}" data-text="{{ socialShare().title + ' ' + socialShare().description }}" data-counter="right" data-success="linkedinShareSuccess" class="social-share-item social-share-linkedin"></script>
+  -->
 </section>
