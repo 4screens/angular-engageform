@@ -419,17 +419,13 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           }
 
           // Init linkedin
-          if( typeof window.linkedinShareSuccess !== undefined ){
-            window.linkedinShareSuccess = function() {
-              return $http
-                .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'linkedin' ).replace( ':quizId', cq.quizId) )
-                .then(function( res ) { console.log( res ); })
-                .catch(function( res ) { console.log( res ); })
-              ;
-            };
-          } else {
-            console.error('Twitter api is not included');
-          }
+          window.linkedinShareSuccess = function() {
+            return $http
+              .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'linkedin' ).replace( ':quizId', cq.quizId) )
+              .then(function( res ) { console.log( res ); })
+              .catch(function( res ) { console.log( res ); })
+            ;
+          };
         }
       };
       sso.facebook = {
