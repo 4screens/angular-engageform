@@ -10,11 +10,15 @@ angular.module( '4screens.engageform',[
   '4screens.settings',
   'LocalStorageModule',
   'youtube-embed',
+  'djds4rce.angular-socialshare',
   'ngMessages'
 ]).config([ 'localStorageServiceProvider', function( localStorageServiceProvider ) {
   // localStorageService
   localStorageServiceProvider.prefix = '4screens.engageform';
-} ]);
+} ]).run(["$FB", function( $FB ){
+  // ToDo: move to cfg
+  $FB.init('911589325564446');
+}]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/main.html',
@@ -23,7 +27,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-endPage.html',
-    '<div class="scored theme-question-color" data-ng-if="quiz.type === \'score\'">You scored <span class="scored-text"><span class="scored-text-fill" data-ng-style="{height: ( 100 - scoredPoints ) + \'%\'}">{{scoredPoints || 0}}</span>{{ (scoredPoints || 0) + \'%\'}}</span></div><h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="main-content-description theme-question-color text-center" data-ng-if="!!question.description"><p>{{question.description}}</p></div><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture><div class="text-center main-footer" data-ng-if="question.coverPage.link"><a class="btn btn--round-corner btn--normal theme-button-color theme-question-color" rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}" data-ng-href="{{question.coverPage.link}}">{{question.coverPage.buttonText || "Thank You"}}</a></div><div class="text-center main-footer" data-ng-if="!question.coverPage.link"><span class="btn btn--round-corner btn--normal theme-button-color theme-question-color" title="{{question.coverPage.buttonText}}">{{question.coverPage.buttonText || "Thank You" }}</span></div>');
+    '<div class="scored theme-question-color" data-ng-if="quiz.type === \'score\'">You scored <span class="scored-text"><span class="scored-text-fill" data-ng-style="{height: ( 100 - scoredPoints ) + \'%\'}">{{scoredPoints || 0}}</span>{{ (scoredPoints || 0) + \'%\'}}</span></div><h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="main-content-description theme-question-color text-center" data-ng-if="!!question.description"><p>{{question.description}}</p></div><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture><div class="text-center main-footer" data-ng-if="question.coverPage.link"><a class="btn btn--round-corner btn--normal theme-button-color theme-question-color" rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}" data-ng-href="{{question.coverPage.link}}">{{question.coverPage.buttonText || "Thank You"}}</a></div><div class="text-center main-footer" data-ng-if="!question.coverPage.link"><span class="btn btn--round-corner btn--normal theme-button-color theme-question-color" title="{{question.coverPage.buttonText}}">{{question.coverPage.buttonText || "Thank You" }}</span></div><div data-ng-if="question.coverPage.showSocialShares" data-ng-include="\'views/engageform/social-share.html\'"></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -51,10 +55,15 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
     '<h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="main-content-description theme-question-color text-center" data-ng-if="!!question.description"><p>{{question.description}}</p></div><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture><div class="quiz-icon quiz-icon-big" data-ng-if="!currentQuestion.mainMedia() && currentQuestion.settings(\'showMainMedia\')"><i class="fa theme-question-color" data-ng-class="{ \'fa-bar-chart\': quiz.type === \'poll\', \'fa-edit\': quiz.type === \'survey\', \'fa-trophy\': quiz.type === \'score\', \'fa-group\': quiz.type === \'outcome\' }"></i></div><div class="text-center main-footer"><button class="btn btn--round-corner btn--normal theme-button-color theme-question-color" data-ng-show="hasNext()" data-ng-click="next($event)">{{question.coverPage.buttonText || "Let\'s get started"}}</button> <button class="btn btn--round-corner btn--normal theme-button-color theme-question-color" data-ng-show="!hasNext()">{{question.coverPage.buttonText || "Let\'s get started"}}</button></div>');
 }]);
 
+angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
+  $templateCache.put('views/engageform/social-share.html',
+    '<section class="social-share" style="position: fixed; top: -999px;"><div facebook style="display:none!important;" class="social-share-item facebookShare sr-only" data-shares="sharesFb"></div><div class="social-share-item facebookShare" data-ng-click="socialShare().facebook.share()"><div class="facebookButton"><div class="pluginButton"><div class="pluginButtonContainer"><div class="pluginButtonImage"><button type="button"><i class="pluginButtonIcon img sp_plugin-button-2x sx_plugin-button-2x_favblue"></i></button></div><span class="pluginButtonLabel">Share</span></div></div></div><div class="facebookCount"><div class="pluginCountButton pluginCountNum"><span><span>{{ sharesFb }}</span></span></div><div class="pluginCountButtonNub"><s></s><i></i></div></div></div><div twitter class="social-share-item" data-lang="en" data-count="horizontal" data-url="{{ socialShare().link }}" data-size="medium" data-text="{{ socialShare().title + \' \' + socialShare().description }}"></div><script type="IN/Share" data-url="http://www.google.com" data-counter="right" data-onsuccess="linkedinShareSuccess" class="social-share-item"></script></section>');
+}]);
+
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", "$q", "previewMode", "summaryMode", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $q, previewMode, summaryMode ) {
+  ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", "$http", "$q", "previewMode", "summaryMode", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $http, $q, previewMode, summaryMode ) {
     var nextQuestionTimeout, quizId = $routeParams.engageFormId;
 
     $scope.pagination = { curr: function() {}, last: 0 };
@@ -115,6 +124,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         EngageformBackendService.questions.sync($scope.questions, $scope.currentQuestion.index());
 
         $scope.sentAnswer();
+
+        // Init socialshare
+        $scope.socialShare().init();
       });
     });
 
@@ -441,6 +453,54 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     $scope.progressBarWidth = function() {
       return ( ( $scope.pagination.curr() / $scope.pagination.last ) * 100 );
+    };
+
+    $scope.socialShare = function() {
+      var cq = $scope.questions[$scope.currentQuestion.index()], sso = {
+        enabled: cq.coverPage.showSocialShares ? true : false,
+        title: ( $scope.quiz.settings.share && $scope.quiz.settings.share.title ) ||
+          ( $scope.questions[0].type === 'startPage' && $scope.questions[0].title ? $scope.questions[0].title : 'ShareTitle' ),
+        description: ( $scope.quiz.settings.share && $scope.quiz.settings.share.description ) ||
+          ( $scope.questions[0].type === 'startPage' && $scope.questions[0].description ? $scope.questions[0].description : 'ShareDescription' ),
+        imageUrl: ( $scope.quiz.settings.share && $scope.quiz.settings.share.imageUrl ) ||
+          ( $scope.questions[0].type === 'startPage' && $scope.questions[0].imageFile ? $scope.questions[0].imageFile : '' ),
+        link: ( $scope.quiz.settings.share && $scope.quiz.settings.share.link ) || $window.location.href,
+        href: $window.location.href,
+        init: function() {
+          // Init twitter
+          if( typeof window.twttr === 'object' ){
+            window.twttr.events.bind( 'tweet', function( ev ) {
+              $http
+                .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'twitter' ).replace( ':quizId', cq.quizId ) )
+                .then(function( res ) { console.log( res ); })
+                .catch(function( res ) { console.log( res ); })
+              ;
+            } );
+          } else {
+            console.error('Twitter api is not included');
+          }
+
+          // Init linkedin
+          window.linkedinShareSuccess = function() {
+            return $http
+              .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'linkedin' ).replace( ':quizId', cq.quizId) )
+              .then(function( res ) { console.log( res ); })
+              .catch(function( res ) { console.log( res ); })
+            ;
+          };
+        }
+      };
+      sso.facebook = {
+        share: function() {
+          window.open(
+            CONFIG.backend.answers.domain + CONFIG.backend.share.facebook + '?quizId=' + cq.quizId + '&description=' + sso.description + '&name=' + sso.title,
+            '_blank',
+            'toolbar=no,scrollbars=no,resizable=yes,width=460,height=280'
+            );
+        }
+      };
+
+      return sso;
     };
 
     function sendDataForm( data, $event ) {
