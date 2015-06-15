@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $q, previewMode, summaryMode ) {
+  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $http, $q, previewMode, summaryMode ) {
     var nextQuestionTimeout, quizId = $routeParams.engageFormId;
 
     $scope.pagination = { curr: function() {}, last: 0 };
@@ -62,6 +62,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         EngageformBackendService.questions.sync($scope.questions, $scope.currentQuestion.index());
 
         $scope.sentAnswer();
+
+        // Init socialshare
+        $scope.socialShare().init();
       });
     });
 
@@ -391,19 +394,55 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.socialShare = function() {
-      var cq = $scope.questions[$scope.currentQuestion.index()];
-      return cq.type !== 'endPage' ? false : {
+      var cq = $scope.questions[$scope.currentQuestion.index()], sso = {
         enabled: cq.coverPage.showSocialShares ? true : false,
-        // Adjust atributes to server response (title, desc, img, etc.)
-        title: cq.coverPage.socialShareTitle || 
+        title: ( $scope.quiz.settings.share && $scope.quiz.settings.share.title ) ||
           ( $scope.questions[0].type === 'startPage' && $scope.questions[0].title ? $scope.questions[0].title : 'ShareTitle' ),
-        description: cq.coverPage.socialShareDescription || 
+        description: ( $scope.quiz.settings.share && $scope.quiz.settings.share.description ) ||
           ( $scope.questions[0].type === 'startPage' && $scope.questions[0].description ? $scope.questions[0].description : 'ShareDescription' ),
-        picture: cq.coverPage.socialSharePicture || 
+        imageUrl: ( $scope.quiz.settings.share && $scope.quiz.settings.share.imageUrl ) ||
           ( $scope.questions[0].type === 'startPage' && $scope.questions[0].imageFile ? $scope.questions[0].imageFile : '' ),
-        url: cq.coverPage.socialShareUrl || $window.location.href,
-        href: $window.location.href
+        link: ( $scope.quiz.settings.share && $scope.quiz.settings.share.link ) || $window.location.href,
+        href: $window.location.href,
+        init: function() {
+          // Init twitter
+          if( typeof window.twttr === 'object' ){
+            window.twttr.events.bind( 'tweet', function( ev ) {
+              $http
+                .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'twitter' ).replace( ':quizId', cq.quizId ) )
+                .then(function( res ) { console.log( res ); })
+                .catch(function( res ) { console.log( res ); })
+              ;
+            } );
+          } else {
+            console.error('Twitter api is not included');
+          }
+
+          // Init linkedin
+          if( typeof window.linkedinShareSuccess !== undefined ){
+            window.linkedinShareSuccess = function() {
+              return $http
+                .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'linkedin' ).replace( ':quizId', cq.quizId) )
+                .then(function( res ) { console.log( res ); })
+                .catch(function( res ) { console.log( res ); })
+              ;
+            };
+          } else {
+            console.error('Twitter api is not included');
+          }
+        }
       };
+      sso.facebook = {
+        share: function() {
+          window.open(
+            CONFIG.backend.answers.domain + CONFIG.backend.share.facebook + '?quizId=' + cq.quizId + '&description=' + sso.description + '&name=' + sso.title,
+            '_blank',
+            'toolbar=no,scrollbars=no,resizable=yes,width=460,height=280'
+            );
+        }
+      };
+
+      return sso;
     };
 
     function sendDataForm( data, $event ) {
