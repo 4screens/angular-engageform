@@ -316,7 +316,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
             }
           } );
 
-          if(correctEndPage) {
+          if(correctEndPage.length) {
             $scope.questions.push( correctEndPage[0] );
           }
         }
