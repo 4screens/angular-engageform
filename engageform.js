@@ -815,7 +815,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           return _questions[ _questionIndex ].requiredAnswer;
         },
         answerMedia: function( filename ) {
-          return CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + filename;
+          return filename.slice( 0, 4 ) !== 'http' ? CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + filename : filename;
         },
         sentAnswer: function() {
           var value,
