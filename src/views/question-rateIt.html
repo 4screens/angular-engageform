@@ -9,7 +9,7 @@
       'left' : (question.imageData.left > 0 ? question.imageData.left : 0) + '%',
       'top'  : (question.imageData.top  > 0 ? question.imageData.top  : 0) + '%'
     }"
-    data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
+    data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}"
     data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
                     {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
                     {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
@@ -21,7 +21,7 @@
 >
   <span
     data-ng-click="sendAnswer(AA.length - $index, $event)"
-    class="theme-answer-color"
+    class="theme-question-color"
     data-ng-class="{'item__selected': questionAnswer.selected >= AA.length - $index}"
     data-ng-repeat="r in AA"
     data-ng-if="question.rateIt.rateType !== 'number'">
@@ -31,7 +31,7 @@
 
   <span
     data-ng-click="sendAnswer(AA.length - $index, $event)"
-    class="theme-answer-color"
+    class="theme-question-color"
     data-ng-class="{'item__selected': questionAnswer.selected == AA.length - $index}"
     data-ng-repeat="r in AA"
     data-ng-if="question.rateIt.rateType === 'number'">

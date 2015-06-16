@@ -2,6 +2,9 @@
  * This file is subject to the terms and conditions defined in
  * file 'LICENSE' or 'LICENSE.txt', which is part of this source code package.
  */
+
+'use strict';
+
 var gulp = require('gulp')
 , plugins = require('gulp-load-plugins')()
 , pkg = require('./package.json')
@@ -29,17 +32,20 @@ var gulp = require('gulp')
     './src/services/cloudinary.js'
   ]
 , BANNER = './src/header.txt'
-, MAIN = 'engageform.js';
+, MAIN = 'engageform.js'
+, FILES_FOR_LINT = FILES.concat([
+  '!./src/views.js'
+]);
 
 gulp.task( 'jscodesnifer', function() {
-  return gulp.src( FILES )
+  return gulp.src( FILES_FOR_LINT )
     .pipe( plugins.jscodesniffer(
       { standard: 'Idiomatic', reporters: [ 'default', 'failer' ] }
     ) );
 });
 
 gulp.task( 'lint', ['jscodesnifer'], function() {
-  return gulp.src( FILES )
+  return gulp.src( FILES_FOR_LINT )
     .pipe( plugins.jshint() )
     .pipe( plugins.jshint.reporter('jshint-stylish') );
 } );
@@ -107,7 +113,7 @@ gulp.task( 'complexity', function() {
 } );
 
 gulp.task( 'watch', function() {
-  gulp.watch( FILES, [ 'clean:views' ] );
+  gulp.watch( FILES.concat(VIEWS), [ 'clean:views' ] );
 } );
 
 gulp.task( 'default', ['clean:views'] );
