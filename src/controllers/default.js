@@ -84,7 +84,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
 
       // Ignore fb, twttr messages 
-      if ( event.origin.indexOf('facebook') || event.origin.indexOf('twitter') ) {
+      if ( event.origin.indexOf('facebook') !== -1 || event.origin.indexOf('twitter') !== -1 ) {
         return;
       }
 
@@ -251,6 +251,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
       case 'outcome':
         if(res.hasOwnProperty('outcome') && $scope.endPages.length) {
+          $scope.scoredOutcome = res.outcome;
           correctEndPage = _.filter( $scope.endPages, function( e ) {
             if( e.coverPage && e.coverPage.outcome && e.coverPage.outcome === res.outcome ) {
               return e;
@@ -399,20 +400,18 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.socialShare = function() {
-      var cq = $scope.questions[$scope.currentQuestion.index()], sso = {
+      var cq = $scope.questions[$scope.currentQuestion.index()], sso = {};
+      sso = {
         enabled: cq.coverPage.showSocialShares ? true : false,
-        title: ( $scope.quiz.settings.share && $scope.quiz.settings.share.title ) ||
-          ( $scope.questions[0].type === 'startPage' && $scope.questions[0].title ? $scope.questions[0].title : 'ShareTitle' ),
-        description: ( $scope.quiz.settings.share && $scope.quiz.settings.share.description ) ||
-          ( $scope.questions[0].type === 'startPage' && $scope.questions[0].description ? $scope.questions[0].description : 'ShareDescription' ),
-        imageUrl: ( $scope.quiz.settings.share && $scope.quiz.settings.share.imageUrl ) ||
-          ( $scope.questions[0].type === 'startPage' && $scope.questions[0].imageFile ? $scope.questions[0].imageFile : '' ),
-        link: ( $scope.quiz.settings.share && $scope.quiz.settings.share.link ) || $window.location.href,
+        title: $scope.quiz.settings.share.title || $scope.quiz.title,
+        description: $scope.quiz.settings.share.description || 'Fill out this' + $scope.quiz.type + '!',
+        imageUrl: $scope.quiz.settings.share.imageUrl ? $scope.currentQuestion.answerMedia( $scope.quiz.settings.share.imageUrl ) : CONFIG.backend.domain + CONFIG.backend.share.defaultImgUrl,
+        link: $scope.quiz.settings.share.link || $window.location.href,
         href: $window.location.href,
         init: function() {
           // Init twitter
           if( typeof window.twttr === 'object' ){
-            window.twttr.events.bind( 'tweet', function( ev ) {
+            window.twttr.events.bind( 'tweet', function() {
               $http
                 .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'twitter' ).replace( ':quizId', cq.quizId ) )
                 .then(function( res ) { console.log( res ); })
@@ -437,7 +436,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       sso.facebook = {
         share: function() {
           window.open(
-            CONFIG.backend.answers.domain + CONFIG.backend.share.facebook + '?quizId=' + cq.quizId + '&description=' + sso.description + '&name=' + sso.title,
+            CONFIG.backend.answers.domain + CONFIG.backend.share.facebook + '?quizId=' + cq.quizId + '&description=' + sso.description + '&name=' + sso.title + '&image=' + sso.imageUrl,
             '_blank',
             'toolbar=no,scrollbars=no,resizable=yes,width=460,height=280'
           );
@@ -452,6 +451,16 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           );
         }
       };
+
+      // Personalyze description for outcomes and score
+      if ($scope.quiz.type === 'outcome' || $scope.quiz.type === 'score') {
+        sso.description = 'I got :result on :quizname on Engageform! What about you?'.replace( ':quizname', $scope.quiz.title );
+        sso.description = sso.description.replace( ':result', $scope.quiz.type === 'score' ? ( $scope.scoredPoints || 0 ) + ' %' : ( $scope.scoredOutcome || '' ) );
+
+        if (cq.type === 'endPage' && cq.imageFile && cq.settings.showMainMedia) {
+          sso.imageUrl = $scope.currentQuestion.mainMedia().src;
+        }
+      }
 
       return sso;
     };
