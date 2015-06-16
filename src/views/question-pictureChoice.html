@@ -9,7 +9,7 @@
         'left' : (question.imageData.left > 0 ? question.imageData.left : 0) + '%',
         'top'  : (question.imageData.top  > 0 ? question.imageData.top  : 0) + '%'
       }"
-      data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
+      data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}"
       data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
                       {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
                       {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
@@ -25,17 +25,23 @@
       'theme-answer-background-color theme-answer-border-color': questionAnswer.selected !== answer._id,
       'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id
     }">
-        <div class="wrapper ir">
+        <div class="image-wrapper">
           <picture class="thumb-media-image">
-            <img 
-              data-ng-src="{{ getImgUrl( currentQuestion.answerMedia( answer.imageFile ), 300, '1.0' ) }}" 
+            <img
+              style="display: block; position: absolute;"
+              data-ng-style="{
+                'width': answer.imagedata.width + '%',
+                'left': answer.imagedata.left + '%',
+                'top': answer.imagedata.top + '%'
+              }"
+              data-ng-src="{{ getImgUrl( currentQuestion.answerMedia( answer.imageFile ), 300, '1.0' ) }}"
               data-ng-srcset="{{ getImgUrl( currentQuestion.answerMedia( answer.imageFile ), 300, '1.0' ) }},
                               {{ getImgUrl( currentQuestion.answerMedia( answer.imageFile ), 300, '1.5' ) }} 1.5x,
                               {{ getImgUrl( currentQuestion.answerMedia( answer.imageFile ), 300, '2.0' ) }} 2.0x"
             >
           </picture>
-          <div class="answer__bar" 
-            data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id, 'theme-answer-background-result-color': questionAnswer.selected !== answer._id }" 
+          <div class="answer__bar"
+            data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id, 'theme-answer-background-result-color': questionAnswer.selected !== answer._id }"
             ng-style="{
               '-moz-transform': formatAnswersTransform(questionAnswer.stats[answer._id], true),
               '-webkit-transform': formatAnswersTransform(questionAnswer.stats[answer._id], true),
@@ -52,14 +58,14 @@
         }">
           {{ answer.text }}
         </figcaption>
-        <div class="results" 
+        <div class="results"
              data-ng-class="{ 'theme-question-color': questionAnswer.selected === answer._id,
                               'theme-answer-color': questionAnswer.selected !== answer._id}">
           <span class="results__precent" data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false && questionAnswer.selected ">
             {{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}<span class="precent">%</span>
           </span>
-          <span class="results__triangle" 
-              data-ng-if="question.settings.showCorrectAnswer && question.settings.showCorrectAnswer !== false && questionAnswer.selected === answer._id " 
+          <span class="results__triangle"
+              data-ng-if="question.settings.showCorrectAnswer && question.settings.showCorrectAnswer !== false && questionAnswer.selected === answer._id "
               data-ng-class="{'is-correct': !!question.settings.showCorrectAnswer && !!questionAnswer.status[ answer._id ].correct, 'is-incorrect': !questionAnswer.status[ answer._id ].correct }">
             <i class="fa" data-ng-class="{'fa-check': questionAnswer.status[ answer._id ].correct, 'fa-times': !questionAnswer.status[ answer._id ].correct }"></i>
           </span>
