@@ -107,7 +107,7 @@ gulp.task( 'complexity', function() {
 } );
 
 gulp.task( 'watch', function() {
-  gulp.watch( FILES, [ 'complexity', 'clean:views' ] );
+  gulp.watch( FILES, [ 'clean:views' ] );
 } );
 
 gulp.task( 'default', ['clean:views'] );
