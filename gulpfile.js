@@ -29,21 +29,23 @@ var gulp = require('gulp')
     './src/filters/nl2br.js',
     './src/filters/questions-order.js',
     './src/services/backend.js',
-    './src/services/cloudinary.js',
-    '!./src/views.js'
+    './src/services/cloudinary.js'
   ]
 , BANNER = './src/header.txt'
-, MAIN = 'engageform.js';
+, MAIN = 'engageform.js'
+, FILES_FOR_LINT = FILES.concat([
+  '!./src/views.js'
+]);
 
 gulp.task( 'jscodesnifer', function() {
-  return gulp.src( FILES )
+  return gulp.src( FILES_FOR_LINT )
     .pipe( plugins.jscodesniffer(
       { standard: 'Idiomatic', reporters: [ 'default', 'failer' ] }
     ) );
 });
 
 gulp.task( 'lint', ['jscodesnifer'], function() {
-  return gulp.src( FILES )
+  return gulp.src( FILES_FOR_LINT )
     .pipe( plugins.jshint() )
     .pipe( plugins.jshint.reporter('jshint-stylish') );
 } );
