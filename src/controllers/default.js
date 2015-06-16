@@ -83,19 +83,23 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         return;
       }
 
-      // Ignore fb, twttr messages 
-      if ( event.origin.indexOf('facebook') || event.origin.indexOf('twitter') ) {
+      // Ignore fb, twttr messages
+      if ( event.origin.indexOf('facebook') > -1 || event.origin.indexOf('twitter') > -1 ) {
         return;
       }
 
       results = JSON.parse( event.data );
+
       if ( previewMode ) {
         $scope.$apply(function() {
-          EngageformBackendService.setUserResults( results );
+          EngageformBackendService.preview.setUserResults( results ).then( function() {
+            $scope.sentAnswer();
+          } );
         });
       } else if ( summaryMode ) {
         $scope.$apply(function() {
           EngageformBackendService.setAnswersResults( results );
+          $scope.sentAnswer();
         });
       }
     }
@@ -307,6 +311,17 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.submitQuiz = function( $event ) {
       if ( summaryMode ) {
         return false;
+      }
+
+      if ( previewMode ) {
+        $scope.pickCorrectEndPage(EngageformBackendService.preview.getUserResults());
+
+        if( _.where( $scope.questions, { type: 'endPage' } ).length ) {
+          $scope.next( null, true );
+        } else {
+          $scope.requiredMessage = 'Thank you!';
+        }
+        return;
       }
 
       $scope.requiredMessage = '';

@@ -142,19 +142,23 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         return;
       }
 
-      // Ignore fb, twttr messages 
-      if ( event.origin.indexOf('facebook') || event.origin.indexOf('twitter') ) {
+      // Ignore fb, twttr messages
+      if ( event.origin.indexOf('facebook') > -1 || event.origin.indexOf('twitter') > -1 ) {
         return;
       }
 
       results = JSON.parse( event.data );
+
       if ( previewMode ) {
         $scope.$apply(function() {
-          EngageformBackendService.setUserResults( results );
+          EngageformBackendService.preview.setUserResults( results ).then( function() {
+            $scope.sentAnswer();
+          } );
         });
       } else if ( summaryMode ) {
         $scope.$apply(function() {
           EngageformBackendService.setAnswersResults( results );
+          $scope.sentAnswer();
         });
       }
     }
@@ -366,6 +370,17 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.submitQuiz = function( $event ) {
       if ( summaryMode ) {
         return false;
+      }
+
+      if ( previewMode ) {
+        $scope.pickCorrectEndPage(EngageformBackendService.preview.getUserResults());
+
+        if( _.where( $scope.questions, { type: 'endPage' } ).length ) {
+          $scope.next( null, true );
+        } else {
+          $scope.requiredMessage = 'Thank you!';
+        }
+        return;
       }
 
       $scope.requiredMessage = '';
@@ -701,7 +716,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           question = _questions[ _questionIndex ],
           result = null;
 
-      if (typeof answer === 'undefined') {
+      if ( !answer ) {
         return result;
       }
 
@@ -746,17 +761,23 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
     }
 
     return {
-      setUserResults: function( results ){
-        _userResults = results ? results : null;
-        if (results && results.userIdent) {
-          _cache[ USER_IDENTIFIER ] = results.userIdent;
-          CommonLocalStorageService.set( USER_IDENTIFIER, _cache[ USER_IDENTIFIER ] );
+      preview: {
+        setUserResults: function( results ){
+          var deferred = $q.defer();
+
+          _userResults = results ? results : null;
+
+          deferred.resolve();
+
+          return deferred.promise;
+        },
+        setAnswersResults: function( results ){
+          _answerResults = results ? results : null;
+          return;
+        },
+        getUserResults: function() {
+          return _userResults;
         }
-        return;
-      },
-      setAnswersResults: function( results ){
-        _answerResults = results ? results : null;
-        return;
       },
       quiz: {
         get: function( engageFormId ) {
@@ -809,7 +830,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           return _questions[ _questionIndex ].forms.inputs;
         },
         answers: function() {
-          return _questions[ _questionIndex ].answers;
+          return _questions[ _questionIndex ] ? _questions[ _questionIndex ].answers : [];
         },
         requiredAnswer: function() {
           return _questions[ _questionIndex ].requiredAnswer;
@@ -818,10 +839,15 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           return filename.slice( 0, 4 ) !== 'http' ? CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + filename : filename;
         },
         sentAnswer: function() {
-          var value,
-              id = _questions[ _questionIndex ]._id;
+          var value, id;
 
-          if (!!_userResults) {
+          if ( _questions[ _questionIndex ] ) {
+            id = _questions[ _questionIndex ]._id;
+          } else {
+            return null;
+          }
+
+          if ( _userResults ) {
             value = _formUserResult( id );
           }
           else if (!!_answerResults) {
