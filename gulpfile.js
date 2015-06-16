@@ -2,6 +2,9 @@
  * This file is subject to the terms and conditions defined in
  * file 'LICENSE' or 'LICENSE.txt', which is part of this source code package.
  */
+
+'use strict';
+
 var gulp = require('gulp')
 , plugins = require('gulp-load-plugins')()
 , pkg = require('./package.json')
@@ -26,7 +29,8 @@ var gulp = require('gulp')
     './src/filters/nl2br.js',
     './src/filters/questions-order.js',
     './src/services/backend.js',
-    './src/services/cloudinary.js'
+    './src/services/cloudinary.js',
+    '!./src/views.js'
   ]
 , BANNER = './src/header.txt'
 , MAIN = 'engageform.js';
