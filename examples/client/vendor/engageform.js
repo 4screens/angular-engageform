@@ -74,9 +74,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         // Get questions
         $scope.questions = _.sortBy( questions, 'position' );
 
+        // Summary mode: filter start and end pages; show answers on and required answers off for every question
         if ( summaryMode ) {
+          _.remove( $scope.questions, function( question ) {
+            return question.type === 'startPage' || question.type === 'endPage';
+          });
+
           _.map( $scope.questions, function( question ) {
-            if ( question.settings && question.settings.showAnswers ) {
+            if ( question.settings ) {
               question.settings.showAnswers = true;
             }
 
@@ -877,11 +882,9 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
             value = CommonLocalStorageService.get( key );
           }
 
-          if( !!value ) {
-            return value;
-          }
+          console.log( value );
 
-          return null;
+          return value ? value : null;
         },
         sendAnswer: function( value ) {
           var deferred, values = {};
