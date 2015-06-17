@@ -211,11 +211,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
             value = CommonLocalStorageService.get( key );
           }
 
-          if( !!value ) {
-            return value;
-          }
-
-          return null;
+          return value ? value : null;
         },
         sendAnswer: function( value ) {
           var deferred, values = {};
