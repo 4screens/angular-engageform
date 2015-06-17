@@ -215,11 +215,11 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           $scope.sentAnswer();
         }
 
-        if (!$scope.currentQuestion.settings('showAnswers') && !$scope.currentQuestion.settings('showCorrectAnswer') && $scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last) {
+        if (!$scope.currentQuestion.settings('showAnswers') && $scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last) {
           nextQuestionTimeout = $timeout( function () {
             typeof force === 'undefinded' ? $scope.next() : $scope.next( null, true );
             nextQuestionTimeout = null;
-          }, 200 );
+          }, $scope.currentQuestion.settings('showCorrectAnswer') ? 500 : 200 );
         }
 
       });
