@@ -16,12 +16,12 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.questions = _.sortBy( questions, 'position' );
 
         if ( summaryMode ) {
-          _.map($scope.questions, function( question ) {
-            if ( !!question.settings && typeof question.settings.showAnswers !== 'undefined') {
+          _.map( $scope.questions, function( question ) {
+            if ( question.settings && question.settings.showAnswers ) {
               question.settings.showAnswers = true;
             }
 
-            if ( typeof question.requiredAnswer !== 'undefined' ) {
+            if ( question.requiredAnswer ) {
               question.requiredAnswer = false;
             }
 
@@ -98,8 +98,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         });
       } else if ( summaryMode ) {
         $scope.$apply(function() {
-          EngageformBackendService.setAnswersResults( results );
-          $scope.sentAnswer();
+          EngageformBackendService.preview.setAnswersResults( results ).then( function() {
+            $scope.sentAnswer();
+          } );
         });
       }
     }
@@ -310,12 +311,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     }
 
     $scope.submitQuiz = function( $event ) {
+      var userResults = EngageformBackendService.preview.getUserResults();
+
       if ( summaryMode ) {
         return false;
       }
 
-      if ( previewMode ) {
-        $scope.pickCorrectEndPage(EngageformBackendService.preview.getUserResults());
+      if ( previewMode && userResults ) {
+        $scope.pickCorrectEndPage( userResults );
 
         if( _.where( $scope.questions, { type: 'endPage' } ).length ) {
           $scope.next( null, true );
