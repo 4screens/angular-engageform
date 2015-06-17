@@ -34,4 +34,4 @@
   </span>
 </div>
 
-<div data-ng-if="question.coverPage.showSocialShares" data-ng-include="'views/engageform/social-share.html'"></div>
+<div data-ng-if="question.coverPage.showSocialShares && socialShare().enabled" data-ng-include="'views/engageform/social-share.html'"></div>
