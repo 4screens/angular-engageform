@@ -66,6 +66,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         // Init socialshare
         $scope.socialShare().init();
       });
+    }).catch(function() {
+      $scope.show404 = true;
     });
 
     function setScreenType() { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; }
