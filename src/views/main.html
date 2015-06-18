@@ -63,8 +63,9 @@
         </span>
       </span>
     </div>
-    <a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a>
-
+    <div class="four-screens__footer-logo">
+      <span>Made with:</span> <a title="4Screens" href="http://4screens.net/" target="_blank" ng-class="{'logo-light-32': themeName ==='theme-dark',  'logo-dark-32': themeName ==='theme-light'}">4Screens</a>
+    </div>
     <button class="progress__btn progress__btn--prev fa-stack fa-lg" data-ng-show="hasPrev()" data-ng-click="prev()">
       <i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i>
       <i class="fa fa-angle-left"></i>
