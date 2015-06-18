@@ -7,7 +7,7 @@
     'theme-question-color': questionAnswer.selected === answer._id,
     'theme-answer-color': questionAnswer.selected !== answer._id
   }">
-    {{answer.group}}
+    {{ answer.title ? answer.title + ' (' + answer.group + ')' : answer.group }}
     <span class="theme-question-result-color-text ng-animate">
       <span>
         {{ formatAnswers(answer.percent) | number:1 }} %
