@@ -76,34 +76,39 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       });
     });
 
-    function setThemeName( colorHex ) {
+    function setThemeName( color ) {
 
-      var color = hex2rgb( colorHex );
+      var colorRGB = colorToRgb( color );
       
-      if ((color.red * 0.299 + color.green * 0.587 + color.blue * 0.114) > 186) {
+      if ((colorRGB.red * 0.299 + colorRGB.green * 0.587 + colorRGB.blue * 0.114) > 186) {
         $scope.themeName = 'theme-light';
       } else {
         $scope.themeName = 'theme-dark';
       }
     }
 
-    function hex2rgb( hex ){
-      var temp, triplets;
-
-      if ( hex[0] === '#' ){
-        hex = hex.substr( 1 );
+    function colorToRgb( color ) {
+      var colorParts, temp, triplets;
+      if (color[0] === '#') {
+        color = color.substr( 1 );
+      }
+      else {
+        colorParts = color.match( /^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i );
+        color = ( colorParts && colorParts.length === 4 ) ? ( '0' + parseInt( colorParts[1], 10 ).toString( 16 ) ).slice( -2 ) + 
+          ('0' + parseInt( colorParts[2], 10 ).toString( 16 ) ).slice( -2 ) +
+          ('0' + parseInt( colorParts[3], 10 ).toString( 16 ) ).slice( -2 ) : '';
       }
 
-      if (hex.length === 3) {
-        temp = hex;
-        hex = '';
+      if (color.length === 3) {
+        temp = color;
+        color = '';
         temp = /^([a-f0-9])([a-f0-9])([a-f0-9])$/i.exec( temp ).slice( 1 );
         for (var i = 0; i < 3; i++) {
-          hex += temp[i] + temp[i];
+          color += temp[i] + temp[i];
         }
       }
 
-      triplets = /^([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i.exec( hex ).slice( 1 );
+      triplets = /^([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i.exec( color ).slice( 1 );
 
       return {
         red: parseInt( triplets[0], 16 ),
