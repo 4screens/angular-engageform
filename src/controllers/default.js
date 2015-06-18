@@ -8,6 +8,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
+
+      setThemeName(quiz.theme.backgroundColor);
+      
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.wayAnimateClass = 'way-animation__next';
@@ -72,6 +75,43 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.socialShare().init();
       });
     });
+
+    function setThemeName( colorHex ) {
+
+      var color = hex2rgb( colorHex );
+      
+      if ((color.red * 0.299 + color.green * 0.587 + color.blue * 0.114) > 186) {
+        $scope.themeName = 'theme-light';
+      } else {
+        $scope.themeName = 'theme-dark';
+      }
+    }
+
+    function hex2rgb( hex ){
+      var temp, triplets;
+
+      if ( hex[0] === '#' ){
+        hex = hex.substr( 1 );
+      }
+
+      if (hex.length === 3) {
+        temp = hex;
+        hex = '';
+        temp = /^([a-f0-9])([a-f0-9])([a-f0-9])$/i.exec( temp ).slice( 1 );
+        for (var i = 0; i < 3; i++) {
+          hex += temp[i] + temp[i];
+        }
+      }
+
+      triplets = /^([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i.exec( hex ).slice( 1 );
+
+      return {
+        red: parseInt( triplets[0], 16 ),
+        green: parseInt( triplets[1], 16 ),
+        blue: parseInt( triplets[2], 16 )
+      };
+    }
+
 
     function setScreenType() { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; }
 

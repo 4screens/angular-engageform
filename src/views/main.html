@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile" />
 
-<div id="four-screens-application" class="{{screenType}}">
+<div id="four-screens-application" class="{{screenType}}" ng-class="themeName">
   <div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color">
     <picture data-ng-if="quiz.theme.backgroundImageFile" class="position-{{quiz.theme.backgroundImagePosition}}">
       <source
