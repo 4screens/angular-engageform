@@ -19,7 +19,7 @@ angular.module( '4screens.engageform',[
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/main.html',
-    '<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile"><div id="four-screens-application" class="{{screenType}}"><div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color"><picture data-ng-if="quiz.theme.backgroundImageFile" class="position-{{quiz.theme.backgroundImagePosition}}"><source media="(min-width: 1021px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 769px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 481px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 0px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><img data-ng-src="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"></picture></div><div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass"><div data-ng-repeat="question in questions | questionsFilter" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()"><div class="question-content-wrapper question-content-wrapper--{{question.type}}" higher-than-window><div class="four-screens__content wrapper" data-ng-class="{ \'content__type--forms\': question.type == \'forms\', \'content__type--multi-choice\': question.type == \'multiChoice\', \'content__type--picture-choice\': question.type == \'pictureChoice\', \'content__type--rate-it\': question.type == \'rateIt\', \'content__type--start-page\': question.type == \'startPage\', \'content__type--end-page\': question.type == \'endPage\' }" data-ng-include="\'views/engageform/question-\' + question.type + \'.html\'"></div></div></div></div><div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{\'is-active\': !!requiredMessage }">{{requiredMessage}}</div><div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== \'startPage\' && questions[currentQuestion.index()].type !== \'endPage\'"><div class="progress"><span class="progress__bar"><span class="progress__bar--line theme-button-color" data-ng-class="{\'progress__bar--full-size\': progressBarWidth() === 100 }" data-ng-style="{\'width\': progressBarWidth()+\'%\'}"></span></span></div><a title="4Screens" href="http://4screens.net/" class="four-screens__footer-logo" target="_blank">4Screens</a> <button class="progress__btn progress__btn--prev fa-stack fa-lg" data-ng-show="hasPrev()" data-ng-click="prev()"><i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i> <i class="fa fa-angle-left"></i></button> <button class="progress__btn progress__btn--next fa-stack fa-lg" data-ng-show="pagination.curr() < pagination.last" data-ng-click="next($event)"><i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i> <i class="fa fa-angle-right"></i></button> <button class="progress__btn progress__btn--submit theme-button-color theme-question-color" data-ng-show="pagination.curr() == pagination.last" data-ng-click="submitQuiz($event)"><span>submit</span></button></div></div>');
+    '<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile"><div id="four-screens-application" class="{{screenType}}" ng-class="themeName"><div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color"><picture data-ng-if="quiz.theme.backgroundImageFile" class="position-{{quiz.theme.backgroundImagePosition}}"><source media="(min-width: 1021px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 769px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 481px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 0px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><img data-ng-src="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"></picture></div><div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass"><div data-ng-repeat="question in questions | questionsFilter" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()"><div class="question-content-wrapper question-content-wrapper--{{question.type}}" question-initialized><div class="four-screens__content wrapper" data-ng-class="{ \'content__type--forms\': question.type == \'forms\', \'content__type--multi-choice\': question.type == \'multiChoice\', \'content__type--picture-choice\': question.type == \'pictureChoice\', \'content__type--rate-it\': question.type == \'rateIt\', \'content__type--start-page\': question.type == \'startPage\', \'content__type--end-page\': question.type == \'endPage\' }" data-ng-include="\'views/engageform/question-\' + question.type + \'.html\'"></div></div></div></div><div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{\'is-active\': !!requiredMessage }">{{requiredMessage}}</div><div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== \'startPage\' && questions[currentQuestion.index()].type !== \'endPage\'"><div class="progress"><span class="progress__bar"><span class="progress__bar--line theme-button-color" data-ng-class="{\'progress__bar--full-size\': progressBarWidth() === 100 }" data-ng-style="{\'width\': progressBarWidth()+\'%\'}"></span></span></div><div class="four-screens__footer-logo"><span>Made with:</span> <a title="4Screens" href="http://4screens.net/" target="_blank" ng-class="{\'logo-light-32\': themeName ===\'theme-dark\', \'logo-dark-32\': themeName ===\'theme-light\'}">4Screens</a></div><button class="progress__btn progress__btn--prev fa-stack fa-lg" data-ng-show="hasPrev()" data-ng-click="prev()"><i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i> <i class="fa fa-angle-left"></i></button> <button class="progress__btn progress__btn--next fa-stack fa-lg" data-ng-show="pagination.curr() < pagination.last" data-ng-click="next($event)"><i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i> <i class="fa fa-angle-right"></i></button> <button class="progress__btn progress__btn--submit theme-button-color theme-question-color" data-ng-show="pagination.curr() == pagination.last" data-ng-click="submitQuiz($event)"><span>submit</span></button></div></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -60,13 +60,30 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", "$http", "$q", "previewMode", "summaryMode", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $http, $q, previewMode, summaryMode ) {
-    var nextQuestionTimeout, quizId = $routeParams.engageFormId;
+  ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", "$document", "$http", "$q", "previewMode", "summaryMode", "message", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $document, $http, $q, previewMode, summaryMode, message ) {
+    var nextQuestionTimeout,
+        quizId = $routeParams.engageFormId,
+        $body = angular.element( $document.find('body').eq( 0 ) );
+
+    $scope.$on( 'container-initialized', function( event, data ) {
+      // Add or remove class on the body element depending on the question's height.
+      if (data.isHigherThanViewport) {
+        $body.addClass('higher-than-window');
+      } else {
+        $body.removeClass('higher-than-window');
+      }
+
+      // Inform the parent window (in the embedded environment) about the page change.
+      message.send( 'page-changed', data );
+    } );
 
     $scope.pagination = { curr: function() {}, last: 0 };
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
+
+      setThemeName(quiz.theme.backgroundColor);
+      
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.wayAnimateClass = 'way-animation__next';
@@ -131,6 +148,48 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.socialShare().init();
       });
     });
+
+    function setThemeName( color ) {
+
+      var colorRGB = colorToRgb( color );
+      
+      if ((colorRGB.red * 0.299 + colorRGB.green * 0.587 + colorRGB.blue * 0.114) > 186) {
+        $scope.themeName = 'theme-light';
+      } else {
+        $scope.themeName = 'theme-dark';
+      }
+    }
+
+    function colorToRgb( color ) {
+      var colorParts, temp, triplets;
+      if (color[0] === '#') {
+        color = color.substr( 1 );
+      }
+      else {
+        colorParts = color.match( /^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i );
+        color = ( colorParts && colorParts.length === 4 ) ? ( '0' + parseInt( colorParts[1], 10 ).toString( 16 ) ).slice( -2 ) + 
+          ('0' + parseInt( colorParts[2], 10 ).toString( 16 ) ).slice( -2 ) +
+          ('0' + parseInt( colorParts[3], 10 ).toString( 16 ) ).slice( -2 ) : '';
+      }
+
+      if (color.length === 3) {
+        temp = color;
+        color = '';
+        temp = /^([a-f0-9])([a-f0-9])([a-f0-9])$/i.exec( temp ).slice( 1 );
+        for (var i = 0; i < 3; i++) {
+          color += temp[i] + temp[i];
+        }
+      }
+
+      triplets = /^([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i.exec( color ).slice( 1 );
+
+      return {
+        red: parseInt( triplets[0], 16 ),
+        green: parseInt( triplets[1], 16 ),
+        blue: parseInt( triplets[2], 16 )
+      };
+    }
+
 
     function setScreenType() { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; }
 
@@ -610,38 +669,29 @@ angular.module('4screens.engageform').directive( 'engageformSwiperDirective',
 
 'use strict';
 
-angular.module('4screens.engageform').directive( 'higherThanWindow', ["$document", "$window", "$timeout", function( $document, $window, $timeout ) {
-  var $body = angular.element( $document.find('body').eq( 0 ) );
-
+angular.module('4screens.engageform').directive( 'questionInitialized', ["$document", "$window", "$timeout", function( $document, $window, $timeout ) {
   return {
     link: function( scope, element ) {
-      function checkHeight () {
-        scope.$applyAsync(function() {
-          var height = element[0].clientHeight;
+      function checkHeight() {
+        var height = element[0].clientHeight;
 
-          // Add class on the body
-          // FIXME: Shouldn't really be a part of the directive.
-          if (element[0].clientHeight > $window.innerHeight) {
-            $body.addClass('higher-than-window');
+        // When the app is embedded, the embed script can change the window size, what leads to resize of
+        // some elements. It has impact on the element's height, so it has to be checked again.
+        $timeout(function() {
+          // If the height hasn't stabilised yet, schedule another check.
+          if ( height !== element[0].clientHeight ) {
+            checkHeight();
           } else {
-            $body.removeClass('higher-than-window');
+            scope.$emit( 'container-initialized', {
+              height: height,
+              isHigherThanViewport: height > $window.innerHeight
+            } );
           }
-
-          // Inform the parent window (in the embedded environment) about size change.
-          // FIXME: Shouldn't really be a part of the directive.
-          $window.parent.postMessage( height, '*' );
-
-          // When the app is embedded, the embed script can change the window size, what leads to resize of
-          // some elements. It has impact on the element's height, so it has to be checked again.
-          $timeout(function() {
-            if ( height !== element[0].clientHeight ) {
-              checkHeight();
-            }
-          }, 50 );
-        })
+        }, 50 );
       }
 
-      checkHeight();
+      // Check the height when the scope stabilizes.
+      scope.$applyAsync( checkHeight );
     }
   };
 }]);
@@ -1017,3 +1067,14 @@ angular.module('4screens.engageform').factory(
       };
     } ]
 );
+angular.module('4screens.engageform').factory( 'message', ["$window", function( $window ) {
+  'use strict';
+  return {
+    send: function( name, data ) {
+      $window.parent.postMessage( angular.extend( { name: name }, data ), '*' );
+    },
+    on: function( name, callback ) {
+      // TODO
+    }
+  }
+}]);
