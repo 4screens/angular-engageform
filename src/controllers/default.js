@@ -4,8 +4,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $document, $http, $q, previewMode, summaryMode, message ) {
     var nextQuestionTimeout,
         quizId = $routeParams.engageFormId,
-        $body = angular.element( $document.find('body').eq( 0 ) );
-    
+        $body = angular.element( $document.find('body').eq( 0 ) ),
+        questionSortingDefer = $q.defer(),
+        summaryPage;
+
     if ($window.innerWidth <= 1024) {
       $scope.smallViewport = true;
     } else {
@@ -34,14 +36,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
     }, 200 ) );
 
-
     $scope.pagination = { curr: function() {}, last: 0 };
+    $scope.summaryMode = summaryMode;
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
 
       setThemeName(quiz.theme.backgroundColor);
-      
+
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.wayAnimateClass = 'way-animation__next';
@@ -104,6 +106,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
         // Init socialshare
         $scope.socialShare().init();
+
+        questionSortingDefer.resolve();
       });
     }).catch(function() {
       $scope.show404 = true;
@@ -112,7 +116,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     function setThemeName( color ) {
 
       var colorRGB = colorToRgb( color );
-      
+
       if ((colorRGB.red * 0.299 + colorRGB.green * 0.587 + colorRGB.blue * 0.114) > 186) {
         $scope.themeName = 'theme-light';
       } else {
@@ -127,7 +131,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
       else {
         colorParts = color.match( /^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i );
-        color = ( colorParts && colorParts.length === 4 ) ? ( '0' + parseInt( colorParts[1], 10 ).toString( 16 ) ).slice( -2 ) + 
+        color = ( colorParts && colorParts.length === 4 ) ? ( '0' + parseInt( colorParts[1], 10 ).toString( 16 ) ).slice( -2 ) +
           ('0' + parseInt( colorParts[2], 10 ).toString( 16 ) ).slice( -2 ) +
           ('0' + parseInt( colorParts[3], 10 ).toString( 16 ) ).slice( -2 ) : '';
       }
@@ -173,16 +177,44 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
       results = JSON.parse( event.data );
 
-      if ( previewMode ) {
+      if ( previewMode && results.name === 'results' ) {
         $scope.$apply(function() {
-          EngageformBackendService.preview.setUserResults( results ).then( function() {
+          EngageformBackendService.preview.setUserResults( results.results ).then( function() {
             $scope.sentAnswer();
           } );
         });
-      } else if ( summaryMode ) {
+      } else if ( summaryMode && results.name === 'summary' ) {
         $scope.$apply(function() {
-          EngageformBackendService.preview.setAnswersResults( results ).then( function() {
-            $scope.sentAnswer();
+          EngageformBackendService.preview.setAnswersResults( results ).then( function( statsEndPage ) {
+
+            if ( !summaryPage ) {
+              questionSortingDefer.promise.then(function() {
+                var text;
+
+                if ( $scope.quiz.type === 'outcome' ) {
+                  text = 'Outcomes';
+                } else if ( $scope.quiz.type === 'score' ) {
+                  text = 'Scores';
+                } else {
+                  return;
+                }
+
+                summaryPage = {
+                  type: 'summaryPage',
+                  text: text,
+                  quizId: $routeParams.engageFormId,
+                  stats: statsEndPage
+                };
+
+                $scope.questions.push( summaryPage );
+                $scope.normalQuestions.push( summaryPage );
+
+                $scope.normalQuestionsAmmount = $scope.normalQuestions.length;
+                $scope.pagination.last = $scope.normalQuestionsAmmount;
+                EngageformBackendService.questions.sync($scope.questions, $scope.currentQuestion.index());
+                $scope.sentAnswer();
+              });
+            }
           } );
         });
       }
@@ -397,7 +429,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       var userResults = EngageformBackendService.preview.getUserResults();
 
       if ( summaryMode ) {
-        return false;
+        $scope.pickCorrectEndPage( {} );
+        $scope.next( null, true );
+        return;
       }
 
       if ( previewMode && userResults ) {

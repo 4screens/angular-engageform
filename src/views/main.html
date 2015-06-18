@@ -46,7 +46,8 @@
             'content__type--picture-choice': question.type == 'pictureChoice',
             'content__type--rate-it': question.type == 'rateIt',
             'content__type--start-page': question.type == 'startPage',
-            'content__type--end-page': question.type == 'endPage'
+            'content__type--end-page': question.type == 'endPage',
+            'content__type--summary-page': question.type == 'summaryPage'
           }"
           data-ng-include="'views/engageform/question-' + question.type + '.html'">
         </div>
@@ -95,7 +96,7 @@
       <i class="fa fa-angle-right"></i>
     </button>
 
-    <button class="progress__btn progress__btn--submit theme-button-color theme-question-color" data-ng-show="pagination.curr() == pagination.last" data-ng-click="submitQuiz($event)">
+    <button class="progress__btn progress__btn--submit theme-button-color theme-question-color" data-ng-show="pagination.curr() == pagination.last && !summaryMode" data-ng-click="submitQuiz($event)">
       <span>submit</span>
     </button>
   </div>

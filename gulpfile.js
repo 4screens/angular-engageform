@@ -17,6 +17,7 @@ var gulp = require('gulp')
     './src/views/question-pictureChoice.html',
     './src/views/question-rateIt.html',
     './src/views/question-startPage.html',
+    './src/views/question-summaryPage.html',
     './src/views/question-endPage.html',
     './src/views/social-share.html'
   ]
