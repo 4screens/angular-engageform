@@ -22,6 +22,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
+
+      setThemeName(quiz.theme.backgroundColor);
+      
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.wayAnimateClass = 'way-animation__next';
@@ -29,9 +32,14 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         // Get questions
         $scope.questions = _.sortBy( questions, 'position' );
 
+        // Summary mode: filter start and end pages; show answers on and required answers off for every question
         if ( summaryMode ) {
+          _.remove( $scope.questions, function( question ) {
+            return question.type === 'startPage' || question.type === 'endPage';
+          });
+
           _.map( $scope.questions, function( question ) {
-            if ( question.settings && question.settings.showAnswers ) {
+            if ( question.settings ) {
               question.settings.showAnswers = true;
             }
 
@@ -81,6 +89,48 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.socialShare().init();
       });
     });
+
+    function setThemeName( color ) {
+
+      var colorRGB = colorToRgb( color );
+      
+      if ((colorRGB.red * 0.299 + colorRGB.green * 0.587 + colorRGB.blue * 0.114) > 186) {
+        $scope.themeName = 'theme-light';
+      } else {
+        $scope.themeName = 'theme-dark';
+      }
+    }
+
+    function colorToRgb( color ) {
+      var colorParts, temp, triplets;
+      if (color[0] === '#') {
+        color = color.substr( 1 );
+      }
+      else {
+        colorParts = color.match( /^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i );
+        color = ( colorParts && colorParts.length === 4 ) ? ( '0' + parseInt( colorParts[1], 10 ).toString( 16 ) ).slice( -2 ) + 
+          ('0' + parseInt( colorParts[2], 10 ).toString( 16 ) ).slice( -2 ) +
+          ('0' + parseInt( colorParts[3], 10 ).toString( 16 ) ).slice( -2 ) : '';
+      }
+
+      if (color.length === 3) {
+        temp = color;
+        color = '';
+        temp = /^([a-f0-9])([a-f0-9])([a-f0-9])$/i.exec( temp ).slice( 1 );
+        for (var i = 0; i < 3; i++) {
+          color += temp[i] + temp[i];
+        }
+      }
+
+      triplets = /^([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i.exec( color ).slice( 1 );
+
+      return {
+        red: parseInt( triplets[0], 16 ),
+        green: parseInt( triplets[1], 16 ),
+        blue: parseInt( triplets[2], 16 )
+      };
+    }
+
 
     function setScreenType() { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; }
 
