@@ -1,17 +1,49 @@
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $http, $q, previewMode, summaryMode ) {
+  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $document, $http, $q, previewMode, summaryMode, message ) {
     var nextQuestionTimeout,
         quizId = $routeParams.engageFormId,
+        $body = angular.element( $document.find('body').eq( 0 ) ),
         questionSortingDefer = $q.defer(),
         summaryPage;
+
+    if ($window.innerWidth <= 1024) {
+      $scope.smallViewport = true;
+    } else {
+      $scope.smallViewport = false;
+    }
+
+    $scope.$on( 'container-initialized', function( event, data ) {
+      // Add or remove class on the body element depending on the question's height.
+      if (data.isHigherThanViewport) {
+        $body.addClass('higher-than-window');
+        $scope.isHigherThanViewport = data.isHigherThanViewport;
+      } else {
+        $body.removeClass('higher-than-window');
+        $scope.isHigherThanViewport = data.isHigherThanViewport;
+      }
+
+      // Inform the parent window (in the embedded environment) about the page change.
+      message.send( 'page-changed', data, angular.extend( data, { page: $scope.currentQuestion.index() } ) );
+    } );
+
+    angular.element( $window ).bind( 'resize' , _.throttle(function(){
+      if ($window.innerWidth <= 1024){
+        $scope.smallViewport = true;
+      } else {
+        $scope.smallViewport = false;
+      }
+    }, 200 ) );
 
     $scope.pagination = { curr: function() {}, last: 0 };
     $scope.summaryMode = summaryMode;
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
+
+      setThemeName(quiz.theme.backgroundColor);
+
       $scope.staticThemeCssFile = EngageformBackendService.quiz.getStaticThemeCssFile();
       EngageformBackendService.questions.get().then(function( questions ) {
         $scope.wayAnimateClass = 'way-animation__next';
@@ -77,7 +109,51 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
         questionSortingDefer.resolve();
       });
+    }).catch(function() {
+      $scope.show404 = true;
     });
+
+    function setThemeName( color ) {
+
+      var colorRGB = colorToRgb( color );
+
+      if ((colorRGB.red * 0.299 + colorRGB.green * 0.587 + colorRGB.blue * 0.114) > 186) {
+        $scope.themeName = 'theme-light';
+      } else {
+        $scope.themeName = 'theme-dark';
+      }
+    }
+
+    function colorToRgb( color ) {
+      var colorParts, temp, triplets;
+      if (color[0] === '#') {
+        color = color.substr( 1 );
+      }
+      else {
+        colorParts = color.match( /^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i );
+        color = ( colorParts && colorParts.length === 4 ) ? ( '0' + parseInt( colorParts[1], 10 ).toString( 16 ) ).slice( -2 ) +
+          ('0' + parseInt( colorParts[2], 10 ).toString( 16 ) ).slice( -2 ) +
+          ('0' + parseInt( colorParts[3], 10 ).toString( 16 ) ).slice( -2 ) : '';
+      }
+
+      if (color.length === 3) {
+        temp = color;
+        color = '';
+        temp = /^([a-f0-9])([a-f0-9])([a-f0-9])$/i.exec( temp ).slice( 1 );
+        for (var i = 0; i < 3; i++) {
+          color += temp[i] + temp[i];
+        }
+      }
+
+      triplets = /^([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i.exec( color ).slice( 1 );
+
+      return {
+        red: parseInt( triplets[0], 16 ),
+        green: parseInt( triplets[1], 16 ),
+        blue: parseInt( triplets[2], 16 )
+      };
+    }
+
 
     function setScreenType() { $scope.screenType = $window.innerHeight > $window.innerWidth ? 'narrow' : 'wide'; }
 
@@ -514,7 +590,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       // Personalyze description for outcomes and score
       if ($scope.quiz.type === 'outcome' || $scope.quiz.type === 'score') {
         sso.description = 'I got :result on :quizname on Engageform! What about you?'.replace( ':quizname', $scope.quiz.title );
-        sso.description = sso.description.replace( ':result', $scope.quiz.type === 'score' ? ( $scope.scoredPoints || 0 ) + ' %' : ( $scope.scoredOutcome || '' ) );
+        sso.description = sso.description.replace( ':result', $scope.quiz.type === 'score' ? ( $scope.scoredPoints || 0 ) + ' percent' : ( $scope.scoredOutcome || '' ) );
 
         if (cq.type === 'endPage' && cq.imageFile && cq.settings.showMainMedia) {
           sso.imageUrl = $scope.currentQuestion.mainMedia().src;
