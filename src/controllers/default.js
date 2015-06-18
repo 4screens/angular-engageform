@@ -1,8 +1,22 @@
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $http, $q, previewMode, summaryMode ) {
-    var nextQuestionTimeout, quizId = $routeParams.engageFormId;
+  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $document, $http, $q, previewMode, summaryMode, message ) {
+    var nextQuestionTimeout,
+        quizId = $routeParams.engageFormId,
+        $body = angular.element( $document.find('body').eq( 0 ) );
+
+    $scope.$on( 'container-initialized', function( event, data ) {
+      // Add or remove class on the body element depending on the question's height.
+      if (data.isHigherThanViewport) {
+        $body.addClass('higher-than-window');
+      } else {
+        $body.removeClass('higher-than-window');
+      }
+
+      // Inform the parent window (in the embedded environment) about the page change.
+      message.send( 'page-changed', data );
+    } );
 
     $scope.pagination = { curr: function() {}, last: 0 };
 
