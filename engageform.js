@@ -598,7 +598,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       // Personalyze description for outcomes and score
       if ($scope.quiz.type === 'outcome' || $scope.quiz.type === 'score') {
         sso.description = 'I got :result on :quizname on Engageform! What about you?'.replace( ':quizname', $scope.quiz.title );
-        sso.description = sso.description.replace( ':result', $scope.quiz.type === 'score' ? ( $scope.scoredPoints || 0 ) + ' %' : ( $scope.scoredOutcome || '' ) );
+        sso.description = sso.description.replace( ':result', $scope.quiz.type === 'score' ? ( $scope.scoredPoints || 0 ) + ' percent' : ( $scope.scoredOutcome || '' ) );
 
         if (cq.type === 'endPage' && cq.imageFile && cq.settings.showMainMedia) {
           sso.imageUrl = $scope.currentQuestion.mainMedia().src;
