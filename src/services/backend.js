@@ -50,6 +50,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
       index = _.findIndex( _answerResults, function( answer ) {
         return answer.stats.questionId === id;
       } );
+
       if (index < 0) {
         return;
       }
@@ -118,8 +119,13 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           return deferred.promise;
         },
         setAnswersResults: function( results ){
+          var deferred = $q.defer();
+
           _answerResults = results ? results : null;
-          return;
+
+          deferred.resolve();
+
+          return deferred.promise;
         },
         getUserResults: function() {
           return _userResults;
@@ -196,7 +202,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
           if ( _userResults ) {
             value = _formUserResult( id );
           }
-          else if (!!_answerResults) {
+          else if ( _answerResults ) {
             value = _formAnswerResult( id );
           }
           else {
@@ -205,11 +211,7 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
             value = CommonLocalStorageService.get( key );
           }
 
-          if( !!value ) {
-            return value;
-          }
-
-          return null;
+          return value ? value : null;
         },
         sendAnswer: function( value ) {
           var deferred, values = {};

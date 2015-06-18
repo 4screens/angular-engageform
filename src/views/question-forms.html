@@ -29,6 +29,12 @@
 
       <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()"></textarea>
 
+      <span>
+        <span data-ng-if="question.settings.showAnswers && questionAnswer.selected">
+          Filled {{ questionAnswer.count }} time{{ questionAnswer === 1 ? '' : 's' }}
+        </span>
+      <span>
+
       <div data-ng-messages="form[input._id].$error" class="message text-right" data-ng-class="{'is-active': !!form[input._id].$error.fullEmail || !!form[input._id].$error.url}">
         <div data-ng-message="fullEmail" >
           Your field has an invalid email address
