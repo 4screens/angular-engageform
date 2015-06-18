@@ -4,7 +4,7 @@
 
 <h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
 <div class="main-content-description theme-question-color text-center" data-ng-if="!!question.description">
-  <p>{{question.description}}</p>  
+  <p data-ng-bind-html="question.description | nl2br"></p>  
 </div>
 
 <picture class="main-media-image"

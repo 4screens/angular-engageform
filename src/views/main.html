@@ -53,6 +53,20 @@
       </div>
     </div>
   </div>
+  <!-- 404 -->
+  <div class="four-screens__embed-container theme-main-font page404" data-ng-if="show404">
+    <div class="questionnaire animate-if">
+      <div class="question-content-wrapper question-content-wrapper--404">
+        <div class="four-screens__content wrapper">
+          <h2 class="theme-question-color text-center">Engageform not found</h2>
+          <div class="main-content-description theme-question-color text-center">
+            <p>We're sorry, we can't find the engageform you're looking for.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/404 -->
   <div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{'is-active': !!requiredMessage }" >{{requiredMessage}}</div>
   <div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== 'startPage' && questions[currentQuestion.index()].type !== 'endPage'">
     <div class="progress">
@@ -64,7 +78,12 @@
       </span>
     </div>
     <div class="four-screens__footer-logo">
-      <span>Made with:</span> <a title="4Screens" href="http://4screens.net/" target="_blank" ng-class="{'logo-light-32': themeName ==='theme-dark',  'logo-dark-32': themeName ==='theme-light'}">4Screens</a>
+      <span>Made with:</span>
+      <a title="4Screens" href="http://4screens.net/" target="_blank" 
+      ng-class="{
+        'logo-dark-32': themeName === 'theme-dark' || ( themeName === 'theme-light' && isHigherThanViewport ) || ( themeName === 'theme-light' && smallViewport ) || show404,
+        'logo-light-32': themeName === 'theme-light' && !isHigherThanViewport && !smallViewport
+      }">4Screens</a>
     </div>
     <button class="progress__btn progress__btn--prev fa-stack fa-lg" data-ng-show="hasPrev()" data-ng-click="prev()">
       <i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i>
