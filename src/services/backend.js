@@ -118,12 +118,12 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
 
           return deferred.promise;
         },
-        setAnswersResults: function( results ){
+        setAnswersResults: function( summary ){
           var deferred = $q.defer();
 
-          _answerResults = results ? results : null;
+          _answerResults = summary && summary.results ? summary.results : null;
 
-          deferred.resolve();
+          deferred.resolve( summary.statsEndPage );
 
           return deferred.promise;
         },

@@ -2,9 +2,13 @@
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $http, $q, previewMode, summaryMode ) {
-    var nextQuestionTimeout, quizId = $routeParams.engageFormId;
+    var nextQuestionTimeout,
+        quizId = $routeParams.engageFormId,
+        questionSortingDefer = $q.defer(),
+        summaryPage;
 
     $scope.pagination = { curr: function() {}, last: 0 };
+    $scope.summaryMode = summaryMode;
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
@@ -70,6 +74,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
         // Init socialshare
         $scope.socialShare().init();
+
+        questionSortingDefer.resolve();
       });
     });
 
@@ -95,16 +101,44 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
       results = JSON.parse( event.data );
 
-      if ( previewMode ) {
+      if ( previewMode && results.name === 'results' ) {
         $scope.$apply(function() {
-          EngageformBackendService.preview.setUserResults( results ).then( function() {
+          EngageformBackendService.preview.setUserResults( results.results ).then( function() {
             $scope.sentAnswer();
           } );
         });
-      } else if ( summaryMode ) {
+      } else if ( summaryMode && results.name === 'summary' ) {
         $scope.$apply(function() {
-          EngageformBackendService.preview.setAnswersResults( results ).then( function() {
-            $scope.sentAnswer();
+          EngageformBackendService.preview.setAnswersResults( results ).then( function( statsEndPage ) {
+
+            if ( !summaryPage ) {
+              questionSortingDefer.promise.then(function() {
+                var text;
+
+                if ( $scope.quiz.type === 'outcome' ) {
+                  text = 'Outcomes';
+                } else if ( $scope.quiz.type === 'score' ) {
+                  text = 'Scores';
+                } else {
+                  return;
+                }
+
+                summaryPage = {
+                  type: 'summaryPage',
+                  text: text,
+                  quizId: $routeParams.engageFormId,
+                  stats: statsEndPage
+                };
+
+                $scope.questions.push( summaryPage );
+                $scope.normalQuestions.push( summaryPage );
+
+                $scope.normalQuestionsAmmount = $scope.normalQuestions.length;
+                $scope.pagination.last = $scope.normalQuestionsAmmount;
+                EngageformBackendService.questions.sync($scope.questions, $scope.currentQuestion.index());
+                $scope.sentAnswer();
+              });
+            }
           } );
         });
       }
@@ -319,7 +353,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       var userResults = EngageformBackendService.preview.getUserResults();
 
       if ( summaryMode ) {
-        return false;
+        $scope.pickCorrectEndPage( {} );
+        $scope.next( null, true );
+        return;
       }
 
       if ( previewMode && userResults ) {
