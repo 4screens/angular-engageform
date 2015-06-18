@@ -29,7 +29,7 @@
 
       <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()"></textarea>
 
-      <span>
+      <span class="form__field--filled">
         <span data-ng-if="question.settings.showAnswers && questionAnswer.selected">
           Filled {{ questionAnswer.count }} time{{ questionAnswer === 1 ? '' : 's' }}
         </span>
