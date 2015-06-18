@@ -15,7 +15,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
 
       // Inform the parent window (in the embedded environment) about the page change.
-      message.send( 'page-changed', data );
+      message.send( 'page-changed', data, angular.extend( data, { page: $scope.currentQuestion.index() } ) );
     } );
 
     $scope.pagination = { curr: function() {}, last: 0 };
