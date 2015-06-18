@@ -5,18 +5,35 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     var nextQuestionTimeout,
         quizId = $routeParams.engageFormId,
         $body = angular.element( $document.find('body').eq( 0 ) );
+    
+    if ($window.innerWidth <= 1024) {
+      $scope.smallViewport = true;
+    } else {
+      $scope.smallViewport = false;
+    }
 
     $scope.$on( 'container-initialized', function( event, data ) {
       // Add or remove class on the body element depending on the question's height.
       if (data.isHigherThanViewport) {
         $body.addClass('higher-than-window');
+        $scope.isHigherThanViewport = data.isHigherThanViewport;
       } else {
         $body.removeClass('higher-than-window');
+        $scope.isHigherThanViewport = data.isHigherThanViewport;
       }
 
       // Inform the parent window (in the embedded environment) about the page change.
       message.send( 'page-changed', data );
     } );
+
+    angular.element( $window ).bind( 'resize' , _.throttle(function(){
+      if ($window.innerWidth <= 1024){
+        $scope.smallViewport = true;
+      } else {
+        $scope.smallViewport = false;
+      }
+    }, 200 ) );
+
 
     $scope.pagination = { curr: function() {}, last: 0 };
 
