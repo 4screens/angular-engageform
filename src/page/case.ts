@@ -41,7 +41,7 @@ module Page {
       data.userIdent = Bootstrap.user.sessionId;
 
       return Bootstrap.$http.post(url.replace(':pageId', this.page.id), data).then((res) => {
-        if (res.status === 200) {
+        if ([200, 304].indexOf(res.status) !== -1) {
           if (!data.userIdent) {
             Bootstrap.user.sessionId = res.data['userIdent'];
           }

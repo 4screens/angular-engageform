@@ -94,7 +94,7 @@ class Bootstrap {
     var url = 'http://answers.4screens.acc.nopattern.net/api/v1/quiz/:quizId'.replace(':quizId', id);
 
     return Bootstrap.$http.get(url).then((res: API.IQuizResponse) => {
-      if (res.status === 200) {
+      if ([200, 304].indexOf(res.status) !== -1) {
         return res.data;
       }
 

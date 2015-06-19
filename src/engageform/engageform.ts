@@ -92,7 +92,7 @@ module Engageform {
         userIdent: Bootstrap.user.sessionId,
         globalUserIdent: Bootstrap.user.id
       }).then(function (res: API.IQuizFinishResponse) {
-        if ([200, 304].indexOf(res.status)) {
+        if ([200, 304].indexOf(res.status) !== -1) {
           Bootstrap.localStorage.clearAll();
           Bootstrap.user.id = res.data.globalUserIdent;
           return res.data;
@@ -107,7 +107,7 @@ module Engageform {
       var url = 'http://answers.4screens.acc.nopattern.net/api/v1/quiz/:engageformId/questions';
 
       return Bootstrap.$http.get(url.replace(':engageformId', engageformId)).then(function (res) {
-        if (res.status === 200) {
+        if ([200, 304].indexOf(res.status) !== -1) {
           return res.data;
         }
 
