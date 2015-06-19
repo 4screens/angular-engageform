@@ -1,5 +1,5 @@
 <h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
-<div data-ng-repeat="answer in question.stats" class="questionnaire__answer">
+<div data-ng-repeat="answer in question.stats" class="questionnaire__answer theme-answer-background-result-color theme-answer-border-color">
   <div class="answer__bar theme-answer-background-result-color"
        ng-style="{'width': formatAnswers(answer.percent)+'%'}">
   </div>
