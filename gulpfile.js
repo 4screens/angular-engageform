@@ -7,7 +7,9 @@ var semver = require('semver');
 var sh = require('shelljs');
 
 var PATH = {
+  bower_components: 'bower_components',
   source: 'src',
+  test: 'test',
   define: 'typings'
 };
 var FILES = [
@@ -46,6 +48,14 @@ var FILES = [
 ];
 var BANNER = path.join('.', PATH.source, 'header.txt');
 var MAIN = path.join('.', 'engageform.js');
+var TESTS = [
+  path.join('.', PATH.bower_components, 'angular', 'angular.js'),
+  path.join('.', PATH.bower_components, 'angular-local-storage', 'dist', 'angular-local-storage.js'),
+  path.join('.', PATH.bower_components, 'angular-mocks', 'angular-mocks.js'),
+  MAIN,
+  path.join('.', PATH.test, '**', '*.spec.js')
+];
+
 
 gulp.task('bump', function() {
   var bump = plugins.util.env.bump || false;
@@ -90,7 +100,18 @@ gulp.task('develop', ['build'], function() {
   gulp.watch(FILES, ['build']);
 });
 
-gulp.task('release::bump', ['build'], function(done) {
+gulp.task('test', ['build'], function() {
+  return gulp.src(TESTS)
+    .pipe(plugins.karma({
+      configFile: 'karma.conf.js',
+      action: 'run'
+    }))
+    .on('error', function(err) {
+      throw err;
+    });
+});
+
+gulp.task('release::bump', ['test'], function(done) {
   if (plugins.util.env.bump) {
     sh.exec('git add .');
     sh.exec('git commit -m "chore(release): Bump version." --quiet');

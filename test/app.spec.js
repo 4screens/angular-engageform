@@ -1,4 +1,4 @@
-describe("App Module:", function() {
+describe("module initialize", function() {
   var module;
 
   before(function() {
@@ -9,21 +9,13 @@ describe("App Module:", function() {
     expect(module).not.to.equal(null);
   });
 
-  describe("Dependencies:", function() {
-    var deps;
+  describe("module dependencies", function() {
     var hasModule = function(m) {
-      return deps.indexOf(m) >= 0;
+      return module.requires.indexOf(m) >= 0;
     };
 
-    before(function() {
-      deps = module.value('appName').requires;
+    it("should have LocalStorageModule as a dependency", function() {
+      expect(hasModule('LocalStorageModule')).to.equal(true);
     });
-
-    //you can also test the module's dependencies
-    it.skip("should have 4screens.engageform.Controllers as a dependency", function() {
-      expect(hasModule('4screens.engageform.Controllers')).to.equal(true);
-    });
-
   });
-
 });

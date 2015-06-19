@@ -103,5 +103,5 @@ class Bootstrap {
   }
 }
 
-Bootstrap.$inject = ['$http', '$q', 'CommonLocalStorageService'];
+Bootstrap.$inject = ['$http', '$q', 'localStorageService'];
 app.service('Engageform', Bootstrap);
