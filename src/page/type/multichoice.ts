@@ -14,9 +14,9 @@ module Page {
       });
 
       if (this.cases.length) {
-        var sent = Bootstrap.localStorage.get('page.' + this.id);
+        var sent = <IPageSent>Bootstrap.localStorage.get('page.' + this.id) || <IPageSent>{};
 
-        if (!(sent || {}).selectedCaseId) {
+        if (!sent.selectedCaseId) {
           return;
         }
 

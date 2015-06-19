@@ -53,7 +53,7 @@ module Page {
     }
 
     load(): IPageSent {
-      return Bootstrap.localStorage.get('page.' + this.page.id) || {};
+      return <IPageSent>Bootstrap.localStorage.get('page.' + this.page.id) || <IPageSent>{};
     }
 
     save(data: IPageSent): void {

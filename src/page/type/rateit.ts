@@ -18,9 +18,9 @@ module Page {
         }));
       }
 
-      var sent = Bootstrap.localStorage.get('page.' + this.id);
+      var sent = <IPageSent>Bootstrap.localStorage.get('page.' + this.id) || <IPageSent>{};
 
-      if (!(sent || {}).selectedValue) {
+      if (!sent.selectedValue) {
         return;
       }
 

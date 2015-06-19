@@ -17,6 +17,9 @@
     "angularjs/angular.d.ts": {
       "commit": "52dc8fc39354569838b7bc09e24df690b852b4d9"
     },
+    "angular-local-storage/angular-local-storage.d.ts": {
+      "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
+    },
     "jquery/jquery.d.ts": {
       "commit": "52dc8fc39354569838b7bc09e24df690b852b4d9"
     }

@@ -7,12 +7,12 @@
 class Bootstrap {
   static $http: ng.IHttpService;
   static $q: ng.IQService;
-  static localStorage;
+  static localStorage: ng.local.storage.ILocalStorageService;
   static user: User;
 
   private _engageform: Engageform.IEngageform;
 
-  constructor($http: ng.IHttpService, $q: ng.IQService, localStorage) {
+  constructor($http: ng.IHttpService, $q: ng.IQService, localStorage: ng.local.storage.ILocalStorageService) {
     Bootstrap.$http = $http;
     Bootstrap.$q = $q;
     Bootstrap.localStorage = localStorage;

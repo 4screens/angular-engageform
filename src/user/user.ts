@@ -6,7 +6,7 @@ class User implements IUser {
 
   get id(): string {
     if (!this._id) {
-      this._id = Bootstrap.localStorage.get('userIdent');
+      this._id = <string>Bootstrap.localStorage.get('userIdent');
     }
     return this._id;
   }
@@ -18,7 +18,7 @@ class User implements IUser {
 
   get sessionId(): string {
     if (!this._sessionId) {
-      this._sessionId = Bootstrap.localStorage.get('sessionIdent');
+      this._sessionId = <string>Bootstrap.localStorage.get('sessionIdent');
     }
     return this._sessionId;
   }
