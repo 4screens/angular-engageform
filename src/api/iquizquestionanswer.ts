@@ -4,5 +4,6 @@ module API {
     userIdent?: string;
     selectedAnswerId?: string;
     correctAnswerId?: string;
+    selectedValue?: number;
   }
 }

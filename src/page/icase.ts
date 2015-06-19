@@ -13,6 +13,7 @@ module Page {
     expectedValue?: string;
     value?: string;
     error?: string;
+    ordinal?: number;
 
     send($event): void;
     validate(): boolean;

@@ -4,6 +4,12 @@ module API {
     type: string;
     text: string;
     requiredAnswer: boolean;
+    rateIt: {
+      maxLabel: string;
+      minLabel: string;
+      maxRateItValue: number;
+      rateType: string;
+    };
     answers: {}[];
     forms: {
       inputs: {}[];

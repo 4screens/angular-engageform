@@ -57,6 +57,10 @@ module Engageform {
               this._availablePages.push(page._id);
               this._pages[page._id] = new Page.PictureChoice(<IEngageform>this, page);
               break;
+            case 'rateIt':
+              this._availablePages.push(page._id);
+              this._pages[page._id] = new Page.Rateit(<IEngageform>this, page);
+              break;
             case 'forms':
               this._availablePages.push(page._id);
               this._pages[page._id] = new Page.Form(<IEngageform>this, page);

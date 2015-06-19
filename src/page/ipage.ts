@@ -14,6 +14,8 @@ module Page {
     score?: number;
     rangeMin?: number;
     rangeMax?: number;
+    labelMin?: string;
+    labelMax?: string;
 
     send(): void;
     selectAnswer(data): void;

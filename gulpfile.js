@@ -33,11 +33,13 @@ var FILES = [
   path.join('.', PATH.source, 'page', 'settings.ts'),
 
   path.join('.', PATH.source, 'page', 'case', 'image.ts'),
+  path.join('.', PATH.source, 'page', 'case', 'iteration.ts'),
   path.join('.', PATH.source, 'page', 'case', 'text.ts'),
 
   path.join('.', PATH.source, 'page', 'type', 'endpage.ts'),
   path.join('.', PATH.source, 'page', 'type', 'multichoice.ts'),
   path.join('.', PATH.source, 'page', 'type', 'picturechoice.ts'),
+  path.join('.', PATH.source, 'page', 'type', 'rateit.ts'),
   path.join('.', PATH.source, 'page', 'type', 'startpage.ts'),
 
   path.join('.', PATH.source, 'user', 'user.ts')
