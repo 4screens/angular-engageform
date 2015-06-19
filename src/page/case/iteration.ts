@@ -14,15 +14,13 @@ module Page {
       this.symbol = data.symbol;
     }
 
-    send($event) {
-      super.disableDefaultAction($event);
-
+    send() {
       if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
         this.page.engageform.message = 'Changing answer is not allowed';
         return;
       }
 
-      super.makeSend({quizQuestionId: this.page.id, rateItValue: this.ordinal}).then((res) => {
+      return super.makeSend({quizQuestionId: this.page.id, rateItValue: this.ordinal}).then((res) => {
         var data: IPageSent = <IPageSent>{};
 
         if (res.selectedValue) {
@@ -31,6 +29,8 @@ module Page {
 
         super.save(data);
         this.page.selectAnswer(data);
+
+        return data;
       });
     }
   }

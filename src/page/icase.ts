@@ -15,7 +15,7 @@ module Page {
     error?: string;
     ordinal?: number;
 
-    send($event): void;
+    send(): ng.IPromise<IPageSent>;
     validate(): boolean;
   }
 }

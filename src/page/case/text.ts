@@ -14,15 +14,13 @@ module Page {
       this.title = data.text;
     }
 
-    send($event) {
-      super.disableDefaultAction($event);
-
+    send() {
       if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
         this.page.engageform.message = 'Changing answer is not allowed';
         return;
       }
 
-      super.makeSend({selectedAnswerId: this.id}).then((res) => {
+      return super.makeSend({selectedAnswerId: this.id}).then((res) => {
         var data: IPageSent = <IPageSent>{};
 
         if (res.selectedAnswerId) {
@@ -35,6 +33,8 @@ module Page {
 
         super.save(data);
         this.page.selectAnswer(data);
+
+        return data;
       });
     }
   }

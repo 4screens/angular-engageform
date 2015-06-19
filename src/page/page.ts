@@ -29,7 +29,15 @@ module Page {
       this.settings = <ISetting>new Settings(data);
     }
 
-    send(): void {}
+    send(vcase: ICase): ng.IPromise<IPageSent> {
+      if (vcase) {
+        return vcase.send();
+      }
+
+      var deferred = Bootstrap.$q.defer();
+      deferred.resolve();
+      return deferred.promise;
+    }
     selectAnswer(data): void {}
   }
 }

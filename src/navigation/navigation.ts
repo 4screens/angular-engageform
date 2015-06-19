@@ -25,7 +25,7 @@ module Navigation {
         this._engageform.setCurrent(this._engageform.startPages[0]);
       } else {
         this.enabled = true;
-        this.next(null);
+        this.move(null);
         this.hasPrev = false;
       }
     }
@@ -35,7 +35,7 @@ module Navigation {
 
       this.enabled = true;
       this.hasStart = false;
-      this.next(null);
+      this.move(null);
       this.hasPrev = false;
     }
 
@@ -58,7 +58,15 @@ module Navigation {
       }
     }
 
-    next($event): void {
+    pick($event, vcase: Page.ICase): void {
+      this.disableDefaultAction($event);
+      this._engageform.current.send(vcase).then(() => {
+        this.move($event);
+      });
+    }
+    next = this.pick;
+
+    move($event): void {
       this.disableDefaultAction($event);
 
       this._engageform.message = '';
@@ -70,6 +78,11 @@ module Navigation {
       }
 
       this.position++;
+      if (this.position > this._engageform.availablePages.length) {
+        this.position = this._engageform.availablePages.length - 1;
+        return;
+      }
+
       this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
 
       this.hasPrev = true;

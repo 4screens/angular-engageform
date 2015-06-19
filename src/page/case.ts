@@ -24,7 +24,11 @@ module Page {
       this._page = page;
     }
 
-    send($event) {}
+    send(): ng.IPromise<IPageSent> {
+      var deferred = Bootstrap.$q.defer();
+      deferred.resolve(<IPageSent>{});
+      return deferred.promise;
+    }
     validate(): boolean {
       return true;
     }

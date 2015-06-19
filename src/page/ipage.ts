@@ -17,7 +17,7 @@ module Page {
     labelMin?: string;
     labelMax?: string;
 
-    send(): void;
+    send(vcase: ICase): ng.IPromise<IPageSent>;
     selectAnswer(data): void;
   }
 }
