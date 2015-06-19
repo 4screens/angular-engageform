@@ -7,10 +7,11 @@ script:
   - ./node_modules/karma/bin/karma start karma.conf.js --no-auto-watch --single-run --browsers PhantomJS
 
 before_script:
-  - npm install -g bower tsd codeclimate-test-reporter
+  - npm install -g gulp bower tsd codeclimate-test-reporter
   - npm install
   - bower install
   - tsd reinstall --save --overwrite
+  - gulp build
 
 after_script:
   - cat coverage/lcov.info | codeclimate
