@@ -90,7 +90,7 @@ class Bootstrap {
     });
   }
 
-  private getById(id: string):ng.IPromise<API.IQuiz> {
+  private getById(id: string): ng.IPromise<API.IQuiz> {
     var url = 'http://answers.4screens.acc.nopattern.net/api/v1/quiz/:quizId'.replace(':quizId', id);
 
     return Bootstrap.$http.get(url).then((res: API.IQuizResponse) => {

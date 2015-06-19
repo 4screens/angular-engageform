@@ -2,7 +2,7 @@ module Engageform {
   export class Outcome extends Engageform {
     type = Type.Outcome;
 
-    setCurrentEndPage():ng.IPromise<API.IQuizFinish> {
+    setCurrentEndPage(): ng.IPromise<API.IQuizFinish> {
       return super.setCurrentEndPage().then((data) => {
         var hasEndPage = false;
 

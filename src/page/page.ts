@@ -4,7 +4,7 @@
 
 module Page {
   export class Page implements IPage {
-    private _pageId:string;
+    private _pageId: string;
     private _engageform: Engageform.IEngageform;
 
     type: Type;
@@ -38,6 +38,8 @@ module Page {
       deferred.resolve();
       return deferred.promise;
     }
-    selectAnswer(data): void {}
+    selectAnswer(data): void {
+      // "abstract"
+    }
   }
 }

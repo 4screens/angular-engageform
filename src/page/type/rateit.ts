@@ -11,7 +11,7 @@ module Page {
       this.labelMin = data.rateIt.minLabel;
       this.labelMax = data.rateIt.maxLabel;
 
-      for (var i=1; i<=data.rateIt.maxRateItValue; i++) {
+      for (var i = 1; i <= data.rateIt.maxRateItValue; i++) {
         this.cases.push(<ICase>new IterationCase(<IPage>this, {
           ordinal: i,
           symbol: data.rateIt.rateType

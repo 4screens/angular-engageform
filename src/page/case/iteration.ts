@@ -24,7 +24,7 @@ module Page {
         var data: IPageSent = <IPageSent>{};
 
         if (res.selectedValue) {
-          data.selectedValue = res.selectedValue
+          data.selectedValue = res.selectedValue;
         }
 
         super.save(data);

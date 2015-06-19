@@ -100,7 +100,13 @@ gulp.task('develop', ['build'], function() {
   gulp.watch(FILES, ['build']);
 });
 
-gulp.task('test', ['build'], function() {
+gulp.task('tslint', ['build'], function () {
+  return gulp.src(FILES)
+    .pipe(plugins.tslint())
+    .pipe(plugins.tslint.report('verbose'));
+});
+
+gulp.task('test', ['tslint'], function() {
   return gulp.src(TESTS)
     .pipe(plugins.karma({
       configFile: 'karma.conf.js',

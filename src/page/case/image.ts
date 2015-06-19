@@ -26,11 +26,11 @@ module Page {
         var data = <IPageSent>{};
 
         if (res.selectedAnswerId) {
-          data.selectedCaseId = res.selectedAnswerId
+          data.selectedCaseId = res.selectedAnswerId;
         }
 
         if (res.correctAnswerId) {
-          data.correctCaseId = res.correctAnswerId
+          data.correctCaseId = res.correctAnswerId;
         }
 
         super.save(data);

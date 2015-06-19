@@ -2,12 +2,12 @@
 
 module Engageform {
   export class Engageform implements IEngageform {
-    private _engageformId:string;
-    private _pages:Page.IPages = {};
+    private _engageformId: string;
+    private _pages: Page.IPages = {};
 
-    private _startPages:string[] = [];
-    private _endPages:string[] = [];
-    private _availablePages:string[] = [];
+    private _startPages: string[] = [];
+    private _endPages: string[] = [];
+    private _availablePages: string[] = [];
 
     type;
     mode = Mode.Default;
@@ -84,7 +84,7 @@ module Engageform {
       this.current = this._pages[pageId];
     }
 
-    setCurrentEndPage():ng.IPromise<API.IQuizFinish> {
+    setCurrentEndPage(): ng.IPromise<API.IQuizFinish> {
       // @todo move url to the configuration
       var url = 'http://answers.4screens.acc.nopattern.net/api/v1/quiz/:engageformId/finish';
 
@@ -99,10 +99,10 @@ module Engageform {
         }
 
         this.$q.reject(res);
-      })
+      });
     }
 
-    private getPagesById(engageformId: string):ng.IPromise<API.IQuizQuestion[]> {
+    private getPagesById(engageformId: string): ng.IPromise<API.IQuizQuestion[]> {
       // @todo move url to the configuration
       var url = 'http://answers.4screens.acc.nopattern.net/api/v1/quiz/:engageformId/questions';
 
@@ -112,7 +112,7 @@ module Engageform {
         }
 
         this.$q.reject(res);
-      })
+      });
     }
   }
 }

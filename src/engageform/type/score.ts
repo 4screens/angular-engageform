@@ -2,7 +2,7 @@ module Engageform {
   export class Score extends Engageform {
     type = Type.Score;
 
-    setCurrentEndPage():ng.IPromise<API.IQuizFinish> {
+    setCurrentEndPage(): ng.IPromise<API.IQuizFinish> {
       return super.setCurrentEndPage().then((data) => {
         var score = Math.round(data.totalScore / data.maxScore * 100);
         var hasEndPage = false;

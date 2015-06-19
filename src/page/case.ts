@@ -40,10 +40,10 @@ module Page {
       data.quizQuestionId = this.page.id;
       data.userIdent = Bootstrap.user.sessionId;
 
-      return Bootstrap.$http.post(url.replace(':pageId', this.page.id), data).then((res) => {
+      return Bootstrap.$http.post(url.replace(':pageId', this.page.id), data).then((res: API.IQuizQuestionAnswerResponse) => {
         if ([200, 304].indexOf(res.status) !== -1) {
           if (!data.userIdent) {
-            Bootstrap.user.sessionId = res.data['userIdent'];
+            Bootstrap.user.sessionId = res.data.userIdent;
           }
           return res.data;
         }
