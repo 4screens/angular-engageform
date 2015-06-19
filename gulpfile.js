@@ -12,7 +12,35 @@ var PATH = {
 };
 var FILES = [
   path.join('.', PATH.define, 'tsd.d.ts'),
-  path.join('.', PATH.source, 'app.ts')
+  path.join('.', PATH.source, 'app.ts'),
+  path.join('.', PATH.source, 'bootstrap.ts'),
+
+  path.join('.', PATH.source, 'engageform', 'engageform.ts'),
+  path.join('.', PATH.source, 'engageform', 'enum.ts'),
+  path.join('.', PATH.source, 'engageform', 'settings.ts'),
+  path.join('.', PATH.source, 'engageform', 'theme.ts'),
+
+  path.join('.', PATH.source, 'engageform', 'type', 'outcome.ts'),
+  path.join('.', PATH.source, 'engageform', 'type', 'poll.ts'),
+  path.join('.', PATH.source, 'engageform', 'type', 'score.ts'),
+  path.join('.', PATH.source, 'engageform', 'type', 'survey.ts'),
+
+  path.join('.', PATH.source, 'navigation', 'navigation.ts'),
+
+  path.join('.', PATH.source, 'page', 'page.ts'),
+  path.join('.', PATH.source, 'page', 'case.ts'),
+  path.join('.', PATH.source, 'page', 'enum.ts'),
+  path.join('.', PATH.source, 'page', 'settings.ts'),
+
+  path.join('.', PATH.source, 'page', 'case', 'image.ts'),
+  path.join('.', PATH.source, 'page', 'case', 'text.ts'),
+
+  path.join('.', PATH.source, 'page', 'type', 'endpage.ts'),
+  path.join('.', PATH.source, 'page', 'type', 'multichoice.ts'),
+  path.join('.', PATH.source, 'page', 'type', 'picturechoice.ts'),
+  path.join('.', PATH.source, 'page', 'type', 'startpage.ts'),
+
+  path.join('.', PATH.source, 'user', 'user.ts')
 ];
 var BANNER = path.join('.', PATH.source, 'header.txt');
 var MAIN = path.join('.', 'engageform.js');

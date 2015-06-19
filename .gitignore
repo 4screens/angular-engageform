@@ -8,4 +8,4 @@ typings
 coverage
 
 # Build files... dont needed here
-engageform*
+/engageform*
