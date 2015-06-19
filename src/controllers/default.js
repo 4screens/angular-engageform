@@ -331,7 +331,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           $scope.sentAnswer();
         }
 
-        if (!$scope.currentQuestion.settings('showAnswers') && $scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last) {
+        if ($scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last) {
           nextQuestionTimeout = $timeout( function () {
             typeof force === 'undefinded' ? $scope.next() : $scope.next( null, true );
             nextQuestionTimeout = null;

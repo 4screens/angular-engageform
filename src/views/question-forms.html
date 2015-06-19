@@ -29,9 +29,9 @@
 
       <textarea name="{{input._id}}" id="" cols="30" rows="10" data-ng-if="input.type=='textarea'" placeholder="{{input.label}}" data-ng-model="questionAnswer.status[input._id]" formnovalidate ng-required="currentQuestion.requiredAnswer()"></textarea>
 
-      <span class="form__field--filled" ng-class="{'textarea': input.type=='textarea' }" >
-        <span data-ng-if="question.settings.showAnswers && questionAnswer.selected">
-          Filled {{ questionAnswer.count }} time{{ questionAnswer === 1 ? '' : 's' }}
+      <span data-ng-if="question.settings.showAnswers && questionAnswer.selected && summaryMode" class="form__field--filled" ng-class="{'textarea': input.type=='textarea' }" >
+        <span>
+          Filled {{ questionAnswer.count }} time{{ questionAnswer.count === 1 ? '' : 's' }}
         </span>
       <span>
 
