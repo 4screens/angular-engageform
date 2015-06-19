@@ -1,12 +1,9 @@
 <h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
-<div data-ng-repeat="answer in question.stats" class="questionnaire__answer">
+<div data-ng-repeat="answer in question.stats" class="questionnaire__answer theme-answer-background-color theme-answer-border-color questionnaire__answer--notcorrect">
   <div class="answer__bar theme-answer-background-result-color"
        ng-style="{'width': formatAnswers(answer.percent)+'%'}">
   </div>
-  <label data-ng-class="{
-    'theme-question-color': questionAnswer.selected === answer._id,
-    'theme-answer-color': questionAnswer.selected !== answer._id
-  }">
+  <label class="theme-answer-color">
     {{ answer.title ? answer.title + ' (' + answer.group + ')' : answer.group }}
     <span class="theme-question-result-color-text ng-animate">
       <span>
