@@ -80,24 +80,6 @@ module Engageform {
       });
     }
 
-    finish():ng.IPromise<API.IQuizFinish> {
-      // @todo move url to the configuration
-      var url = 'http://answers.4screens.acc.nopattern.net/api/v1/quiz/:engageformId/finish';
-
-      return Bootstrap.$http.post(url.replace(':engageformId', this._engageformId), {
-        userIdent: Bootstrap.user.sessionId,
-        globalUserIdent: Bootstrap.user.id
-      }).then(function (res: API.IQuizFinishResponse) {
-        if ([200, 304].indexOf(res.status) !== -1) {
-          Bootstrap.localStorage.clearAll();
-          Bootstrap.user.id = res.data.globalUserIdent;
-          return res.data;
-        }
-
-        this.$q.reject(res);
-      })
-    }
-
     setCurrent(pageId: string) {
       this.current = this._pages[pageId];
     }

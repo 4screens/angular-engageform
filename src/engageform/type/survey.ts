@@ -3,7 +3,7 @@ module Engageform {
     type = Type.Survey;
 
     setCurrentEndPage():ng.IPromise<API.IQuizFinish> {
-      return super.finish().then((data) => {
+      return super.setCurrentEndPage().then((data) => {
         if (this.endPages.length) {
           this.setCurrent(this.endPages[0]);
         } else {
