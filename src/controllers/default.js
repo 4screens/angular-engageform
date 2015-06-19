@@ -14,7 +14,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       $scope.smallViewport = false;
     }
 
-    $scope.$on( 'container-initialized', function( event, data ) {
+    $scope.$on( 'height-changed', function( event, data ) {
       // Add or remove class on the body element depending on the question's height.
       if (data.isHigherThanViewport) {
         $body.addClass('higher-than-window');
@@ -25,7 +25,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       }
 
       // Inform the parent window (in the embedded environment) about the page change.
-      message.send( 'page-changed', data, angular.extend( data, { page: $scope.currentQuestion.index() } ) );
+      // TODO: Should emit 'height-changed' message. Page changed should be moved to its own event.
+      message.send( 'page-changed', angular.extend( data, { page: $scope.currentQuestion.index() } ) );
     } );
 
     angular.element( $window ).bind( 'resize' , _.throttle(function(){
