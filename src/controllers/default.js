@@ -498,7 +498,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           $scope.sentAnswer();
           $scope.wayAnimateClass = 'way-animation__next';
           $scope.requiredMessage = '';
-        // Is valid form, or invalid only couse @ is empty 
+        // Is valid form, or invalid only couse @ is empty
         } else if( $scope.questionAnswer && $scope.questionAnswer.form && ( $scope.questionAnswer.form.$valid || ( Object.keys($scope.questionAnswer.form.$error).length === 1 && $scope.questionAnswer.form.$error.fullEmail ) ) ) {
           $scope.questionAnswer.selected = true;
           sendDataForm( $scope.questionAnswer.status, $event );
