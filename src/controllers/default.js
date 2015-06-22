@@ -8,10 +8,11 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         questionSortingDefer = $q.defer(),
         summaryPage;
 
-    if ($window.innerWidth <= 1024) {
-      $scope.smallViewport = true;
-    } else {
-      $scope.smallViewport = false;
+    $scope.smallViewport = $window.innerWidth <= 1024;
+
+    // Is in iframe?
+    if ( $window.parent !== $window ) {
+      $scope.isEmbedded = true;
     }
 
     $scope.$on( 'height-changed', function( event, data ) {
@@ -30,11 +31,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     } );
 
     angular.element( $window ).bind( 'resize' , _.throttle(function(){
-      if ($window.innerWidth <= 1024){
-        $scope.smallViewport = true;
-      } else {
-        $scope.smallViewport = false;
-      }
+      $scope.smallViewport = $window.innerWidth <= 1024;
     }, 200 ) );
 
     $scope.pagination = { curr: function() {}, last: 0 };
