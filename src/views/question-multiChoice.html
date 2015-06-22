@@ -25,9 +25,8 @@
                   'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id
 }">
 
-  <div class="answer__bar"
+  <div class="answer__bar theme-answer-select-background-result-color"
        ng-style="{'width': formatAnswers(questionAnswer.stats[answer._id])+'%'}"
-       data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id, 'theme-answer-background-result-color': questionAnswer.selected !== answer._id }"
        data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false"
        >
   </div>

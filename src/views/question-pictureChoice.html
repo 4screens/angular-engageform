@@ -23,11 +23,7 @@
   <div data-ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choice "
       data-ng-class="{'questionnaire__answer--selected':  questionAnswer.selected === answer._id, 'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id  }"
       data-ng-click="sendAnswer( answer._id )">
-     <figure data-ng-class="{
-      'theme-button-color questionnaire__answer--selected': questionAnswer.selected === answer._id,
-      'theme-answer-background-color theme-answer-border-color': questionAnswer.selected !== answer._id,
-      'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id
-    }">
+     <figure class="theme-answer-background-color theme-answer-border-color">
         <div class="image-wrapper">
           <picture class="thumb-media-image">
             <img
@@ -42,27 +38,13 @@
                               {{ getImgUrl( currentQuestion.answerMedia( answer.imageFile ), 300, '2.0' ) }} 2.0x"
             >
           </picture>
-          <div class="answer__bar"
-            data-ng-class="{'theme-answer-select-background-result-color': questionAnswer.selected === answer._id, 'theme-answer-background-result-color': questionAnswer.selected !== answer._id }"
-            ng-style="{
-              '-moz-transform': formatAnswersTransform(questionAnswer.stats[answer._id], true),
-              '-webkit-transform': formatAnswersTransform(questionAnswer.stats[answer._id], true),
-              '-o-transform': formatAnswersTransform(questionAnswer.stats[answer._id], true),
-              '-ms-transform': formatAnswersTransform(questionAnswer.stats[answer._id], true),
-              'transform': formatAnswersTransform(questionAnswer.stats[answer._id], true),
-            }"
-            data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false && !!questionAnswer.stats"
+          <div class="answer__bar" data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false && !!questionAnswer.stats"
               ></div>
         </div>
-        <figcaption data-ng-class="{
-          'theme-question-color': questionAnswer.selected === answer._id,
-          'theme-answer-color': questionAnswer.selected !== answer._id
-        }">
+        <figcaption class="theme-answer-color">
           {{ answer.text }}
         </figcaption>
-        <div class="results"
-             data-ng-class="{ 'theme-question-color': questionAnswer.selected === answer._id,
-                              'theme-answer-color': questionAnswer.selected !== answer._id}">
+        <div class="results">
           <span class="results__precent" data-ng-if="question.settings.showAnswers && question.settings.showAnswers !== false && questionAnswer.selected ">
             {{ !!questionAnswer.stats[answer._id] ? (100 * questionAnswer.stats[answer._id]) : 0 | number:1 }}<span class="precent">%</span>
           </span>
