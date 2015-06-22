@@ -4,7 +4,7 @@
 
 <h2 class="theme-question-color text-center" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2>
 <div class="main-content-description theme-question-color text-center" data-ng-if="!!question.description">
-  <p data-ng-bind-html="question.description | nl2br"></p>  
+  <p data-ng-bind-html="question.description | nl2br"></p>
 </div>
 
 <picture class="main-media-image"
@@ -17,7 +17,7 @@
       'left' : (question.imageData.left > 0 ? question.imageData.left : 0) + '%',
       'top'  : (question.imageData.top  > 0 ? question.imageData.top  : 0) + '%'
     }"
-    data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
+    data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}"
     data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
                     {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
                     {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
@@ -25,7 +25,9 @@
 </picture>
 
 <div class="text-center main-footer" data-ng-if="question.coverPage.link">
-  <a class="btn btn--round-corner btn--normal theme-button-color theme-question-color" rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}" data-ng-href="{{question.coverPage.link}}">{{question.coverPage.buttonText || "Thank You"}}</a>
+  <a class="btn btn--round-corner btn--normal theme-button-color theme-question-color"
+     rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}"
+     data-ng-href="{{(question.coverPage.link.indexOf('http') === -1 ? 'http://' : '') + question.coverPage.link}}">{{question.coverPage.buttonText || "Thank You"}}</a>
 </div>
 
 <div class="text-center main-footer" data-ng-if="!question.coverPage.link">
