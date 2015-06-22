@@ -27,6 +27,7 @@
         <div class="image-wrapper">
           <picture class="thumb-media-image">
             <img
+              ng-if="answer.imageFile"
               data-ng-style="{
                 'width': answer.imageData.width + '%',
                 'left': answer.imageData.left + '%',
