@@ -194,7 +194,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
                 } else if ( $scope.quiz.type === 'score' ) {
                   text = 'Scores';
                 } else {
-                  return;
+                  return $scope.sentAnswer();
                 }
 
                 summaryPage = {
