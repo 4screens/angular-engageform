@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $document, $http, $q, previewMode, summaryMode, message ) {
+  function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $document,
+            $http, $q, previewMode, summaryMode, message, isMobile, isEmbedded, openInFullscreen ) {
+
     var nextQuestionTimeout,
         quizId = $routeParams.engageFormId,
         $body = angular.element( $document.find('body').eq( 0 ) ),
@@ -11,9 +13,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     $scope.smallViewport = $window.innerWidth <= 1024;
 
     // Is in iframe?
-    if ( $window.parent !== $window ) {
-      $scope.isEmbedded = true;
-    }
+    $scope.isEmbedded = isEmbedded;
+
+    // Runs on a mobile device?
+    $scope.isMobile = isMobile;
 
     $scope.$on( 'height-changed', function( event, data ) {
       // Add or remove class on the body element depending on the question's height.
@@ -482,6 +485,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
 
     $scope.next = function( $event, force ) {
+
+      if($scope.questions[$scope.currentQuestion.index()].type === 'startPage' && isMobile) {
+       openInFullscreen();
+      }
 
       // Do not valid anything it's a startPage
       if($scope.questions[$scope.currentQuestion.index()].type === 'startPage' || typeof force !== 'undefined') {
