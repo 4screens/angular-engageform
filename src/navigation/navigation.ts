@@ -60,59 +60,58 @@ module Navigation {
 
     pick($event, vcase: Page.ICase): void {
       this.disableDefaultAction($event);
-      this._engageform.current.send(vcase).then(() => {
-        this.move($event);
-      });
+
+      switch (this._engageform.mode) {
+        default:
+          this._engageform.current.send(vcase).then(() => {
+            this.move(vcase);
+          }).catch(errorMessage => {
+            this._engageform.message = errorMessage;
+          });
+      }
     }
     next = this.pick;
+    finish = this.pick;
 
-    move($event): void {
-      this.disableDefaultAction($event);
-
+    private move(vcase: Page.ICase): void {
       this._engageform.message = '';
       if (this._engageform.current) {
-        if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
-          this._engageform.message = 'Answer is required to proceed to next question';
-          return;
+        switch (this._engageform.mode) {
+          case Engageform.Mode.Default:
+          case Engageform.Mode.Preview:
+            if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
+              this._engageform.message = 'Answer is required to proceed to next question';
+              return;
+            }
+            break;
         }
       }
 
       this.position++;
-      if (this.position > this._engageform.availablePages.length) {
-        this.position = this._engageform.availablePages.length - 1;
-        return;
-      }
+      if (this._engageform.availablePages.length >= this.position) {
+        this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
 
-      this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
+        this.hasPrev = true;
+        this.hasNext = false;
+        this.hasFinish = false;
 
-      this.hasPrev = true;
-      this.hasNext = false;
-      this.hasFinish = false;
+        if (this._engageform.availablePages.length > this.position) {
+          this.hasNext = true;
+        } else if (this._engageform.availablePages.length === this.position) {
+          this.hasFinish = true;
+        }
 
-      if (this._engageform.availablePages.length > this.position) {
-        this.hasNext = true;
-      } else if (this._engageform.availablePages.length === this.position) {
-        this.hasFinish = true;
-      }
-    }
+      } else {
+        this.position = this._engageform.availablePages.length;
+        if (!vcase) {
+          this._engageform.setCurrentEndPage();
 
-    finish($event): void {
-      this.disableDefaultAction($event);
-
-      this._engageform.message = '';
-      if (this._engageform.current) {
-        if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
-          this._engageform.message = 'Answer is required to proceed to next question';
-          return;
+          this.enabled = false;
+          this.hasPrev = false;
+          this.hasNext = false;
+          this.hasFinish = false;
         }
       }
-
-      this._engageform.setCurrentEndPage();
-
-      this.enabled = false;
-      this.hasPrev = false;
-      this.hasNext = false;
-      this.hasFinish = false;
     }
 
     private disableDefaultAction($event) {

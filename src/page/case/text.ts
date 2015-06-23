@@ -2,6 +2,7 @@ module Page {
   export class TextCase extends Case {
     type = CaseType.Text;
 
+    result: number;
     selected: boolean = false;
     correct: boolean = false;
     incorrect: boolean = false;
@@ -16,8 +17,7 @@ module Page {
 
     send() {
       if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
-        this.page.engageform.message = 'Changing answer is not allowed';
-        return;
+        return Bootstrap.$q.reject('Changing answer is not allowed');
       }
 
       return super.makeSend({selectedAnswerId: this.id}).then((res) => {
@@ -29,6 +29,15 @@ module Page {
 
         if (res.correctAnswerId) {
           data.correctCaseId = res.correctAnswerId;
+        }
+
+        for (var caseId in res.stats) {
+          if (res.stats.hasOwnProperty(caseId)) {
+            data.results = data.results || {};
+            if (/.{24}/.test(caseId)) {
+              data.results[caseId] = res.stats[caseId];
+            }
+          }
         }
 
         super.save(data);

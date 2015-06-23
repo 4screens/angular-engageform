@@ -3,5 +3,9 @@ module Page {
     selectedCaseId: string;
     correctCaseId: string;
     selectedValue: number;
+    result: number;
+    results: {
+      [index: string]: number
+    }
   }
 }

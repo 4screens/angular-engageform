@@ -12,6 +12,7 @@ module Page {
     image?: string;
     outcome?: string;
     score?: number;
+    result?: number;
     rangeMin?: number;
     rangeMax?: number;
     labelMin?: string;

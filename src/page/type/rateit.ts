@@ -2,6 +2,7 @@ module Page {
   export class Rateit extends Page {
     type = Type.Rateit;
 
+    result: number;
     labelMin: string;
     labelMax: string;
 
@@ -18,18 +19,21 @@ module Page {
         }));
       }
 
-      var sent = <IPageSent>Bootstrap.localStorage.get('page.' + this.id) || <IPageSent>{};
+      this.sent().then(sent => {
+        if (sent.selectedValue) {
+          this.selectAnswer(sent);
+        }
+      });
 
-      if (!sent.selectedValue) {
-        return;
-      }
-
-      this.selectAnswer(sent);
     }
 
     selectAnswer(sent) {
       if (sent.selectedValue) {
         this.filled = true;
+      }
+
+      if (sent.result) {
+        this.result = sent.result;
       }
 
       this.cases.map((vcase: ICase) => {

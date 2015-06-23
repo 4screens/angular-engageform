@@ -38,6 +38,21 @@ module Page {
       deferred.resolve();
       return deferred.promise;
     }
+
+    sent(): ng.IPromise<IPageSent> {
+      var deferred = Bootstrap.$q.defer();
+      var sent = <IPageSent>{};
+
+      switch (this.engageform.mode) {
+        default:
+          sent = <IPageSent>(Bootstrap.localStorage.get('page.' + this.id) || {});
+          break;
+      }
+      deferred.resolve(sent);
+
+      return deferred.promise;
+    }
+
     selectAnswer(data): void {
       // "abstract"
     }

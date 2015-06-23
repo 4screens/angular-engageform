@@ -16,8 +16,7 @@ module Page {
 
     send() {
       if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
-        this.page.engageform.message = 'Changing answer is not allowed';
-        return;
+        return Bootstrap.$q.reject('Changing answer is not allowed');
       }
 
       return super.makeSend({quizQuestionId: this.page.id, rateItValue: this.ordinal}).then((res) => {
@@ -25,6 +24,10 @@ module Page {
 
         if (res.selectedValue) {
           data.selectedValue = res.selectedValue;
+        }
+
+        if (res.avgRateItValue) {
+          data.result = +res.avgRateItValue;
         }
 
         super.save(data);

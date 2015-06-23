@@ -14,14 +14,12 @@ module Page {
       });
 
       if (this.cases.length) {
-        var sent = <IPageSent>Bootstrap.localStorage.get('page.' + this.id) || <IPageSent>{};
+        this.sent().then(sent => {
+          this.selectAnswer(sent);
+        });
 
-        if (!sent.selectedCaseId) {
-          return;
         }
 
-        this.selectAnswer(sent);
-      }
     }
 
     selectAnswer(sent) {
@@ -35,6 +33,10 @@ module Page {
           vcase.selected = true;
         }
 
+        if (sent.results) {
+          vcase.result = sent.results[vcase.id] || 0;
+        }
+
         if (sent.correctCaseId && (vcase.id === sent.correctCaseId || vcase.id === sent.selectedCaseId)) {
           if (vcase.id === sent.correctCaseId) {
             vcase.correct = true;
@@ -42,7 +44,6 @@ module Page {
             vcase.incorrect = true;
           }
         }
-
       });
     }
   }

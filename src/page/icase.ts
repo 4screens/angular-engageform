@@ -4,6 +4,7 @@ module Page {
     page: IPage;
     type: CaseType;
 
+    result?: number;
     selected?: boolean;
     correct?: boolean;
     incorrect?: boolean;
@@ -16,6 +17,6 @@ module Page {
     ordinal?: number;
 
     send(): ng.IPromise<IPageSent>;
-    validate(): boolean;
+    validate(): ng.IPromise<ICase>;
   }
 }

@@ -29,9 +29,6 @@ module Page {
       deferred.resolve(<IPageSent>{});
       return deferred.promise;
     }
-    validate(): boolean {
-      return true;
-    }
 
     makeSend(data: API.IQuizQuestionAnswer): ng.IPromise<API.IQuizQuestionAnswer> {
       // @todo move url to the configuration
@@ -60,11 +57,11 @@ module Page {
       Bootstrap.localStorage.set('page.' + this.page.id, data);
     }
 
-    disableDefaultAction($event) {
-      if ($event) {
-        $event.stopPropagation();
-        $event.preventDefault();
-      }
+    validate(): ng.IPromise<ICase> {
+      // "abstract"
+      var deferred = Bootstrap.$q.defer();
+      deferred.resolve(<ICase>{});
+      return deferred.promise;
     }
   }
 }

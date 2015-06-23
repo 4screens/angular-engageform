@@ -16,8 +16,6 @@ module Navigation {
     prev($event): void;
     pick($event, vcase: Page.ICase): void;
     next($event, vcase: Page.ICase): void;
-    move($event): void;
-
-    finish($event): void;
+    finish($event, vcase: Page.ICase): void;
   }
 }
