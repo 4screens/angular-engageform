@@ -23,8 +23,12 @@
   <div data-ng-repeat="answer in question.answers" class="questionnaire__answer questionnaire__answer--picture-choice "
       data-ng-class="{'questionnaire__answer--selected':  questionAnswer.selected === answer._id, 'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id  }"
       data-ng-click="sendAnswer( answer._id )">
-     <figure class="theme-answer-background-color theme-answer-border-color">
-        <div class="image-wrapper">
+      <figure data-ng-class="{
+        'theme-answer-select-background-result-color': questionAnswer.selected === answer._id,
+        'theme-answer-background-color theme-answer-border-color': questionAnswer.selected !== answer._id,
+        'questionnaire__answer--notcorrect': !!questionAnswer.selected && questionAnswer.selected !== answer._id
+      }">
+       <div class="image-wrapper">
           <picture class="thumb-media-image">
             <img
               ng-if="answer.imageFile"
