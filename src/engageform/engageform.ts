@@ -86,10 +86,14 @@ module Engageform {
     }
 
     setCurrentEndPage(): ng.IPromise<API.IQuizFinish> {
-      // @todo move url to the configuration
-      var url = 'http://answers.4screens.acc.nopattern.net/api/v1/quiz/:engageformId/finish';
+      var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformFinishUrl;
+          url = url.replace(':engageformId', this._engageformId);
 
-      return Bootstrap.$http.post(url.replace(':engageformId', this._engageformId), {
+      if (this.mode !== Mode.Default) {
+        url += '?preview';
+      }
+
+      return Bootstrap.$http.post(url, {
         userIdent: Bootstrap.user.sessionId,
         globalUserIdent: Bootstrap.user.id
       }).then(function (res: API.IQuizFinishResponse) {
@@ -104,8 +108,12 @@ module Engageform {
     }
 
     private getPagesById(engageformId: string): ng.IPromise<API.IQuizQuestion[]> {
-      // @todo move url to the configuration
-      var url = 'http://answers.4screens.acc.nopattern.net/api/v1/quiz/:engageformId/questions';
+      var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformPagesUrl;
+          url = url.replace(':engageformId', this._engageformId);
+
+      if (this.mode !== Mode.Default) {
+        url += '?preview';
+      }
 
       return Bootstrap.$http.get(url.replace(':engageformId', engageformId)).then(function (res) {
         if ([200, 304].indexOf(res.status) !== -1) {

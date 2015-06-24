@@ -31,13 +31,17 @@ module Page {
     }
 
     makeSend(data: API.IQuizQuestionAnswer): ng.IPromise<API.IQuizQuestionAnswer> {
-      // @todo move url to the configuration
-      var url = 'http://answers.4screens.acc.nopattern.net/api/v1/quiz/question/:pageId/response';
+      var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.pageResponseUrl;
+          url = url.replace(':pageId', this.page.id);
+
+      if (this.page.engageform.mode !== Engageform.Mode.Default) {
+        url += '?preview';
+      }
 
       data.quizQuestionId = this.page.id;
       data.userIdent = Bootstrap.user.sessionId;
 
-      return Bootstrap.$http.post(url.replace(':pageId', this.page.id), data).then((res: API.IQuizQuestionAnswerResponse) => {
+      return Bootstrap.$http.post(url, data).then((res: API.IQuizQuestionAnswerResponse) => {
         if ([200, 304].indexOf(res.status) !== -1) {
           if (!data.userIdent) {
             Bootstrap.user.sessionId = res.data.userIdent;

@@ -9,14 +9,16 @@ class Bootstrap {
   static $q: ng.IQService;
   static localStorage: ng.local.storage.ILocalStorageService;
   static user: User;
+  static config;
 
   private _engageform: Engageform.IEngageform;
   private _mode: Engageform.Mode = Engageform.Mode.Undefined;
 
-  constructor($http: ng.IHttpService, $q: ng.IQService, localStorage: ng.local.storage.ILocalStorageService) {
+  constructor($http: ng.IHttpService, $q: ng.IQService, localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
     Bootstrap.$http = $http;
     Bootstrap.$q = $q;
     Bootstrap.localStorage = localStorage;
+    Bootstrap.config = ApiConfig;
     Bootstrap.user = new User();
   }
 
@@ -102,7 +104,12 @@ class Bootstrap {
   }
 
   private getById(id: string): ng.IPromise<API.IQuiz> {
-    var url = 'http://answers.4screens.acc.nopattern.net/api/v1/quiz/:quizId'.replace(':quizId', id);
+    var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformUrl;
+        url = url.replace(':engageformId', id);
+
+    if (this.mode !== Engageform.Mode.Default) {
+      url += '?preview';
+    }
 
     return Bootstrap.$http.get(url).then((res: API.IQuizResponse) => {
       if ([200, 304].indexOf(res.status) !== -1) {
@@ -114,5 +121,5 @@ class Bootstrap {
   }
 }
 
-Bootstrap.$inject = ['$http', '$q', 'localStorageService'];
+Bootstrap.$inject = ['$http', '$q', 'localStorageService', 'ApiConfig'];
 app.service('Engageform', Bootstrap);
