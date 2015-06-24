@@ -550,8 +550,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     $scope.next = function( $event, force ) {
 
-      //if($scope.questions[$scope.currentQuestion.index()].type === 'startPage' && isMobile) {
-      if($scope.questions[$scope.currentQuestion.index()].type === 'startPage') {
+      if($scope.questions[$scope.currentQuestion.index()].type === 'startPage' && isMobile) {
        openInFullscreen();
       }
 
