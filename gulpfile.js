@@ -13,7 +13,7 @@ var PATH = {
   define: 'typings'
 };
 var FILES = [
-  path.join('.', PATH.define, 'tsd.d.ts'),
+  path.join('.', PATH.source, 'header.ts'),
   path.join('.', PATH.source, 'app.ts'),
   path.join('.', PATH.source, 'bootstrap.ts'),
 
@@ -71,7 +71,16 @@ gulp.task('bump', function() {
     .pipe(gulp.dest('.'));
 });
 
-gulp.task('compile', ['bump'], function() {
+gulp.task('header', ['bump'], function() {
+  return gulp.src(BANNER)
+    .pipe(plugins.rename({extname: '.ts'}))
+    .pipe(plugins.replace(/<%= pkg\.(\w+)\.?(\w+)? %>/g, function(chars, major, minor) {
+      return minor?pkg[major][minor]:pkg[major];
+    }))
+    .pipe(gulp.dest(PATH.source));
+});
+
+gulp.task('build', ['header'], function() {
   var ts = gulp.src(FILES)
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.typescript({
@@ -81,26 +90,26 @@ gulp.task('compile', ['bump'], function() {
 
   return ts.js
     .pipe(plugins.concat(MAIN))
-    .pipe(plugins.header(fs.readFileSync(BANNER, 'utf8'), {pkg : pkg}))
     .pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest('.'));
 });
 
-gulp.task('build', ['compile'], function() {
+gulp.task('minify', ['build'], function() {
   return gulp.src(MAIN)
-    .pipe(plugins.sourcemaps.init({loadMaps: true}))
-    .pipe(plugins.uglify())
+    .pipe(plugins.sourcemaps.init({loadMaps: true, debug: true}))
+    .pipe(plugins.uglify({
+      preserveComments: 'some'
+    }))
     .pipe(plugins.rename({extname: '.min.js'}))
-    .pipe(plugins.header(fs.readFileSync(BANNER, 'utf8'), {pkg : pkg}))
     .pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest('.'));
 });
 
-gulp.task('develop', ['build'], function() {
-  gulp.watch(FILES, ['build']);
+gulp.task('develop', ['minify'], function() {
+  gulp.watch(FILES, ['minify']);
 });
 
-gulp.task('tslint', ['build'], function () {
+gulp.task('tslint', ['minify'], function () {
   return gulp.src(FILES)
     .pipe(plugins.tslint())
     .pipe(plugins.tslint.report('verbose'));
