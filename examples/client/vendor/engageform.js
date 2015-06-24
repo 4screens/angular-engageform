@@ -550,7 +550,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     $scope.next = function( $event, force ) {
 
-      if($scope.questions[$scope.currentQuestion.index()].type === 'startPage' && isMobile) {
+      //if($scope.questions[$scope.currentQuestion.index()].type === 'startPage' && isMobile) {
+      if($scope.questions[$scope.currentQuestion.index()].type === 'startPage') {
        openInFullscreen();
       }
 
@@ -1176,11 +1177,10 @@ angular.module('4screens.engageform').factory( 'message', ["$window", function( 
 
 'use strict';
 angular.module('4screens.engageform')
-  .factory( 'openInFullscreen', ["$document", function( $document ) {
+  .factory( 'openInFullscreen', ["$document", "message", function( $document, message ) {
     var body = $document[0].body;
 
     return function() {
-
       if (body.requestFullscreen) {
         body.requestFullscreen();
       } else if (body.msRequestFullscreen) {
@@ -1189,6 +1189,8 @@ angular.module('4screens.engageform')
         body.mozRequestFullScreen();
       } else if (body.webkitRequestFullscreen) {
         body.webkitRequestFullscreen();
+      } else {
+        message.send('request-fullscreen');
       }
     }
   }]);

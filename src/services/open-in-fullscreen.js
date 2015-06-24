@@ -1,10 +1,9 @@
 'use strict';
 angular.module('4screens.engageform')
-  .factory( 'openInFullscreen', function( $document ) {
+  .factory( 'openInFullscreen', function( $document, message ) {
     var body = $document[0].body;
 
     return function() {
-
       if (body.requestFullscreen) {
         body.requestFullscreen();
       } else if (body.msRequestFullscreen) {
@@ -13,6 +12,8 @@ angular.module('4screens.engageform')
         body.mozRequestFullScreen();
       } else if (body.webkitRequestFullscreen) {
         body.webkitRequestFullscreen();
+      } else {
+        message.send('request-fullscreen');
       }
     }
   });
