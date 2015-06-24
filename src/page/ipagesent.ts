@@ -7,5 +7,9 @@ module Page {
     results: {
       [index: string]: number
     }
+    inputs: {
+      _id: string;
+      value: string;
+    }[]
   }
 }

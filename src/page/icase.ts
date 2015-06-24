@@ -17,6 +17,6 @@ module Page {
     ordinal?: number;
 
     send(): ng.IPromise<IPageSent>;
-    validate(): ng.IPromise<ICase>;
+    validate(): boolean;
   }
 }

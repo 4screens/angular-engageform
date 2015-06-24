@@ -57,11 +57,9 @@ module Page {
       Bootstrap.localStorage.set('page.' + this.page.id, data);
     }
 
-    validate(): ng.IPromise<ICase> {
+    validate(): boolean {
       // "abstract"
-      var deferred = Bootstrap.$q.defer();
-      deferred.resolve(<ICase>{});
-      return deferred.promise;
+      return true;
     }
   }
 }
