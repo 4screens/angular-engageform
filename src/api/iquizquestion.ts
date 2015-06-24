@@ -3,6 +3,15 @@ module API {
     _id: string;
     type: string;
     text: string;
+    coverPage: {
+      buttonText: string;
+      outcome: string;
+      scoreRange: {
+        max: number;
+        min: number;
+      }
+      showSocialShares: boolean;
+    }
     requiredAnswer: boolean;
     rateIt: {
       maxLabel: string;

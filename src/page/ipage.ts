@@ -11,6 +11,8 @@ module Page {
 
     image?: string;
     outcome?: string;
+    button?: string;
+    social?: boolean;
     score?: number;
     result?: number;
     rangeMin?: number;
