@@ -11,6 +11,7 @@ class Bootstrap {
   static user: User;
 
   private _engageform: Engageform.IEngageform;
+  private _mode: Engageform.Mode = Engageform.Mode.Undefined;
 
   constructor($http: ng.IHttpService, $q: ng.IQService, localStorage: ng.local.storage.ILocalStorageService) {
     Bootstrap.$http = $http;
@@ -28,11 +29,7 @@ class Bootstrap {
   }
 
   get mode(): Engageform.Mode {
-    if (this._engageform) {
-      return this._engageform.mode;
-    }
-
-    return Engageform.Mode.Undefined;
+    return this._mode;
   }
 
   get title(): string {
@@ -72,19 +69,33 @@ class Bootstrap {
   }
 
   init(opts: API.IEmbed): void {
+    switch (opts.mode) {
+      case 'preview':
+        this._mode = Engageform.Mode.Preview;
+        break;
+      case 'summary':
+        this._mode = Engageform.Mode.Summary;
+        break;
+      case 'result':
+        this._mode = Engageform.Mode.Result;
+        break;
+      default:
+        this._mode = Engageform.Mode.Default;
+    }
+
     this.getById(opts.id).then((engageform) => {
       switch (engageform.type) {
         case 'outcome':
-          this._engageform = new Engageform.Outcome(engageform);
+          this._engageform = new Engageform.Outcome(this.mode, engageform);
           break;
         case 'poll':
-          this._engageform = new Engageform.Poll(engageform);
+          this._engageform = new Engageform.Poll(this.mode, engageform);
           break;
         case 'score':
-          this._engageform = new Engageform.Score(engageform);
+          this._engageform = new Engageform.Score(this.mode, engageform);
           break;
         case 'survey':
-          this._engageform = new Engageform.Survey(engageform);
+          this._engageform = new Engageform.Survey(this.mode, engageform);
           break;
       }
     });

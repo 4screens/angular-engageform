@@ -12,6 +12,7 @@ module Engageform {
     Undefined,
     Default,
     Preview,
-    Summory
+    Result,
+    Summary
   }
 }

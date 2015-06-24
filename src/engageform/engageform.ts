@@ -9,8 +9,8 @@ module Engageform {
     private _endPages: string[] = [];
     private _availablePages: string[] = [];
 
-    type;
-    mode = Mode.Default;
+    type: Type = Type.Undefined;
+    mode: Mode = Mode.Undefined;
     title;
     message;
     settings;
@@ -35,8 +35,9 @@ module Engageform {
       return this._availablePages;
     }
 
-    constructor(data: API.IQuiz) {
+    constructor(mode: Mode, data: API.IQuiz) {
       this._engageformId = data._id;
+      this.mode = mode;
 
       this.title = data.title;
       this.settings = new Settings(data);

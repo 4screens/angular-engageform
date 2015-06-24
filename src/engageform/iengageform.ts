@@ -1,10 +1,10 @@
 module Engageform {
   export interface IEngageform {
-    type: Engageform.Type;
-    mode: Engageform.Mode;
+    type: Type;
+    mode: Mode;
     title: string;
-    settings: Engageform.ISetting;
-    theme: Engageform.ITheme;
+    settings: ISetting;
+    theme: ITheme;
 
     current: Page.IPage;
     message: string;
