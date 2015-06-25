@@ -30,8 +30,16 @@ class Bootstrap {
     return Engageform.Type.Undefined;
   }
 
+  get Type() {
+    return Engageform.Type;
+  }
+
   get mode(): Engageform.Mode {
     return this._mode;
+  }
+
+  get Mode() {
+    return Engageform.Mode;
   }
 
   get title(): string {

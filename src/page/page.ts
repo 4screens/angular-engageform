@@ -21,6 +21,14 @@ module Page {
       return this._engageform;
     }
 
+    get Type() {
+      return Type;
+    }
+
+    get CaseType() {
+      return CaseType;
+    }
+
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
       this._pageId = data._id;
       this._engageform = engageform;
