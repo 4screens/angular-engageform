@@ -40,12 +40,10 @@ module Engageform {
       this.title = data.title;
       this.settings = new Settings(data);
       this.theme = new Theme(data);
+    }
 
-      this._startPages = [];
-      this._endPages = [];
-      this._availablePages = [];
-
-      this.getPagesById(this._engageformId).then((pages) => {
+    initPages(): ng.IPromise<IEngageform> {
+      return this.getPagesById(this._engageformId).then((pages) => {
         pages.map((page) => {
           switch (page.type) {
             case 'multiChoice':
@@ -75,7 +73,7 @@ module Engageform {
           }
         });
 
-        this.navigation = new Navigation.Navigation(<IEngageform>this);
+        return <IEngageform>this;
       });
     }
 

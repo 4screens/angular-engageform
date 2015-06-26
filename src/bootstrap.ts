@@ -78,7 +78,7 @@ class Bootstrap {
     }
   }
 
-  init(opts: API.IEmbed): void {
+  init(opts: API.IEmbed): ng.IPromise<Engageform.IEngageform> {
     switch (opts.mode) {
       case 'preview':
         Bootstrap.mode = Engageform.Mode.Preview;
@@ -93,7 +93,7 @@ class Bootstrap {
         Bootstrap.mode = Engageform.Mode.Default;
     }
 
-    Engageform.Engageform.getById(opts.id).then((engageform) => {
+    return Engageform.Engageform.getById(opts.id).then((engageform) => {
       switch (engageform.type) {
         case 'outcome':
           this._engageform = new Engageform.Outcome(engageform);
@@ -108,6 +108,12 @@ class Bootstrap {
           this._engageform = new Engageform.Survey(engageform);
           break;
       }
+
+      return this._engageform.initPages();
+    }).then(function(engageform) {
+      engageform.navigation = new Navigation.Navigation(<Engageform.IEngageform>engageform);
+
+      return engageform;
     });
   }
 }

@@ -14,6 +14,7 @@ module Engageform {
     endPages: string[];
     availablePages: string[];
 
+    initPages(): ng.IPromise<IEngageform>;
     setCurrent(pageId: string);
     setCurrentEndPage(): void;
   }
