@@ -22,10 +22,9 @@ module Page {
 
     send(vcase: ICase): ng.IPromise<IPageSent> {
       var deferred = Bootstrap.$q.defer();
-      var values = [];
       var validated = true;
 
-      var inputs = this.cases.map((input) => {
+      this.cases.map((input) => {
         if (!input.validate()) {
           validated = false;
         }
