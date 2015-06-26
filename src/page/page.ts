@@ -9,6 +9,8 @@ module Page {
 
     type: Type;
     title: string;
+    description: string;
+    media: string;
     filled: boolean;
     settings: ISetting;
     cases: ICase[] = [];
@@ -34,6 +36,8 @@ module Page {
       this._engageform = engageform;
 
       this.title = data.text;
+      this.description = data.description;
+      this.media = this.getMediaUrl(data.imageData, data.imageFile);
       this.settings = <ISetting>new Settings(data);
     }
 
@@ -63,6 +67,18 @@ module Page {
 
     selectAnswer(data): void {
       // "abstract"
+    }
+
+    private getMediaUrl(imageData, imageFile): string {
+      if (!imageFile) {
+        return '';
+      }
+
+      if (imageFile.indexOf('http') === -1) {
+        imageFile = Bootstrap.config.backend.api + '/uploads/' + imageFile;
+      }
+
+      return imageFile;
     }
   }
 }

@@ -28,7 +28,10 @@ module Engageform {
         this.buttonColor = data.theme.buttonColor || '';
         this.font = data.theme.font || '';
         this.questionColor = data.theme.questionColor || '';
-        this.customThemeCssFile = data.theme.customThemeCssFile || '';
+
+        if (data.theme.customThemeCssFile) {
+          this.customThemeCssFile = Bootstrap.config.backend.api + '/uploads/' + data.theme.customThemeCssFile;
+        }
       }
     }
   }

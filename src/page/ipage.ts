@@ -5,6 +5,8 @@ module Page {
 
     type: Type;
     title: string;
+    description: string;
+    media: string;
     filled: boolean;
     settings: ISetting;
     cases: ICase[];

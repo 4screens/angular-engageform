@@ -3,6 +3,7 @@ module API {
     _id: string;
     type: string;
     text: string;
+    description: string;
     coverPage: {
       buttonText: string;
       outcome: string;
@@ -12,6 +13,13 @@ module API {
       }
       showSocialShares: boolean;
     }
+    imageData: {
+      containerHeight: number;
+      left: number;
+      top: number;
+      width: number;
+    }
+    imageFile: string;
     requiredAnswer: boolean;
     rateIt: {
       maxLabel: string;
