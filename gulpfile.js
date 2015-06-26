@@ -139,14 +139,20 @@ gulp.task('release::bump', ['test'], function(done) {
 });
 
 gulp.task('release', ['release::bump'], function() {
+  sh.exec('mkdir release');
+  sh.exec('mv -f engageform.* release/');
+
   plugins.git.checkout('release', {quiet: true}, function (err) {
     if (err) throw err;
 
+    sh.exec('mv release/* ./');
+    sh.exec('rm -r release');
     sh.exec('git add engageform.js engageform.js.map engageform.min.js engageform.min.js.map');
     sh.exec('git commit -m "feat(release): New build files." --quiet');
     sh.exec('git push');
     sh.exec('git tag v' + pkg.version);
     sh.exec('git push -v origin refs/tags/v' + pkg.version);
+    sh.exec('git reset -q --hard HEAD');
     sh.exec('git checkout v0.2.x --quiet');
   });
 });
