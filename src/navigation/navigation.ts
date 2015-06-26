@@ -61,7 +61,7 @@ module Navigation {
     pick($event, vcase: Page.ICase): void {
       this.disableDefaultAction($event);
 
-      switch (this._engageform.mode) {
+      switch (Bootstrap.mode) {
         default:
           this._engageform.current.send(vcase).then(() => {
             this.move(vcase);
@@ -76,7 +76,7 @@ module Navigation {
     private move(vcase: Page.ICase): void {
       this._engageform.message = '';
       if (this._engageform.current) {
-        switch (this._engageform.mode) {
+        switch (Bootstrap.mode) {
           case Engageform.Mode.Default:
           case Engageform.Mode.Preview:
             if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {

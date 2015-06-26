@@ -1,7 +1,6 @@
 module Engageform {
   export interface IEngageform {
     type: Type;
-    mode: Mode;
     title: string;
     settings: ISetting;
     theme: ITheme;

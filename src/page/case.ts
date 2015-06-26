@@ -34,7 +34,7 @@ module Page {
       var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.pageResponseUrl;
           url = url.replace(':pageId', this.page.id);
 
-      if (this.page.engageform.mode !== Engageform.Mode.Default) {
+      if (Bootstrap.mode !== Engageform.Mode.Default) {
         url += '?preview';
       }
 

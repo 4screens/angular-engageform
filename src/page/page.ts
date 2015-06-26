@@ -51,7 +51,7 @@ module Page {
       var deferred = Bootstrap.$q.defer();
       var sent = <IPageSent>{};
 
-      switch (this.engageform.mode) {
+      switch (Bootstrap.mode) {
         default:
           sent = <IPageSent>(Bootstrap.localStorage.get('page.' + this.id) || {});
           break;

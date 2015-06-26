@@ -10,7 +10,6 @@ module Engageform {
     private _availablePages: string[] = [];
 
     type: Type = Type.Undefined;
-    mode: Mode = Mode.Undefined;
     title;
     message;
     settings;
@@ -35,9 +34,8 @@ module Engageform {
       return this._availablePages;
     }
 
-    constructor(mode: Mode, data: API.IQuiz) {
+    constructor(data: API.IQuiz) {
       this._engageformId = data._id;
-      this.mode = mode;
 
       this.title = data.title;
       this.settings = new Settings(data);
@@ -89,7 +87,7 @@ module Engageform {
       var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformFinishUrl;
           url = url.replace(':engageformId', this._engageformId);
 
-      if (this.mode !== Mode.Default) {
+      if (Bootstrap.mode !== Mode.Default) {
         url += '?preview';
       }
 
@@ -107,11 +105,28 @@ module Engageform {
       });
     }
 
+    static getById(id: string): ng.IPromise<API.IQuiz> {
+      var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformUrl;
+      url = url.replace(':engageformId', id);
+
+      if (Bootstrap.mode !== Mode.Default) {
+        url += '?preview';
+      }
+
+      return Bootstrap.$http.get(url).then((res: API.IQuizResponse) => {
+        if ([200, 304].indexOf(res.status) !== -1) {
+          return res.data;
+        }
+
+        return Bootstrap.$q.reject(res);
+      });
+    }
+
     private getPagesById(engageformId: string): ng.IPromise<API.IQuizQuestion[]> {
       var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformPagesUrl;
           url = url.replace(':engageformId', this._engageformId);
 
-      if (this.mode !== Mode.Default) {
+      if (Bootstrap.mode !== Mode.Default) {
         url += '?preview';
       }
 

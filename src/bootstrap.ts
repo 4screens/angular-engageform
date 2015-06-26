@@ -10,9 +10,9 @@ class Bootstrap {
   static localStorage: ng.local.storage.ILocalStorageService;
   static user: User;
   static config;
+  static mode = Engageform.Mode.Undefined;
 
   private _engageform: Engageform.IEngageform;
-  private _mode: Engageform.Mode = Engageform.Mode.Undefined;
 
   constructor($http: ng.IHttpService, $q: ng.IQService, localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
     Bootstrap.$http = $http;
@@ -35,7 +35,7 @@ class Bootstrap {
   }
 
   get mode(): Engageform.Mode {
-    return this._mode;
+    return Bootstrap.mode;
   }
 
   get Mode() {
@@ -81,50 +81,33 @@ class Bootstrap {
   init(opts: API.IEmbed): void {
     switch (opts.mode) {
       case 'preview':
-        this._mode = Engageform.Mode.Preview;
+        Bootstrap.mode = Engageform.Mode.Preview;
         break;
       case 'summary':
-        this._mode = Engageform.Mode.Summary;
+        Bootstrap.mode = Engageform.Mode.Summary;
         break;
       case 'result':
-        this._mode = Engageform.Mode.Result;
+        Bootstrap.mode = Engageform.Mode.Result;
         break;
       default:
-        this._mode = Engageform.Mode.Default;
+        Bootstrap.mode = Engageform.Mode.Default;
     }
 
-    this.getById(opts.id).then((engageform) => {
+    Engageform.Engageform.getById(opts.id).then((engageform) => {
       switch (engageform.type) {
         case 'outcome':
-          this._engageform = new Engageform.Outcome(this.mode, engageform);
+          this._engageform = new Engageform.Outcome(engageform);
           break;
         case 'poll':
-          this._engageform = new Engageform.Poll(this.mode, engageform);
+          this._engageform = new Engageform.Poll(engageform);
           break;
         case 'score':
-          this._engageform = new Engageform.Score(this.mode, engageform);
+          this._engageform = new Engageform.Score(engageform);
           break;
         case 'survey':
-          this._engageform = new Engageform.Survey(this.mode, engageform);
+          this._engageform = new Engageform.Survey(engageform);
           break;
       }
-    });
-  }
-
-  private getById(id: string): ng.IPromise<API.IQuiz> {
-    var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformUrl;
-        url = url.replace(':engageformId', id);
-
-    if (this.mode !== Engageform.Mode.Default) {
-      url += '?preview';
-    }
-
-    return Bootstrap.$http.get(url).then((res: API.IQuizResponse) => {
-      if ([200, 304].indexOf(res.status) !== -1) {
-        return res.data;
-      }
-
-      return Bootstrap.$q.reject(res);
     });
   }
 }
