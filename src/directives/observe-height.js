@@ -38,11 +38,12 @@ angular.module('4screens.engageform').directive( 'observeHeight', function( $win
           // If the height hasn't stabilised yet, schedule another check.
           if ( height !== innerHeight ) {
             emit( innerHeight );
+
+            // Polling
+            pollHeight();
           }
 
-          // Polling
-          pollHeight();
-        }, 16 );
+        }, 50 );
       }
 
       scope.$on( '$destroy', function() {
