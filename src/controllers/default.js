@@ -583,6 +583,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           );
         }
       };
+      /*
       sso.linkedin = {
         share: function () {
           window.open(
@@ -592,6 +593,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           );
         }
       };
+      */
 
       // Personalyze description for outcomes and score
       if ($scope.quiz.type === 'outcome' || $scope.quiz.type === 'score') {

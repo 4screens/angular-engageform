@@ -59,7 +59,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/social-share.html',
-    '<section class="social-shares--icons"><a class="social-shares--icons__fb" data-ng-click="socialShare().facebook.share()"><i class="fa fa-facebook"></i></a><a class="social-shares--icons__twitter" href="https://twitter.com/intent/tweet?text={{ socialShare().link + \' \' + socialShare().title + \' \' + socialShare().description }}"><i class="fa fa-twitter"></i></a><a class="social-shares--icons__linkedin" data-ng-click="socialShare().linkedin.share()"><i class="fa fa-linkedin"></i></a></section>');
+    '<section class="social-shares--icons"><a class="social-shares--icons__fb" data-ng-click="socialShare().facebook.share()"><i class="fa fa-facebook"></i></a><a class="social-shares--icons__twitter" href="https://twitter.com/intent/tweet?text={{ socialShare().link + \' \' + socialShare().title + \' \' + socialShare().description }}"><i class="fa fa-twitter"></i></a></section>');
 }]);
 
 'use strict';
@@ -647,6 +647,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           );
         }
       };
+      /*
       sso.linkedin = {
         share: function () {
           window.open(
@@ -656,6 +657,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
           );
         }
       };
+      */
 
       // Personalyze description for outcomes and score
       if ($scope.quiz.type === 'outcome' || $scope.quiz.type === 'score') {
