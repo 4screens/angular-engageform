@@ -24,17 +24,12 @@
   >
 </picture>
 
-<div class="text-center main-footer" data-ng-if="question.coverPage.exitLink">
-  <a ng-if="question.coverPage.link"
-     class="btn btn--round-corner btn--normal theme-button-color theme-question-color"
+<div class="text-center main-footer" data-ng-if="question.coverPage.exitLink && question.coverPage.link">
+  <a class="btn btn--round-corner btn--normal theme-button-color theme-question-color"
      rel="nofollow" target="_blank" title="{{question.coverPage.buttonText}}"
-     data-ng-href="{{(question.coverPage.link.indexOf('http') === -1 ? 'http://' : '') + question.coverPage.link}}">{{question.coverPage.buttonText || "Thank You"}}</a>
-
-  <span ng-if="!question.coverPage.link"
-        class="btn btn--round-corner btn--normal theme-button-color theme-question-color"
-        title="{{question.coverPage.buttonText}}">
-    {{question.coverPage.buttonText || "Thank You" }}
-  </span>
+     data-ng-href="{{(question.coverPage.link.indexOf('http') === -1 ? 'http://' : '') + question.coverPage.link}}">
+    {{question.coverPage.buttonText || "Thank You"}}
+  </a>
 </div>
 
 <div data-ng-if="question.coverPage.showSocialShares && socialShare().enabled" data-ng-include="'views/engageform/social-share.html'"></div>
