@@ -10,6 +10,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         questionSortingDefer = $q.defer(),
         summaryPage;
 
+    message.on( 'height-type', function( data ) {
+      $scope.isFluid = data.fluidHeight;
+    } );
+
     $scope.smallViewport = $window.innerWidth <= 1024;
 
     // Is in iframe?
