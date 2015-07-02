@@ -719,7 +719,7 @@ angular.module('4screens.engageform').directive( 'branding',
             text: CONFIG.backend.branding.defaultText,
             link: CONFIG.backend.branding.defaultLink,
             imageUrl: CONFIG.backend.branding.defaultImgUrl
-          },
+          }, _brandingIsDefault;
 
       _brandingIsDefault = function() {
         var defaultBranding = true;
