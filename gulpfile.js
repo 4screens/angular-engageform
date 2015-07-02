@@ -54,8 +54,9 @@ var TESTS = [
   path.join('.', PATH.bower_components, 'angular', 'angular.js'),
   path.join('.', PATH.bower_components, 'angular-local-storage', 'dist', 'angular-local-storage.js'),
   path.join('.', PATH.bower_components, 'angular-mocks', 'angular-mocks.js'),
+  path.join('.', PATH.bower_components, 'angular-sanitize', 'angular-sanitize.js'),
   MAIN,
-  path.join('.', PATH.test, '**', '*.spec.js')
+  path.join('.', PATH.test, '**', '*.spec.ts')
 ];
 
 
@@ -117,6 +118,7 @@ gulp.task('tslint', ['minify'], function () {
     .pipe(plugins.tslint.report('verbose'));
 });
 
+// TODO: gulp-karma does not include fixtures...
 gulp.task('test', ['tslint'], function() {
   return gulp.src(TESTS)
     .pipe(plugins.karma({
@@ -128,7 +130,7 @@ gulp.task('test', ['tslint'], function() {
     });
 });
 
-gulp.task('release::bump', ['test'], function(done) {
+gulp.task('release::bump', ['tslint'], function(done) {
   if (plugins.util.env.bump) {
     sh.exec('git add .');
     sh.exec('git commit -m "chore(release): Bump version." --quiet');
