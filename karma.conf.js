@@ -1,35 +1,43 @@
 module.exports = function(config) {
   config.set({
-
     browsers: [
       'Chrome',
+      'Firefox',
       'PhantomJS'
     ],
 
     files: [
-      'bower_components/angular/angular.js',
-      'bower_components/angular-local-storage/dist/angular-local-storage.js',
-      'bower_components/angular-mocks/angular-mocks.js',
-      'engageform.js',
-      'test/*.spec.js'
+      './bower_components/angular/angular.js',
+      './bower_components/angular-local-storage/dist/angular-local-storage.js',
+      './bower_components/angular-mocks/angular-mocks.js',
+      './bower_components/angular-sanitize/angular-sanitize.js',
+      './engageform.js',
+      './test/**/*.spec.ts',
+
+      // fixtures
+      {
+        pattern: 'test/mock/**/*.json',
+        watched: true,
+        served: true,
+        included: false
+      }
     ],
 
-    frameworks: [
-      'chai',
-      'mocha'
-    ],
+    frameworks: ['jasmine-jquery', 'jasmine'],
 
     plugins: [
-      'karma-chai',
-      'karma-mocha',
+      'karma-jasmine',
+      'karma-jasmine-jquery',
       'karma-coverage',
       'karma-chrome-launcher',
-      'karma-phantomjs-launcher'
+      'karma-firefox-launcher',
+      'karma-phantomjs-launcher',
+      'karma-typescript-preprocessor'
     ],
 
     preprocessors: {
       'engageform.js': ['coverage'],
-      'test/**/*.ts': ['typescript']
+      '**/*.spec.ts': ['typescript']
     },
 
     reporters: [
@@ -46,11 +54,7 @@ module.exports = function(config) {
       // options passed to the typescript compiler
       options: {
         sourceMap: false, // (optional) Generates corresponding .map file.
-        target: 'ES5', // (optional) Specify ECMAScript target version: 'ES3' (default), or 'ES5'
-        module: 'amd', // (optional) Specify module code generation: 'commonjs' or 'amd'
-        noImplicitAny: true, // (optional) Warn on expressions and declarations with an implied 'any' type.
-        noResolve: true, // (optional) Skip resolution and preprocessing.
-        removeComments: true // (optional) Do not emit comments to output.
+        target: 'es5'     // (optional) Specify ECMAScript target version: 'ES3' (default), or 'ES5'
       },
       // extra typing definitions to pass to the compiler (globs allowed)
       typings: [

@@ -98,7 +98,7 @@ gulp.task('build', ['header'], function() {
 
 gulp.task('minify', ['build'], function() {
   return gulp.src(MAIN)
-    .pipe(plugins.sourcemaps.init({loadMaps: true, debug: true}))
+    .pipe(plugins.sourcemaps.init({loadMaps: true}))
     .pipe(plugins.uglify({
       preserveComments: 'some'
     }))

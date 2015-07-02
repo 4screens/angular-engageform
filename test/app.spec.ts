@@ -17,5 +17,6 @@ describe("module initialize", function() {
     it("should have LocalStorageModule as a dependency", function() {
       expect(hasModule('LocalStorageModule')).to.equal(true);
     });
+
   });
 });
