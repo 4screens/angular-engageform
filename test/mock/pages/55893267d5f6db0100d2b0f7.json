@@ -1,0 +1,329 @@
+[
+  {
+    "_id": "55893267d5f6db0100d2b0fe",
+    "text": "On a scale from 1 to 10, please rate your experience with Thai Spot",
+    "type": "rateIt",
+    "imageFile": "5586de962e01950100cd629f.jpg",
+    "quizId": "55893267d5f6db0100d2b0f7",
+    "position": 0,
+    "requiredAnswer": true,
+    "imageData": {
+      "containerHeight": 300,
+      "width": 100.3717472118959,
+      "top": 0,
+      "left": 0
+    },
+    "settings": {
+      "showAnswers": false,
+      "showCorrectAnswer": false,
+      "showMainMedia": true
+    },
+    "coverPage": {
+      "scoreRange": { }
+    },
+    "rateIt": {
+      "maxRateItValue": 10,
+      "rateType": "star",
+      "minLabel": "Very negative",
+      "maxLabel": "Very positive"
+    }
+  },
+  {
+    "_id": "55893267d5f6db0100d2b0ff",
+    "text": "What did you like most?",
+    "type": "multiChoice",
+    "quizId": "55893267d5f6db0100d2b0f7",
+    "position": 1,
+    "requiredAnswer": true,
+    "imageData": {
+      "containerHeight": 300
+    },
+    "answers": [
+      {
+        "_id": "55893267d5f6db0100d2b104",
+        "text": "The design",
+        "position": 1,
+        "imageData": { }
+      },
+      {
+        "_id": "55893267d5f6db0100d2b103",
+        "text": "The food",
+        "position": 2,
+        "imageData": { }
+      },
+      {
+        "_id": "55893267d5f6db0100d2b102",
+        "text": "The service",
+        "position": 3,
+        "imageData": { }
+      },
+      {
+        "_id": "55893267d5f6db0100d2b101",
+        "text": "I liked it all",
+        "position": 4,
+        "imageData": { }
+      },
+      {
+        "_id": "55893267d5f6db0100d2b100",
+        "text": "I hated it",
+        "position": 5,
+        "imageData": { }
+      }
+    ],
+    "settings": {
+      "showAnswers": false,
+      "showCorrectAnswer": false,
+      "showMainMedia": false
+    },
+    "coverPage": {
+      "scoreRange": { }
+    }
+  },
+  {
+    "_id": "55893267d5f6db0100d2b105",
+    "text": "What did you like the least?",
+    "type": "multiChoice",
+    "quizId": "55893267d5f6db0100d2b0f7",
+    "position": 2,
+    "requiredAnswer": true,
+    "imageData": {
+      "containerHeight": 300
+    },
+    "answers": [
+      {
+        "_id": "55893267d5f6db0100d2b10a",
+        "text": "The Design",
+        "position": 1,
+        "imageData": { }
+      },
+      {
+        "_id": "55893267d5f6db0100d2b109",
+        "text": "The food",
+        "position": 2,
+        "imageData": { }
+      },
+      {
+        "_id": "55893267d5f6db0100d2b108",
+        "text": "The service",
+        "position": 3,
+        "imageData": { }
+      },
+      {
+        "_id": "55893267d5f6db0100d2b107",
+        "text": "I liked everything",
+        "position": 4,
+        "imageData": { }
+      },
+      {
+        "_id": "55893267d5f6db0100d2b106",
+        "text": "I disliked it all",
+        "position": 5,
+        "imageData": { }
+      }
+    ],
+    "settings": {
+      "showAnswers": false,
+      "showCorrectAnswer": false,
+      "showMainMedia": false
+    },
+    "coverPage": {
+      "scoreRange": { }
+    }
+  },
+  {
+    "_id": "55893267d5f6db0100d2b110",
+    "text": "How would you rate our Staff overall?",
+    "type": "rateIt",
+    "imageFile": "5586df4d2e01950100cd62fc.jpg",
+    "quizId": "55893267d5f6db0100d2b0f7",
+    "position": 3,
+    "requiredAnswer": true,
+    "imageData": {
+      "containerHeight": 300,
+      "width": 100.3717472118959,
+      "top": 0,
+      "left": 0
+    },
+    "settings": {
+      "showAnswers": false,
+      "showCorrectAnswer": false,
+      "showMainMedia": true
+    },
+    "coverPage": {
+      "scoreRange": { }
+    },
+    "rateIt": {
+      "maxRateItValue": 10,
+      "rateType": "star",
+      "minLabel": "Very negative",
+      "maxLabel": "Very positive"
+    }
+  },
+  {
+    "_id": "55893267d5f6db0100d2b10b",
+    "text": "Was it your first time with us?",
+    "type": "multiChoice",
+    "quizId": "55893267d5f6db0100d2b0f7",
+    "position": 4,
+    "requiredAnswer": true,
+    "imageData": {
+      "containerHeight": 300
+    },
+    "answers": [
+      {
+        "_id": "55893267d5f6db0100d2b10e",
+        "text": "Yes",
+        "position": 1,
+        "imageData": { }
+      },
+      {
+        "_id": "55893267d5f6db0100d2b10d",
+        "text": "No, I’ve been here before",
+        "position": 2,
+        "imageData": { }
+      },
+      {
+        "_id": "55893267d5f6db0100d2b10c",
+        "text": "I’m a regular!",
+        "position": 3,
+        "imageData": { }
+      }
+    ],
+    "settings": {
+      "showAnswers": false,
+      "showCorrectAnswer": false,
+      "showMainMedia": false
+    },
+    "coverPage": {
+      "scoreRange": { }
+    }
+  },
+  {
+    "_id": "55893267d5f6db0100d2b10f",
+    "text": "On a scale from 1 to 10, how likely are you to recommend thai Spot to your friends?",
+    "type": "rateIt",
+    "imageFile": "5586dfa42e01950100cd6318.jpg",
+    "quizId": "55893267d5f6db0100d2b0f7",
+    "position": 5,
+    "requiredAnswer": true,
+    "imageData": {
+      "containerHeight": 300,
+      "width": 100.3717472118959,
+      "top": 0,
+      "left": 0
+    },
+    "settings": {
+      "showAnswers": false,
+      "showCorrectAnswer": false,
+      "showMainMedia": true
+    },
+    "coverPage": {
+      "scoreRange": { }
+    },
+    "rateIt": {
+      "maxRateItValue": 10,
+      "rateType": "star",
+      "minLabel": "Very unlikely",
+      "maxLabel": "Very likely"
+    }
+  },
+  {
+    "_id": "55893267d5f6db0100d2b0f8",
+    "text": "Do you have any extra comments that you would like to share with us?",
+    "type": "forms",
+    "imageFile": "5586dfd82e01950100cd631d.jpg",
+    "quizId": "55893267d5f6db0100d2b0f7",
+    "position": 6,
+    "requiredAnswer": true,
+    "imageData": {
+      "containerHeight": 300,
+      "width": 100.3717472118959,
+      "top": 0,
+      "left": 0
+    },
+    "forms": {
+      "inputs": [
+        {
+          "type": "textarea",
+          "position": 1,
+          "_id": "55893267d5f6db0100d2b0f9"
+        }
+      ]
+    },
+    "settings": {
+      "showAnswers": false,
+      "showCorrectAnswer": false,
+      "showMainMedia": true
+    },
+    "coverPage": {
+      "scoreRange": { }
+    }
+  },
+  {
+    "_id": "55893267d5f6db0100d2b0fa",
+    "text": "Thank you for your time, now let us send you a voucher for a free meal next time you visit! Please input your email address below:",
+    "type": "forms",
+    "quizId": "55893267d5f6db0100d2b0f7",
+    "position": 7,
+    "requiredAnswer": true,
+    "imageData": {
+      "containerHeight": 300
+    },
+    "forms": {
+      "inputs": [
+        {
+          "type": "email",
+          "position": 1,
+          "_id": "55893267d5f6db0100d2b0fb"
+        }
+      ]
+    },
+    "settings": {
+      "showAnswers": false,
+      "showCorrectAnswer": false,
+      "showMainMedia": false
+    },
+    "coverPage": {
+      "scoreRange": { }
+    }
+  },
+  {
+    "_id": "55893267d5f6db0100d2b0fc",
+    "type": "endPage",
+    "quizId": "55893267d5f6db0100d2b0f7",
+    "position": 9007199254740991,
+    "imageData": {
+      "containerHeight": 300
+    },
+    "settings": {
+      "showMainMedia": true
+    },
+    "coverPage": {
+      "scoreRange": { },
+      "showSocialShares": true
+    }
+  },
+  {
+    "_id": "55893267d5f6db0100d2b0fd",
+    "text": "Thai Spot",
+    "type": "startPage",
+    "imageFile": "5586de772e01950100cd629d.jpg",
+    "description": "Please take a few minutes to rate your time with us – we promise you’ll be rewarded!",
+    "quizId": "55893267d5f6db0100d2b0f7",
+    "position": 9007199254740991,
+    "imageData": {
+      "containerHeight": 300,
+      "width": 88.82455505477513,
+      "top": 0,
+      "left": 5.752212389380531
+    },
+    "settings": {
+      "showMainMedia": true
+    },
+    "coverPage": {
+      "scoreRange": { },
+      "showSocialShares": true,
+      "buttonText": "Start"
+    }
+  }
+]

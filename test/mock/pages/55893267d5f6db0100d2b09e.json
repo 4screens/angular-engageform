@@ -1,0 +1,457 @@
+[
+  {
+    "_id":"55893267d5f6db0100d2b0a0",
+    "text":"When a crisis emerges, what do you do?",
+    "type":"multiChoice",
+    "imageFile":"5582e2d92e01950100cd5fc4.jpg",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":0,
+    "requiredAnswer":false,
+    "imageData":{
+      "left":0,
+      "top":0,
+      "width":100.3717472118959,
+      "containerHeight":300
+    },
+    "answers":[
+      {
+        "_id":"55893267d5f6db0100d2b0a3",
+        "text":"ROAAAARRRRR",
+        "position":1,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0a2",
+        "text":"Grab a double shot of espresso – tough time ahead!",
+        "position":2,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0a1",
+        "text":"Call in emergency meeting with a anti-crisis team",
+        "position":3,
+        "imageData":{
+
+        }
+      }
+    ],
+    "settings":{
+      "showAnswers":false,
+      "showCorrectAnswer":false,
+      "showMainMedia":true
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      }
+    }
+  },
+  {
+    "_id":"55893267d5f6db0100d2b0a4",
+    "text":"2. How well do you know the people in your company?",
+    "type":"multiChoice",
+    "imageFile":"5582de6d2e01950100cd5fb1.jpg",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":1,
+    "requiredAnswer":true,
+    "imageData":{
+      "left":0,
+      "top":0,
+      "width":100.3717472118959,
+      "containerHeight":300
+    },
+    "answers":[
+      {
+        "_id":"55893267d5f6db0100d2b0a7",
+        "text":"I know everyone in the building",
+        "position":1,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0a6",
+        "text":"I have quite a few friend",
+        "position":2,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0a5",
+        "text":"I only know the people I work with",
+        "position":3,
+        "imageData":{
+
+        }
+      }
+    ],
+    "settings":{
+      "showAnswers":false,
+      "showCorrectAnswer":false,
+      "showMainMedia":true
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      }
+    }
+  },
+  {
+    "_id":"55893267d5f6db0100d2b0a8",
+    "text":"3. Everyone has his weaknesses – even Superman had his Kryptonite. What’s yours?",
+    "type":"multiChoice",
+    "imageFile":"5582df082e01950100cd5fb2.jpg",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":2,
+    "requiredAnswer":true,
+    "imageData":{
+      "left":0,
+      "top":0,
+      "width":100.3736253449319,
+      "containerHeight":300
+    },
+    "answers":[
+      {
+        "_id":"55893267d5f6db0100d2b0ab",
+        "text":"Lack of caffeine!",
+        "position":1,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0aa",
+        "text":"Fear of internet connection going down",
+        "position":2,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0a9",
+        "text":"What weakness?",
+        "position":3,
+        "imageData":{
+
+        }
+      }
+    ],
+    "settings":{
+      "showAnswers":false,
+      "showCorrectAnswer":false,
+      "showMainMedia":true
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      }
+    }
+  },
+  {
+    "_id":"55893267d5f6db0100d2b0ac",
+    "text":"Who’s your favourite superhero?",
+    "type":"multiChoice",
+    "imageFile":"5582e0ff2e01950100cd5fbc.jpg",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":3,
+    "requiredAnswer":true,
+    "imageData":{
+      "left":0,
+      "top":0,
+      "width":100.3717472118959,
+      "containerHeight":300
+    },
+    "answers":[
+      {
+        "_id":"55893267d5f6db0100d2b0af",
+        "text":"Ever-mysterious Batman",
+        "position":1,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0ae",
+        "text":"Iron Man, the king of oneliners",
+        "position":2,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0ad",
+        "text":"Hulk – the destroyer!",
+        "position":3,
+        "imageData":{
+
+        }
+      }
+    ],
+    "settings":{
+      "showAnswers":false,
+      "showCorrectAnswer":false,
+      "showMainMedia":true
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      }
+    }
+  },
+  {
+    "_id":"55893267d5f6db0100d2b0b0",
+    "text":"What’s the most useful office tool for you?",
+    "type":"multiChoice",
+    "imageFile":"5582e14d2e01950100cd5fbd.jpg",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":4,
+    "requiredAnswer":true,
+    "imageData":{
+      "containerHeight":300,
+      "width":100.3717472118959,
+      "top":0,
+      "left":0
+    },
+    "answers":[
+      {
+        "_id":"55893267d5f6db0100d2b0b3",
+        "text":"Whiteboard and a set of markers",
+        "position":1,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0b2",
+        "text":"Coffeemaker",
+        "position":2,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0b1",
+        "text":"My laptop",
+        "position":3,
+        "imageData":{
+
+        }
+      }
+    ],
+    "settings":{
+      "showAnswers":false,
+      "showCorrectAnswer":false,
+      "showMainMedia":true
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      }
+    }
+  },
+  {
+    "_id":"55893267d5f6db0100d2b0b4",
+    "text":"What is your catchphrase?",
+    "type":"multiChoice",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":5,
+    "requiredAnswer":true,
+    "imageData":{
+      "containerHeight":300
+    },
+    "answers":[
+      {
+        "_id":"55893267d5f6db0100d2b0b7",
+        "text":"Whatever the problem, I’ll fix it.",
+        "position":1,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0b6",
+        "text":"Let’s join efforts!",
+        "position":2,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0b5",
+        "text":"Boom Baby!",
+        "position":3,
+        "imageData":{
+
+        }
+      }
+    ],
+    "settings":{
+      "showAnswers":false,
+      "showCorrectAnswer":false,
+      "showMainMedia":false
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      }
+    }
+  },
+  {
+    "_id":"55893267d5f6db0100d2b0b8",
+    "text":"The space you feel best in is…",
+    "type":"multiChoice",
+    "imageFile":"5582e1c72e01950100cd5fc0.jpg",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":6,
+    "requiredAnswer":true,
+    "imageData":{
+      "left":0,
+      "top":0,
+      "width":100.3717472118959,
+      "containerHeight":300
+    },
+    "answers":[
+      {
+        "_id":"55893267d5f6db0100d2b0bb",
+        "text":"My home",
+        "position":1,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0ba",
+        "text":"The office, obviously!",
+        "position":2,
+        "imageData":{
+
+        }
+      },
+      {
+        "_id":"55893267d5f6db0100d2b0b9",
+        "text":"Anywhere with a lot of people",
+        "position":3,
+        "imageData":{
+
+        }
+      }
+    ],
+    "settings":{
+      "showAnswers":false,
+      "showCorrectAnswer":false,
+      "showMainMedia":true
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      }
+    }
+  },
+  {
+    "_id":"55893267d5f6db0100d2b0bd",
+    "text":"You are the\nDEALBREAKER.",
+    "type":"endPage",
+    "imageFile":"5582e7262e01950100cd5fca.png",
+    "description":"Nothing can stop you from reaching your goals and your competitors get no sleep at night. Beware those who stand in your way…",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":9007199254740989,
+    "imageData":{
+      "containerHeight":300,
+      "width":77.61798248377545,
+      "top":-0.3333333333333334,
+      "left":16.52054398148148
+    },
+    "settings":{
+      "showMainMedia":true
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      },
+      "showSocialShares":true,
+      "outcome":"DEALBREAKER",
+      "buttonText":"Thank You!"
+    }
+  },
+  {
+    "_id":"55893267d5f6db0100d2b0be",
+    "text":"You are the mysterious ORACLE.",
+    "type":"endPage",
+    "imageFile":"5582e7a82e01950100cd5fcb.png",
+    "description":"You are just like Clark Kent – in a time of crisis you turn into a superhero, who knows no limits.",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":9007199254740990,
+    "imageData":{
+      "containerHeight":300,
+      "width":77.61798248377545,
+      "top":0.3333333333333333,
+      "left":18.00141242937853
+    },
+    "settings":{
+      "showMainMedia":true
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      },
+      "buttonText":"Thank You!",
+      "outcome":"ORACLE",
+      "showSocialShares":true
+    }
+  },
+  {
+    "_id":"55893267d5f6db0100d2b09f",
+    "text":"Which office superhero are you?",
+    "type":"startPage",
+    "imageFile":"5582e8b32e01950100cd5fcd.png",
+    "description":"As Gotham needs its Batman & Metropolis its Superman – your office needs your superheroes! You know you are one of them – without you your colleagues would stand a day and your company would disappear within a week. Take the quiz and find out which superhero skills fit you most!",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":9007199254740991,
+    "imageData":{
+      "containerHeight":300,
+      "width":100.1827232058471,
+      "top":0,
+      "left":0.09416195856874765
+    },
+    "settings":{
+      "showMainMedia":true
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      },
+      "showSocialShares":true
+    }
+  },
+  {
+    "_id":"55893267d5f6db0100d2b0bc",
+    "text":"You are\nCAPTAIN OFFICE.",
+    "type":"endPage",
+    "imageFile":"5582e7f52e01950100cd5fcc.png",
+    "description":"A natural born leader, well-connected, who always appreciates team work. With skills like that you are valued for amazing project and team management!",
+    "quizId":"55893267d5f6db0100d2b09e",
+    "position":9007199254740991,
+    "imageData":{
+      "containerHeight":300,
+      "width":77.61798248377545,
+      "top":-1.333333333333333,
+      "left":18.00141242937853
+    },
+    "settings":{
+      "showMainMedia":true
+    },
+    "coverPage":{
+      "scoreRange":{
+
+      },
+      "buttonText":"Thank You!",
+      "outcome":"CAPTAIN OFFICE",
+      "showSocialShares":true
+    }
+  }
+]

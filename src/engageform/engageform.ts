@@ -122,7 +122,7 @@ module Engageform {
 
     private getPagesById(engageformId: string): ng.IPromise<API.IQuizQuestion[]> {
       var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformPagesUrl;
-          url = url.replace(':engageformId', this._engageformId);
+          url = url.replace(':engageformId', engageformId);
 
       if (Bootstrap.mode !== Mode.Default) {
         url += '?preview';

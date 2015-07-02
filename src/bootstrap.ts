@@ -48,12 +48,6 @@ class Bootstrap {
     }
   }
 
-  get settings(): Engageform.ISetting {
-    if (this._engageform) {
-      return this._engageform.settings;
-    }
-  }
-
   get theme(): Engageform.ITheme {
     if (this._engageform) {
       return this._engageform.theme;
@@ -79,6 +73,17 @@ class Bootstrap {
   }
 
   init(opts: API.IEmbed): ng.IPromise<Engageform.IEngageform> {
+    if (!opts || !opts.id) {
+      return Bootstrap.$q.reject({
+        status: 'error',
+        error: {
+          code: 406,
+          message: 'The required id property does not exist.'
+        },
+        data: opts
+      });
+    }
+
     switch (opts.mode) {
       case 'preview':
         Bootstrap.mode = Engageform.Mode.Preview;
@@ -89,8 +94,20 @@ class Bootstrap {
       case 'result':
         Bootstrap.mode = Engageform.Mode.Result;
         break;
-      default:
+      case 'default':
+      case '':
+      case undefined:
         Bootstrap.mode = Engageform.Mode.Default;
+        break;
+      default:
+        return Bootstrap.$q.reject({
+          status: 'error',
+          error: {
+            code: 406,
+            message: 'Mode property not supported.'
+          },
+          data: opts
+        });
     }
 
     return Engageform.Engageform.getById(opts.id).then((engageform) => {
@@ -107,6 +124,15 @@ class Bootstrap {
         case 'survey':
           this._engageform = new Engageform.Survey(engageform);
           break;
+        default:
+          return Bootstrap.$q.reject({
+            status: 'error',
+            error: {
+              code: 406,
+              message: 'Type property not supported.'
+            },
+            data: engageform
+          });
       }
 
       return this._engageform.initPages();

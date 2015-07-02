@@ -1,22 +1,19 @@
-describe("module initialize", function() {
-  var module;
+describe('Module:', () => {
+  var module: ng.IModule;
+  var hasModule = (m) => {
+    return module.requires.indexOf(m) >= 0;
+  };
 
-  before(function() {
-    module = angular.module("4screens.engageform");
+  beforeEach(() => {
+    module = angular.module('4screens.engageform');
   });
 
-  it("should be registered", function() {
-    expect(module).not.to.equal(null);
+  it('should be registered', () => {
+    expect(module).toBeDefined();
   });
 
-  describe("module dependencies", function() {
-    var hasModule = function(m) {
-      return module.requires.indexOf(m) >= 0;
-    };
-
-    it("should have LocalStorageModule as a dependency", function() {
-      expect(hasModule('LocalStorageModule')).to.equal(true);
-    });
-
+  it('should have LocalStorageModule as a dependency', () => {
+    expect(hasModule('LocalStorageModule')).toBe(true);
   });
+
 });
