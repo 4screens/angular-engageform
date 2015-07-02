@@ -16,6 +16,7 @@ module Engageform {
         });
 
         if (!hasEndPage) {
+          this.enabled = false;
           this.message = 'Thank you!';
         }
 

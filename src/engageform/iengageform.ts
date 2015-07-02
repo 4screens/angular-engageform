@@ -1,5 +1,6 @@
 module Engageform {
   export interface IEngageform {
+    enabled: boolean;
     type: Type;
     title: string;
     settings: ISetting;
@@ -16,6 +17,6 @@ module Engageform {
 
     initPages(): ng.IPromise<IEngageform>;
     setCurrent(pageId: string);
-    setCurrentEndPage(): void;
+    setCurrentEndPage(): ng.IPromise<API.IQuizFinish>;
   }
 }

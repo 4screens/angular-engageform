@@ -104,12 +104,16 @@ module Navigation {
       } else {
         this.position = this._engageform.availablePages.length;
         if (!vcase) {
-          this._engageform.setCurrentEndPage();
-
-          this.enabled = false;
-          this.hasPrev = false;
-          this.hasNext = false;
-          this.hasFinish = false;
+          this._engageform.setCurrentEndPage().then(() => {
+            this.enabled = false;
+            this.hasPrev = false;
+            this.hasNext = false;
+            this.hasFinish = false;
+          }).catch((err) => {
+            if (err.data.msg) {
+              this._engageform.message = err.data.msg;
+            }
+          });
         }
       }
     }

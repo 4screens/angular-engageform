@@ -9,6 +9,7 @@ module Engageform {
     private _endPages: string[] = [];
     private _availablePages: string[] = [];
 
+    enabled = true;
     type: Type = Type.Undefined;
     title;
     message;
@@ -99,7 +100,7 @@ module Engageform {
           return res.data;
         }
 
-        this.$q.reject(res);
+        return this.$q.reject(res);
       });
     }
 

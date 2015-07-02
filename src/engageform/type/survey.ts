@@ -7,6 +7,7 @@ module Engageform {
         if (this.endPages.length) {
           this.setCurrent(this.endPages[0]);
         } else {
+          this.enabled = false;
           this.message = 'Thank you!';
         }
 

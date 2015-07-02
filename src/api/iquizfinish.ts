@@ -5,5 +5,6 @@ module API {
     outcome: string;
     totalScore: number;
     maxScore: number;
+    msg: string;
   }
 }

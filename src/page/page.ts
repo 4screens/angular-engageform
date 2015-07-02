@@ -42,6 +42,10 @@ module Page {
     }
 
     send(vcase: ICase): ng.IPromise<IPageSent> {
+      if (this._engageform.enabled === false) {
+        return Bootstrap.$q.reject('Engageform already ended.');
+      }
+
       if (vcase) {
         return vcase.send();
       }
