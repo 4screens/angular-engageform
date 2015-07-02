@@ -11,6 +11,7 @@ var gulp = require('gulp')
 , fs = require('fs')
 
 , VIEWS = [
+    './src/views/branding-logo.html',
     './src/views/main.html',
     './src/views/question-forms.html',
     './src/views/question-multiChoice.html',
@@ -25,6 +26,7 @@ var gulp = require('gulp')
     './src/app.js',
     './src/views.js',
     './src/controllers/default.js',
+    './src/directives/branding.js',
     './src/directives/swiper.js',
     './src/directives/observe-height.js',
     './src/filters/nl2br.js',

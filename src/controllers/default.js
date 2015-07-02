@@ -2,7 +2,7 @@
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $document,
-            $http, $q, previewMode, summaryMode, message, isMobile, isEmbedded, openInFullscreen ) {
+            $http, $q, previewMode, summaryMode, message, isMobile, isEmbedded, openInFullscreen, $rootScope ) {
 
     var nextQuestionTimeout,
         quizId = $routeParams.engageFormId,
@@ -41,6 +41,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
+
+      $rootScope.$broadcast( 'quizReady', quiz );
 
       setThemeName(quiz.theme.backgroundColor);
 
