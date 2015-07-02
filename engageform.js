@@ -1,5 +1,5 @@
 /*!
- * 4screens-angular-engageform v0.2.1
+ * 4screens-angular-engageform v0.2.2
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -18,6 +18,7 @@ var Engageform;
             this._startPages = [];
             this._endPages = [];
             this._availablePages = [];
+            this.enabled = true;
             this.type = 0 /* Undefined */;
             this._engageformId = data._id;
             this.title = data.title;
@@ -104,7 +105,7 @@ var Engageform;
                     Bootstrap.user.id = res.data.globalUserIdent;
                     return res.data;
                 }
-                this.$q.reject(res);
+                return this.$q.reject(res);
             });
         };
         Engageform.getById = function (id) {
@@ -122,7 +123,7 @@ var Engageform;
         };
         Engageform.prototype.getPagesById = function (engageformId) {
             var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformPagesUrl;
-            url = url.replace(':engageformId', this._engageformId);
+            url = url.replace(':engageformId', engageformId);
             if (Bootstrap.mode !== 1 /* Default */) {
                 url += '?preview';
             }
@@ -202,6 +203,7 @@ var Navigation;
             }
         };
         Navigation.prototype.move = function (vcase) {
+            var _this = this;
             this._engageform.message = '';
             if (this._engageform.current) {
                 switch (Bootstrap.mode) {
@@ -230,11 +232,16 @@ var Navigation;
             else {
                 this.position = this._engageform.availablePages.length;
                 if (!vcase) {
-                    this._engageform.setCurrentEndPage();
-                    this.enabled = false;
-                    this.hasPrev = false;
-                    this.hasNext = false;
-                    this.hasFinish = false;
+                    this._engageform.setCurrentEndPage().then(function () {
+                        _this.enabled = false;
+                        _this.hasPrev = false;
+                        _this.hasNext = false;
+                        _this.hasFinish = false;
+                    }).catch(function (err) {
+                        if (err.data.msg) {
+                            _this._engageform.message = err.data.msg;
+                        }
+                    });
                 }
             }
         };
@@ -293,6 +300,9 @@ var Page;
             configurable: true
         });
         Page.prototype.send = function (vcase) {
+            if (this._engageform.enabled === false) {
+                return Bootstrap.$q.reject('Engageform already ended.');
+            }
             if (vcase) {
                 return vcase.send();
             }
@@ -416,15 +426,6 @@ var Bootstrap = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Bootstrap.prototype, "settings", {
-        get: function () {
-            if (this._engageform) {
-                return this._engageform.settings;
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Bootstrap.prototype, "theme", {
         get: function () {
             if (this._engageform) {
@@ -463,6 +464,16 @@ var Bootstrap = (function () {
     });
     Bootstrap.prototype.init = function (opts) {
         var _this = this;
+        if (!opts || !opts.id) {
+            return Bootstrap.$q.reject({
+                status: 'error',
+                error: {
+                    code: 406,
+                    message: 'The required id property does not exist.'
+                },
+                data: opts
+            });
+        }
         switch (opts.mode) {
             case 'preview':
                 Bootstrap.mode = 2 /* Preview */;
@@ -473,8 +484,20 @@ var Bootstrap = (function () {
             case 'result':
                 Bootstrap.mode = 3 /* Result */;
                 break;
-            default:
+            case 'default':
+            case '':
+            case undefined:
                 Bootstrap.mode = 1 /* Default */;
+                break;
+            default:
+                return Bootstrap.$q.reject({
+                    status: 'error',
+                    error: {
+                        code: 406,
+                        message: 'Mode property not supported.'
+                    },
+                    data: opts
+                });
         }
         return Engageform.Engageform.getById(opts.id).then(function (engageform) {
             switch (engageform.type) {
@@ -490,6 +513,15 @@ var Bootstrap = (function () {
                 case 'survey':
                     _this._engageform = new Engageform.Survey(engageform);
                     break;
+                default:
+                    return Bootstrap.$q.reject({
+                        status: 'error',
+                        error: {
+                            code: 406,
+                            message: 'Type property not supported.'
+                        },
+                        data: engageform
+                    });
             }
             return _this._engageform.initPages();
         }).then(function (engageform) {
@@ -603,6 +635,7 @@ var Engageform;
                     }
                 });
                 if (!hasEndPage) {
+                    _this.enabled = false;
                     _this.message = 'Thank you!';
                 }
                 return data;
@@ -634,6 +667,7 @@ var Engageform;
                     _this.setCurrent(_this.endPages[0]);
                 }
                 else {
+                    _this.enabled = false;
                     _this.message = 'Thank you!';
                 }
                 return data;
@@ -671,6 +705,7 @@ var Engageform;
                     }
                 });
                 if (!hasEndPage) {
+                    _this.enabled = false;
                     _this.message = 'Thank you!';
                 }
                 return data;
@@ -702,6 +737,7 @@ var Engageform;
                     _this.setCurrent(_this.endPages[0]);
                 }
                 else {
+                    _this.enabled = false;
                     _this.message = 'Thank you!';
                 }
                 return data;
