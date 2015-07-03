@@ -19,7 +19,7 @@ angular.module( '4screens.engageform',[
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/branding-logo.html',
-    '<span>{{ quiz.settings.branding.text }}</span> <a title="4Screens" ng-if="defaultLink" href="http://4screens.net/" target="_blank" ng-class="{ \'logo-dark-32\': themeName === \'theme-dark\' || ( themeName === \'theme-light\' && isHigherThanViewport ) || ( themeName === \'theme-light\' && smallViewport ) || show404, \'logo-light-32\': themeName === \'theme-light\' && !isHigherThanViewport && !smallViewport }">4Screens</a> <a ng-if="!defaultLink" class="four-screens__footer-logo--link" ng-href="{{ quiz.settings.branding.link }}" target="_blank"><img ng-src="{{ getBrandingImageSrc(quiz.settings.branding.imageUrl) }}"></a>');
+    '<span>{{ quiz.settings.branding.text }}</span> <a title="4Screens" ng-if="defaultBranding" href="http://4screens.net/" target="_blank" ng-class="{ \'logo-dark-32\': themeName === \'theme-dark\' || ( themeName === \'theme-light\' && isHigherThanViewport ) || ( themeName === \'theme-light\' && smallViewport ) || show404, \'logo-light-32\': themeName === \'theme-light\' && !isHigherThanViewport && !smallViewport }">4Screens</a> <a ng-if="!defaultBranding" class="four-screens__footer-logo--link" ng-href="{{ quiz.settings.branding.link }}" target="_blank"><img ng-src="{{ quiz.settings.branding.imageUrl }}"></a>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -401,18 +401,21 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         return false;
       }
 
-      return EngageformBackendService.question.sendAnswer( value ).then( function() {
-        if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
-          $scope.sentAnswer();
-        }
+      return EngageformBackendService.question.sendAnswer( value ).then( function( res ) {
+        if (res && res.hasOwnProperty('error')) {
+          $scope.requiredMessage = res.error;
+        } else {
+          if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
+            $scope.sentAnswer();
+          }
 
-        if ($scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last && !$scope.currentQuestion.settings('showAnswers')) {
-          nextQuestionTimeout = $timeout( function () {
-            typeof force === 'undefinded' ? $scope.next() : $scope.next( null, true );
-            nextQuestionTimeout = null;
-          }, $scope.currentQuestion.settings('showCorrectAnswer') ? 500 : 200 );
+          if ($scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last && !$scope.currentQuestion.settings('showAnswers')) {
+            nextQuestionTimeout = $timeout( function () {
+              typeof force === 'undefinded' ? $scope.next() : $scope.next( null, true );
+              nextQuestionTimeout = null;
+            }, $scope.currentQuestion.settings('showCorrectAnswer') ? 500 : 200 );
+          }
         }
-
       });
     };
 
@@ -632,12 +635,12 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
             window.twttr.events.bind( 'tweet', function() {
               $http
                 .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'twitter' ).replace( ':quizId', cq.quizId ) )
-                .then(function( res ) { console.log( res ); })
-                .catch(function( res ) { console.log( res ); })
+                .then(function( res ) { /* console.log( res ); */ })
+                .catch(function( res ) { /* console.log( res );*/ })
               ;
             } );
           } else {
-            console.error('Twitter api is not included');
+            // console.error('Twitter api is not included');
           }
 
           // Init linkedin
@@ -715,22 +718,31 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 angular.module('4screens.engageform').directive( 'branding',
   ["EngageformBackendService", "$rootScope", "CONFIG", function( EngageformBackendService, $rootScope, CONFIG ) {
     var _link = function( $scope ) {
-      var _default = {
-            text: CONFIG.backend.branding.defaultText,
-            link: CONFIG.backend.branding.defaultLink,
-            imageUrl: CONFIG.backend.branding.defaultImgUrl
-          }, _brandingIsDefault;
+      var _default = CONFIG.backend.branding,
+          _defaultBranding,
+          _getBrandingImageSrc,
+          _getBrandingLink;
 
-      _brandingIsDefault = function() {
-        var defaultBranding = true;
+      _defaultBranding = function() {
+        $scope.defaultBranding = _.isUndefined( $scope.branding.link ) && _.isUndefined( $scope.branding.imageUrl );
+      };
 
-        _.forIn( _default, function( val, key ) {
-          if ( $scope.branding[ key ] !== val ) {
-            defaultBranding = false;
-          }
-        });
+      _getBrandingImageSrc = function( src ) {
+        if ( !_.isUndefined( src ) && src !== _default.imageUrl ) {
+          return CONFIG.backend.domain + CONFIG.backend.imagesUrl + '/' + src;
+        } else if ( src === '' ) {
+          return '';
+        } else {
+          return CONFIG.backend.domain + _default.imageUrl;
+        }
+      };
 
-        return defaultBranding;
+      _getBrandingLink = function( link ) {
+        if ( _.isUndefined( link ) ) {
+          return _default.link;
+        } else {
+          return link;
+        }
       };
 
       $rootScope.$on( 'quizReady', function() {
@@ -741,20 +753,12 @@ angular.module('4screens.engageform').directive( 'branding',
           $scope.branding.text = '';
           $scope.branding.link = '';
           $scope.branding.imageUrl = '';
-        }
-
-        $scope.defaultBranding = _brandingIsDefault();
-      });
-
-      $scope.getBrandingImageSrc = function( src ) {
-        if ( src === _default.imageUrl ) {
-          return CONFIG.backend.domain + src;
-        } else if ( src ) {
-          return CONFIG.backend.domain + CONFIG.backend.imagesUrl + '/' + src;
         } else {
-          return '';
+          _defaultBranding();
+          $scope.branding.imageUrl = _getBrandingImageSrc( $scope.branding.imageUrl );
+          $scope.branding.link = _getBrandingLink( $scope.branding.link );
         }
-      };
+      });
     };
 
     return {
@@ -1152,6 +1156,8 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
             }
 
             return data;
+          }).catch(function( res ) {
+            return { error: res.data.msg || res.data.message || 'Unexpected error' };
           });
         }
       },
