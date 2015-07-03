@@ -6,7 +6,8 @@ angular.module('4screens.engageform').directive( 'branding',
       var _default = CONFIG.backend.branding,
           _defaultBranding,
           _getBrandingImageSrc,
-          _getBrandingLink;
+          _getBrandingLink,
+          _getBrandingText;
 
       _defaultBranding = function() {
         $scope.defaultBranding = _.isUndefined( $scope.branding.link ) && _.isUndefined( $scope.branding.imageUrl );
@@ -30,26 +31,47 @@ angular.module('4screens.engageform').directive( 'branding',
         }
       };
 
+      _getBrandingText = function( text ) {
+        if ( _.isUndefined( text ) ) {
+          return _default.text;
+        } else {
+          return text;
+        }
+      };
+
+      $scope.defaultBranding = true;
+
       $rootScope.$on( 'quizReady', function() {
 
-        $scope.branding = $scope.quiz.settings.branding;
+        if ( !$scope.branding ) {
+          $scope.branding = {};
+        }
 
-        if ( $scope.branding.state ) {
+        _defaultBranding();
+
+        if ( !_.isUndefined( $scope.branding.state ) && $scope.branding.state ) {
           $scope.branding.text = '';
           $scope.branding.link = '';
           $scope.branding.imageUrl = '';
         } else {
-          _defaultBranding();
+          $scope.branding.text = _getBrandingText( $scope.branding.text );
           $scope.branding.imageUrl = _getBrandingImageSrc( $scope.branding.imageUrl );
           $scope.branding.link = _getBrandingLink( $scope.branding.link );
         }
+
       });
     };
 
     return {
       restrict: 'E',
       templateUrl: 'views/engageform/branding-logo.html',
-      link: _link
+      link: _link,
+      scope: {
+        branding: '=brandingObject',
+        themeName: '=',
+        isHigherThanViewport: '=',
+        smallViewport: '='
+      }
     };
   }
 );
