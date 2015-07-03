@@ -326,18 +326,21 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         return false;
       }
 
-      return EngageformBackendService.question.sendAnswer( value ).then( function() {
-        if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
-          $scope.sentAnswer();
-        }
+      return EngageformBackendService.question.sendAnswer( value ).then( function( res ) {
+        if (res && res.hasOwnProperty('error')) {
+          $scope.requiredMessage = res.error;
+        } else {
+          if( !!$scope.questionAnswer && !$scope.questionAnswer.form ) {
+            $scope.sentAnswer();
+          }
 
-        if ($scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last && !$scope.currentQuestion.settings('showAnswers')) {
-          nextQuestionTimeout = $timeout( function () {
-            typeof force === 'undefinded' ? $scope.next() : $scope.next( null, true );
-            nextQuestionTimeout = null;
-          }, $scope.currentQuestion.settings('showCorrectAnswer') ? 500 : 200 );
+          if ($scope.hasNext() && !nextQuestionTimeout && $scope.pagination.curr() < $scope.pagination.last && !$scope.currentQuestion.settings('showAnswers')) {
+            nextQuestionTimeout = $timeout( function () {
+              typeof force === 'undefinded' ? $scope.next() : $scope.next( null, true );
+              nextQuestionTimeout = null;
+            }, $scope.currentQuestion.settings('showCorrectAnswer') ? 500 : 200 );
+          }
         }
-
       });
     };
 
@@ -557,12 +560,12 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
             window.twttr.events.bind( 'tweet', function() {
               $http
                 .get( CONFIG.backend.answers.domain + CONFIG.backend.share.other.replace( ':service', 'twitter' ).replace( ':quizId', cq.quizId ) )
-                .then(function( res ) { console.log( res ); })
-                .catch(function( res ) { console.log( res ); })
+                .then(function( res ) { /* console.log( res ); */ })
+                .catch(function( res ) { /* console.log( res );*/ })
               ;
             } );
           } else {
-            console.error('Twitter api is not included');
+            // console.error('Twitter api is not included');
           }
 
           // Init linkedin

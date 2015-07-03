@@ -265,6 +265,8 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
             }
 
             return data;
+          }).catch(function( res ) {
+            return { error: res.data.msg || res.data.message || 'Unexpected error' };
           });
         }
       },
