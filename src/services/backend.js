@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('4screens.engageform').factory( 'EngageformBackendService',
-  function( CONFIG, CommonLocalStorageService, SettingsEngageformService, $q, $filter ) {
+  function( CONFIG, CommonLocalStorageService, SettingsEngageformService, $q, $filter, $rootScope ) {
     var _quiz
       , _questions = []
       , _normalQuestionsAmmount

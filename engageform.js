@@ -18,8 +18,13 @@ angular.module( '4screens.engageform',[
 } ]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
+  $templateCache.put('views/engageform/branding-logo.html',
+    '<span>{{ quiz.settings.branding.text }}</span> <a title="4Screens" ng-if="defaultLink" href="http://4screens.net/" target="_blank" ng-class="{ \'logo-dark-32\': themeName === \'theme-dark\' || ( themeName === \'theme-light\' && isHigherThanViewport ) || ( themeName === \'theme-light\' && smallViewport ) || show404, \'logo-light-32\': themeName === \'theme-light\' && !isHigherThanViewport && !smallViewport }">4Screens</a> <a ng-if="!defaultLink" class="four-screens__footer-logo--link" ng-href="{{ quiz.settings.branding.link }}" target="_blank"><img ng-src="{{ getBrandingImageSrc(quiz.settings.branding.imageUrl) }}"></a>');
+}]);
+
+angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/main.html',
-    '<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile"><div id="four-screens-application" class="{{screenType}}" ng-class="themeName + (isEmbedded ? \' embedded\' : \'\') + (isMobile ? \' mobile\' : \'\')"><div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color"><picture data-ng-if="quiz.theme.backgroundImageFile" class="position-{{quiz.theme.backgroundImagePosition}}"><source media="(min-width: 1021px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 769px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 481px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 0px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><img data-ng-src="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"></picture></div><div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass"><div data-ng-repeat="question in questions" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()"><div class="question-content-wrapper question-content-wrapper--{{question.type}}" observe-height><div class="four-screens__content wrapper" data-ng-class="{ \'content__type--forms\': question.type == \'forms\', \'content__type--multi-choice\': question.type == \'multiChoice\', \'content__type--picture-choice\': question.type == \'pictureChoice\', \'content__type--rate-it\': question.type == \'rateIt\', \'content__type--start-page\': question.type == \'startPage\', \'content__type--end-page\': question.type == \'endPage\', \'content__type--summary-page\': question.type == \'summaryPage\' }" data-ng-include="\'views/engageform/question-\' + question.type + \'.html\'"></div></div></div></div><div class="four-screens__embed-container theme-main-font page404" data-ng-if="show404"><div class="questionnaire animate-if"><div class="question-content-wrapper question-content-wrapper--404"><div class="four-screens__content wrapper"><h2 class="theme-question-color text-center">Engageform not found</h2><div class="main-content-description theme-question-color text-center"><p>We\'re sorry, we can\'t find the engageform you\'re looking for.</p></div></div></div></div></div><div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{\'is-active\': !!requiredMessage }">{{requiredMessage}}</div><div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== \'startPage\' && questions[currentQuestion.index()].type !== \'endPage\'"><div class="progress"><span class="progress__bar"><span class="progress__bar--line theme-button-color" data-ng-class="{\'progress__bar--full-size\': progressBarWidth() === 100 }" data-ng-style="{\'width\': progressBarWidth()+\'%\'}"></span></span></div><div class="four-screens__footer-logo"><span>Made with:</span> <a title="4Screens" href="http://4screens.net/" target="_blank" ng-class="{ \'logo-dark-32\': themeName === \'theme-dark\' || ( themeName === \'theme-light\' && isHigherThanViewport ) || ( themeName === \'theme-light\' && smallViewport ) || show404, \'logo-light-32\': themeName === \'theme-light\' && !isHigherThanViewport && !smallViewport }">4Screens</a></div><button class="progress__btn progress__btn--prev fa-stack fa-lg" data-ng-show="hasPrev()" data-ng-click="prev()"><i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i> <i class="fa fa-angle-left"></i></button> <button class="progress__btn progress__btn--next fa-stack fa-lg" data-ng-show="pagination.curr() < pagination.last" data-ng-click="next($event)"><i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i> <i class="fa fa-angle-right"></i></button> <button class="progress__btn progress__btn--submit theme-button-color theme-question-color" data-ng-show="pagination.curr() == pagination.last && !summaryMode" data-ng-click="submitQuiz($event)"><span>submit</span></button></div></div>');
+    '<link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile"><div id="four-screens-application" class="{{themeName}} {{screenType}}" ng-class="{embedded: isEmbedded, mobile: isMobile, \'fluid-height\': isFluid}"><div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color"><picture data-ng-if="quiz.theme.backgroundImageFile" class="position-{{quiz.theme.backgroundImagePosition}}"><source media="(min-width: 1021px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 769px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1020, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 481px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 768, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><source media="(min-width: 0px)" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 480, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"><img data-ng-src="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}" data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.0\', quiz.theme.backgroundImageBlur ) }}, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'1.5\', quiz.theme.backgroundImageBlur ) }} 1.5x, {{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, \'2.0\', quiz.theme.backgroundImageBlur ) }} 2.0x"></picture></div><div class="four-screens__embed-container theme-main-font" data-ng-class="wayAnimateClass"><div data-ng-repeat="question in questions" class="questionnaire animate-if" data-ng-if="$index == currentQuestion.index()"><div class="question-content-wrapper question-content-wrapper--{{question.type}}" observe-height><div class="four-screens__content wrapper" data-ng-class="{ \'content__type--forms\': question.type == \'forms\', \'content__type--multi-choice\': question.type == \'multiChoice\', \'content__type--picture-choice\': question.type == \'pictureChoice\', \'content__type--rate-it\': question.type == \'rateIt\', \'content__type--start-page\': question.type == \'startPage\', \'content__type--end-page\': question.type == \'endPage\', \'content__type--summary-page\': question.type == \'summaryPage\' }" data-ng-include="\'views/engageform/question-\' + question.type + \'.html\'"></div></div></div></div><div class="four-screens__embed-container theme-main-font page404" data-ng-if="show404"><div class="questionnaire animate-if"><div class="question-content-wrapper question-content-wrapper--404"><div class="four-screens__content wrapper"><h2 class="theme-question-color text-center">Engageform not found</h2><div class="main-content-description theme-question-color text-center"><p>We\'re sorry, we can\'t find the engageform you\'re looking for.</p></div></div></div></div></div><div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{\'is-active\': !!requiredMessage }">{{requiredMessage}}</div><div class="four-screens__footer" data-ng-if="questions[currentQuestion.index()].type !== \'startPage\' && questions[currentQuestion.index()].type !== \'endPage\'"><div class="progress"><span class="progress__bar"><span class="progress__bar--line theme-button-color" data-ng-class="{\'progress__bar--full-size\': progressBarWidth() === 100 }" data-ng-style="{\'width\': progressBarWidth()+\'%\'}"></span></span></div><branding class="four-screens__footer-logo"></branding><button class="progress__btn progress__btn--prev fa-stack fa-lg" data-ng-show="hasPrev()" data-ng-click="prev()"><i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i> <i class="fa fa-angle-left"></i></button> <button class="progress__btn progress__btn--next fa-stack fa-lg" data-ng-show="pagination.curr() < pagination.last" data-ng-click="next($event)"><i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i> <i class="fa fa-angle-right"></i></button> <button class="progress__btn progress__btn--submit theme-button-color theme-question-color" data-ng-show="pagination.curr() == pagination.last && !summaryMode" data-ng-click="submitQuiz($event)"><span>submit</span></button></div></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -44,7 +49,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/question-rateIt.html',
-    '<h2 class="theme-question-color text-left" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture><div class="list list__rating list__rating--{{question.rateIt.rateType || \'star\'}}" data-ng-init="AA = makeTimes(question.rateIt.maxRateItValue || 5)"><span data-ng-click="sendAnswer(AA.length - $index, $event)" class="theme-question-color" data-ng-class="{\'item__selected\': questionAnswer.selected >= AA.length - $index}" data-ng-repeat="r in AA" data-ng-if="question.rateIt.rateType !== \'number\'"><i class="fa"></i> <span class="number">{{AA.length - $index}}</span></span> <span data-ng-click="sendAnswer(AA.length - $index, $event)" class="theme-question-color" data-ng-class="{\'item__selected\': questionAnswer.selected == AA.length - $index}" data-ng-repeat="r in AA" data-ng-if="question.rateIt.rateType === \'number\'"><i class="fa"></i> <span class="number">{{AA.length - $index}}</span></span></div><div class="footer-rating"><div class="cell"><div class="rating__label theme-question-color text-left"><span>{{question.rateIt.minLabel}}</span></div></div><div class="cell"><div class="rating__results theme-question-color"><span data-ng-if="questionAnswer.average">Average: {{ questionAnswer.average | number:1 }}</span></div></div><div class="cell"><div class="rating__label theme-question-color text-right"><span>{{question.rateIt.maxLabel}}</span></div></div></div>');
+    '<h2 class="theme-question-color text-left" data-ng-bind-html="question.text | nl2br" data-ng-if="!!question.text"></h2><div class="main-content-description theme-question-color text-left" data-ng-if="!!question.description"><p data-ng-bind-html="question.description | nl2br"></p></div><picture class="main-media-image" data-ng-if="!!currentQuestion.mainMedia() && !!mainMediaImg()" data-ng-class="{\'no-transform\': !question.imageData, \'transform\': question.imageData}" data-ng-style="{\'padding-bottom\': mainMediaImg().paddingBottom + \'%\'}"><img data-ng-style="{ \'width\': mainMediaImg().width + \'%\', \'left\' : (question.imageData.left > 0 ? question.imageData.left : 0) + \'%\', \'top\' : (question.imageData.top > 0 ? question.imageData.top : 0) + \'%\' }" data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}" data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.0\' ) }}, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'1.5\' ) }} 1.5x, {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, \'2.0\' ) }} 2.0x"></picture><div class="list list__rating list__rating--{{question.rateIt.rateType || \'star\'}}" data-ng-init="AA = makeTimes(question.rateIt.maxRateItValue || 5)"><span data-ng-click="sendAnswer(AA.length - $index, $event)" class="theme-question-color" data-ng-class="{\'item__selected\': questionAnswer.selected >= AA.length - $index}" data-ng-repeat="r in AA" data-ng-if="question.rateIt.rateType !== \'number\'"><i class="fa"></i> <span class="number">{{AA.length - $index}}</span></span> <span data-ng-click="sendAnswer(AA.length - $index, $event)" class="theme-question-color" data-ng-class="{\'item__selected\': questionAnswer.selected == AA.length - $index}" data-ng-repeat="r in AA" data-ng-if="question.rateIt.rateType === \'number\'"><i class="fa"></i> <span class="number">{{AA.length - $index}}</span></span></div><div class="footer-rating"><div class="cell"><div class="rating__label theme-question-color text-left"><span>{{question.rateIt.minLabel}}</span></div></div><div class="cell"><div class="rating__results theme-question-color"><span data-ng-if="questionAnswer.average">Average: {{ questionAnswer.average | number:1 }}</span></div></div><div class="cell"><div class="rating__label theme-question-color text-right"><span>{{question.rateIt.maxLabel}}</span></div></div></div>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
@@ -65,14 +70,18 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 'use strict';
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
-  ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", "$document", "$http", "$q", "previewMode", "summaryMode", "message", "isMobile", "isEmbedded", "openInFullscreen", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $document,
-            $http, $q, previewMode, summaryMode, message, isMobile, isEmbedded, openInFullscreen ) {
+  ["CONFIG", "EngageformBackendService", "CloudinaryService", "$scope", "$routeParams", "$timeout", "$window", "$document", "$http", "$q", "previewMode", "summaryMode", "message", "isMobile", "isEmbedded", "openInFullscreen", "$rootScope", function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $document,
+            $http, $q, previewMode, summaryMode, message, isMobile, isEmbedded, openInFullscreen, $rootScope ) {
 
     var nextQuestionTimeout,
         quizId = $routeParams.engageFormId,
         $body = angular.element( $document.find('body').eq( 0 ) ),
         questionSortingDefer = $q.defer(),
         summaryPage;
+
+    message.on( 'height-type', function( data ) {
+      $scope.isFluid = data.fluidHeight;
+    } );
 
     $scope.smallViewport = $window.innerWidth <= 1024;
 
@@ -105,6 +114,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
+
+      $rootScope.$broadcast( 'quizReady', quiz );
 
       setThemeName(quiz.theme.backgroundColor);
 
@@ -701,6 +712,61 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
 'use strict';
 
+angular.module('4screens.engageform').directive( 'branding',
+  ["EngageformBackendService", "$rootScope", "CONFIG", function( EngageformBackendService, $rootScope, CONFIG ) {
+    var _link = function( $scope ) {
+      var _default = {
+            text: CONFIG.backend.branding.defaultText,
+            link: CONFIG.backend.branding.defaultLink,
+            imageUrl: CONFIG.backend.branding.defaultImgUrl
+          }, _brandingIsDefault;
+
+      _brandingIsDefault = function() {
+        var defaultBranding = true;
+
+        _.forIn( _default, function( val, key ) {
+          if ( $scope.branding[ key ] !== val ) {
+            defaultBranding = false;
+          }
+        });
+
+        return defaultBranding;
+      };
+
+      $rootScope.$on( 'quizReady', function() {
+
+        $scope.branding = $scope.quiz.settings.branding;
+
+        if ( $scope.branding.state ) {
+          $scope.branding.text = '';
+          $scope.branding.link = '';
+          $scope.branding.imageUrl = '';
+        }
+
+        $scope.defaultBranding = _brandingIsDefault();
+      });
+
+      $scope.getBrandingImageSrc = function( src ) {
+        if ( src === _default.imageUrl ) {
+          return CONFIG.backend.domain + src;
+        } else if ( src ) {
+          return CONFIG.backend.domain + CONFIG.backend.imagesUrl + '/' + src;
+        } else {
+          return '';
+        }
+      };
+    };
+
+    return {
+      restrict: 'E',
+      templateUrl: 'views/engageform/branding-logo.html',
+      link: _link
+    };
+  }]
+);
+
+'use strict';
+
 angular.module('4screens.engageform').directive( 'engageformSwiperDirective',
   ["$timeout", function( $timeout ) {
     return {
@@ -822,7 +888,7 @@ angular.module('4screens.engageform').filter( 'questionsFilter', function () {
 'use strict';
 
 angular.module('4screens.engageform').factory( 'EngageformBackendService',
-  ["CONFIG", "CommonLocalStorageService", "SettingsEngageformService", "$q", "$filter", function( CONFIG, CommonLocalStorageService, SettingsEngageformService, $q, $filter ) {
+  ["CONFIG", "CommonLocalStorageService", "SettingsEngageformService", "$q", "$filter", "$rootScope", function( CONFIG, CommonLocalStorageService, SettingsEngageformService, $q, $filter, $rootScope ) {
     var _quiz
       , _questions = []
       , _normalQuestionsAmmount
@@ -1169,13 +1235,81 @@ angular.module('4screens.engageform').factory(
 );
 angular.module('4screens.engageform').factory( 'message', ["$window", function( $window ) {
   'use strict';
+
+  // Callbacks store.
+  var eventsCallbacks = {};
+
+  /**
+   * Registers a callback that will be executed when the postMessage with the registered name will come.
+   * @param {string} name Message's name (the 'name' property of the event.data object).
+   * @param {function} callback Function that will be called with event's data and event object as argumetns.
+   */
+  function registerCallback( name, callback ) {
+    if ( typeof callback !== 'function' ) {
+      throw new Error( 'Provide a function as a callback' );
+    }
+
+    // Create callbacks list for a given name.
+    if ( !eventsCallbacks[name] ) {
+      eventsCallbacks[name] = [];
+    }
+
+    // Add the callback if it is not yet registered.
+    if ( eventsCallbacks[name].indexOf( callback ) === -1 ) {
+      eventsCallbacks[name].push( callback );
+    }
+  }
+
+  /**
+   * Deregisters a single callback, when the reference is provided as a second argument or removes all callbacks otherwise.
+   * @param {string} name Event's name on which the callback listens.
+   * @param {function} callback (optional) The reference to the callback.
+   * @returns {boolean} Was the callback deregistered?
+   */
+  function deregisterCallback( name, callback ) {
+    // Don't do anything if there's no listeners.
+    if (!eventsCallbacks[name]) {
+      return false;
+    }
+
+    // If there's callback provided, remove it from the listeners.
+    if (callback) {
+      eventsCallbacks[name].splice( eventsCallbacks[name].indexOf( callback ), 1 );
+
+    // Otherwise remove all listeners.
+    } else {
+      eventsCallbacks[name].lenght = 0;
+    }
+
+    return true;
+  }
+
+  /**
+   * Fires the callback registered under a specified name. Provides the functions a the data and an event object.
+   * @param {string} name Event's name.
+   * @param {eventObject} event The event object coming from the message listener.
+   */
+  function fireCallbacks( name, event ) {
+    if ( eventsCallbacks[name] ) {
+      for ( var i = 0; i < eventsCallbacks[name].length; i += 1 ) {
+        eventsCallbacks[name][i]( event.data || {}, event )
+      }
+    }
+  }
+
+  // Register the main message listener that will proxy the data to callbacks.
+  $window.addEventListener( 'message', function( event ) {
+    if (event.data && event.data.name) {
+      fireCallbacks( event.data.name, event );
+    }
+  } );
+
   return {
     send: function( name, data ) {
       $window.parent.postMessage( angular.extend( { name: name }, data ), '*' );
     },
-    on: function( name, callback ) {
-      // TODO
-    }
+    on: registerCallback,
+    off: deregisterCallback
   }
 }]);
 

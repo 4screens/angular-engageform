@@ -2,13 +2,17 @@
 
 angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
   function( CONFIG, EngageformBackendService, CloudinaryService, $scope, $routeParams, $timeout, $window, $document,
-            $http, $q, previewMode, summaryMode, message, isMobile, isEmbedded, openInFullscreen ) {
+            $http, $q, previewMode, summaryMode, message, isMobile, isEmbedded, openInFullscreen, $rootScope ) {
 
     var nextQuestionTimeout,
         quizId = $routeParams.engageFormId,
         $body = angular.element( $document.find('body').eq( 0 ) ),
         questionSortingDefer = $q.defer(),
         summaryPage;
+
+    message.on( 'height-type', function( data ) {
+      $scope.isFluid = data.fluidHeight;
+    } );
 
     $scope.smallViewport = $window.innerWidth <= 1024;
 
@@ -41,6 +45,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
     EngageformBackendService.quiz.get( quizId ).then(function( quiz ) {
       $scope.quiz = quiz;
+
+      $rootScope.$broadcast( 'quizReady', quiz );
 
       setThemeName(quiz.theme.backgroundColor);
 

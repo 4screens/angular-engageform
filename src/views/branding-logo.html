@@ -1,0 +1,9 @@
+<span>{{ quiz.settings.branding.text }}</span>
+<a title="4Screens" ng-if="defaultLink" href="http://4screens.net/" target="_blank"
+ng-class="{
+  'logo-dark-32': themeName === 'theme-dark' || ( themeName === 'theme-light' && isHigherThanViewport ) || ( themeName === 'theme-light' && smallViewport ) || show404,
+  'logo-light-32': themeName === 'theme-light' && !isHigherThanViewport && !smallViewport
+}">4Screens</a>
+<a ng-if="!defaultLink" class="four-screens__footer-logo--link" ng-href="{{ quiz.settings.branding.link }}" target="_blank">
+  <img ng-src="{{ getBrandingImageSrc(quiz.settings.branding.imageUrl) }}" />
+</a>

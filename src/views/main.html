@@ -1,8 +1,9 @@
 <link rel="stylesheet" type="text/css" data-ng-href="{{ customThemeCssFile || staticThemeCssFile }}" data-ng-if="!!customThemeCssFile || !!staticThemeCssFile" />
 
-<div id="four-screens-application" class="{{screenType}}" ng-class="themeName + (isEmbedded ? ' embedded' : '') + (isMobile ? ' mobile' : '')">
+<div id="four-screens-application" class="{{themeName}} {{screenType}}" ng-class="{embedded: isEmbedded, mobile: isMobile, 'fluid-height': isFluid}">
   <div class="theme-background-image-file-wrapper theme-background-brightness theme-background-color">
     <picture data-ng-if="quiz.theme.backgroundImageFile" class="position-{{quiz.theme.backgroundImagePosition}}">
+
       <source
         media="(min-width: 1021px)"
         data-ng-srcset="{{ getBgImgUrl( quiz.theme.backgroundImageFile, 1920, '1.0', quiz.theme.backgroundImageBlur ) }},
@@ -78,14 +79,9 @@
         </span>
       </span>
     </div>
-    <div class="four-screens__footer-logo">
-      <span>Made with:</span>
-      <a title="4Screens" href="http://4screens.net/" target="_blank"
-      ng-class="{
-        'logo-dark-32': themeName === 'theme-dark' || ( themeName === 'theme-light' && isHigherThanViewport ) || ( themeName === 'theme-light' && smallViewport ) || show404,
-        'logo-light-32': themeName === 'theme-light' && !isHigherThanViewport && !smallViewport
-      }">4Screens</a>
-    </div>
+    <branding class="four-screens__footer-logo">
+
+    </branding>
     <button class="progress__btn progress__btn--prev fa-stack fa-lg" data-ng-show="hasPrev()" data-ng-click="prev()">
       <i class="fa fa-circle fa-stack-2x theme-navigation-btn-color"></i>
       <i class="fa fa-angle-left"></i>
