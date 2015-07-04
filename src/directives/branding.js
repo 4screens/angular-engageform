@@ -9,7 +9,7 @@ angular.module('4screens.engageform').directive( 'branding',
           _getBrandingText;
 
       _getBrandingImageSrc = function( src ) {
-        if ( !_.isUndefined( src ) && src !== _default.imageUrl ) {
+        if ( src && src !== _default.imageUrl ) {
           return CONFIG.backend.domain + CONFIG.backend.imagesUrl + '/' + src;
         } else if ( src === '' ) {
           return '';
