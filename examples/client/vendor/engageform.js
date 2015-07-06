@@ -19,7 +19,7 @@ angular.module( '4screens.engageform',[
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/branding-logo.html',
-    '<span>{{ branding.text }}</span> <a title="4Screens" ng-if="defaultBranding" href="http://4screens.net/" target="_blank" ng-class="{ \'logo-dark-32\': themeName === \'theme-dark\' || ( themeName === \'theme-light\' && isHigherThanViewport ) || ( themeName === \'theme-light\' && smallViewport ) || show404, \'logo-light-32\': themeName === \'theme-light\' && !isHigherThanViewport && !smallViewport }">4Screens</a> <a ng-if="!defaultBranding" class="four-screens__footer-logo--link" ng-href="{{ branding.link }}" target="_blank"><img ng-src="{{ branding.imageUrl }}"></a>');
+    '<span>{{ branding.text }}</span> <a title="4Screens" ng-if="defaultBranding" ng-href="{{ branding.link }}" target="_blank" ng-class="{ \'logo-dark-32\': themeName === \'theme-dark\' || ( themeName === \'theme-light\' && isHigherThanViewport ) || ( themeName === \'theme-light\' && smallViewport ) || show404, \'logo-light-32\': themeName === \'theme-light\' && !isHigherThanViewport && !smallViewport }">4Screens</a> <a ng-if="!defaultBranding" class="four-screens__footer-logo--link" ng-href="{{ branding.link }}" target="_blank"><img ng-src="{{ branding.imageUrl }}"></a>');
 }]);
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
