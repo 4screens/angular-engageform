@@ -1,5 +1,5 @@
 <span>{{ branding.text }}</span>
-<a title="4Screens" ng-if="defaultBranding" href="{{ branding.link }}" target="_blank"
+<a title="4Screens" ng-if="defaultBranding" ng-href="{{ branding.link }}" target="_blank"
 ng-class="{
   'logo-dark-32': themeName === 'theme-dark' || ( themeName === 'theme-light' && isHigherThanViewport ) || ( themeName === 'theme-light' && smallViewport ) || show404,
   'logo-light-32': themeName === 'theme-light' && !isHigherThanViewport && !smallViewport
