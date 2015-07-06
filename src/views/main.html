@@ -70,6 +70,7 @@
   </div>
   <!--/404 -->
   <div class="message-box message-box__require theme-button-color theme-question-color" data-ng-class="{'is-active': !!requiredMessage }" >{{requiredMessage}}</div>
+
   <div class="four-screens__footer" data-ng-show="questions[currentQuestion.index()].type !== 'startPage' && questions[currentQuestion.index()].type !== 'endPage'">
     <div class="progress">
       <span class="progress__bar">
@@ -92,7 +93,7 @@
       <i class="fa fa-angle-right"></i>
     </button>
 
-    <button class="progress__btn progress__btn--submit theme-button-color theme-question-color" data-ng-show="pagination.curr() == pagination.last && !summaryMode" data-ng-click="submitQuiz($event)">
+    <button class="progress__btn progress__btn--submit theme-button-color theme-question-color" data-ng-show="showSubmitButton()" data-ng-click="submitQuiz($event)">
       <span>submit</span>
     </button>
   </div>

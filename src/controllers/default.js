@@ -81,6 +81,10 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.startPages = _.groupBy( $scope.questions, { type: 'startPage' } ).true || [];
         $scope.normalQuestions = _.groupBy( $scope.questions, function( e ) { return e.type !== 'endPage' && e.type !== 'startPage'; } ).true || [];
 
+
+        // Is there at least one form in the available questions?
+        $scope.hasForms = _.some($scope.normalQuestions, { type: 'forms' });
+
         // Restack question
         $scope.questions = $scope.startPages.length ? new Array($scope.startPages[0]) : [];
         $scope.questions = $scope.questions.concat( $scope.normalQuestions );
@@ -490,6 +494,21 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
     };
     $scope.hasPrev = function() {
       return EngageformBackendService.navigation.hasPrev();
+    };
+
+    /**
+     * @description
+     * Decides if the submit button should be shown. Rules are:
+     * - hidden in the preview mode,
+     * - current page is the last one,
+     * - if the type of a quiz is 'poll', the submit button is hidden, but will be shown if there is at least one form type of question.
+     *
+     * @returns {boolean}
+     */
+    $scope.showSubmitButton = function() {
+      return (($scope.quiz && $scope.quiz.type !== 'poll') || $scope.hasForms) &&
+             ($scope.pagination.curr() == $scope.pagination.last) &&
+             !summaryMode;
     };
 
     $scope.next = function( $event, force ) {
