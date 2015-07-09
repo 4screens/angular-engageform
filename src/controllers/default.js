@@ -277,7 +277,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         w,
         Math.round( trs.containerHeight * ( w / baseWidth ) ),
         Math.round( ( w / baseWidth ) * Math.round( baseWidth * trs.left * -1 / 100 ) || 0 ),
-        Math.round( ( w / baseWidth ) * Math.round( trs.containerHeight * trs.top * -1 / 100 ) || 0 )
+        Math.round( ( w / baseWidth ) * Math.round( trs.containerHeight * trs.top * -1 / 100 ) || 0 ),
+        dpr
       );
     };
 
