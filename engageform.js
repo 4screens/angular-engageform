@@ -77,7 +77,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         quizId = $routeParams.engageFormId,
         $body = angular.element( $document.find('body').eq( 0 ) ),
         questionSortingDefer = $q.defer(),
-        summaryPage;
+        summaryPage,
+        socialShareIsEnabled;
 
     message.on( 'height-type', function( data ) {
       $scope.isFluid = data.fluidHeight;
@@ -187,6 +188,24 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.socialShare().init();
 
         questionSortingDefer.resolve();
+
+        // Setup socialShareIsEnabled
+        socialShareIsEnabled = !!_.find($scope.endPages, { coverPage: { showSocialShares: true } } );
+
+        // Setup siteTitle && siteDescription
+        $rootScope.siteTitle = $scope.quiz.settings.share.title || '';
+        $rootScope.siteDescription = $scope.quiz.settings.share.description || '';
+
+        if($scope.endPages.length < 1 || $scope.endPages.length && !socialShareIsEnabled) {
+          if($scope.startPages.length && $scope.startPages[0].text) {
+            $rootScope.siteTitle = $scope.startPages[0].text;
+            $rootScope.siteDescription = $scope.startPages[0].description;
+          } else {
+            $rootScope.siteTitle = '';
+            $rootScope.siteDescription = '';
+          }
+        }
+
       });
     }).catch(function() {
       $scope.show404 = true;
