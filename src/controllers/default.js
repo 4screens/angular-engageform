@@ -327,23 +327,41 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       };
     };
 
+    /**
+     * Data of the answer user selected.
+     */
     $scope.sentAnswer = function() {
+      var availableAnswers = $scope.currentQuestion.answers();
+
       $scope.questionAnswer = EngageformBackendService.question.sentAnswer() || {};
       $scope.questionAnswer.status = $scope.questionAnswer.status || {};
 
-      _.forEach( $scope.currentQuestion.answers(), function( value ) {
-        $scope.questionAnswer.status[ value._id ] = {};
-        if( value._id === $scope.questionAnswer.selected ) {
-          $scope.questionAnswer.status[ value._id ].selected = true;
+      _.forEach( availableAnswers, function( answer ) {
+        $scope.questionAnswer.status[ answer._id ] = {};
+
+        if( answer._id === $scope.questionAnswer.selected ) {
+          $scope.questionAnswer.status[ answer._id ].selected = true;
         }
-        if( !!$scope.questionAnswer.correct ) {
-          if( value._id === $scope.questionAnswer.correct ) {
-            $scope.questionAnswer.status[ value._id ].correct = true;
-          } else if( value._id === $scope.questionAnswer.selected ) {
-            $scope.questionAnswer.status[ value._id ].wrong = true;
+
+        if( $scope.questionAnswer.correct ) {
+          if( answer._id === $scope.questionAnswer.correct ) {
+            $scope.questionAnswer.status[ answer._id ].correct = true;
+          } else if( answer._id === $scope.questionAnswer.selected ) {
+            $scope.questionAnswer.status[ answer._id ].wrong = true;
           }
         }
       });
+
+      // Look for answers in the statistics that are not present in the answers of the current question.
+      _.forEach($scope.questionAnswer.stats, function( result, id ) {
+        // Stats object have a "questionId" key, so have to ignore it.
+        if ( id !== 'questionId' ) {
+          // Find a statistics data for a not existing answer and create a fake answer to show the results for.
+          if ( !_.find( availableAnswers, function( answer ) { return answer._id === id; })) {
+            $scope.currentQuestion.addFakeAnswer( id );
+          }
+        }
+      })
     };
 
     $scope.sendAnswer = function( value, $event, force ) {
@@ -583,7 +601,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       answers: EngageformBackendService.question.answers,
       inputs: EngageformBackendService.question.inputs,
       answerMedia: EngageformBackendService.question.answerMedia,
-      requiredAnswer: EngageformBackendService.question.requiredAnswer
+      requiredAnswer: EngageformBackendService.question.requiredAnswer,
+
+      addFakeAnswer: EngageformBackendService.question.addFakeAnswer
     };
 
     $scope.progressBarWidth = function() {
