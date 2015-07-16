@@ -1274,7 +1274,7 @@ angular.module('4screens.engageform').factory(
     function ( CONFIG ) {
       var accountName = CONFIG.backend.cloudinary.account || 'test4screens'
         , uploadFolderName = CONFIG.backend.cloudinary.uploadFolderName || 'console'
-        , imageUrlPrefix = 'http://res.cloudinary.com/' + accountName + '/image/'
+        , imageUrlPrefix = 'https://res.cloudinary.com/' + accountName + '/image/'
         , remoteMediaUrlPrefix = CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl;
 
       function correctUrl( prms, src ) {
