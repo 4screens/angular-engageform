@@ -77,7 +77,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         quizId = $routeParams.engageFormId,
         $body = angular.element( $document.find('body').eq( 0 ) ),
         questionSortingDefer = $q.defer(),
-        summaryPage;
+        summaryPage,
+        socialShareIsEnabled;
 
     message.on( 'height-type', function( data ) {
       $scope.isFluid = data.fluidHeight;
@@ -187,6 +188,24 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         $scope.socialShare().init();
 
         questionSortingDefer.resolve();
+
+        // Setup socialShareIsEnabled
+        socialShareIsEnabled = !!_.find($scope.endPages, { coverPage: { showSocialShares: true } } );
+
+        // Setup siteTitle && siteDescription
+        $rootScope.siteTitle = $scope.quiz.settings.share.title || '';
+        $rootScope.siteDescription = $scope.quiz.settings.share.description || '';
+
+        if($scope.endPages.length < 1 || $scope.endPages.length && !socialShareIsEnabled) {
+          if($scope.startPages.length && $scope.startPages[0].text) {
+            $rootScope.siteTitle = $scope.startPages[0].text;
+            $rootScope.siteDescription = $scope.startPages[0].description;
+          } else {
+            $rootScope.siteTitle = '';
+            $rootScope.siteDescription = '';
+          }
+        }
+
       });
     }).catch(function() {
       $scope.show404 = true;
@@ -346,7 +365,8 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
         w,
         Math.round( trs.containerHeight * ( w / baseWidth ) ),
         Math.round( ( w / baseWidth ) * Math.round( baseWidth * trs.left * -1 / 100 ) || 0 ),
-        Math.round( ( w / baseWidth ) * Math.round( trs.containerHeight * trs.top * -1 / 100 ) || 0 )
+        Math.round( ( w / baseWidth ) * Math.round( trs.containerHeight * trs.top * -1 / 100 ) || 0 ),
+        dpr
       );
     };
 
@@ -376,23 +396,41 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       };
     };
 
+    /**
+     * Data of the answer user selected.
+     */
     $scope.sentAnswer = function() {
+      var availableAnswers = $scope.currentQuestion.answers();
+
       $scope.questionAnswer = EngageformBackendService.question.sentAnswer() || {};
       $scope.questionAnswer.status = $scope.questionAnswer.status || {};
 
-      _.forEach( $scope.currentQuestion.answers(), function( value ) {
-        $scope.questionAnswer.status[ value._id ] = {};
-        if( value._id === $scope.questionAnswer.selected ) {
-          $scope.questionAnswer.status[ value._id ].selected = true;
+      _.forEach( availableAnswers, function( answer ) {
+        $scope.questionAnswer.status[ answer._id ] = {};
+
+        if( answer._id === $scope.questionAnswer.selected ) {
+          $scope.questionAnswer.status[ answer._id ].selected = true;
         }
-        if( !!$scope.questionAnswer.correct ) {
-          if( value._id === $scope.questionAnswer.correct ) {
-            $scope.questionAnswer.status[ value._id ].correct = true;
-          } else if( value._id === $scope.questionAnswer.selected ) {
-            $scope.questionAnswer.status[ value._id ].wrong = true;
+
+        if( $scope.questionAnswer.correct ) {
+          if( answer._id === $scope.questionAnswer.correct ) {
+            $scope.questionAnswer.status[ answer._id ].correct = true;
+          } else if( answer._id === $scope.questionAnswer.selected ) {
+            $scope.questionAnswer.status[ answer._id ].wrong = true;
           }
         }
       });
+
+      // Look for answers in the statistics that are not present in the answers of the current question.
+      _.forEach($scope.questionAnswer.stats, function( result, id ) {
+        // Stats object have a "questionId" key, so have to ignore it.
+        if ( id !== 'questionId' ) {
+          // Find a statistics data for a not existing answer and create a fake answer to show the results for.
+          if ( !_.find( availableAnswers, function( answer ) { return answer._id === id; })) {
+            $scope.currentQuestion.addFakeAnswer( id );
+          }
+        }
+      })
     };
 
     $scope.sendAnswer = function( value, $event, force ) {
@@ -632,7 +670,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       answers: EngageformBackendService.question.answers,
       inputs: EngageformBackendService.question.inputs,
       answerMedia: EngageformBackendService.question.answerMedia,
-      requiredAnswer: EngageformBackendService.question.requiredAnswer
+      requiredAnswer: EngageformBackendService.question.requiredAnswer,
+
+      addFakeAnswer: EngageformBackendService.question.addFakeAnswer
     };
 
     $scope.progressBarWidth = function() {
@@ -1110,6 +1150,31 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         answerMedia: function( filename ) {
           return filename.slice( 0, 4 ) !== 'http' ? CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + filename : filename;
         },
+
+        /**
+         * Allows adding fake answers to show them when in the summary mode. They're created with an ID that comes from
+         * the statistics data. This is used when users picked an answer that was later removed from the question.
+         * It is still included in the statistics so there is a need to expose that.
+         *
+         * @param {string} id The answer's ID from the statistics data.
+         * @returns {array} Available answers with the fake included.
+         */
+        addFakeAnswer: function( id ) {
+          var answers = _questions[ _questionIndex].answers;
+
+          // Create an empty array if the current questions doesn't have any answers.
+          if ( !answers ) {
+            _questions[ _questionIndex].answers = answers = [];
+          }
+
+          // Create a fake answer.
+          _questions[ _questionIndex].answers.push({
+            text: '(Removed answer)',
+            _id: id
+          });
+
+          return answers;
+        },
         sentAnswer: function() {
           var value, id;
 
@@ -1248,22 +1313,29 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
 
 'use strict';
 
-angular.module('4screens.engageform').factory( 
+angular.module('4screens.engageform').factory(
   'CloudinaryService',
   [ 'CONFIG',
     function ( CONFIG ) {
-      // cloudinaryUrl - Cloudinary cloud name, this need to be added to your CONFIG file
-      var cloudinaryUrl = CONFIG.backend.cloudinaryUrl || 'http://res.cloudinary.com/test4screens/image/fetch/';
+      var accountName = CONFIG.backend.cloudinary.account || 'test4screens'
+        , uploadFolderName = CONFIG.backend.cloudinary.uploadFolderName || 'console'
+        , imageUrlPrefix = 'http://res.cloudinary.com/' + accountName + '/image/'
+        , remoteMediaUrlPrefix = CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl;
+
+      function correctUrl( prms, src ) {
+        return imageUrlPrefix + ( src.indexOf( remoteMediaUrlPrefix ) !== -1 ? 'upload/' : 'fetch/' ) + prms + '/' + src.replace( remoteMediaUrlPrefix, uploadFolderName );
+      }
 
       return {
         getImgUrl: function ( src, w, dpr, blur ) {
-          var blur = typeof blur !== 'undefined' && blur !== '0' ? ',e_blur:' + parseInt( blur, 10 ) * 100 + '/' : '/'
+          var blur = typeof blur !== 'undefined' && blur !== '0' ? ',e_blur:' + parseInt( blur, 10 ) * 100 : ''
           , dpr = ',dpr_' + dpr;
-          
-          return cloudinaryUrl + 'w_' + parseInt( w, 10 ) + ',c_limit' + dpr + blur + src;
+
+          return correctUrl( 'w_' + parseInt( w, 10 ) + ',f_auto,q_82' + dpr + ',c_limit' + blur, src );
         },
-        getMainImgUrl: function ( src, sw, w, h, ox, oy ) {
-          return cloudinaryUrl + 'w_' + parseInt( sw, 10 ) + '/' + 'w_' + w + ',h_' + h + ',x_' + ox + ',y_' + oy + ',c_crop/' + src;
+        getMainImgUrl: function ( src, sw, w, h, ox, oy, dpr ) {
+          dpr = typeof dpr === 'undefined' ? '' : ',dpr_' + dpr;
+          return correctUrl( 'w_' + parseInt( sw, 10 ) + ',f_auto,q_82' + dpr + '/' + 'w_' + w + ',h_' + h + ',x_' + ox + ',y_' + oy + ',c_crop', src );
         }
       };
     } ]

@@ -190,6 +190,31 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         answerMedia: function( filename ) {
           return filename.slice( 0, 4 ) !== 'http' ? CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + filename : filename;
         },
+
+        /**
+         * Allows adding fake answers to show them when in the summary mode. They're created with an ID that comes from
+         * the statistics data. This is used when users picked an answer that was later removed from the question.
+         * It is still included in the statistics so there is a need to expose that.
+         *
+         * @param {string} id The answer's ID from the statistics data.
+         * @returns {array} Available answers with the fake included.
+         */
+        addFakeAnswer: function( id ) {
+          var answers = _questions[ _questionIndex].answers;
+
+          // Create an empty array if the current questions doesn't have any answers.
+          if ( !answers ) {
+            _questions[ _questionIndex].answers = answers = [];
+          }
+
+          // Create a fake answer.
+          _questions[ _questionIndex].answers.push({
+            text: '(Removed answer)',
+            _id: id
+          });
+
+          return answers;
+        },
         sentAnswer: function() {
           var value, id;
 
