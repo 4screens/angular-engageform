@@ -396,23 +396,41 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       };
     };
 
+    /**
+     * Data of the answer user selected.
+     */
     $scope.sentAnswer = function() {
+      var availableAnswers = $scope.currentQuestion.answers();
+
       $scope.questionAnswer = EngageformBackendService.question.sentAnswer() || {};
       $scope.questionAnswer.status = $scope.questionAnswer.status || {};
 
-      _.forEach( $scope.currentQuestion.answers(), function( value ) {
-        $scope.questionAnswer.status[ value._id ] = {};
-        if( value._id === $scope.questionAnswer.selected ) {
-          $scope.questionAnswer.status[ value._id ].selected = true;
+      _.forEach( availableAnswers, function( answer ) {
+        $scope.questionAnswer.status[ answer._id ] = {};
+
+        if( answer._id === $scope.questionAnswer.selected ) {
+          $scope.questionAnswer.status[ answer._id ].selected = true;
         }
-        if( !!$scope.questionAnswer.correct ) {
-          if( value._id === $scope.questionAnswer.correct ) {
-            $scope.questionAnswer.status[ value._id ].correct = true;
-          } else if( value._id === $scope.questionAnswer.selected ) {
-            $scope.questionAnswer.status[ value._id ].wrong = true;
+
+        if( $scope.questionAnswer.correct ) {
+          if( answer._id === $scope.questionAnswer.correct ) {
+            $scope.questionAnswer.status[ answer._id ].correct = true;
+          } else if( answer._id === $scope.questionAnswer.selected ) {
+            $scope.questionAnswer.status[ answer._id ].wrong = true;
           }
         }
       });
+
+      // Look for answers in the statistics that are not present in the answers of the current question.
+      _.forEach($scope.questionAnswer.stats, function( result, id ) {
+        // Stats object have a "questionId" key, so have to ignore it.
+        if ( id !== 'questionId' ) {
+          // Find a statistics data for a not existing answer and create a fake answer to show the results for.
+          if ( !_.find( availableAnswers, function( answer ) { return answer._id === id; })) {
+            $scope.currentQuestion.addFakeAnswer( id );
+          }
+        }
+      })
     };
 
     $scope.sendAnswer = function( value, $event, force ) {
@@ -652,7 +670,9 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       answers: EngageformBackendService.question.answers,
       inputs: EngageformBackendService.question.inputs,
       answerMedia: EngageformBackendService.question.answerMedia,
-      requiredAnswer: EngageformBackendService.question.requiredAnswer
+      requiredAnswer: EngageformBackendService.question.requiredAnswer,
+
+      addFakeAnswer: EngageformBackendService.question.addFakeAnswer
     };
 
     $scope.progressBarWidth = function() {
@@ -1129,6 +1149,31 @@ angular.module('4screens.engageform').factory( 'EngageformBackendService',
         },
         answerMedia: function( filename ) {
           return filename.slice( 0, 4 ) !== 'http' ? CONFIG.backend.domain.replace( ':subdomain', '' ) + CONFIG.backend.imagesUrl + '/' + filename : filename;
+        },
+
+        /**
+         * Allows adding fake answers to show them when in the summary mode. They're created with an ID that comes from
+         * the statistics data. This is used when users picked an answer that was later removed from the question.
+         * It is still included in the statistics so there is a need to expose that.
+         *
+         * @param {string} id The answer's ID from the statistics data.
+         * @returns {array} Available answers with the fake included.
+         */
+        addFakeAnswer: function( id ) {
+          var answers = _questions[ _questionIndex].answers;
+
+          // Create an empty array if the current questions doesn't have any answers.
+          if ( !answers ) {
+            _questions[ _questionIndex].answers = answers = [];
+          }
+
+          // Create a fake answer.
+          _questions[ _questionIndex].answers.push({
+            text: '(Removed answer)',
+            _id: id
+          });
+
+          return answers;
         },
         sentAnswer: function() {
           var value, id;
