@@ -64,7 +64,7 @@ angular.module('4screens.engageform').run(['$templateCache', function($templateC
 
 angular.module('4screens.engageform').run(['$templateCache', function($templateCache) {
   $templateCache.put('views/engageform/social-share.html',
-    '<section class="social-shares--icons"><a class="social-shares--icons__fb" data-ng-click="socialShare().facebook.share()"><i class="fa fa-facebook"></i></a><a class="social-shares--icons__twitter" href="https://twitter.com/intent/tweet?text={{ socialShare().link + \' \' + socialShare().title + \' \' + socialShare().description }}"><i class="fa fa-twitter"></i></a></section>');
+    '<section class="social-shares--icons"><a class="social-shares--icons__fb" data-ng-click="socialShare().facebook.share()"><i class="fa fa-facebook"></i></a><a class="social-shares--icons__twitter" href="https://twitter.com/intent/tweet?text={{ socialShare().title + \' \' + socialShare().link + \' via @4screens\'}}"><i class="fa fa-twitter"></i></a></section>');
 }]);
 
 'use strict';
@@ -679,12 +679,16 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       return ( ( $scope.pagination.curr() / $scope.pagination.last ) * 100 );
     };
 
+    function cleanParam( str ) {
+      return str.replace( /#|\?|\/|\\|\=/g, '' );
+    }
+
     $scope.socialShare = function() {
       var cq = $scope.questions[$scope.currentQuestion.index()], sso = {};
       sso = {
         enabled: cq.coverPage.showSocialShares ? true : false,
         title: $scope.quiz.settings.share.title || $scope.quiz.title,
-        description: $scope.quiz.settings.share.description || 'Fill out this' + $scope.quiz.type + '!',
+        description: $scope.quiz.settings.share.description || $scope.startPages[0].description || 'Fill out this' + $scope.quiz.type + '!',
         imageUrl: $scope.quiz.settings.share.imageUrl ? $scope.currentQuestion.answerMedia( $scope.quiz.settings.share.imageUrl ) : CONFIG.backend.domain + CONFIG.backend.share.defaultImgUrl,
         link: $scope.quiz.settings.share.link || $window.location.href,
         href: $window.location.href,
@@ -716,7 +720,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
       sso.facebook = {
         share: function() {
           window.open(
-            CONFIG.backend.answers.domain + CONFIG.backend.share.facebook + '?quizId=' + cq.quizId + '&description=' + sso.description + '&name=' + sso.title + '&image=' + sso.imageUrl,
+            CONFIG.backend.answers.domain + CONFIG.backend.share.facebook + '?quizId=' + cq.quizId + '&description=' + cleanParam(sso.description) + '&name=' + cleanParam(sso.title) + '&image=' + sso.imageUrl,
             '_blank',
             'toolbar=no,scrollbars=no,resizable=yes,width=460,height=280'
           );
@@ -736,8 +740,7 @@ angular.module('4screens.engageform').controller( 'engageformDefaultCtrl',
 
       // Personalyze description for outcomes and score
       if ($scope.quiz.type === 'outcome' || $scope.quiz.type === 'score') {
-        sso.description = 'I got :result on :quizname on Engageform! What about you?'.replace( ':quizname', $scope.quiz.title );
-        sso.description = sso.description.replace( ':result', $scope.quiz.type === 'score' ? ( $scope.scoredPoints || 0 ) + ' percent' : ( $scope.scoredOutcome || '' ) );
+        sso.title = 'I got "' + ( $scope.quiz.type === 'score' ? ( ( $scope.scoredPoints || 0 ) + ' percent' ) : ( $scope.scoredOutcome || '' ) ) + '" on "' + cleanParam($scope.quiz.title) + '" quiz. What about you ?';
 
         if (cq.type === 'endPage' && cq.imageFile && cq.settings.showMainMedia) {
           sso.imageUrl = $scope.currentQuestion.mainMedia().src;
