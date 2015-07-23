@@ -110,19 +110,19 @@ class Bootstrap {
         });
     }
 
-    return Engageform.Engageform.getById(opts.id).then((engageform) => {
-      switch (engageform.type) {
+    return Engageform.Engageform.getById(opts.id).then((engageformData) => {
+      switch (engageformData.type) {
         case 'outcome':
-          this._engageform = new Engageform.Outcome(engageform);
+          this._engageform = new Engageform.Outcome(engageformData);
           break;
         case 'poll':
-          this._engageform = new Engageform.Poll(engageform);
+          this._engageform = new Engageform.Poll(engageformData);
           break;
         case 'score':
-          this._engageform = new Engageform.Score(engageform);
+          this._engageform = new Engageform.Score(engageformData);
           break;
         case 'survey':
-          this._engageform = new Engageform.Survey(engageform);
+          this._engageform = new Engageform.Survey(engageformData);
           break;
         default:
           return Bootstrap.$q.reject({
@@ -131,11 +131,13 @@ class Bootstrap {
               code: 406,
               message: 'Type property not supported.'
             },
-            data: engageform
+            data: engageformData
           });
       }
 
-      return this._engageform.initPages();
+      this._engageform.initPages();
+
+      return this._engageform;
     }).then(function(engageform) {
       engageform.navigation = new Navigation.Navigation(<Engageform.IEngageform>engageform);
 
