@@ -8,6 +8,7 @@ module Engageform {
     private _startPages: string[] = [];
     private _endPages: string[] = [];
     private _availablePages: string[] = [];
+    private _hasForms:boolean = false;
 
     enabled = true;
     type: Type = Type.Undefined;
@@ -60,6 +61,7 @@ module Engageform {
               this._pages[page._id] = new Page.Rateit(<IEngageform>this, page);
               break;
             case 'forms':
+              this._hasForms = true;
               this._availablePages.push(page._id);
               this._pages[page._id] = new Page.Form(<IEngageform>this, page);
               break;
@@ -102,6 +104,10 @@ module Engageform {
 
         return this.$q.reject(res);
       });
+    }
+
+    hasForms():boolean {
+      return this._hasForms;
     }
 
     static getById(id: string): ng.IPromise<API.IQuiz> {
