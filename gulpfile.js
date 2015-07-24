@@ -14,11 +14,13 @@ var PATH = {
 };
 var FILES = [
   path.join('.', PATH.source, 'header.ts'),
+  path.join('.', PATH.source, 'engageform', 'enum.ts'),
+  path.join('.', PATH.source, 'page', 'enum.ts'),
+
   path.join('.', PATH.source, 'app.ts'),
   path.join('.', PATH.source, 'bootstrap.ts'),
 
   path.join('.', PATH.source, 'engageform', 'engageform.ts'),
-  path.join('.', PATH.source, 'engageform', 'enum.ts'),
   path.join('.', PATH.source, 'engageform', 'settings.ts'),
   path.join('.', PATH.source, 'engageform', 'theme.ts'),
 
@@ -31,7 +33,6 @@ var FILES = [
 
   path.join('.', PATH.source, 'page', 'page.ts'),
   path.join('.', PATH.source, 'page', 'case.ts'),
-  path.join('.', PATH.source, 'page', 'enum.ts'),
   path.join('.', PATH.source, 'page', 'settings.ts'),
 
   path.join('.', PATH.source, 'page', 'case', 'image.ts'),
