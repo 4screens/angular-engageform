@@ -98,7 +98,8 @@ module Navigation {
         if (this._engageform.availablePages.length > this.position) {
           this.hasNext = true;
         } else if (this._engageform.availablePages.length === this.position) {
-          this.hasFinish = true;
+          // Finisher is not available when the engageform is of a type "poll" and doesn't have any form-type question.
+          this.hasFinish = !(this._engageform.isType(Engageform.Type.Poll) && !this._engageform.hasForms);
         }
 
       } else {
