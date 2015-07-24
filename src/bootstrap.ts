@@ -135,9 +135,7 @@ class Bootstrap {
           });
       }
 
-      this._engageform.initPages();
-
-      return this._engageform;
+      return this._engageform.initPages();
     }).then(function(engageform) {
       engageform.navigation = new Navigation.Navigation(<Engageform.IEngageform>engageform);
 

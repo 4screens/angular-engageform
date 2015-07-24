@@ -134,8 +134,7 @@ module Engageform {
       if (Bootstrap.mode !== Mode.Default) {
         url += '?preview';
       }
-
-      return Bootstrap.$http.get(url.replace(':engageformId', engageformId)).then(function (res) {
+      return Bootstrap.$http.get(url).then(function (res) {
         if ([200, 304].indexOf(res.status) !== -1) {
           return res.data;
         }
