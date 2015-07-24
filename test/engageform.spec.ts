@@ -151,6 +151,19 @@ describe('Engageform:', () => {
     });
   });
 
+  describe('Type checking:', () => {
+    it('should have a type checking method', (done) => {
+      Engageform.init({
+        id: '55893267d5f6db0100d2b0f7'
+      }).then((ef) => {
+        expect(ef.isType).toEqual(jasmine.any(Function));
+        done();
+      });
+
+      httpBackend.flush();
+    });
+  });
+
   describe('Mode:', () => {
     it('should be set to "default" (default)', (done) => {
       Engageform.init({
@@ -209,7 +222,7 @@ describe('Engageform:', () => {
   });
 
   describe('Data:', () => {
-    it('should response to title property', (done) => {
+    it('should respond to title property', (done) => {
       Engageform.init({
         id: '55893267d5f6db0100d2b09e'
       }).then((ef) => {

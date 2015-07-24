@@ -10,12 +10,12 @@ module Engageform {
     private _availablePages: string[] = [];
     private _hasForms:boolean = false;
 
-    enabled = true;
+    enabled: boolean = true;
     type: Type = Type.Undefined;
-    title;
-    message;
-    settings;
-    theme;
+    title: string;
+    message: string;
+    settings: Settings;
+    theme: Theme;
 
     current: Page.IPage;
     navigation: Navigation.INavigation;
@@ -34,6 +34,29 @@ module Engageform {
 
     get availablePages(): string[] {
       return this._availablePages;
+    }
+
+    /**
+     * @public
+     * @description
+     * Returns boolean information about the presence of form-type in the current engageform.
+     *
+     * @returns {boolean} Are there any form-type questions?
+     */
+    get hasForms(): boolean {
+      return this._hasForms;
+    }
+
+    /**
+     * @public
+     * @description
+     * Checks if the current engageform is of provided type. Takes Types enum as an argument.
+     *
+     * @param {Type} type Engageform type from the Type enum.
+     * @returns {boolean} Is it?
+     */
+    isType(type:Type): boolean {
+      return this.type === type;
     }
 
     constructor(data: API.IQuiz) {
@@ -61,7 +84,9 @@ module Engageform {
               this._pages[page._id] = new Page.Rateit(<IEngageform>this, page);
               break;
             case 'forms':
+              // Store information about this engageform having a form-type question.
               this._hasForms = true;
+
               this._availablePages.push(page._id);
               this._pages[page._id] = new Page.Form(<IEngageform>this, page);
               break;
@@ -104,10 +129,6 @@ module Engageform {
 
         return this.$q.reject(res);
       });
-    }
-
-    hasForms():boolean {
-      return this._hasForms;
     }
 
     static getById(id: string): ng.IPromise<API.IQuiz> {

@@ -14,6 +14,9 @@ module Engageform {
     startPages: string[];
     endPages: string[];
     availablePages: string[];
+    hasForms: boolean;
+
+    isType(type: Type): boolean;
 
     initPages(): ng.IPromise<IEngageform>;
     setCurrent(pageId: string);
