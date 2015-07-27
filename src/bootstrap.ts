@@ -14,6 +14,8 @@ class Bootstrap {
 
   private _engageform: Engageform.IEngageform;
 
+  static events = new Events.Events();
+
   constructor($http: ng.IHttpService, $q: ng.IQService, localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
     Bootstrap.$http = $http;
     Bootstrap.$q = $q;
