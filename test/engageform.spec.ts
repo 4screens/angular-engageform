@@ -10,7 +10,13 @@ describe('Engageform:', () => {
     apiConfigMock = {
       backend: {
         api: 'api',
-        domain: ''
+        domain: '',
+        imagesUrl: 'imgUrl',
+        branding: {
+          text: 'text',
+          link: 'link',
+          imageUrl: 'url'
+        }
       },
       engageform: {
         engageformUrl: '/engageform/:engageformId',
@@ -258,6 +264,58 @@ describe('Engageform:', () => {
         id: '55893267d5f6db0100d2b09e'
       }).then((ef) => {
         expect(ef.settings.allowAnswerChange).toBeFalsy();
+        done();
+      });
+
+      httpBackend.flush();
+    });
+  });
+
+  describe('Branding:', () => {
+    it('should have a default branding.', (done) => {
+      Engageform.init(<API.IEmbed>{
+        id: '55893267d5f6db0100d2b09e'
+      }).then((ef) => {
+        expect(ef.branding).toBeDefined();
+        expect({text: ef.branding.text, link: ef.branding.link, imageUrl: ef.branding.imageUrl})
+          .toEqual(jasmine.objectContaining({text: 'text', link: 'link', imageUrl: 'url'}));
+        done();
+      });
+
+      httpBackend.flush();
+    });
+
+    it('should have a custom branding if branding settings are available.', (done) => {
+      Engageform.init(<API.IEmbed>{
+        id: '55893267d5f6db0100d2b0bf'
+      }).then((ef) => {
+        expect(ef.branding).toBeDefined();
+        expect({text: ef.branding.text, link: ef.branding.link, imageUrl: ef.branding.imageUrl})
+          .toEqual(jasmine.objectContaining({text: 'custom', link: 'custom', imageUrl: 'imgUrl/custom'}));
+        done();
+      });
+
+      httpBackend.flush();
+    });
+
+    it('should inform about being default when branding is default.', (done) => {
+      Engageform.init(<API.IEmbed>{
+        id: '55893267d5f6db0100d2b09e'
+      }).then((ef) => {
+        expect(ef.branding.isDefault).toBeTruthy();
+        expect(ef.branding.isCustom).toBeFalsy();
+        done();
+      });
+
+      httpBackend.flush();
+    });
+
+    it('should inform about being custom when branding is custom.', (done) => {
+      Engageform.init(<API.IEmbed>{
+        id: '55893267d5f6db0100d2b0bf'
+      }).then((ef) => {
+        expect(ef.branding.isDefault).toBeFalsy();
+        expect(ef.branding.isCustom).toBeTruthy();
         done();
       });
 

@@ -24,6 +24,11 @@
       "description": "Fill out this score!",
       "title": "How much do you know about marketing?",
       "imageUrl": "5582cdf62e01950100cd5f49.png"
+    },
+    "branding": {
+      "text": "custom",
+      "link": "custom",
+      "imageUrl": "custom"
     }
   }
 }

@@ -12,7 +12,12 @@ describe('Navigation:', () => {
     apiConfigMock = {
       backend: {
         api: 'api',
-        domain: ''
+        domain: '',
+        branding: {
+          text: 'Default branding text',
+          link: 'Default link',
+          imageUrl: 'Default URL'
+        }
       },
       engageform: {
         engageformUrl: '/engageform/:engageformId',
@@ -42,7 +47,7 @@ describe('Navigation:', () => {
   });
 
   beforeEach(() => {
-    Engageform.init({
+    Engageform.init(<API.IEmbed>{
       id: '55893267d5f6db0100d2b09e'
     }).then((engageform) => {
       ef = engageform;

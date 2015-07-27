@@ -6,6 +6,7 @@ module API {
 
     settings: {
       allowAnswerChange: boolean;
+      branding?: Branding.IBrandingData
     };
     theme: {
       answerBackgroundColor: string;

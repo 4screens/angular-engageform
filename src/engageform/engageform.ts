@@ -16,6 +16,7 @@ module Engageform {
     message: string;
     settings: Settings;
     theme: Theme;
+    branding: Branding.Branding;
 
     current: Page.IPage;
     navigation: Navigation.INavigation;
@@ -65,6 +66,7 @@ module Engageform {
       this.title = data.title;
       this.settings = new Settings(data);
       this.theme = new Theme(data);
+      this.branding = new Branding.Branding(data.settings.branding);
     }
 
     initPages(): ng.IPromise<IEngageform> {

@@ -20,6 +20,9 @@ var FILES = [
   path.join('.', PATH.source, 'app.ts'),
   path.join('.', PATH.source, 'bootstrap.ts'),
 
+  path.join('.', PATH.source, 'branding', 'ibranding.ts'),
+  path.join('.', PATH.source, 'branding', 'branding.ts'),
+
   path.join('.', PATH.source, 'engageform', 'engageform.ts'),
   path.join('.', PATH.source, 'engageform', 'settings.ts'),
   path.join('.', PATH.source, 'engageform', 'theme.ts'),
