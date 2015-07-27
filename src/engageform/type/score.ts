@@ -8,7 +8,8 @@ module Engageform {
         var hasEndPage = false;
 
         this.endPages.map((pageId) => {
-          if (this.pages[pageId].rangeMin <= score && this.pages[pageId].rangeMax >= score) {
+          var page: Page.IPage = <Page.IPage>this.pages[pageId];
+          if (page.rangeMin <= score && page.rangeMax >= score) {
             hasEndPage = true;
             this.pages[pageId].score = score;
             this.setCurrent(pageId);

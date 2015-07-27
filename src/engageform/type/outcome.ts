@@ -7,7 +7,8 @@ module Engageform {
         var hasEndPage = false;
 
         this.endPages.map((pageId) => {
-          if (this.pages[pageId].outcome === data.outcome) {
+          var page: Page.IPage = <Page.IPage>this.pages[pageId];
+          if (page.outcome === data.outcome) {
             hasEndPage = true;
             this.setCurrent(pageId);
           }

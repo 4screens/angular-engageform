@@ -110,7 +110,7 @@ describe('Engageform:', () => {
 
   describe('Type:', () => {
     it('should get/set as "outcome"', (done) => {
-      Engageform.init({
+      Engageform.init(<API.IEmbed>{
         id: '55893267d5f6db0100d2b09e'
       }).then((ef) => {
         expect(ef.type).toBe(Engageform.Type.Outcome);
@@ -120,7 +120,7 @@ describe('Engageform:', () => {
       httpBackend.flush();
     });
     it('should get/set as "poll"', (done) => {
-      Engageform.init({
+      Engageform.init(<API.IEmbed>{
         id: '55893267d5f6db0100d2b068'
       }).then((ef) => {
         expect(ef.type).toBe(Engageform.Type.Poll);
@@ -130,7 +130,7 @@ describe('Engageform:', () => {
       httpBackend.flush();
     });
     it('should get/set as "score"', (done) => {
-      Engageform.init({
+      Engageform.init(<API.IEmbed>{
         id: '55893267d5f6db0100d2b0bf'
       }).then((ef) => {
         expect(ef.type).toBe(Engageform.Type.Score);
@@ -140,7 +140,7 @@ describe('Engageform:', () => {
       httpBackend.flush();
     });
     it('should get/set as "survey"', (done) => {
-      Engageform.init({
+      Engageform.init(<API.IEmbed>{
         id: '55893267d5f6db0100d2b0f7'
       }).then((ef) => {
         expect(ef.type).toBe(Engageform.Type.Survey);
@@ -153,7 +153,7 @@ describe('Engageform:', () => {
 
   describe('Type checking:', () => {
     it('should have a type checking method', (done) => {
-      Engageform.init({
+      Engageform.init(<API.IEmbed>{
         id: '55893267d5f6db0100d2b0f7'
       }).then((ef) => {
         expect(ef.isType).toEqual(jasmine.any(Function));
@@ -166,7 +166,7 @@ describe('Engageform:', () => {
 
   describe('Mode:', () => {
     it('should be set to "default" (default)', (done) => {
-      Engageform.init({
+      Engageform.init(<API.IEmbed>{
         id: '55893267d5f6db0100d2b09e'
       }).then(() => {
         expect(Engageform.mode).toBe(Engageform.Mode.Default);
@@ -223,7 +223,7 @@ describe('Engageform:', () => {
 
   describe('Data:', () => {
     it('should respond to title property', (done) => {
-      Engageform.init({
+      Engageform.init(<API.IEmbed>{
         id: '55893267d5f6db0100d2b09e'
       }).then((ef) => {
         expect(ef.title).toBe('Example: Which office superhero are you?');
@@ -233,7 +233,7 @@ describe('Engageform:', () => {
       httpBackend.flush();
     });
     it('should response to theme property', (done) => {
-      Engageform.init({
+      Engageform.init(<API.IEmbed>{
         id: '55893267d5f6db0100d2b09e'
       }).then((ef) => {
         expect(ef.theme.answerBackgroundColor).toBe('rgba(43,62,79,0.56)');
@@ -254,7 +254,7 @@ describe('Engageform:', () => {
       httpBackend.flush();
     });
     it('should response to settings property', (done) => {
-      Engageform.init({
+      Engageform.init(<API.IEmbed>{
         id: '55893267d5f6db0100d2b09e'
       }).then((ef) => {
         expect(ef.settings.allowAnswerChange).toBeFalsy();
