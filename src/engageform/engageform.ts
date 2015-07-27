@@ -106,7 +106,7 @@ module Engageform {
     }
 
     setCurrent(pageId: string) {
-      this.current = this._pages[pageId];
+      this.current = <Page.IPage>this._pages[pageId];
     }
 
     setCurrentEndPage(): ng.IPromise<API.IQuizFinish> {
