@@ -4,6 +4,74 @@
  * License: proprietary
  */
 
+var Engageform;
+(function (Engageform) {
+    (function (Type) {
+        Type[Type["Undefined"] = 0] = "Undefined";
+        Type[Type["Live"] = 1] = "Live";
+        Type[Type["Outcome"] = 2] = "Outcome";
+        Type[Type["Poll"] = 3] = "Poll";
+        Type[Type["Score"] = 4] = "Score";
+        Type[Type["Survey"] = 5] = "Survey";
+    })(Engageform.Type || (Engageform.Type = {}));
+    var Type = Engageform.Type;
+    (function (Mode) {
+        Mode[Mode["Undefined"] = 0] = "Undefined";
+        Mode[Mode["Default"] = 1] = "Default";
+        Mode[Mode["Preview"] = 2] = "Preview";
+        Mode[Mode["Result"] = 3] = "Result";
+        Mode[Mode["Summary"] = 4] = "Summary";
+    })(Engageform.Mode || (Engageform.Mode = {}));
+    var Mode = Engageform.Mode;
+})(Engageform || (Engageform = {}));
+
+var Page;
+(function (Page) {
+    (function (CaseType) {
+        CaseType[CaseType["Undefined"] = 0] = "Undefined";
+        CaseType[CaseType["Image"] = 1] = "Image";
+        CaseType[CaseType["Input"] = 2] = "Input";
+        CaseType[CaseType["Iteration"] = 3] = "Iteration";
+        CaseType[CaseType["Text"] = 4] = "Text";
+    })(Page.CaseType || (Page.CaseType = {}));
+    var CaseType = Page.CaseType;
+    (function (Type) {
+        Type[Type["Undefined"] = 0] = "Undefined";
+        Type[Type["EndPage"] = 1] = "EndPage";
+        Type[Type["Form"] = 2] = "Form";
+        Type[Type["MultiChoice"] = 3] = "MultiChoice";
+        Type[Type["PictureChoice"] = 4] = "PictureChoice";
+        Type[Type["Rateit"] = 5] = "Rateit";
+        Type[Type["StartPage"] = 6] = "StartPage";
+    })(Page.Type || (Page.Type = {}));
+    var Type = Page.Type;
+})(Page || (Page = {}));
+
+var Events;
+(function (Events_1) {
+    var Events = (function () {
+        function Events() {
+            this.listeners = {};
+        }
+        Events.prototype.listen = function (name, callback) {
+            if (!this.listeners[name]) {
+                this.listeners[name] = [];
+            }
+            this.listeners[name].push(callback);
+        };
+        Events.prototype.trigger = function (name, data) {
+            if (data === void 0) { data = {}; }
+            if (this.listeners[name]) {
+                for (var i = 0; i < this.listeners[name].length; i += 1) {
+                    this.listeners[name][i](data);
+                }
+            }
+        };
+        return Events;
+    })();
+    Events_1.Events = Events;
+})(Events || (Events = {}));
+
 /// <reference path="../typings/tsd.d.ts" />
 var app = angular.module('4screens.engageform', [
     'LocalStorageModule'
@@ -11,19 +79,21 @@ var app = angular.module('4screens.engageform', [
 
 /// <reference path="iengageform.ts" />
 var Engageform;
-(function (_Engageform) {
+(function (Engageform_1) {
     var Engageform = (function () {
         function Engageform(data) {
             this._pages = {};
             this._startPages = [];
             this._endPages = [];
             this._availablePages = [];
+            this._hasForms = false;
             this.enabled = true;
-            this.type = 0 /* Undefined */;
+            this.type = Engageform_1.Type.Undefined;
             this._engageformId = data._id;
             this.title = data.title;
-            this.settings = new _Engageform.Settings(data);
-            this.theme = new _Engageform.Theme(data);
+            this.settings = new Engageform_1.Settings(data);
+            this.theme = new Engageform_1.Theme(data);
+            this.branding = new Branding.Branding(data.settings.branding);
         }
         Object.defineProperty(Engageform.prototype, "pages", {
             get: function () {
@@ -53,6 +123,31 @@ var Engageform;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Engageform.prototype, "hasForms", {
+            /**
+             * @public
+             * @description
+             * Returns boolean information about the presence of form-type in the current engageform.
+             *
+             * @returns {boolean} Are there any form-type questions?
+             */
+            get: function () {
+                return this._hasForms;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @public
+         * @description
+         * Checks if the current engageform is of provided type. Takes Types enum as an argument.
+         *
+         * @param {Type} type Engageform type from the Type enum.
+         * @returns {boolean} Is it?
+         */
+        Engageform.prototype.isType = function (type) {
+            return this.type === type;
+        };
         Engageform.prototype.initPages = function () {
             var _this = this;
             return this.getPagesById(this._engageformId).then(function (pages) {
@@ -71,6 +166,8 @@ var Engageform;
                             _this._pages[page._id] = new Page.Rateit(_this, page);
                             break;
                         case 'forms':
+                            // Store information about this engageform having a form-type question.
+                            _this._hasForms = true;
                             _this._availablePages.push(page._id);
                             _this._pages[page._id] = new Page.Form(_this, page);
                             break;
@@ -93,7 +190,7 @@ var Engageform;
         Engageform.prototype.setCurrentEndPage = function () {
             var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformFinishUrl;
             url = url.replace(':engageformId', this._engageformId);
-            if (Bootstrap.mode !== 1 /* Default */) {
+            if (Bootstrap.mode !== Engageform_1.Mode.Default) {
                 url += '?preview';
             }
             return Bootstrap.$http.post(url, {
@@ -111,7 +208,7 @@ var Engageform;
         Engageform.getById = function (id) {
             var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformUrl;
             url = url.replace(':engageformId', id);
-            if (Bootstrap.mode !== 1 /* Default */) {
+            if (Bootstrap.mode !== Engageform_1.Mode.Default) {
                 url += '?preview';
             }
             return Bootstrap.$http.get(url).then(function (res) {
@@ -124,10 +221,10 @@ var Engageform;
         Engageform.prototype.getPagesById = function (engageformId) {
             var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformPagesUrl;
             url = url.replace(':engageformId', engageformId);
-            if (Bootstrap.mode !== 1 /* Default */) {
+            if (Bootstrap.mode !== Engageform_1.Mode.Default) {
                 url += '?preview';
             }
-            return Bootstrap.$http.get(url.replace(':engageformId', engageformId)).then(function (res) {
+            return Bootstrap.$http.get(url).then(function (res) {
                 if ([200, 304].indexOf(res.status) !== -1) {
                     return res.data;
                 }
@@ -136,12 +233,12 @@ var Engageform;
         };
         return Engageform;
     })();
-    _Engageform.Engageform = Engageform;
+    Engageform_1.Engageform = Engageform;
 })(Engageform || (Engageform = {}));
 
 /// <reference path="inavigation.ts" />
 var Navigation;
-(function (_Navigation) {
+(function (Navigation_1) {
     var Navigation = (function () {
         function Navigation(engageform) {
             this.enabled = false;
@@ -207,8 +304,8 @@ var Navigation;
             this._engageform.message = '';
             if (this._engageform.current) {
                 switch (Bootstrap.mode) {
-                    case 1 /* Default */:
-                    case 2 /* Preview */:
+                    case Engageform.Mode.Default:
+                    case Engageform.Mode.Preview:
                         if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
                             this._engageform.message = 'Answer is required to proceed to next question';
                             return;
@@ -226,7 +323,8 @@ var Navigation;
                     this.hasNext = true;
                 }
                 else if (this._engageform.availablePages.length === this.position) {
-                    this.hasFinish = true;
+                    // Finisher is not available when the engageform is of a type "poll" and doesn't have any form-type question.
+                    this.hasFinish = !(this._engageform.isType(Engageform.Type.Poll) && !this._engageform.hasForms);
                 }
             }
             else {
@@ -253,14 +351,14 @@ var Navigation;
         };
         return Navigation;
     })();
-    _Navigation.Navigation = Navigation;
+    Navigation_1.Navigation = Navigation;
 })(Navigation || (Navigation = {}));
 
 /// <reference path="ipage.ts" />
 /// <reference path="ipages.ts" />
 /// <reference path="ipagesent.ts" />
 var Page;
-(function (_Page) {
+(function (Page_1) {
     var Page = (function () {
         function Page(engageform, data) {
             this.cases = [];
@@ -269,7 +367,7 @@ var Page;
             this.title = data.text;
             this.description = data.description;
             this.media = this.getMediaUrl(data.imageData, data.imageFile);
-            this.settings = new _Page.Settings(data);
+            this.settings = new Page_1.Settings(data);
         }
         Object.defineProperty(Page.prototype, "id", {
             get: function () {
@@ -287,14 +385,14 @@ var Page;
         });
         Object.defineProperty(Page.prototype, "Type", {
             get: function () {
-                return _Page.Type;
+                return Page_1.Type;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Page.prototype, "CaseType", {
             get: function () {
-                return _Page.CaseType;
+                return Page_1.CaseType;
             },
             enumerable: true,
             configurable: true
@@ -335,7 +433,7 @@ var Page;
         };
         return Page;
     })();
-    _Page.Page = Page;
+    Page_1.Page = Page;
 })(Page || (Page = {}));
 
 /// <reference path="iuser.ts" />
@@ -391,7 +489,7 @@ var Bootstrap = (function () {
             if (this._engageform) {
                 return this._engageform.type;
             }
-            return 0 /* Undefined */;
+            return Engageform.Type.Undefined;
         },
         enumerable: true,
         configurable: true
@@ -476,18 +574,18 @@ var Bootstrap = (function () {
         }
         switch (opts.mode) {
             case 'preview':
-                Bootstrap.mode = 2 /* Preview */;
+                Bootstrap.mode = Engageform.Mode.Preview;
                 break;
             case 'summary':
-                Bootstrap.mode = 4 /* Summary */;
+                Bootstrap.mode = Engageform.Mode.Summary;
                 break;
             case 'result':
-                Bootstrap.mode = 3 /* Result */;
+                Bootstrap.mode = Engageform.Mode.Result;
                 break;
             case 'default':
             case '':
             case undefined:
-                Bootstrap.mode = 1 /* Default */;
+                Bootstrap.mode = Engageform.Mode.Default;
                 break;
             default:
                 return Bootstrap.$q.reject({
@@ -499,19 +597,19 @@ var Bootstrap = (function () {
                     data: opts
                 });
         }
-        return Engageform.Engageform.getById(opts.id).then(function (engageform) {
-            switch (engageform.type) {
+        return Engageform.Engageform.getById(opts.id).then(function (engageformData) {
+            switch (engageformData.type) {
                 case 'outcome':
-                    _this._engageform = new Engageform.Outcome(engageform);
+                    _this._engageform = new Engageform.Outcome(engageformData);
                     break;
                 case 'poll':
-                    _this._engageform = new Engageform.Poll(engageform);
+                    _this._engageform = new Engageform.Poll(engageformData);
                     break;
                 case 'score':
-                    _this._engageform = new Engageform.Score(engageform);
+                    _this._engageform = new Engageform.Score(engageformData);
                     break;
                 case 'survey':
-                    _this._engageform = new Engageform.Survey(engageform);
+                    _this._engageform = new Engageform.Survey(engageformData);
                     break;
                 default:
                     return Bootstrap.$q.reject({
@@ -520,7 +618,7 @@ var Bootstrap = (function () {
                             code: 406,
                             message: 'Type property not supported.'
                         },
-                        data: engageform
+                        data: engageformData
                     });
             }
             return _this._engageform.initPages();
@@ -529,32 +627,80 @@ var Bootstrap = (function () {
             return engageform;
         });
     };
-    Bootstrap.mode = 0 /* Undefined */;
+    Bootstrap.mode = Engageform.Mode.Undefined;
+    Bootstrap.events = new Events.Events();
     return Bootstrap;
 })();
 Bootstrap.$inject = ['$http', '$q', 'localStorageService', 'ApiConfig'];
 app.service('Engageform', Bootstrap);
 
-var Engageform;
-(function (Engageform) {
-    (function (Type) {
-        Type[Type["Undefined"] = 0] = "Undefined";
-        Type[Type["Live"] = 1] = "Live";
-        Type[Type["Outcome"] = 2] = "Outcome";
-        Type[Type["Poll"] = 3] = "Poll";
-        Type[Type["Score"] = 4] = "Score";
-        Type[Type["Survey"] = 5] = "Survey";
-    })(Engageform.Type || (Engageform.Type = {}));
-    var Type = Engageform.Type;
-    (function (Mode) {
-        Mode[Mode["Undefined"] = 0] = "Undefined";
-        Mode[Mode["Default"] = 1] = "Default";
-        Mode[Mode["Preview"] = 2] = "Preview";
-        Mode[Mode["Result"] = 3] = "Result";
-        Mode[Mode["Summary"] = 4] = "Summary";
-    })(Engageform.Mode || (Engageform.Mode = {}));
-    var Mode = Engageform.Mode;
-})(Engageform || (Engageform = {}));
+
+
+var Branding;
+(function (Branding_1) {
+    var Branding = (function () {
+        function Branding(data) {
+            if (data === void 0) { data = {}; }
+            // Marks the branding if it is a cusom, ie. user defined at least one own value.
+            this._isCustom = false;
+            // Default branding values from settings.
+            this._defaultBranding = Bootstrap.config.backend.branding;
+            // If there's any branding data, it means that this is a custom branding.
+            if (data.text || data.link || data.imageUrl) {
+                this._isCustom = true;
+            }
+            // Set the branding properties form the data object or from the default values.
+            this._text = data.text || this._defaultBranding.text;
+            this._link = data.link || this._defaultBranding.link;
+            // Image URL is a bit complicated.
+            var imgUrl = data.imageUrl || this._defaultBranding.imageUrl;
+            // The image's URL is a bit different if it is a default one, than when it is a custom.
+            if (imgUrl === this._defaultBranding.imageUrl) {
+                this._imageUrl = Bootstrap.config.backend.domain + imgUrl;
+            }
+            else {
+                this._imageUrl = Bootstrap.config.backend.domain + Bootstrap.config.backend.imagesUrl + '/' + imgUrl;
+            }
+        }
+        Object.defineProperty(Branding.prototype, "isCustom", {
+            get: function () {
+                return this._isCustom;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Branding.prototype, "isDefault", {
+            get: function () {
+                return !this._isCustom;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Branding.prototype, "imageUrl", {
+            get: function () {
+                return this._imageUrl;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Branding.prototype, "link", {
+            get: function () {
+                return this._link;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Branding.prototype, "text", {
+            get: function () {
+                return this._text;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Branding;
+    })();
+    Branding_1.Branding = Branding;
+})(Branding || (Branding = {}));
 
 /// <reference path="isettings.ts" />
 var Engageform;
@@ -610,7 +756,7 @@ var Engageform;
     Engageform.Theme = Theme;
 })(Engageform || (Engageform = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -622,14 +768,15 @@ var Engageform;
         __extends(Outcome, _super);
         function Outcome() {
             _super.apply(this, arguments);
-            this.type = 2 /* Outcome */;
+            this.type = Engageform.Type.Outcome;
         }
         Outcome.prototype.setCurrentEndPage = function () {
             var _this = this;
             return _super.prototype.setCurrentEndPage.call(this).then(function (data) {
                 var hasEndPage = false;
                 _this.endPages.map(function (pageId) {
-                    if (_this.pages[pageId].outcome === data.outcome) {
+                    var page = _this.pages[pageId];
+                    if (page.outcome === data.outcome) {
                         hasEndPage = true;
                         _this.setCurrent(pageId);
                     }
@@ -646,7 +793,7 @@ var Engageform;
     Engageform.Outcome = Outcome;
 })(Engageform || (Engageform = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -658,7 +805,7 @@ var Engageform;
         __extends(Poll, _super);
         function Poll() {
             _super.apply(this, arguments);
-            this.type = 3 /* Poll */;
+            this.type = Engageform.Type.Poll;
         }
         Poll.prototype.setCurrentEndPage = function () {
             var _this = this;
@@ -678,7 +825,7 @@ var Engageform;
     Engageform.Poll = Poll;
 })(Engageform || (Engageform = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -690,7 +837,7 @@ var Engageform;
         __extends(Score, _super);
         function Score() {
             _super.apply(this, arguments);
-            this.type = 4 /* Score */;
+            this.type = Engageform.Type.Score;
         }
         Score.prototype.setCurrentEndPage = function () {
             var _this = this;
@@ -698,7 +845,8 @@ var Engageform;
                 var score = Math.round(data.totalScore / data.maxScore * 100);
                 var hasEndPage = false;
                 _this.endPages.map(function (pageId) {
-                    if (_this.pages[pageId].rangeMin <= score && _this.pages[pageId].rangeMax >= score) {
+                    var page = _this.pages[pageId];
+                    if (page.rangeMin <= score && page.rangeMax >= score) {
                         hasEndPage = true;
                         _this.pages[pageId].score = score;
                         _this.setCurrent(pageId);
@@ -716,7 +864,7 @@ var Engageform;
     Engageform.Score = Score;
 })(Engageform || (Engageform = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -728,7 +876,7 @@ var Engageform;
         __extends(Survey, _super);
         function Survey() {
             _super.apply(this, arguments);
-            this.type = 5 /* Survey */;
+            this.type = Engageform.Type.Survey;
         }
         Survey.prototype.setCurrentEndPage = function () {
             var _this = this;
@@ -753,7 +901,7 @@ var Page;
 (function (Page) {
     var Case = (function () {
         function Case(page, data) {
-            this.type = 0 /* Undefined */;
+            this.type = Page.CaseType.Undefined;
             this._caseId = data._id;
             this._page = page;
         }
@@ -782,7 +930,7 @@ var Page;
         Case.prototype.makeSend = function (data) {
             var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.pageResponseUrl;
             url = url.replace(':pageId', this.page.id);
-            if (Bootstrap.mode !== 1 /* Default */) {
+            if (Bootstrap.mode !== Engageform.Mode.Default) {
                 url += '?preview';
             }
             data.quizQuestionId = this.page.id;
@@ -812,28 +960,6 @@ var Page;
     Page.Case = Case;
 })(Page || (Page = {}));
 
-var Page;
-(function (Page) {
-    (function (CaseType) {
-        CaseType[CaseType["Undefined"] = 0] = "Undefined";
-        CaseType[CaseType["Image"] = 1] = "Image";
-        CaseType[CaseType["Input"] = 2] = "Input";
-        CaseType[CaseType["Iteration"] = 3] = "Iteration";
-        CaseType[CaseType["Text"] = 4] = "Text";
-    })(Page.CaseType || (Page.CaseType = {}));
-    var CaseType = Page.CaseType;
-    (function (Type) {
-        Type[Type["Undefined"] = 0] = "Undefined";
-        Type[Type["EndPage"] = 1] = "EndPage";
-        Type[Type["Form"] = 2] = "Form";
-        Type[Type["MultiChoice"] = 3] = "MultiChoice";
-        Type[Type["PictureChoice"] = 4] = "PictureChoice";
-        Type[Type["Rateit"] = 5] = "Rateit";
-        Type[Type["StartPage"] = 6] = "StartPage";
-    })(Page.Type || (Page.Type = {}));
-    var Type = Page.Type;
-})(Page || (Page = {}));
-
 /// <reference path="isettings.ts" />
 var Page;
 (function (Page) {
@@ -857,7 +983,7 @@ var Page;
     Page.Settings = Settings;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -869,7 +995,7 @@ var Page;
         __extends(ImageCase, _super);
         function ImageCase(page, data) {
             _super.call(this, page, data);
-            this.type = 1 /* Image */;
+            this.type = Page.CaseType.Image;
             this.selected = false;
             this.correct = false;
             this.incorrect = false;
@@ -899,7 +1025,7 @@ var Page;
     Page.ImageCase = ImageCase;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -911,7 +1037,7 @@ var Page;
         __extends(InputCase, _super);
         function InputCase(page, data) {
             _super.call(this, page, data);
-            this.type = 2 /* Input */;
+            this.type = Page.CaseType.Input;
             this.title = data.text;
             this.expectedValue = data.type;
             this.value = '';
@@ -956,7 +1082,7 @@ var Page;
     Page.InputCase = InputCase;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -968,7 +1094,7 @@ var Page;
         __extends(IterationCase, _super);
         function IterationCase(page, data) {
             _super.call(this, page, data);
-            this.type = 3 /* Iteration */;
+            this.type = Page.CaseType.Iteration;
             this.selected = false;
             this.ordinal = data.ordinal;
             this.symbol = data.symbol;
@@ -996,7 +1122,7 @@ var Page;
     Page.IterationCase = IterationCase;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1008,7 +1134,7 @@ var Page;
         __extends(TextCase, _super);
         function TextCase(page, data) {
             _super.call(this, page, data);
-            this.type = 4 /* Text */;
+            this.type = Page.CaseType.Text;
             this.selected = false;
             this.correct = false;
             this.incorrect = false;
@@ -1045,7 +1171,7 @@ var Page;
     Page.TextCase = TextCase;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1057,7 +1183,7 @@ var Page;
         __extends(EndPage, _super);
         function EndPage(engageform, data) {
             _super.call(this, engageform, data);
-            this.type = 1 /* EndPage */;
+            this.type = Page.Type.EndPage;
             if (data.coverPage) {
                 this.button = data.coverPage.buttonText;
                 this.outcome = data.coverPage.outcome;
@@ -1073,7 +1199,7 @@ var Page;
     Page.EndPage = EndPage;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1086,7 +1212,7 @@ var Page;
         function Form(engageform, data) {
             var _this = this;
             _super.call(this, engageform, data);
-            this.type = 2 /* Form */;
+            this.type = Page.Type.Form;
             if (!data.forms) {
                 return;
             }
@@ -1125,7 +1251,7 @@ var Page;
     Page.Form = Form;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1138,7 +1264,7 @@ var Page;
         function MultiChoice(engageform, data) {
             var _this = this;
             _super.call(this, engageform, data);
-            this.type = 3 /* MultiChoice */;
+            this.type = Page.Type.MultiChoice;
             if (!data.answers) {
                 return;
             }
@@ -1179,7 +1305,7 @@ var Page;
     Page.MultiChoice = MultiChoice;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1192,7 +1318,7 @@ var Page;
         function PictureChoice(engageform, data) {
             var _this = this;
             _super.call(this, engageform, data);
-            this.type = 4 /* PictureChoice */;
+            this.type = Page.Type.PictureChoice;
             if (!data.answers) {
                 return;
             }
@@ -1233,7 +1359,7 @@ var Page;
     Page.PictureChoice = PictureChoice;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1246,7 +1372,7 @@ var Page;
         function Rateit(engageform, data) {
             var _this = this;
             _super.call(this, engageform, data);
-            this.type = 5 /* Rateit */;
+            this.type = Page.Type.Rateit;
             this.labelMin = data.rateIt.minLabel;
             this.labelMax = data.rateIt.maxLabel;
             for (var i = 1; i <= data.rateIt.maxRateItValue; i++) {
@@ -1280,7 +1406,7 @@ var Page;
     Page.Rateit = Rateit;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1292,7 +1418,7 @@ var Page;
         __extends(StartPage, _super);
         function StartPage(engageform, data) {
             _super.call(this, engageform, data);
-            this.type = 6 /* StartPage */;
+            this.type = Page.Type.StartPage;
             this.button = 'Let\'s get started';
             if (data.coverPage) {
                 this.button = data.coverPage.buttonText || this.button;
