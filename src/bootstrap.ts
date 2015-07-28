@@ -68,6 +68,12 @@ class Bootstrap {
     }
   }
 
+  get branding(): Branding.IBranding {
+    if (this._engageform) {
+      return this._engageform.branding;
+    }
+  }
+
   get message(): string {
     if (this._engageform) {
       return this._engageform.message;
