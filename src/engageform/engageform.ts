@@ -8,7 +8,7 @@ module Engageform {
     private _startPages: string[] = [];
     private _endPages: string[] = [];
     private _availablePages: string[] = [];
-    private _hasForms:boolean = false;
+    private _hasForms: boolean = false;
 
     enabled: boolean = true;
     type: Type = Type.Undefined;
@@ -56,7 +56,7 @@ module Engageform {
      * @param {Type} type Engageform type from the Type enum.
      * @returns {boolean} Is it?
      */
-    isType(type:Type): boolean {
+    isType(type: Type): boolean {
       return this.type === type;
     }
 

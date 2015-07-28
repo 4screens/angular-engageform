@@ -17,6 +17,8 @@ var FILES = [
   path.join('.', PATH.source, 'engageform', 'enum.ts'),
   path.join('.', PATH.source, 'page', 'enum.ts'),
 
+  path.join('.', PATH.source, 'events', 'events.ts'),
+
   path.join('.', PATH.source, 'app.ts'),
   path.join('.', PATH.source, 'bootstrap.ts'),
 

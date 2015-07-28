@@ -5,6 +5,7 @@ module Engageform {
     title: string;
     settings: ISetting;
     theme: ITheme;
+    branding: Branding.IBranding;
 
     current: Page.IPage;
     message: string;
