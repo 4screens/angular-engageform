@@ -11,6 +11,7 @@ module Navigation {
     enabledNext: boolean;
     hasFinish: boolean;
     enabledFinish: boolean;
+    distance: number;
 
     start($event): void;
     prev($event): void;
