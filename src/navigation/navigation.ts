@@ -72,8 +72,6 @@ module Navigation {
         default:
           this._engageform.current.send(vcase).then(() => {
             this.move(vcase);
-
-            this.updateDistance();
           }).catch(errorMessage => {
             this._engageform.message = errorMessage;
           });
@@ -97,6 +95,7 @@ module Navigation {
       }
 
       this.position++;
+      this.updateDistance();
       if (this._engageform.availablePages.length >= this.position) {
         this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
 
