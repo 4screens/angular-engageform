@@ -12,6 +12,8 @@ module API {
         min: number;
       }
       showSocialShares: boolean;
+      exitLink: boolean;
+      link: string;
     }
     imageData: {
       containerHeight: number;
@@ -36,6 +38,12 @@ module API {
       showCorrectAnswer: boolean;
       showMainMedia: boolean;
       showDescription: boolean;
+      share: {
+        title: string;
+        imageUrl: string;
+        link: string;
+        description: string;
+      }
     };
   }
 }
