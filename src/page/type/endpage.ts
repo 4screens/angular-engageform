@@ -14,6 +14,8 @@ module Page {
     link: string;
     socialData: ISocialData;
 
+    isCoverPage = true;
+
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion, settings: Engageform.ISetting) {
       super(engageform, data);
 
