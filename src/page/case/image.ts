@@ -8,12 +8,14 @@ module Page {
 
     title: string;
     image: string;
+    imageData: IImageData;
 
     constructor(page: IPage, data) {
       super(page, data);
 
       this.title = data.text;
       this.image = data.imageFile;
+      this.imageData = data.imageData;
     }
 
     send() {
