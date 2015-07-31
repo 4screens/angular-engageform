@@ -4,6 +4,8 @@ module Page {
 
     button: string = 'Let\'s get started';
 
+    isCoverPage = true;
+
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
       super(engageform, data);
 

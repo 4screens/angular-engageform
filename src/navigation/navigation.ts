@@ -15,6 +15,7 @@ module Navigation {
     enabledNext: boolean = true;
     hasFinish: boolean = false;
     enabledFinish: boolean = true;
+    distance:number = 0;
 
     constructor(engageform: Engageform.IEngageform) {
       this._engageform = engageform;
@@ -28,6 +29,10 @@ module Navigation {
         this.move(null);
         this.hasPrev = false;
       }
+    }
+
+    private updateDistance():number {
+      return this.distance = this.position / this.size;
     }
 
     start($event): void {
@@ -47,6 +52,8 @@ module Navigation {
       }
 
       this.position--;
+      this.updateDistance();
+
       this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
 
       this.hasPrev = false;
@@ -88,6 +95,7 @@ module Navigation {
       }
 
       this.position++;
+      this.updateDistance();
       if (this._engageform.availablePages.length >= this.position) {
         this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
 

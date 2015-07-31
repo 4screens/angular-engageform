@@ -151,7 +151,7 @@ module Engageform {
             break;
           case 'endPage':
             this._endPages.push(page._id);
-            this._pages[page._id] = new Page.EndPage(<IEngageform>this, page);
+            this._pages[page._id] = new Page.EndPage(<IEngageform>this, page, this.settings);
             break;
 
           // EngageNow exclusive

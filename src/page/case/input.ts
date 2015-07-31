@@ -12,7 +12,7 @@ module Page {
     constructor(page: IPage, data) {
       super(page, data);
 
-      this.title = data.text;
+      this.title = data.label;
       this.expectedValue = data.type;
       this.value = '';
     }

@@ -6,7 +6,13 @@ module API {
 
     settings: {
       allowAnswerChange: boolean;
-      branding?: Branding.IBrandingData
+      branding?: Branding.IBrandingData,
+      share?: {
+        title: string;
+        imageUrl: string;
+        link: string;
+        description: string;
+      }
     };
     theme: {
       answerBackgroundColor: string;

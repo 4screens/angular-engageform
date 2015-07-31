@@ -15,6 +15,8 @@ module Page {
     outcome?: string;
     button?: string;
     social?: boolean;
+    exitLink?: boolean;
+    link?: string;
     score?: number;
     result?: number;
     rangeMin?: number;
@@ -24,5 +26,12 @@ module Page {
 
     send(vcase: ICase): ng.IPromise<IPageSent>;
     selectAnswer(data): void;
+  }
+
+  export interface ISocialData {
+    title: string;
+    description: string;
+    imageUrl: string;
+    link: string;
   }
 }
