@@ -31,6 +31,11 @@ var FILES = [
   path.join('.', PATH.source, 'engageform', 'type', 'poll.ts'),
   path.join('.', PATH.source, 'engageform', 'type', 'score.ts'),
   path.join('.', PATH.source, 'engageform', 'type', 'survey.ts'),
+  path.join('.', PATH.source, 'engageform', 'type', 'live.ts'),
+
+  // FIXME: MOVEIT!!
+  path.join('.', PATH.source, 'liveevent', 'liveevent.ts'),
+
 
   path.join('.', PATH.source, 'navigation', 'navigation.ts'),
 
@@ -49,6 +54,8 @@ var FILES = [
   path.join('.', PATH.source, 'page', 'type', 'picturechoice.ts'),
   path.join('.', PATH.source, 'page', 'type', 'rateit.ts'),
   path.join('.', PATH.source, 'page', 'type', 'startpage.ts'),
+  path.join('.', PATH.source, 'page', 'type', 'buzzer.ts'),
+  path.join('.', PATH.source, 'page', 'type', 'poster.ts'),
 
   path.join('.', PATH.source, 'user', 'user.ts')
 ];

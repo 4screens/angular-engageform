@@ -1,33 +1,33 @@
 module Branding {
   export class Branding implements IBranding {
     // Basic properties.
-    private _text:string;
-    private _link:string;
-    private _imageUrl:string;
+    private _text: string;
+    private _link: string;
+    private _imageUrl: string;
 
     // Marks the branding if it is a cusom, ie. user defined at least one own value.
-    private _isCustom:boolean = false;
+    private _isCustom: boolean = false;
 
     // Default branding values from settings.
     private _defaultBranding: IBrandingData = Bootstrap.config.backend.branding;
 
-    public get isCustom():boolean {
+    public get isCustom(): boolean {
       return this._isCustom;
     }
-    public get isDefault():boolean {
+    public get isDefault(): boolean {
       return !this._isCustom;
     }
-    public get imageUrl():string {
+    public get imageUrl(): string {
       return this._imageUrl;
     }
-    public get link():string {
+    public get link(): string {
       return this._link;
     }
-    public get text():string {
+    public get text(): string {
       return this._text;
     }
 
-    constructor(data:IBrandingData = {}) {
+    constructor(data: IBrandingData = {}) {
       // If there's any branding data, it means that this is a custom branding.
       if (data.text || data.link || data.imageUrl) {
         this._isCustom = true;

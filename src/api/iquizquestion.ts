@@ -37,5 +37,10 @@ module API {
       showMainMedia: boolean;
       showDescription: boolean;
     };
+    buzzerTheme: {
+      imgIdleSrc: string,
+      imgPressedSrc: string,
+      audioSrc: string
+    };
   }
 }

@@ -1,8 +1,12 @@
 /// <reference path="api/api.ts" />
+/// <reference path="events/events.ts" />
 /// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
+
+// FIXME: MOVEIT!!
+/// <reference path="liveevent/liveevent.ts" />
 
 class Bootstrap {
   static $http: ng.IHttpService;
@@ -14,7 +18,8 @@ class Bootstrap {
 
   private _engageform: Engageform.IEngageform;
 
-  static events = new Events.Events();
+  // FIXME: Uncomment (last commits coverts this)
+  // static events = new Events.Events();
 
   constructor($http: ng.IHttpService, $q: ng.IQService, localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
     Bootstrap.$http = $http;
@@ -140,9 +145,14 @@ class Bootstrap {
       return this._engageform.initPages();
     }).then(function(engageform) {
       engageform.navigation = new Navigation.Navigation(<Engageform.IEngageform>engageform);
-
       return engageform;
     });
+  }
+
+  // FIXME: REMOVE
+  live(id: string, opt: {}) {
+    Liveevent.Liveevent(id, opt);
+    // return Liveevent.Liveevent.init(id);
   }
 }
 

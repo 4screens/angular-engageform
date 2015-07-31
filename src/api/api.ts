@@ -7,3 +7,5 @@
 /// <reference path="iquizres.ts" />
 /// <reference path="iquizfinish.ts" />
 /// <reference path="iquizfinishres.ts" />
+// FIXME: MOVEME!!
+/// <reference path="iliveevent.ts" />
