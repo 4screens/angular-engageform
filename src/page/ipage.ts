@@ -1,4 +1,11 @@
 module Page {
+  export interface IImageData {
+    containerHeight: number;
+    left: number;
+    top: number;
+    width: number;
+  }
+
   export interface IPage {
     id: string;
     engageform: Engageform.IEngageform;
@@ -23,6 +30,8 @@ module Page {
     rangeMax?: number;
     labelMin?: string;
     labelMax?: string;
+
+    imageData: IImageData;
 
     send(vcase: ICase): ng.IPromise<IPageSent>;
     selectAnswer(data): void;

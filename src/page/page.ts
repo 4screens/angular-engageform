@@ -11,6 +11,7 @@ module Page {
     title: string;
     description: string;
     media: string;
+    imageData: IImageData;
     filled: boolean;
     settings: ISetting;
     cases: ICase[] = [];
@@ -39,6 +40,8 @@ module Page {
       this.description = data.description;
       this.media = this.getMediaUrl(data.imageData, data.imageFile);
       this.settings = <ISetting>new Settings(data);
+
+      this.imageData = data.imageData;
     }
 
     send(vcase: ICase): ng.IPromise<IPageSent> {
