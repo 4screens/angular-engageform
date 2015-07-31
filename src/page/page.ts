@@ -36,8 +36,8 @@ module Page {
       this._pageId = data._id;
       this._engageform = engageform;
 
-      this.title = data.text;
-      this.description = data.description;
+      this.title = data.text || '';
+      this.description = data.description || '';
       this.media = this.getMediaUrl(data.imageData, data.imageFile);
       this.settings = <ISetting>new Settings(data);
 
