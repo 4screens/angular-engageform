@@ -123,7 +123,7 @@ module Engageform {
       });
     }
 
-    buildPages(pages: Array): void {
+    buildPages(pages): void {
       pages.map((page) => {
         switch (page.type) {
           case 'multiChoice':
@@ -154,7 +154,7 @@ module Engageform {
             this._pages[page._id] = new Page.EndPage(<IEngageform>this, page, this.settings);
             break;
 
-          // EngageNow exclusive
+          // EngageNow exclusive page types
           case 'buzzer':
             this._availablePages.push(page._id);
             this._pages[page._id] = new Page.Buzzer(<IEngageform>this, page);

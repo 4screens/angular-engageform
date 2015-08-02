@@ -35,10 +35,6 @@ var FILES = [
   path.join('.', PATH.source, 'engageform', 'type', 'survey.ts'),
   path.join('.', PATH.source, 'engageform', 'type', 'live.ts'),
 
-  // FIXME: MOVEIT!!
-  path.join('.', PATH.source, 'liveevent', 'liveevent.ts'),
-
-
   path.join('.', PATH.source, 'navigation', 'navigation.ts'),
 
   path.join('.', PATH.source, 'page', 'page.ts'),
