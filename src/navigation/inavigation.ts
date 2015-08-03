@@ -13,6 +13,9 @@ module Navigation {
     enabledFinish: boolean;
     distance: number;
 
+    hasStartPages: boolean;
+    hasEndPages: boolean;
+
     start($event): void;
     prev($event): void;
     pick($event, vcase: Page.ICase): void;
