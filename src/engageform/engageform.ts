@@ -80,6 +80,10 @@ module Engageform {
       });
     }
 
+    initPage(page: API.IQuiz) {
+      // ..Abstract for liveEvent
+    }
+
     setCurrent(pageId: string) {
       this.current = <Page.IPage>this._pages[pageId];
     }

@@ -133,6 +133,9 @@ class Bootstrap {
         case 'survey':
           this._engageform = new Engageform.Survey(engageformData);
           break;
+        case 'live':
+          this._engageform = new Engageform.Live(engageformData);
+          break;
         default:
           return Bootstrap.$q.reject({
             status: 'error',
@@ -143,7 +146,6 @@ class Bootstrap {
             data: engageformData
           });
       }
-
       return this._engageform.initPages();
     }).then(function(engageform) {
       engageform.navigation = new Navigation.Navigation(<Engageform.IEngageform>engageform);

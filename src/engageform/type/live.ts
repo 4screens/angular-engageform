@@ -2,11 +2,15 @@ module Engageform {
   export class Live extends Engageform {
     type = Type.Live;
 
-    initPage(page: {_id: string}) {
-      this.buildPages([page]);
-      this.setCurrent(page._id);
+    initPages() {
+      var deferred = Bootstrap.$q.defer();
+      deferred.resolve(this);
+      return deferred.promise;
     };
 
-    initNav() {};
+    initPage(page) {
+      this.buildPages([page]);
+      this.setCurrent(page._id);
+    }
   }
 }
