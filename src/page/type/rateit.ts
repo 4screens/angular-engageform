@@ -6,6 +6,8 @@ module Page {
     labelMin: string;
     labelMax: string;
 
+    selectedValue: number = 0;
+
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
       super(engageform, data);
 
@@ -21,10 +23,10 @@ module Page {
 
       this.sent().then(sent => {
         if (sent.selectedValue) {
+          this.selectedValue = sent.selectedValue;
           this.selectAnswer(sent);
         }
       });
-
     }
 
     selectAnswer(sent) {
@@ -37,11 +39,7 @@ module Page {
       }
 
       this.cases.map((vcase: ICase) => {
-        vcase.selected = false;
-
-        if (sent.selectedValue >= vcase.ordinal) {
-          vcase.selected = true;
-        }
+        vcase.selected = sent.selectedValue >= vcase.ordinal;
       });
     }
   }
