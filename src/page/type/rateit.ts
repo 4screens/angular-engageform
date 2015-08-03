@@ -32,6 +32,7 @@ module Page {
     selectAnswer(sent) {
       if (sent.selectedValue) {
         this.filled = true;
+        this.selectedValue = sent.selectedValue;
       }
 
       if (sent.result) {
