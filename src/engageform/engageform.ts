@@ -66,10 +66,7 @@ module Engageform {
       this.title = data.title;
       this.settings = new Settings(data);
       this.theme = new Theme(data);
-
-      if (data.settings && data.settings.branding) {
-        this.branding = new Branding.Branding(data.settings.branding);
-      }
+      this.branding = new Branding.Branding(data.settings.branding);
     }
 
     initPages(): ng.IPromise<IEngageform> {
