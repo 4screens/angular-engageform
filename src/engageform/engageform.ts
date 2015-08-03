@@ -66,42 +66,15 @@ module Engageform {
       this.title = data.title;
       this.settings = new Settings(data);
       this.theme = new Theme(data);
-      this.branding = new Branding.Branding(data.settings.branding);
+
+      if (data.settings && data.settings.branding) {
+        this.branding = new Branding.Branding(data.settings.branding);
+      }
     }
 
     initPages(): ng.IPromise<IEngageform> {
       return this.getPagesById(this._engageformId).then((pages) => {
-        pages.map((page) => {
-          switch (page.type) {
-            case 'multiChoice':
-              this._availablePages.push(page._id);
-              this._pages[page._id] = new Page.MultiChoice(<IEngageform>this, page);
-              break;
-            case 'pictureChoice':
-              this._availablePages.push(page._id);
-              this._pages[page._id] = new Page.PictureChoice(<IEngageform>this, page);
-              break;
-            case 'rateIt':
-              this._availablePages.push(page._id);
-              this._pages[page._id] = new Page.Rateit(<IEngageform>this, page);
-              break;
-            case 'forms':
-              // Store information about this engageform having a form-type question.
-              this._hasForms = true;
-
-              this._availablePages.push(page._id);
-              this._pages[page._id] = new Page.Form(<IEngageform>this, page);
-              break;
-            case 'startPage':
-              this._startPages.push(page._id);
-              this._pages[page._id] = new Page.StartPage(<IEngageform>this, page);
-              break;
-            case 'endPage':
-              this._endPages.push(page._id);
-              this._pages[page._id] = new Page.EndPage(<IEngageform>this, page, this.settings);
-              break;
-          }
-        });
+        this.buildPages(pages);
 
         return <IEngageform>this;
       });
@@ -147,6 +120,50 @@ module Engageform {
         }
 
         return Bootstrap.$q.reject(res);
+      });
+    }
+
+    buildPages(pages): void {
+      pages.map((page) => {
+        switch (page.type) {
+          case 'multiChoice':
+            this._availablePages.push(page._id);
+            this._pages[page._id] = new Page.MultiChoice(<IEngageform>this, page);
+            break;
+          case 'pictureChoice':
+            this._availablePages.push(page._id);
+            this._pages[page._id] = new Page.PictureChoice(<IEngageform>this, page);
+            break;
+          case 'rateIt':
+            this._availablePages.push(page._id);
+            this._pages[page._id] = new Page.Rateit(<IEngageform>this, page);
+            break;
+          case 'forms':
+            // Store information about this engageform having a form-type question.
+            this._hasForms = true;
+
+            this._availablePages.push(page._id);
+            this._pages[page._id] = new Page.Form(<IEngageform>this, page);
+            break;
+          case 'startPage':
+            this._startPages.push(page._id);
+            this._pages[page._id] = new Page.StartPage(<IEngageform>this, page);
+            break;
+          case 'endPage':
+            this._endPages.push(page._id);
+            this._pages[page._id] = new Page.EndPage(<IEngageform>this, page, this.settings);
+            break;
+
+          // EngageNow exclusive page types
+          case 'buzzer':
+            this._availablePages.push(page._id);
+            this._pages[page._id] = new Page.Buzzer(<IEngageform>this, page);
+            break;
+          case 'poster':
+            this._availablePages.push(page._id);
+            this._pages[page._id] = new Page.Poster(<IEngageform>this, page);
+            break;
+        }
       });
     }
 

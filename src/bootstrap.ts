@@ -1,4 +1,5 @@
 /// <reference path="api/api.ts" />
+/// <reference path="events/events.ts" />
 /// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
 /// <reference path="page/page.ts" />
@@ -146,7 +147,6 @@ class Bootstrap {
       return this._engageform.initPages();
     }).then(function(engageform) {
       engageform.navigation = new Navigation.Navigation(<Engageform.IEngageform>engageform);
-
       return engageform;
     });
   }

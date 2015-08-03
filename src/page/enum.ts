@@ -14,6 +14,8 @@ module Page {
     MultiChoice,
     PictureChoice,
     Rateit,
-    StartPage
+    StartPage,
+    Buzzer,
+    Poster
   }
 }

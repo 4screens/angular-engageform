@@ -18,7 +18,7 @@ module Page {
           this.selectAnswer(sent);
         });
 
-        }
+      }
 
     }
 

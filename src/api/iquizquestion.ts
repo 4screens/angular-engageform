@@ -45,5 +45,10 @@ module API {
         description: string;
       }
     };
+    buzzerTheme: {
+      imgIdleSrc: string,
+      imgPressedSrc: string,
+      audioSrc: string
+    };
   }
 }
