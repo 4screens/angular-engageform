@@ -1,3 +1,5 @@
+/// <reference path="../branding/ibranding.ts" />
+
 module API {
   export interface IQuiz {
     _id: string;

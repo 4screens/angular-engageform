@@ -17,12 +17,18 @@ module Navigation {
     enabledFinish: boolean = true;
     distance:number = 0;
 
+    hasStartPages: boolean = false;
+    hasEndPages: boolean = false;
+
     constructor(engageform: Engageform.IEngageform) {
       this._engageform = engageform;
       this.size = engageform.availablePages.length;
 
-      if (this._engageform.startPages.length > 0) {
+      this.hasEndPages = Boolean(this._engageform.endPages.length);
+
+      if (this._engageform.startPages.length) {
         this.hasStart = true;
+        this.hasStartPages = true;
         this._engageform.setCurrent(this._engageform.startPages[0]);
       } else {
         this.enabled = true;
@@ -41,7 +47,7 @@ module Navigation {
       this.enabled = true;
       this.hasStart = false;
       this.move(null);
-      this.hasPrev = false;
+      this.hasPrev = true;
     }
 
     prev($event): void {
@@ -54,14 +60,15 @@ module Navigation {
       this.position--;
       this.updateDistance();
 
-      this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
-
-      this.hasPrev = false;
       this.hasNext = true;
       this.hasFinish = false;
 
-      if (this.position > 1) {
-        this.hasPrev = true;
+      if (this.position === 0) {
+        this._engageform.setCurrent(this._engageform.startPages[0]);
+        this.hasPrev = false;
+      } else {
+        this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
+        this.hasPrev = this.position === 1 ? this.hasStartPages : true;
       }
     }
 

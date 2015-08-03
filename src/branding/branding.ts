@@ -1,3 +1,5 @@
+/// <reference path="ibranding.ts" />
+
 module Branding {
   export class Branding implements IBranding {
     // Basic properties.
