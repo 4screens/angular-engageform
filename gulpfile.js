@@ -22,7 +22,6 @@ var FILES = [
   path.join('.', PATH.source, 'app.ts'),
   path.join('.', PATH.source, 'bootstrap.ts'),
 
-  path.join('.', PATH.source, 'branding', 'ibranding.ts'),
   path.join('.', PATH.source, 'branding', 'branding.ts'),
 
   path.join('.', PATH.source, 'engageform', 'engageform.ts'),
@@ -102,6 +101,10 @@ gulp.task('build', ['header'], function() {
 
   return ts.js
     .pipe(plugins.concat(MAIN))
+    .pipe(plugins.wrapper({
+      header: '(function(angular) {\n',
+      footer: '})(angular);'
+    }))
     .pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest('.'));
 });

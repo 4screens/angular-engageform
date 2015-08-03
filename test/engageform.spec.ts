@@ -1,3 +1,5 @@
+/// <reference path="../src/api/api.ts" />
+
 describe('Engageform:', () => {
   var Engageform: any;
   var httpBackend: any;

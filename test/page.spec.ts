@@ -1,3 +1,5 @@
+/// <reference path="../src/api/api.ts" />
+
 describe('Page:', () => {
   var Engageform: any;
   var ef: any;
