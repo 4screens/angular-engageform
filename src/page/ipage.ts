@@ -30,6 +30,7 @@ module Page {
     rangeMax?: number;
     labelMin?: string;
     labelMax?: string;
+    buttonClickSum?: number;
 
     imageData: IImageData;
 

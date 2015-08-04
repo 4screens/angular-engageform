@@ -44,6 +44,7 @@ var FILES = [
   path.join('.', PATH.source, 'page', 'case', 'input.ts'),
   path.join('.', PATH.source, 'page', 'case', 'iteration.ts'),
   path.join('.', PATH.source, 'page', 'case', 'text.ts'),
+  path.join('.', PATH.source, 'page', 'case', 'buzz.ts'),
 
   path.join('.', PATH.source, 'page', 'type', 'endpage.ts'),
   path.join('.', PATH.source, 'page', 'type', 'form.ts'),

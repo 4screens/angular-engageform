@@ -15,6 +15,7 @@ module Page {
     value?: string;
     error?: string;
     ordinal?: number;
+    buttonClickSum?: number;
 
     send(): ng.IPromise<IPageSent>;
     validate(): boolean;

@@ -4,7 +4,8 @@ module Page {
     Image,
     Input,
     Iteration,
-    Text
+    Text,
+    Buzz
   }
 
   export enum Type {
