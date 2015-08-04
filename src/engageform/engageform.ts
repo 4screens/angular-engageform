@@ -37,6 +37,10 @@ module Engageform {
       return this._availablePages;
     }
 
+    get typeName(): string {
+      return Type[this.type].toLowerCase();
+    }
+
     /**
      * @public
      * @description
