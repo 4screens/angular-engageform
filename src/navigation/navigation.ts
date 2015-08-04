@@ -15,7 +15,7 @@ module Navigation {
     enabledNext: boolean = true;
     hasFinish: boolean = false;
     enabledFinish: boolean = true;
-    distance:number = 0;
+    distance: number = 0;
 
     hasStartPages: boolean = false;
     hasEndPages: boolean = false;
@@ -37,7 +37,7 @@ module Navigation {
       }
     }
 
-    private updateDistance():number {
+    private updateDistance(): number {
       return this.distance = this.position / this.size;
     }
 

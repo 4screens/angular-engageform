@@ -20,6 +20,8 @@ module Page {
       this.buzzerTheme = Bootstrap.config.fakeBuzzerTheme || {};
     };
 
-    selectAnswer(sent) {};
+    selectAnswer(sent) {
+      /* */
+    };
   }
 }
