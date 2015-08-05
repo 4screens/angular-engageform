@@ -17,6 +17,7 @@ module Page {
     ordinal?: number;
     buttonClickSum?: number;
 
+    trueBuzzerSend?(BCS: number): void;
     send(): ng.IPromise<IPageSent>;
     validate(): boolean;
   }

@@ -15,10 +15,10 @@ module Page {
       console.log('[ Buzzer ] Constructor');
 
       // Make only one case with buzzed ammount
-      this.cases.push(<ICase>new BuzzCase(<IPage>this, { _id: iteration, buttonClickSum: this.buttonClickSum }));
+      this.cases.push(<ICase>new BuzzCase(<IPage>this, { _id: 0, buttonClickSum: this.buttonClickSum }));
 
       // Clear previous timeout
-      if (this.buzzLoop.timeout) clearTimeout(this.buzzLoop.timeout);
+      if (this.buzzLoop.hasOwnProperty('timeout')) clearTimeout(this.buzzLoop['timeout']); // Nasty array reference couse of compiler error ?
 
       // Start loop
       this.buzzLoop(0);
@@ -28,43 +28,46 @@ module Page {
       this.buzzerTheme = Bootstrap.config.fakeBuzzerTheme || {};
     };
 
-    selectAnswer(sent) {
-      console.log('[ Buzzer ] Select answer');
-    };
+    // selectAnswer(sent) {
+    //   console.log('[ Buzzer ] Select answer');
+    // };
 
-    send(sent) {
-      console.log('[ Buzzer ] Send');
-    };
+    // send(sent) {
+    //   console.log('[ Buzzer ] Send');
+    // };
 
     private buzzLoop(iteration: number) {
       console.log('[ Buzzer ] Buzz');
       if (this.buttonClickSum > 0) {
 
-        // Clear buttonClickSum
-        this.buttonClickSum = 0;
-
-        // We dont need then here since socket respond with global buttonClickSum
-        this.cases[0].send();
+        // True send - POST to server, we dont need then here since socket respond with global buttonClickSum
+        this.cases[0].trueBuzzerSend(this.buttonClickSum);
       }
 
-      if (this._engageform && this._engageform.current) {
-        console.log(this._engageform.current._pageId);
-        console.log(this._pageId);
-      }
+      // if (this._engageform && this._engageform.current) {
+      //   console.log(this._engageform.current._pageId);
+      //   console.log(this._pageId);
+      // }
 
       // Not a buzzer - stop cycle
-      if (this._engageform && this._engageform.current && this._engageform.current._pageId !== this._pageId) {
+      if (iteration > 0 && this.engageform && this.engageform.current && this.engageform.current.id !== this.id) {
         return;
       }
 
-      this.buzzLoop.timeout = setTimeout(() => { this.buzzLoop(iteration) }, 3000);
+      // Loop
+      this.buzzLoop['timeout'] = setTimeout(() => { this.buzzLoop(iteration + 1) }, 3000); // Nasty array reference couse of compiler error ?
+
+      // Clear buttonClickSum
+      this.buttonClickSum = 0;
     }
 
-    private buzz() {
+    clickBuzzer() {
       // Limit buzzes
       if (this.buttonClickSum < 100) {
         this.buttonClickSum++;
       }
+
+      console.log('[ Buzzer ] Click! (' + this.buttonClickSum +')');
     }
   }
 }

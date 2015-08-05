@@ -2,20 +2,27 @@ module Page {
   export class BuzzCase extends Case {
     type = CaseType.Buzz;
 
-    buttonClickSum: number = 0;
-
     constructor(page: IPage, data) {
       super(page, data);
-      this.buttonClickSum = data.buttonClickSum;
+      this.page = page;
     }
 
-    send() {
+    send(): ng.IPromise<IPageSent> {
+      // We dont really send buzzes here, just increase buttonClickSum here
+      this.page.clickBuzzer();
+      var deferred = Bootstrap.$q.defer();
+      deferred.resolve(<IPageSent>{});
+      return deferred.promise;
+    }
+
+    trueBuzzerSend(BCS: number): ng.IPromise<IPageSent> {
+      console.log('[ Buzzer ] True send (' + BCS + ')');
       // Ignore change answer option
       // if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
       //   return Bootstrap.$q.reject('Changing answer is not allowed');
       // }
 
-      return super.makeSend({ quizQuestionId: this.page.id, buttonClickSum: this.buttonClickSum }).then((res) => {
+      return super.makeSend({ quizQuestionId: this.page.id, buttonClickSum: BCS }).then((res) => {
         var data: IPageSent = <IPageSent>{};
 
         // IMO we don't need that since buzzer have fake answerId's

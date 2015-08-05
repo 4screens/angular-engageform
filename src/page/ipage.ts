@@ -36,6 +36,7 @@ module Page {
 
     send(vcase: ICase): ng.IPromise<IPageSent>;
     selectAnswer(data): void;
+    clickBuzzer?(): void;
   }
 
   export interface ISocialData {
