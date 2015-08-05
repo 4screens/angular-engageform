@@ -2,6 +2,7 @@ module Page {
   export class ImageCase extends Case {
     type = CaseType.Image;
 
+    result: number;
     selected: boolean = false;
     correct: boolean = false;
     incorrect: boolean = false;
@@ -32,6 +33,15 @@ module Page {
 
         if (res.correctAnswerId) {
           data.correctCaseId = res.correctAnswerId;
+        }
+
+        for (var caseId in res.stats) {
+          if (res.stats.hasOwnProperty(caseId)) {
+            data.results = data.results || {};
+            if (/.{24}/.test(caseId)) {
+              data.results[caseId] = res.stats[caseId];
+            }
+          }
         }
 
         super.save(data);
