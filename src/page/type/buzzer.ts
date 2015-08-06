@@ -26,7 +26,7 @@ module Page {
       // FIXME: Relpace when themes will be ready
       // this.buzzerTheme = data.buzzerTheme;
       this.buzzerTheme = Bootstrap.config.fakeBuzzerTheme || {};
-    };
+    }
 
     // selectAnswer(sent) {
     //   console.log('[ Buzzer ] Select answer');

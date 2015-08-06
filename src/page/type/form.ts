@@ -31,8 +31,10 @@ module Page {
       });
 
       if (validated) {
+        this.filled = true;
         deferred.resolve(this.cases[0].send());
       } else {
+        this.filled = false;
         deferred.resolve(<IPageSent>{});
       }
 
@@ -40,7 +42,7 @@ module Page {
     }
 
     selectAnswer(sent) {
-      this.cases.map((vcase) => {
+      this.cases.map((vcase: ICase) => {
         vcase.value = sent[vcase.id] || '';
       });
     }
