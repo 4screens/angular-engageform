@@ -33,6 +33,13 @@ module Page {
 
       return super.makeSend(data).then(() => {
         return data;
+      }).catch((err) => {
+        if (err.data.code === 406) {
+          this.save(<IPageSent>{});
+          return Bootstrap.$q.reject('Incorrect inputs sent. Try again.');
+        }
+
+        return Bootstrap.$q.reject(err.data.message);
       });
     }
 
