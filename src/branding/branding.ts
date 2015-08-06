@@ -46,7 +46,7 @@ module Branding {
       if (imgUrl === this._defaultBranding.imageUrl) {
         this._imageUrl = Bootstrap.config.backend.domain + imgUrl;
       } else {
-        this._imageUrl = Bootstrap.config.backend.domain + Bootstrap.config.backend.imagesUrl + '/' + imgUrl;
+        this._imageUrl = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imgUrl;
       }
     }
   }
