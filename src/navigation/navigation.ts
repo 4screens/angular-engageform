@@ -78,7 +78,27 @@ module Navigation {
       switch (Bootstrap.mode) {
         default:
           this._engageform.current.send(vcase).then(() => {
-            this.move(vcase);
+            this._engageform.message = '';
+            if (this._engageform.current) {
+              switch (Bootstrap.mode) {
+                case Engageform.Mode.Default:
+                case Engageform.Mode.Preview:
+                  if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
+                    this._engageform.message = 'Answer is required to proceed to next question';
+                    return;
+                  }
+                  break;
+              }
+            }
+
+            if (vcase) {
+              Bootstrap.$timeout(() => {
+                this.move(vcase);
+              }, this._engageform.current.settings.showResults?500:200);
+            } else {
+              this.move(vcase);
+            }
+
           }).catch(errorMessage => {
             this._engageform.message = errorMessage;
           });
@@ -88,22 +108,9 @@ module Navigation {
     finish = this.pick;
 
     private move(vcase: Page.ICase): void {
-      this._engageform.message = '';
-      if (this._engageform.current) {
-        switch (Bootstrap.mode) {
-          case Engageform.Mode.Default:
-          case Engageform.Mode.Preview:
-            if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
-              this._engageform.message = 'Answer is required to proceed to next question';
-              return;
-            }
-            break;
-        }
-      }
-
       this.position++;
-      this.updateDistance();
       if (this._engageform.availablePages.length >= this.position) {
+        this.updateDistance();
         this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
 
         this.hasPrev = true;

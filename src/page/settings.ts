@@ -2,7 +2,7 @@
 
 module Page {
   export class Settings implements ISetting {
-    showAnswers: boolean = false;
+    showResults: boolean = false;
     showCorrectAnswer: boolean = false;
     showMainMedia: boolean = false;
     showDescription: boolean = false;
@@ -12,7 +12,7 @@ module Page {
       this.requiredAnswer = !!data.requiredAnswer;
 
       if (data.settings) {
-        this.showAnswers = !!data.settings.showAnswers;
+        this.showResults = !!data.settings.showAnswers;
         this.showCorrectAnswer = !!data.settings.showCorrectAnswer;
         this.showMainMedia = !!data.settings.showMainMedia;
         this.showDescription = !!data.settings.showDescription;

@@ -1,6 +1,6 @@
 module Page {
   export interface ISetting {
-    showAnswers: boolean;
+    showResults: boolean;
     showCorrectAnswer: boolean;
     showMainMedia: boolean;
     showDescription: boolean;

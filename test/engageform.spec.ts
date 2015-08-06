@@ -13,7 +13,7 @@ describe('Engageform:', () => {
       backend: {
         api: 'api',
         domain: '',
-        imagesUrl: 'imgUrl',
+        imagesUrl: '/imgUrl',
         branding: {
           text: 'text',
           link: 'link',
@@ -293,7 +293,7 @@ describe('Engageform:', () => {
       }).then((ef) => {
         expect(ef.branding).toBeDefined();
         expect({text: ef.branding.text, link: ef.branding.link, imageUrl: ef.branding.imageUrl})
-          .toEqual(jasmine.objectContaining({text: 'custom', link: 'custom', imageUrl: 'imgUrl/custom'}));
+          .toEqual(jasmine.objectContaining({text: 'custom', link: 'custom', imageUrl: 'api/imgUrl/custom'}));
         done();
       });
 

@@ -8,6 +8,7 @@
 class Bootstrap {
   static $http: ng.IHttpService;
   static $q: ng.IQService;
+  static $timeout: ng.ITimeoutService;
   static localStorage: ng.local.storage.ILocalStorageService;
   static user: User;
   static config;
@@ -17,9 +18,10 @@ class Bootstrap {
 
   static events = new Events.Events();
 
-  constructor($http: ng.IHttpService, $q: ng.IQService, localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
+  constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
     Bootstrap.$http = $http;
     Bootstrap.$q = $q;
+    Bootstrap.$timeout = $timeout;
     Bootstrap.localStorage = localStorage;
     Bootstrap.config = ApiConfig;
     Bootstrap.user = new User();
@@ -154,5 +156,5 @@ class Bootstrap {
   }
 }
 
-Bootstrap.$inject = ['$http', '$q', 'localStorageService', 'ApiConfig'];
+Bootstrap.$inject = ['$http', '$q', '$timeout', 'localStorageService', 'ApiConfig'];
 app.service('Engageform', Bootstrap);
