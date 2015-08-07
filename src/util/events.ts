@@ -1,4 +1,4 @@
-module Events {
+module Util {
   export interface IEvents {
     listen(name: string, callback: (data?: Object) => void): void;
     trigger(name: string, data: Object): void;

@@ -11,7 +11,6 @@ module Page {
     title: string;
     description: string;
     media: string;
-    imageData: IImageData;
     filled: boolean;
     settings: ISetting;
     cases: ICase[] = [];
@@ -36,12 +35,19 @@ module Page {
       this._pageId = data._id;
       this._engageform = engageform;
 
-      this.title = data.text || '';
-      this.description = data.description || '';
-      this.media = this.getMediaUrl(data.imageData, data.imageFile);
       this.settings = <ISetting>new Settings(data);
+      this.title = data.text || '';
 
-      this.imageData = data.imageData;
+      if (this.settings.showDescription) {
+        this.description = data.description || '';
+      }
+      if (this.settings.showMainMedia) {
+        this.media = Util.Cloudinary.getInstance().prepareImageUrl(
+          data.imageFile,
+          680,
+          data.imageData
+        );
+      }
     }
 
     send(vcase: ICase): ng.IPromise<IPageSent> {
@@ -80,12 +86,15 @@ module Page {
       if (!imageFile) {
         return '';
       }
+      console.log(console);
 
-      if (imageFile.indexOf('http') === -1) {
-        imageFile = Bootstrap.config.backend.api + '/uploads/' + imageFile;
-      }
-
-      return imageFile;
+      return
+      //
+      //if (imageFile.indexOf('http') === -1) {
+      //  imageFile = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imageFile;
+      //}
+      //
+      //return imageFile;
     }
   }
 }

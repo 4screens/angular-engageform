@@ -8,15 +8,17 @@ module Page {
     incorrect: boolean = false;
 
     title: string;
-    image: string;
-    imageData: IImageData;
+    media: string;
 
     constructor(page: IPage, data) {
       super(page, data);
 
       this.title = data.text;
-      this.image = data.imageFile;
-      this.imageData = data.imageData;
+      this.media = Util.Cloudinary.getInstance().prepareImageUrl(
+        data.imageFile,
+        300,
+        data.imageData
+      );
     }
 
     send() {

@@ -1,9 +1,10 @@
 /// <reference path="api/api.ts" />
-/// <reference path="events/events.ts" />
 /// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
+/// <reference path="util/cloudinary.ts" />
+/// <reference path="util/events.ts" />
 
 class Bootstrap {
   static $http: ng.IHttpService;
@@ -15,8 +16,8 @@ class Bootstrap {
   static mode = Engageform.Mode.Undefined;
 
   private _engageform: Engageform.IEngageform;
-
-  static events = new Events.Events();
+  private _cloudinary: Util.Cloudinary;
+  private _events: Util.Events;
 
   constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
     Bootstrap.$http = $http;
@@ -25,6 +26,9 @@ class Bootstrap {
     Bootstrap.localStorage = localStorage;
     Bootstrap.config = ApiConfig;
     Bootstrap.user = new User();
+
+    this._cloudinary = new Util.Cloudinary();
+    this._events = new Util.Events();
   }
 
   get type(): Engageform.Type {
@@ -80,6 +84,12 @@ class Bootstrap {
   get message(): string {
     if (this._engageform) {
       return this._engageform.message;
+    }
+  }
+
+  get events(): Util.Events {
+    if (this._events) {
+      return this._events;
     }
   }
 
