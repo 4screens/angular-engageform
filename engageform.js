@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.3
+ * 4screens-angular-engageform v0.2.5
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -34,6 +34,7 @@ var Page;
         CaseType[CaseType["Input"] = 2] = "Input";
         CaseType[CaseType["Iteration"] = 3] = "Iteration";
         CaseType[CaseType["Text"] = 4] = "Text";
+        CaseType[CaseType["Buzz"] = 5] = "Buzz";
     })(Page.CaseType || (Page.CaseType = {}));
     var CaseType = Page.CaseType;
     (function (Type) {
@@ -49,31 +50,6 @@ var Page;
     })(Page.Type || (Page.Type = {}));
     var Type = Page.Type;
 })(Page || (Page = {}));
-
-var Events;
-(function (Events_1) {
-    var Events = (function () {
-        function Events() {
-            this.listeners = {};
-        }
-        Events.prototype.listen = function (name, callback) {
-            if (!this.listeners[name]) {
-                this.listeners[name] = [];
-            }
-            this.listeners[name].push(callback);
-        };
-        Events.prototype.trigger = function (name, data) {
-            if (data === void 0) { data = {}; }
-            if (this.listeners[name]) {
-                for (var i = 0; i < this.listeners[name].length; i += 1) {
-                    this.listeners[name][i](data);
-                }
-            }
-        };
-        return Events;
-    })();
-    Events_1.Events = Events;
-})(Events || (Events = {}));
 
 /// <reference path="../typings/tsd.d.ts" />
 var app = angular.module('4screens.engageform', [
@@ -201,6 +177,11 @@ var Engageform;
                 }
                 return Bootstrap.$q.reject(res);
             });
+        };
+        Engageform.prototype.cleanPages = function () {
+            this._availablePages.length = 0;
+            this._pages = {};
+            this.pages = {};
         };
         Engageform.prototype.buildPages = function (pages) {
             var _this = this;
@@ -331,7 +312,26 @@ var Navigation;
             switch (Bootstrap.mode) {
                 default:
                     this._engageform.current.send(vcase).then(function () {
-                        _this.move(vcase);
+                        _this._engageform.message = '';
+                        if (_this._engageform.current) {
+                            switch (Bootstrap.mode) {
+                                case Engageform.Mode.Default:
+                                case Engageform.Mode.Preview:
+                                    if (!_this._engageform.current.filled && _this._engageform.current.settings.requiredAnswer) {
+                                        _this._engageform.message = 'Answer is required to proceed to next question';
+                                        return;
+                                    }
+                                    break;
+                            }
+                        }
+                        if (vcase) {
+                            Bootstrap.$timeout(function () {
+                                _this.move(vcase);
+                            }, _this._engageform.current.settings.showResults ? 500 : 200);
+                        }
+                        else {
+                            _this.move(vcase);
+                        }
                     }).catch(function (errorMessage) {
                         _this._engageform.message = errorMessage;
                     });
@@ -339,21 +339,9 @@ var Navigation;
         };
         Navigation.prototype.move = function (vcase) {
             var _this = this;
-            this._engageform.message = '';
-            if (this._engageform.current) {
-                switch (Bootstrap.mode) {
-                    case Engageform.Mode.Default:
-                    case Engageform.Mode.Preview:
-                        if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
-                            this._engageform.message = 'Answer is required to proceed to next question';
-                            return;
-                        }
-                        break;
-                }
-            }
             this.position++;
-            this.updateDistance();
             if (this._engageform.availablePages.length >= this.position) {
+                this.updateDistance();
                 this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
                 this.hasPrev = true;
                 this.hasNext = false;
@@ -400,14 +388,20 @@ var Page;
 (function (Page_1) {
     var Page = (function () {
         function Page(engageform, data) {
+            this.title = '';
+            this.description = '';
+            this.media = '';
             this.cases = [];
             this._pageId = data._id;
             this._engageform = engageform;
-            this.title = data.text || '';
-            this.description = data.description || '';
-            this.media = this.getMediaUrl(data.imageData, data.imageFile);
             this.settings = new Page_1.Settings(data);
-            this.imageData = data.imageData;
+            this.title = data.text || '';
+            if (this.settings.showDescription) {
+                this.description = data.description || '';
+            }
+            if (this.settings.showMainMedia) {
+                this.media = Util.Cloudinary.getInstance().prepareImageUrl(data.imageFile, 680, data.imageData);
+            }
         }
         Object.defineProperty(Page.prototype, "id", {
             get: function () {
@@ -466,10 +460,14 @@ var Page;
             if (!imageFile) {
                 return '';
             }
-            if (imageFile.indexOf('http') === -1) {
-                imageFile = Bootstrap.config.backend.api + '/uploads/' + imageFile;
-            }
-            return imageFile;
+            console.log(console);
+            return;
+            //
+            //if (imageFile.indexOf('http') === -1) {
+            //  imageFile = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imageFile;
+            //}
+            //
+            //return imageFile;
         };
         return Page;
     })();
@@ -511,19 +509,101 @@ var User = (function () {
     return User;
 })();
 
+/// <reference path="icloudinary.ts" />
+var Util;
+(function (Util) {
+    var Cloudinary = (function () {
+        function Cloudinary() {
+            if (Bootstrap.config.cloudinary) {
+                this._accountName = Bootstrap.config.cloudinary.accountName || 'test4screens';
+                this._uploadFolder = Bootstrap.config.cloudinary.uploadFolder || 'console';
+                this._domain = Bootstrap.config.cloudinary.domain || 'https://res.cloudinary.com';
+            }
+            Cloudinary._instance = this;
+        }
+        Cloudinary.getInstance = function () {
+            return Cloudinary._instance;
+        };
+        Cloudinary.prototype.prepareImageUrl = function (filepath, width, imageData) {
+            if (!filepath) {
+                return '';
+            }
+            var src = this._domain + '/' + this._accountName + '/image';
+            var baseWidth = 540;
+            if (filepath.indexOf('http') !== -1) {
+                src += '/fetch';
+            }
+            else {
+                src += '/upload';
+            }
+            if (imageData.containerHeight === width) {
+                baseWidth = 300;
+            }
+            var manipulation = [];
+            manipulation.push('w_' + Math.round(width * (imageData.width / 100 || 1)));
+            manipulation.push('f_auto');
+            manipulation.push('q_82');
+            manipulation.push('dpr_1.0');
+            src += '/' + manipulation.join(',');
+            var resize = [];
+            resize.push('w_' + width);
+            resize.push('h_' + Math.round(imageData.containerHeight * (width / baseWidth)));
+            resize.push('x_' + Math.round(-1 * width * imageData.left / 100));
+            resize.push('y_' + Math.round(-1 * width * imageData.containerHeight * imageData.top / (100 * baseWidth)));
+            resize.push('c_crop');
+            src += '/' + resize.join(',');
+            if (filepath.indexOf('http') === -1) {
+                src += '/' + this._uploadFolder;
+            }
+            return src + '/' + filepath;
+        };
+        return Cloudinary;
+    })();
+    Util.Cloudinary = Cloudinary;
+})(Util || (Util = {}));
+
+var Util;
+(function (Util) {
+    var Events = (function () {
+        function Events() {
+            this.listeners = {};
+        }
+        Events.prototype.listen = function (name, callback) {
+            if (!this.listeners[name]) {
+                this.listeners[name] = [];
+            }
+            this.listeners[name].push(callback);
+        };
+        Events.prototype.trigger = function (name, data) {
+            if (data === void 0) { data = {}; }
+            if (this.listeners[name]) {
+                for (var i = 0; i < this.listeners[name].length; i += 1) {
+                    this.listeners[name][i](data);
+                }
+            }
+        };
+        return Events;
+    })();
+    Util.Events = Events;
+})(Util || (Util = {}));
+
 /// <reference path="api/api.ts" />
-/// <reference path="events/events.ts" />
 /// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
+/// <reference path="util/cloudinary.ts" />
+/// <reference path="util/events.ts" />
 var Bootstrap = (function () {
-    function Bootstrap($http, $q, localStorage, ApiConfig) {
+    function Bootstrap($http, $q, $timeout, localStorage, ApiConfig) {
         Bootstrap.$http = $http;
         Bootstrap.$q = $q;
+        Bootstrap.$timeout = $timeout;
         Bootstrap.localStorage = localStorage;
         Bootstrap.config = ApiConfig;
         Bootstrap.user = new User();
+        this._cloudinary = new Util.Cloudinary();
+        this._events = new Util.Events();
     }
     Object.defineProperty(Bootstrap.prototype, "type", {
         get: function () {
@@ -610,6 +690,15 @@ var Bootstrap = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Bootstrap.prototype, "events", {
+        get: function () {
+            if (this._events) {
+                return this._events;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Bootstrap.prototype.init = function (opts) {
         var _this = this;
         if (!opts || !opts.id) {
@@ -681,10 +770,9 @@ var Bootstrap = (function () {
         });
     };
     Bootstrap.mode = Engageform.Mode.Undefined;
-    Bootstrap.events = new Events.Events();
     return Bootstrap;
 })();
-Bootstrap.$inject = ['$http', '$q', 'localStorageService', 'ApiConfig'];
+Bootstrap.$inject = ['$http', '$q', '$timeout', 'localStorageService', 'ApiConfig'];
 app.service('Engageform', Bootstrap);
 
 /// <reference path="ibranding.ts" />
@@ -711,7 +799,7 @@ var Branding;
                 this._imageUrl = Bootstrap.config.backend.domain + imgUrl;
             }
             else {
-                this._imageUrl = Bootstrap.config.backend.domain + Bootstrap.config.backend.imagesUrl + '/' + imgUrl;
+                this._imageUrl = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imgUrl;
             }
         }
         Object.defineProperty(Branding.prototype, "isCustom", {
@@ -972,6 +1060,9 @@ var Engageform;
         };
         ;
         Live.prototype.initPage = function (page) {
+            // Clean old pages
+            this.cleanPages();
+            // Build new
             this.buildPages([page]);
             this.setCurrent(page._id);
         };
@@ -1039,6 +1130,10 @@ var Page;
             // "abstract"
             return true;
         };
+        // Buzzer need extra send, so we made this abstract
+        Case.prototype.trueBuzzerSend = function (BCS) {
+            // "abstract"
+        };
         return Case;
     })();
     Page.Case = Case;
@@ -1049,14 +1144,14 @@ var Page;
 (function (Page) {
     var Settings = (function () {
         function Settings(data) {
-            this.showAnswers = false;
+            this.showResults = false;
             this.showCorrectAnswer = false;
             this.showMainMedia = false;
             this.showDescription = false;
             this.requiredAnswer = false;
             this.requiredAnswer = !!data.requiredAnswer;
             if (data.settings) {
-                this.showAnswers = !!data.settings.showAnswers;
+                this.showResults = !!data.settings.showAnswers;
                 this.showCorrectAnswer = !!data.settings.showCorrectAnswer;
                 this.showMainMedia = !!data.settings.showMainMedia;
                 this.showDescription = !!data.settings.showDescription;
@@ -1084,8 +1179,7 @@ var Page;
             this.correct = false;
             this.incorrect = false;
             this.title = data.text;
-            this.image = data.imageFile;
-            this.imageData = data.imageData;
+            this.media = Util.Cloudinary.getInstance().prepareImageUrl(data.imageFile, 300, data.imageData);
         }
         ImageCase.prototype.send = function () {
             var _this = this;
@@ -1099,6 +1193,14 @@ var Page;
                 }
                 if (res.correctAnswerId) {
                     data.correctCaseId = res.correctAnswerId;
+                }
+                for (var caseId in res.stats) {
+                    if (res.stats.hasOwnProperty(caseId)) {
+                        data.results = data.results || {};
+                        if (/.{24}/.test(caseId)) {
+                            data.results[caseId] = res.stats[caseId];
+                        }
+                    }
                 }
                 _super.prototype.save.call(_this, data);
                 _this.page.selectAnswer(data);
@@ -1128,6 +1230,7 @@ var Page;
             this.value = '';
         }
         InputCase.prototype.send = function () {
+            var _this = this;
             var data = {};
             data.inputs = [];
             var sent = this.load();
@@ -1141,6 +1244,12 @@ var Page;
             }
             return _super.prototype.makeSend.call(this, data).then(function () {
                 return data;
+            }).catch(function (err) {
+                if (err.data.code === 406) {
+                    _this.save({});
+                    return Bootstrap.$q.reject('Incorrect inputs sent. Try again.');
+                }
+                return Bootstrap.$q.reject(err.data.message);
             });
         };
         InputCase.prototype.validate = function () {
@@ -1264,6 +1373,43 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Page;
 (function (Page) {
+    var BuzzCase = (function (_super) {
+        __extends(BuzzCase, _super);
+        function BuzzCase(page, data) {
+            _super.call(this, page, data);
+            this.type = Page.CaseType.Buzz;
+            this.page = page;
+        }
+        BuzzCase.prototype.send = function () {
+            // We dont really send buzzes here, just increase buttonClickSum here
+            this.page.clickBuzzer();
+            var deferred = Bootstrap.$q.defer();
+            deferred.resolve({});
+            return deferred.promise;
+        };
+        BuzzCase.prototype.trueBuzzerSend = function (BCS) {
+            console.log('[ Buzzer ] True send (' + BCS + ')');
+            return _super.prototype.makeSend.call(this, { quizQuestionId: this.page.id, buttonClickSum: BCS }).then(function (res) {
+                var data = {};
+                // IMO we don't need that since buzzer have fake answerId's
+                // super.save(data);
+                // this.page.selectAnswer(data);
+                return data;
+            });
+        };
+        return BuzzCase;
+    })(Page.Case);
+    Page.BuzzCase = BuzzCase;
+})(Page || (Page = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Page;
+(function (Page) {
     var EndPage = (function (_super) {
         __extends(EndPage, _super);
         function EndPage(engageform, data, settings) {
@@ -1328,9 +1474,11 @@ var Page;
                 }
             });
             if (validated) {
+                this.filled = true;
                 deferred.resolve(this.cases[0].send());
             }
             else {
+                this.filled = false;
                 deferred.resolve({});
             }
             return deferred.promise;
@@ -1537,18 +1685,54 @@ var Page;
         function Buzzer(engageform, data) {
             _super.call(this, engageform, data);
             this.type = Page.Type.Buzzer;
-            // this.sent().then(sent => {
-            //   this.buzzed = [];
-            // });
+            this.buttonClickSum = 0;
+            console.log('[ Buzzer ] Constructor');
+            // Make only one case with buzzed ammount
+            this.cases.push(new Page.BuzzCase(this, { _id: 0, buttonClickSum: this.buttonClickSum }));
+            // Clear previous timeout
+            if (this.buzzLoop.hasOwnProperty('timeout')) {
+                clearTimeout(this.buzzLoop.timeout);
+            } // Nasty array reference couse of compiler error ?
+            // Start loop
+            this.buzzLoop(0);
             // FIXME: Relpace when themes will be ready
             // this.buzzerTheme = data.buzzerTheme;
             this.buzzerTheme = Bootstrap.config.fakeBuzzerTheme || {};
         }
-        ;
-        Buzzer.prototype.selectAnswer = function (sent) {
-            /* */
+        // selectAnswer(sent) {
+        //   console.log('[ Buzzer ] Select answer');
+        // };
+        // send(sent) {
+        //   console.log('[ Buzzer ] Send');
+        // };
+        Buzzer.prototype.buzzLoop = function (iteration) {
+            var _this = this;
+            console.log('[ Buzzer ] Buzz');
+            if (this.buttonClickSum > 0) {
+                // True send - POST to server, we dont need then here since socket respond with global buttonClickSum
+                this.cases[0].trueBuzzerSend(this.buttonClickSum);
+            }
+            // if (this._engageform && this._engageform.current) {
+            //   console.log(this._engageform.current._pageId);
+            //   console.log(this._pageId);
+            // }
+            // Not a buzzer - stop cycle
+            if (iteration > 0 && this.engageform && this.engageform.current && this.engageform.current.id !== this.id) {
+                return;
+            }
+            // Loop
+            // Nasty array reference couse of compiler error ?
+            this.buzzLoop.timeout = setTimeout(function () { _this.buzzLoop(iteration + 1); }, 3000);
+            // Clear buttonClickSum
+            this.buttonClickSum = 0;
         };
-        ;
+        Buzzer.prototype.clickBuzzer = function () {
+            // Limit buzzes
+            if (this.buttonClickSum < 100) {
+                this.buttonClickSum++;
+            }
+            console.log('[ Buzzer ] Click! (' + this.buttonClickSum + ')');
+        };
         return Buzzer;
     })(Page.Page);
     Page.Buzzer = Buzzer;
