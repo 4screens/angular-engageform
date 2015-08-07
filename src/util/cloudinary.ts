@@ -18,8 +18,7 @@ module Util {
       Cloudinary._instance = this;
     }
 
-    public static getInstance(): Cloudinary
-    {
+    public static getInstance(): Cloudinary {
       return Cloudinary._instance;
     }
 

@@ -94,7 +94,7 @@ module Navigation {
             if (vcase) {
               Bootstrap.$timeout(() => {
                 this.move(vcase);
-              }, this._engageform.current.settings.showResults?500:200);
+              }, this._engageform.current.settings.showResults ? 500 : 200);
             } else {
               this.move(vcase);
             }

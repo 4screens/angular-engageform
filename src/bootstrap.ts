@@ -19,7 +19,8 @@ class Bootstrap {
   private _cloudinary: Util.Cloudinary;
   private _events: Util.Events;
 
-  constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
+  constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService,
+              localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
     Bootstrap.$http = $http;
     Bootstrap.$q = $q;
     Bootstrap.$timeout = $timeout;

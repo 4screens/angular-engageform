@@ -1,6 +1,7 @@
 module Page {
   export class BuzzCase extends Case {
     type = CaseType.Buzz;
+    page: IPage;
 
     constructor(page: IPage, data) {
       super(page, data);
@@ -17,10 +18,6 @@ module Page {
 
     trueBuzzerSend(BCS: number): ng.IPromise<IPageSent> {
       console.log('[ Buzzer ] True send (' + BCS + ')');
-      // Ignore change answer option
-      // if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
-      //   return Bootstrap.$q.reject('Changing answer is not allowed');
-      // }
 
       return super.makeSend({ quizQuestionId: this.page.id, buttonClickSum: BCS }).then((res) => {
         var data: IPageSent = <IPageSent>{};

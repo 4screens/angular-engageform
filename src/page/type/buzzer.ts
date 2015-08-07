@@ -18,7 +18,9 @@ module Page {
       this.cases.push(<ICase>new BuzzCase(<IPage>this, { _id: 0, buttonClickSum: this.buttonClickSum }));
 
       // Clear previous timeout
-      if (this.buzzLoop.hasOwnProperty('timeout')) clearTimeout(this.buzzLoop['timeout']); // Nasty array reference couse of compiler error ?
+      if (this.buzzLoop.hasOwnProperty('timeout')) {
+        clearTimeout(this.buzzLoop.timeout);
+      } // Nasty array reference couse of compiler error ?
 
       // Start loop
       this.buzzLoop(0);
@@ -55,7 +57,8 @@ module Page {
       }
 
       // Loop
-      this.buzzLoop['timeout'] = setTimeout(() => { this.buzzLoop(iteration + 1) }, 3000); // Nasty array reference couse of compiler error ?
+      // Nasty array reference couse of compiler error ?
+      this.buzzLoop.timeout = setTimeout(() => { this.buzzLoop(iteration + 1); }, 3000);
 
       // Clear buttonClickSum
       this.buttonClickSum = 0;
@@ -67,7 +70,7 @@ module Page {
         this.buttonClickSum++;
       }
 
-      console.log('[ Buzzer ] Click! (' + this.buttonClickSum +')');
+      console.log('[ Buzzer ] Click! (' + this.buttonClickSum + ')');
     }
   }
 }
