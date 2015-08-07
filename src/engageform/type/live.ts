@@ -9,6 +9,10 @@ module Engageform {
     };
 
     initPage(page) {
+      // Clean old pages
+      this.cleanPages();
+
+      // Build new
       this.buildPages([page]);
       this.setCurrent(page._id);
     }

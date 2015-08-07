@@ -128,6 +128,12 @@ module Engageform {
       });
     }
 
+    cleanPages(): void {
+      this._availablePages.length = 0;
+      this._pages.length = 0;
+      this.pages.length = 0;
+    }
+
     buildPages(pages): void {
       pages.map((page) => {
         switch (page.type) {
