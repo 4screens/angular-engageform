@@ -8,9 +8,9 @@ module Page {
     private _engageform: Engageform.IEngageform;
 
     type: Type;
-    title: string;
-    description: string;
-    media: string;
+    title: string = '';
+    description: string = '';
+    media: string = '';
     filled: boolean;
     settings: ISetting;
     cases: ICase[] = [];

@@ -24,9 +24,12 @@ module Util {
     }
 
     public prepareImageUrl(filepath: string, width: number, imageData) {
+      if (!filepath) {
+        return '';
+      }
+
       var src = this._domain + '/' + this._accountName + '/image';
       var baseWidth = 540;
-
 
       if (filepath.indexOf('http') !== -1) {
         src += '/fetch';
