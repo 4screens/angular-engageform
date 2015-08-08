@@ -12,6 +12,7 @@ module Navigation {
     hasFinish: boolean;
     enabledFinish: boolean;
     distance: number;
+    animate: string;
 
     hasStartPages: boolean;
     hasEndPages: boolean;

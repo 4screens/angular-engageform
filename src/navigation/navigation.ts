@@ -16,6 +16,7 @@ module Navigation {
     hasFinish: boolean = false;
     enabledFinish: boolean = true;
     distance: number = 0;
+    animate: string = 'swipeNext';
 
     hasStartPages: boolean = false;
     hasEndPages: boolean = false;
@@ -52,6 +53,7 @@ module Navigation {
 
     prev($event): void {
       this.disableDefaultAction($event);
+      this.animate = 'swipePrev';
 
       if (this._engageform.current) {
         this._engageform.message = '';
@@ -74,6 +76,7 @@ module Navigation {
 
     pick($event, vcase: Page.ICase): void {
       this.disableDefaultAction($event);
+      this.animate = 'swipeNext';
 
       switch (Bootstrap.mode) {
         default:
