@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.5
+ * 4screens-angular-engageform v0.2.7
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -260,6 +260,7 @@ var Navigation;
             this.hasFinish = false;
             this.enabledFinish = true;
             this.distance = 0;
+            this.animate = 'swipeNext';
             this.hasStartPages = false;
             this.hasEndPages = false;
             this.next = this.pick;
@@ -290,6 +291,7 @@ var Navigation;
         };
         Navigation.prototype.prev = function ($event) {
             this.disableDefaultAction($event);
+            this.animate = 'swipePrev';
             if (this._engageform.current) {
                 this._engageform.message = '';
             }
@@ -309,6 +311,7 @@ var Navigation;
         Navigation.prototype.pick = function ($event, vcase) {
             var _this = this;
             this.disableDefaultAction($event);
+            this.animate = 'swipeNext';
             switch (Bootstrap.mode) {
                 default:
                     this._engageform.current.send(vcase).then(function () {
@@ -781,13 +784,17 @@ var Branding;
     var Branding = (function () {
         function Branding(data) {
             if (data === void 0) { data = {}; }
-            // Marks the branding if it is a cusom, ie. user defined at least one own value.
+            this._isCustomLogo = false;
+            // Marks the branding if it is a custom, ie. user defined at least one own value.
             this._isCustom = false;
             // Default branding values from settings.
             this._defaultBranding = Bootstrap.config.backend.branding;
             // If there's any branding data, it means that this is a custom branding.
             if (data.text || data.link || data.imageUrl) {
                 this._isCustom = true;
+            }
+            if (data.imageUrl) {
+                this._isCustomLogo = true;
             }
             // Set the branding properties form the data object or from the default values.
             this._text = data.text || this._defaultBranding.text;
@@ -796,7 +803,7 @@ var Branding;
             var imgUrl = data.imageUrl || this._defaultBranding.imageUrl;
             // The image's URL is a bit different if it is a default one, than when it is a custom.
             if (imgUrl === this._defaultBranding.imageUrl) {
-                this._imageUrl = Bootstrap.config.backend.domain + imgUrl;
+                this._imageUrl = Bootstrap.config.backend.api + imgUrl;
             }
             else {
                 this._imageUrl = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imgUrl;
@@ -805,6 +812,13 @@ var Branding;
         Object.defineProperty(Branding.prototype, "isCustom", {
             get: function () {
                 return this._isCustom;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Branding.prototype, "isCustomLogo", {
+            get: function () {
+                return this._isCustomLogo;
             },
             enumerable: true,
             configurable: true
@@ -1065,6 +1079,11 @@ var Engageform;
             // Build new
             this.buildPages([page]);
             this.setCurrent(page._id);
+        };
+        Live.prototype.setCurrentEndPage = function () {
+            var deferred = Bootstrap.$q.defer();
+            deferred.resolve();
+            return deferred.promise;
         };
         return Live;
     })(Engageform.Engageform);
@@ -1691,7 +1710,7 @@ var Page;
             this.cases.push(new Page.BuzzCase(this, { _id: 0, buttonClickSum: this.buttonClickSum }));
             // Clear previous timeout
             if (this.buzzLoop.hasOwnProperty('timeout')) {
-                clearTimeout(this.buzzLoop.timeout);
+                clearTimeout(this.buzzLoop['timeout']);
             } // Nasty array reference couse of compiler error ?
             // Start loop
             this.buzzLoop(0);
@@ -1722,7 +1741,7 @@ var Page;
             }
             // Loop
             // Nasty array reference couse of compiler error ?
-            this.buzzLoop.timeout = setTimeout(function () { _this.buzzLoop(iteration + 1); }, 3000);
+            this.buzzLoop['timeout'] = setTimeout(function () { _this.buzzLoop(iteration + 1); }, 3000);
             // Clear buttonClickSum
             this.buttonClickSum = 0;
         };
