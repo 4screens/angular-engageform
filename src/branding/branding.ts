@@ -6,8 +6,9 @@ module Branding {
     private _text: string;
     private _link: string;
     private _imageUrl: string;
+    private _isCustomLogo: boolean = false;
 
-    // Marks the branding if it is a cusom, ie. user defined at least one own value.
+    // Marks the branding if it is a custom, ie. user defined at least one own value.
     private _isCustom: boolean = false;
 
     // Default branding values from settings.
@@ -15,6 +16,9 @@ module Branding {
 
     public get isCustom(): boolean {
       return this._isCustom;
+    }
+    public get isCustomLogo(): boolean {
+      return this._isCustomLogo;
     }
     public get isDefault(): boolean {
       return !this._isCustom;
@@ -35,6 +39,10 @@ module Branding {
         this._isCustom = true;
       }
 
+      if (data.imageUrl) {
+        this._isCustomLogo = true;
+      }
+
       // Set the branding properties form the data object or from the default values.
       this._text = data.text || this._defaultBranding.text;
       this._link = data.link || this._defaultBranding.link;
@@ -44,7 +52,7 @@ module Branding {
 
       // The image's URL is a bit different if it is a default one, than when it is a custom.
       if (imgUrl === this._defaultBranding.imageUrl) {
-        this._imageUrl = Bootstrap.config.backend.domain + imgUrl;
+        this._imageUrl = Bootstrap.config.backend.api + imgUrl;
       } else {
         this._imageUrl = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imgUrl;
       }

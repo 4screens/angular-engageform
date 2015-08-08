@@ -12,5 +12,6 @@ module Branding {
 
     isDefault: boolean;
     isCustom: boolean;
+    isCustomLogo: boolean;
   }
 }
