@@ -144,7 +144,7 @@ gulp.task('test', ['tslint'], function() {
     });
 });
 
-gulp.task('release::bump', ['tslint'], function(done) {
+gulp.task('release::bump', ['minify'], function(done) {
   if (plugins.util.env.bump) {
     sh.exec('git add .');
     sh.exec('git commit -m "chore(release): Bump version." --quiet');
