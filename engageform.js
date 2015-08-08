@@ -1,8 +1,55 @@
+(function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.2
+ * 4screens-angular-engageform v0.2.6
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
+
+var Engageform;
+(function (Engageform) {
+    (function (Type) {
+        Type[Type["Undefined"] = 0] = "Undefined";
+        Type[Type["Live"] = 1] = "Live";
+        Type[Type["Outcome"] = 2] = "Outcome";
+        Type[Type["Poll"] = 3] = "Poll";
+        Type[Type["Score"] = 4] = "Score";
+        Type[Type["Survey"] = 5] = "Survey";
+    })(Engageform.Type || (Engageform.Type = {}));
+    var Type = Engageform.Type;
+    (function (Mode) {
+        Mode[Mode["Undefined"] = 0] = "Undefined";
+        Mode[Mode["Default"] = 1] = "Default";
+        Mode[Mode["Preview"] = 2] = "Preview";
+        Mode[Mode["Result"] = 3] = "Result";
+        Mode[Mode["Summary"] = 4] = "Summary";
+    })(Engageform.Mode || (Engageform.Mode = {}));
+    var Mode = Engageform.Mode;
+})(Engageform || (Engageform = {}));
+
+var Page;
+(function (Page) {
+    (function (CaseType) {
+        CaseType[CaseType["Undefined"] = 0] = "Undefined";
+        CaseType[CaseType["Image"] = 1] = "Image";
+        CaseType[CaseType["Input"] = 2] = "Input";
+        CaseType[CaseType["Iteration"] = 3] = "Iteration";
+        CaseType[CaseType["Text"] = 4] = "Text";
+        CaseType[CaseType["Buzz"] = 5] = "Buzz";
+    })(Page.CaseType || (Page.CaseType = {}));
+    var CaseType = Page.CaseType;
+    (function (Type) {
+        Type[Type["Undefined"] = 0] = "Undefined";
+        Type[Type["EndPage"] = 1] = "EndPage";
+        Type[Type["Form"] = 2] = "Form";
+        Type[Type["MultiChoice"] = 3] = "MultiChoice";
+        Type[Type["PictureChoice"] = 4] = "PictureChoice";
+        Type[Type["Rateit"] = 5] = "Rateit";
+        Type[Type["StartPage"] = 6] = "StartPage";
+        Type[Type["Buzzer"] = 7] = "Buzzer";
+        Type[Type["Poster"] = 8] = "Poster";
+    })(Page.Type || (Page.Type = {}));
+    var Type = Page.Type;
+})(Page || (Page = {}));
 
 /// <reference path="../typings/tsd.d.ts" />
 var app = angular.module('4screens.engageform', [
@@ -11,19 +58,21 @@ var app = angular.module('4screens.engageform', [
 
 /// <reference path="iengageform.ts" />
 var Engageform;
-(function (_Engageform) {
+(function (Engageform_1) {
     var Engageform = (function () {
         function Engageform(data) {
             this._pages = {};
             this._startPages = [];
             this._endPages = [];
             this._availablePages = [];
+            this._hasForms = false;
             this.enabled = true;
-            this.type = 0 /* Undefined */;
+            this.type = Engageform_1.Type.Undefined;
             this._engageformId = data._id;
             this.title = data.title;
-            this.settings = new _Engageform.Settings(data);
-            this.theme = new _Engageform.Theme(data);
+            this.settings = new Engageform_1.Settings(data);
+            this.theme = new Engageform_1.Theme(data);
+            this.branding = new Branding.Branding(data.settings.branding);
         }
         Object.defineProperty(Engageform.prototype, "pages", {
             get: function () {
@@ -53,39 +102,47 @@ var Engageform;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Engageform.prototype, "typeName", {
+            get: function () {
+                return Engageform_1.Type[this.type].toLowerCase();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engageform.prototype, "hasForms", {
+            /**
+             * @public
+             * @description
+             * Returns boolean information about the presence of form-type in the current engageform.
+             *
+             * @returns {boolean} Are there any form-type questions?
+             */
+            get: function () {
+                return this._hasForms;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @public
+         * @description
+         * Checks if the current engageform is of provided type. Takes Types enum as an argument.
+         *
+         * @param {Type} type Engageform type from the Type enum.
+         * @returns {boolean} Is it?
+         */
+        Engageform.prototype.isType = function (type) {
+            return this.type === type;
+        };
         Engageform.prototype.initPages = function () {
             var _this = this;
             return this.getPagesById(this._engageformId).then(function (pages) {
-                pages.map(function (page) {
-                    switch (page.type) {
-                        case 'multiChoice':
-                            _this._availablePages.push(page._id);
-                            _this._pages[page._id] = new Page.MultiChoice(_this, page);
-                            break;
-                        case 'pictureChoice':
-                            _this._availablePages.push(page._id);
-                            _this._pages[page._id] = new Page.PictureChoice(_this, page);
-                            break;
-                        case 'rateIt':
-                            _this._availablePages.push(page._id);
-                            _this._pages[page._id] = new Page.Rateit(_this, page);
-                            break;
-                        case 'forms':
-                            _this._availablePages.push(page._id);
-                            _this._pages[page._id] = new Page.Form(_this, page);
-                            break;
-                        case 'startPage':
-                            _this._startPages.push(page._id);
-                            _this._pages[page._id] = new Page.StartPage(_this, page);
-                            break;
-                        case 'endPage':
-                            _this._endPages.push(page._id);
-                            _this._pages[page._id] = new Page.EndPage(_this, page);
-                            break;
-                    }
-                });
+                _this.buildPages(pages);
                 return _this;
             });
+        };
+        Engageform.prototype.initPage = function (page) {
+            // ..Abstract for liveEvent
         };
         Engageform.prototype.setCurrent = function (pageId) {
             this.current = this._pages[pageId];
@@ -93,7 +150,7 @@ var Engageform;
         Engageform.prototype.setCurrentEndPage = function () {
             var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformFinishUrl;
             url = url.replace(':engageformId', this._engageformId);
-            if (Bootstrap.mode !== 1 /* Default */) {
+            if (Bootstrap.mode !== Engageform_1.Mode.Default) {
                 url += '?preview';
             }
             return Bootstrap.$http.post(url, {
@@ -111,7 +168,7 @@ var Engageform;
         Engageform.getById = function (id) {
             var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformUrl;
             url = url.replace(':engageformId', id);
-            if (Bootstrap.mode !== 1 /* Default */) {
+            if (Bootstrap.mode !== Engageform_1.Mode.Default) {
                 url += '?preview';
             }
             return Bootstrap.$http.get(url).then(function (res) {
@@ -121,13 +178,60 @@ var Engageform;
                 return Bootstrap.$q.reject(res);
             });
         };
+        Engageform.prototype.cleanPages = function () {
+            this._availablePages.length = 0;
+            this._pages = {};
+            this.pages = {};
+        };
+        Engageform.prototype.buildPages = function (pages) {
+            var _this = this;
+            pages.map(function (page) {
+                switch (page.type) {
+                    case 'multiChoice':
+                        _this._availablePages.push(page._id);
+                        _this._pages[page._id] = new Page.MultiChoice(_this, page);
+                        break;
+                    case 'pictureChoice':
+                        _this._availablePages.push(page._id);
+                        _this._pages[page._id] = new Page.PictureChoice(_this, page);
+                        break;
+                    case 'rateIt':
+                        _this._availablePages.push(page._id);
+                        _this._pages[page._id] = new Page.Rateit(_this, page);
+                        break;
+                    case 'forms':
+                        // Store information about this engageform having a form-type question.
+                        _this._hasForms = true;
+                        _this._availablePages.push(page._id);
+                        _this._pages[page._id] = new Page.Form(_this, page);
+                        break;
+                    case 'startPage':
+                        _this._startPages.push(page._id);
+                        _this._pages[page._id] = new Page.StartPage(_this, page);
+                        break;
+                    case 'endPage':
+                        _this._endPages.push(page._id);
+                        _this._pages[page._id] = new Page.EndPage(_this, page, _this.settings);
+                        break;
+                    // EngageNow exclusive page types
+                    case 'buzzer':
+                        _this._availablePages.push(page._id);
+                        _this._pages[page._id] = new Page.Buzzer(_this, page);
+                        break;
+                    case 'poster':
+                        _this._availablePages.push(page._id);
+                        _this._pages[page._id] = new Page.Poster(_this, page);
+                        break;
+                }
+            });
+        };
         Engageform.prototype.getPagesById = function (engageformId) {
             var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformPagesUrl;
             url = url.replace(':engageformId', engageformId);
-            if (Bootstrap.mode !== 1 /* Default */) {
+            if (Bootstrap.mode !== Engageform_1.Mode.Default) {
                 url += '?preview';
             }
-            return Bootstrap.$http.get(url.replace(':engageformId', engageformId)).then(function (res) {
+            return Bootstrap.$http.get(url).then(function (res) {
                 if ([200, 304].indexOf(res.status) !== -1) {
                     return res.data;
                 }
@@ -136,12 +240,12 @@ var Engageform;
         };
         return Engageform;
     })();
-    _Engageform.Engageform = Engageform;
+    Engageform_1.Engageform = Engageform;
 })(Engageform || (Engageform = {}));
 
 /// <reference path="inavigation.ts" />
 var Navigation;
-(function (_Navigation) {
+(function (Navigation_1) {
     var Navigation = (function () {
         function Navigation(engageform) {
             this.enabled = false;
@@ -155,12 +259,18 @@ var Navigation;
             this.enabledNext = true;
             this.hasFinish = false;
             this.enabledFinish = true;
+            this.distance = 0;
+            this.animate = 'swipeNext';
+            this.hasStartPages = false;
+            this.hasEndPages = false;
             this.next = this.pick;
             this.finish = this.pick;
             this._engageform = engageform;
             this.size = engageform.availablePages.length;
-            if (this._engageform.startPages.length > 0) {
+            this.hasEndPages = Boolean(this._engageform.endPages.length);
+            if (this._engageform.startPages.length) {
                 this.hasStart = true;
+                this.hasStartPages = true;
                 this._engageform.setCurrent(this._engageform.startPages[0]);
             }
             else {
@@ -169,34 +279,62 @@ var Navigation;
                 this.hasPrev = false;
             }
         }
+        Navigation.prototype.updateDistance = function () {
+            return this.distance = this.position / this.size;
+        };
         Navigation.prototype.start = function ($event) {
             this.disableDefaultAction($event);
             this.enabled = true;
             this.hasStart = false;
             this.move(null);
-            this.hasPrev = false;
+            this.hasPrev = true;
         };
         Navigation.prototype.prev = function ($event) {
             this.disableDefaultAction($event);
+            this.animate = 'swipePrev';
             if (this._engageform.current) {
                 this._engageform.message = '';
             }
             this.position--;
-            this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
-            this.hasPrev = false;
+            this.updateDistance();
             this.hasNext = true;
             this.hasFinish = false;
-            if (this.position > 1) {
-                this.hasPrev = true;
+            if (this.position === 0) {
+                this._engageform.setCurrent(this._engageform.startPages[0]);
+                this.hasPrev = false;
+            }
+            else {
+                this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
+                this.hasPrev = this.position === 1 ? this.hasStartPages : true;
             }
         };
         Navigation.prototype.pick = function ($event, vcase) {
             var _this = this;
             this.disableDefaultAction($event);
+            this.animate = 'swipeNext';
             switch (Bootstrap.mode) {
                 default:
                     this._engageform.current.send(vcase).then(function () {
-                        _this.move(vcase);
+                        _this._engageform.message = '';
+                        if (_this._engageform.current) {
+                            switch (Bootstrap.mode) {
+                                case Engageform.Mode.Default:
+                                case Engageform.Mode.Preview:
+                                    if (!_this._engageform.current.filled && _this._engageform.current.settings.requiredAnswer) {
+                                        _this._engageform.message = 'Answer is required to proceed to next question';
+                                        return;
+                                    }
+                                    break;
+                            }
+                        }
+                        if (vcase) {
+                            Bootstrap.$timeout(function () {
+                                _this.move(vcase);
+                            }, _this._engageform.current.settings.showResults ? 500 : 200);
+                        }
+                        else {
+                            _this.move(vcase);
+                        }
                     }).catch(function (errorMessage) {
                         _this._engageform.message = errorMessage;
                     });
@@ -204,20 +342,9 @@ var Navigation;
         };
         Navigation.prototype.move = function (vcase) {
             var _this = this;
-            this._engageform.message = '';
-            if (this._engageform.current) {
-                switch (Bootstrap.mode) {
-                    case 1 /* Default */:
-                    case 2 /* Preview */:
-                        if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
-                            this._engageform.message = 'Answer is required to proceed to next question';
-                            return;
-                        }
-                        break;
-                }
-            }
             this.position++;
             if (this._engageform.availablePages.length >= this.position) {
+                this.updateDistance();
                 this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
                 this.hasPrev = true;
                 this.hasNext = false;
@@ -226,7 +353,8 @@ var Navigation;
                     this.hasNext = true;
                 }
                 else if (this._engageform.availablePages.length === this.position) {
-                    this.hasFinish = true;
+                    // Finisher is not available when the engageform is of a type "poll" and doesn't have any form-type question.
+                    this.hasFinish = !(this._engageform.isType(Engageform.Type.Poll) && !this._engageform.hasForms);
                 }
             }
             else {
@@ -253,23 +381,30 @@ var Navigation;
         };
         return Navigation;
     })();
-    _Navigation.Navigation = Navigation;
+    Navigation_1.Navigation = Navigation;
 })(Navigation || (Navigation = {}));
 
 /// <reference path="ipage.ts" />
 /// <reference path="ipages.ts" />
 /// <reference path="ipagesent.ts" />
 var Page;
-(function (_Page) {
+(function (Page_1) {
     var Page = (function () {
         function Page(engageform, data) {
+            this.title = '';
+            this.description = '';
+            this.media = '';
             this.cases = [];
             this._pageId = data._id;
             this._engageform = engageform;
-            this.title = data.text;
-            this.description = data.description;
-            this.media = this.getMediaUrl(data.imageData, data.imageFile);
-            this.settings = new _Page.Settings(data);
+            this.settings = new Page_1.Settings(data);
+            this.title = data.text || '';
+            if (this.settings.showDescription) {
+                this.description = data.description || '';
+            }
+            if (this.settings.showMainMedia) {
+                this.media = Util.Cloudinary.getInstance().prepareImageUrl(data.imageFile, 680, data.imageData);
+            }
         }
         Object.defineProperty(Page.prototype, "id", {
             get: function () {
@@ -287,14 +422,14 @@ var Page;
         });
         Object.defineProperty(Page.prototype, "Type", {
             get: function () {
-                return _Page.Type;
+                return Page_1.Type;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Page.prototype, "CaseType", {
             get: function () {
-                return _Page.CaseType;
+                return Page_1.CaseType;
             },
             enumerable: true,
             configurable: true
@@ -328,14 +463,18 @@ var Page;
             if (!imageFile) {
                 return '';
             }
-            if (imageFile.indexOf('http') === -1) {
-                imageFile = Bootstrap.config.backend.api + '/uploads/' + imageFile;
-            }
-            return imageFile;
+            console.log(console);
+            return;
+            //
+            //if (imageFile.indexOf('http') === -1) {
+            //  imageFile = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imageFile;
+            //}
+            //
+            //return imageFile;
         };
         return Page;
     })();
-    _Page.Page = Page;
+    Page_1.Page = Page;
 })(Page || (Page = {}));
 
 /// <reference path="iuser.ts" />
@@ -373,25 +512,108 @@ var User = (function () {
     return User;
 })();
 
+/// <reference path="icloudinary.ts" />
+var Util;
+(function (Util) {
+    var Cloudinary = (function () {
+        function Cloudinary() {
+            if (Bootstrap.config.cloudinary) {
+                this._accountName = Bootstrap.config.cloudinary.accountName || 'test4screens';
+                this._uploadFolder = Bootstrap.config.cloudinary.uploadFolder || 'console';
+                this._domain = Bootstrap.config.cloudinary.domain || 'https://res.cloudinary.com';
+            }
+            Cloudinary._instance = this;
+        }
+        Cloudinary.getInstance = function () {
+            return Cloudinary._instance;
+        };
+        Cloudinary.prototype.prepareImageUrl = function (filepath, width, imageData) {
+            if (!filepath) {
+                return '';
+            }
+            var src = this._domain + '/' + this._accountName + '/image';
+            var baseWidth = 540;
+            if (filepath.indexOf('http') !== -1) {
+                src += '/fetch';
+            }
+            else {
+                src += '/upload';
+            }
+            if (imageData.containerHeight === width) {
+                baseWidth = 300;
+            }
+            var manipulation = [];
+            manipulation.push('w_' + Math.round(width * (imageData.width / 100 || 1)));
+            manipulation.push('f_auto');
+            manipulation.push('q_82');
+            manipulation.push('dpr_1.0');
+            src += '/' + manipulation.join(',');
+            var resize = [];
+            resize.push('w_' + width);
+            resize.push('h_' + Math.round(imageData.containerHeight * (width / baseWidth)));
+            resize.push('x_' + Math.round(-1 * width * imageData.left / 100));
+            resize.push('y_' + Math.round(-1 * width * imageData.containerHeight * imageData.top / (100 * baseWidth)));
+            resize.push('c_crop');
+            src += '/' + resize.join(',');
+            if (filepath.indexOf('http') === -1) {
+                src += '/' + this._uploadFolder;
+            }
+            return src + '/' + filepath;
+        };
+        return Cloudinary;
+    })();
+    Util.Cloudinary = Cloudinary;
+})(Util || (Util = {}));
+
+var Util;
+(function (Util) {
+    var Events = (function () {
+        function Events() {
+            this.listeners = {};
+        }
+        Events.prototype.listen = function (name, callback) {
+            if (!this.listeners[name]) {
+                this.listeners[name] = [];
+            }
+            this.listeners[name].push(callback);
+        };
+        Events.prototype.trigger = function (name, data) {
+            if (data === void 0) { data = {}; }
+            if (this.listeners[name]) {
+                for (var i = 0; i < this.listeners[name].length; i += 1) {
+                    this.listeners[name][i](data);
+                }
+            }
+        };
+        return Events;
+    })();
+    Util.Events = Events;
+})(Util || (Util = {}));
+
 /// <reference path="api/api.ts" />
 /// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
+/// <reference path="util/cloudinary.ts" />
+/// <reference path="util/events.ts" />
 var Bootstrap = (function () {
-    function Bootstrap($http, $q, localStorage, ApiConfig) {
+    function Bootstrap($http, $q, $timeout, localStorage, ApiConfig) {
         Bootstrap.$http = $http;
         Bootstrap.$q = $q;
+        Bootstrap.$timeout = $timeout;
         Bootstrap.localStorage = localStorage;
         Bootstrap.config = ApiConfig;
         Bootstrap.user = new User();
+        this._cloudinary = new Util.Cloudinary();
+        this._events = new Util.Events();
     }
     Object.defineProperty(Bootstrap.prototype, "type", {
         get: function () {
             if (this._engageform) {
                 return this._engageform.type;
             }
-            return 0 /* Undefined */;
+            return Engageform.Type.Undefined;
         },
         enumerable: true,
         configurable: true
@@ -453,10 +675,28 @@ var Bootstrap = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Bootstrap.prototype, "branding", {
+        get: function () {
+            if (this._engageform) {
+                return this._engageform.branding;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Bootstrap.prototype, "message", {
         get: function () {
             if (this._engageform) {
                 return this._engageform.message;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Bootstrap.prototype, "events", {
+        get: function () {
+            if (this._events) {
+                return this._events;
             }
         },
         enumerable: true,
@@ -476,18 +716,18 @@ var Bootstrap = (function () {
         }
         switch (opts.mode) {
             case 'preview':
-                Bootstrap.mode = 2 /* Preview */;
+                Bootstrap.mode = Engageform.Mode.Preview;
                 break;
             case 'summary':
-                Bootstrap.mode = 4 /* Summary */;
+                Bootstrap.mode = Engageform.Mode.Summary;
                 break;
             case 'result':
-                Bootstrap.mode = 3 /* Result */;
+                Bootstrap.mode = Engageform.Mode.Result;
                 break;
             case 'default':
             case '':
             case undefined:
-                Bootstrap.mode = 1 /* Default */;
+                Bootstrap.mode = Engageform.Mode.Default;
                 break;
             default:
                 return Bootstrap.$q.reject({
@@ -499,19 +739,22 @@ var Bootstrap = (function () {
                     data: opts
                 });
         }
-        return Engageform.Engageform.getById(opts.id).then(function (engageform) {
-            switch (engageform.type) {
+        return Engageform.Engageform.getById(opts.id).then(function (engageformData) {
+            switch (engageformData.type) {
                 case 'outcome':
-                    _this._engageform = new Engageform.Outcome(engageform);
+                    _this._engageform = new Engageform.Outcome(engageformData);
                     break;
                 case 'poll':
-                    _this._engageform = new Engageform.Poll(engageform);
+                    _this._engageform = new Engageform.Poll(engageformData);
                     break;
                 case 'score':
-                    _this._engageform = new Engageform.Score(engageform);
+                    _this._engageform = new Engageform.Score(engageformData);
                     break;
                 case 'survey':
-                    _this._engageform = new Engageform.Survey(engageform);
+                    _this._engageform = new Engageform.Survey(engageformData);
+                    break;
+                case 'live':
+                    _this._engageform = new Engageform.Live(engageformData);
                     break;
                 default:
                     return Bootstrap.$q.reject({
@@ -520,7 +763,7 @@ var Bootstrap = (function () {
                             code: 406,
                             message: 'Type property not supported.'
                         },
-                        data: engageform
+                        data: engageformData
                     });
             }
             return _this._engageform.initPages();
@@ -529,32 +772,78 @@ var Bootstrap = (function () {
             return engageform;
         });
     };
-    Bootstrap.mode = 0 /* Undefined */;
+    Bootstrap.mode = Engageform.Mode.Undefined;
     return Bootstrap;
 })();
-Bootstrap.$inject = ['$http', '$q', 'localStorageService', 'ApiConfig'];
+Bootstrap.$inject = ['$http', '$q', '$timeout', 'localStorageService', 'ApiConfig'];
 app.service('Engageform', Bootstrap);
 
-var Engageform;
-(function (Engageform) {
-    (function (Type) {
-        Type[Type["Undefined"] = 0] = "Undefined";
-        Type[Type["Live"] = 1] = "Live";
-        Type[Type["Outcome"] = 2] = "Outcome";
-        Type[Type["Poll"] = 3] = "Poll";
-        Type[Type["Score"] = 4] = "Score";
-        Type[Type["Survey"] = 5] = "Survey";
-    })(Engageform.Type || (Engageform.Type = {}));
-    var Type = Engageform.Type;
-    (function (Mode) {
-        Mode[Mode["Undefined"] = 0] = "Undefined";
-        Mode[Mode["Default"] = 1] = "Default";
-        Mode[Mode["Preview"] = 2] = "Preview";
-        Mode[Mode["Result"] = 3] = "Result";
-        Mode[Mode["Summary"] = 4] = "Summary";
-    })(Engageform.Mode || (Engageform.Mode = {}));
-    var Mode = Engageform.Mode;
-})(Engageform || (Engageform = {}));
+/// <reference path="ibranding.ts" />
+var Branding;
+(function (Branding_1) {
+    var Branding = (function () {
+        function Branding(data) {
+            if (data === void 0) { data = {}; }
+            // Marks the branding if it is a cusom, ie. user defined at least one own value.
+            this._isCustom = false;
+            // Default branding values from settings.
+            this._defaultBranding = Bootstrap.config.backend.branding;
+            // If there's any branding data, it means that this is a custom branding.
+            if (data.text || data.link || data.imageUrl) {
+                this._isCustom = true;
+            }
+            // Set the branding properties form the data object or from the default values.
+            this._text = data.text || this._defaultBranding.text;
+            this._link = data.link || this._defaultBranding.link;
+            // Image URL is a bit complicated.
+            var imgUrl = data.imageUrl || this._defaultBranding.imageUrl;
+            // The image's URL is a bit different if it is a default one, than when it is a custom.
+            if (imgUrl === this._defaultBranding.imageUrl) {
+                this._imageUrl = Bootstrap.config.backend.domain + imgUrl;
+            }
+            else {
+                this._imageUrl = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imgUrl;
+            }
+        }
+        Object.defineProperty(Branding.prototype, "isCustom", {
+            get: function () {
+                return this._isCustom;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Branding.prototype, "isDefault", {
+            get: function () {
+                return !this._isCustom;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Branding.prototype, "imageUrl", {
+            get: function () {
+                return this._imageUrl;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Branding.prototype, "link", {
+            get: function () {
+                return this._link;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Branding.prototype, "text", {
+            get: function () {
+                return this._text;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Branding;
+    })();
+    Branding_1.Branding = Branding;
+})(Branding || (Branding = {}));
 
 /// <reference path="isettings.ts" />
 var Engageform;
@@ -564,6 +853,9 @@ var Engageform;
             this.allowAnswerChange = false;
             if (data.settings) {
                 this.allowAnswerChange = !!data.settings.allowAnswerChange;
+                if (data.settings.share) {
+                    this.share = data.settings.share;
+                }
             }
         }
         return Settings;
@@ -610,7 +902,7 @@ var Engageform;
     Engageform.Theme = Theme;
 })(Engageform || (Engageform = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -622,14 +914,15 @@ var Engageform;
         __extends(Outcome, _super);
         function Outcome() {
             _super.apply(this, arguments);
-            this.type = 2 /* Outcome */;
+            this.type = Engageform.Type.Outcome;
         }
         Outcome.prototype.setCurrentEndPage = function () {
             var _this = this;
             return _super.prototype.setCurrentEndPage.call(this).then(function (data) {
                 var hasEndPage = false;
                 _this.endPages.map(function (pageId) {
-                    if (_this.pages[pageId].outcome === data.outcome) {
+                    var page = _this.pages[pageId];
+                    if (page.outcome === data.outcome) {
                         hasEndPage = true;
                         _this.setCurrent(pageId);
                     }
@@ -646,7 +939,7 @@ var Engageform;
     Engageform.Outcome = Outcome;
 })(Engageform || (Engageform = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -658,7 +951,7 @@ var Engageform;
         __extends(Poll, _super);
         function Poll() {
             _super.apply(this, arguments);
-            this.type = 3 /* Poll */;
+            this.type = Engageform.Type.Poll;
         }
         Poll.prototype.setCurrentEndPage = function () {
             var _this = this;
@@ -678,7 +971,7 @@ var Engageform;
     Engageform.Poll = Poll;
 })(Engageform || (Engageform = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -690,7 +983,7 @@ var Engageform;
         __extends(Score, _super);
         function Score() {
             _super.apply(this, arguments);
-            this.type = 4 /* Score */;
+            this.type = Engageform.Type.Score;
         }
         Score.prototype.setCurrentEndPage = function () {
             var _this = this;
@@ -698,7 +991,8 @@ var Engageform;
                 var score = Math.round(data.totalScore / data.maxScore * 100);
                 var hasEndPage = false;
                 _this.endPages.map(function (pageId) {
-                    if (_this.pages[pageId].rangeMin <= score && _this.pages[pageId].rangeMax >= score) {
+                    var page = _this.pages[pageId];
+                    if (page.rangeMin <= score && page.rangeMax >= score) {
                         hasEndPage = true;
                         _this.pages[pageId].score = score;
                         _this.setCurrent(pageId);
@@ -716,7 +1010,7 @@ var Engageform;
     Engageform.Score = Score;
 })(Engageform || (Engageform = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -728,7 +1022,7 @@ var Engageform;
         __extends(Survey, _super);
         function Survey() {
             _super.apply(this, arguments);
-            this.type = 5 /* Survey */;
+            this.type = Engageform.Type.Survey;
         }
         Survey.prototype.setCurrentEndPage = function () {
             var _this = this;
@@ -748,12 +1042,49 @@ var Engageform;
     Engageform.Survey = Survey;
 })(Engageform || (Engageform = {}));
 
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Engageform;
+(function (Engageform) {
+    var Live = (function (_super) {
+        __extends(Live, _super);
+        function Live() {
+            _super.apply(this, arguments);
+            this.type = Engageform.Type.Live;
+        }
+        Live.prototype.initPages = function () {
+            var deferred = Bootstrap.$q.defer();
+            deferred.resolve(this);
+            return deferred.promise;
+        };
+        ;
+        Live.prototype.initPage = function (page) {
+            // Clean old pages
+            this.cleanPages();
+            // Build new
+            this.buildPages([page]);
+            this.setCurrent(page._id);
+        };
+        Live.prototype.setCurrentEndPage = function () {
+            var deferred = Bootstrap.$q.defer();
+            deferred.resolve();
+            return deferred.promise;
+        };
+        return Live;
+    })(Engageform.Engageform);
+    Engageform.Live = Live;
+})(Engageform || (Engageform = {}));
+
 /// <reference path="icase.ts" />
 var Page;
 (function (Page) {
     var Case = (function () {
         function Case(page, data) {
-            this.type = 0 /* Undefined */;
+            this.type = Page.CaseType.Undefined;
             this._caseId = data._id;
             this._page = page;
         }
@@ -782,7 +1113,7 @@ var Page;
         Case.prototype.makeSend = function (data) {
             var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.pageResponseUrl;
             url = url.replace(':pageId', this.page.id);
-            if (Bootstrap.mode !== 1 /* Default */) {
+            if (Bootstrap.mode !== Engageform.Mode.Default) {
                 url += '?preview';
             }
             data.quizQuestionId = this.page.id;
@@ -807,31 +1138,13 @@ var Page;
             // "abstract"
             return true;
         };
+        // Buzzer need extra send, so we made this abstract
+        Case.prototype.trueBuzzerSend = function (BCS) {
+            // "abstract"
+        };
         return Case;
     })();
     Page.Case = Case;
-})(Page || (Page = {}));
-
-var Page;
-(function (Page) {
-    (function (CaseType) {
-        CaseType[CaseType["Undefined"] = 0] = "Undefined";
-        CaseType[CaseType["Image"] = 1] = "Image";
-        CaseType[CaseType["Input"] = 2] = "Input";
-        CaseType[CaseType["Iteration"] = 3] = "Iteration";
-        CaseType[CaseType["Text"] = 4] = "Text";
-    })(Page.CaseType || (Page.CaseType = {}));
-    var CaseType = Page.CaseType;
-    (function (Type) {
-        Type[Type["Undefined"] = 0] = "Undefined";
-        Type[Type["EndPage"] = 1] = "EndPage";
-        Type[Type["Form"] = 2] = "Form";
-        Type[Type["MultiChoice"] = 3] = "MultiChoice";
-        Type[Type["PictureChoice"] = 4] = "PictureChoice";
-        Type[Type["Rateit"] = 5] = "Rateit";
-        Type[Type["StartPage"] = 6] = "StartPage";
-    })(Page.Type || (Page.Type = {}));
-    var Type = Page.Type;
 })(Page || (Page = {}));
 
 /// <reference path="isettings.ts" />
@@ -839,14 +1152,14 @@ var Page;
 (function (Page) {
     var Settings = (function () {
         function Settings(data) {
-            this.showAnswers = false;
+            this.showResults = false;
             this.showCorrectAnswer = false;
             this.showMainMedia = false;
             this.showDescription = false;
             this.requiredAnswer = false;
             this.requiredAnswer = !!data.requiredAnswer;
             if (data.settings) {
-                this.showAnswers = !!data.settings.showAnswers;
+                this.showResults = !!data.settings.showAnswers;
                 this.showCorrectAnswer = !!data.settings.showCorrectAnswer;
                 this.showMainMedia = !!data.settings.showMainMedia;
                 this.showDescription = !!data.settings.showDescription;
@@ -857,7 +1170,7 @@ var Page;
     Page.Settings = Settings;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -869,12 +1182,12 @@ var Page;
         __extends(ImageCase, _super);
         function ImageCase(page, data) {
             _super.call(this, page, data);
-            this.type = 1 /* Image */;
+            this.type = Page.CaseType.Image;
             this.selected = false;
             this.correct = false;
             this.incorrect = false;
             this.title = data.text;
-            this.image = data.imageFile;
+            this.media = Util.Cloudinary.getInstance().prepareImageUrl(data.imageFile, 300, data.imageData);
         }
         ImageCase.prototype.send = function () {
             var _this = this;
@@ -889,6 +1202,14 @@ var Page;
                 if (res.correctAnswerId) {
                     data.correctCaseId = res.correctAnswerId;
                 }
+                for (var caseId in res.stats) {
+                    if (res.stats.hasOwnProperty(caseId)) {
+                        data.results = data.results || {};
+                        if (/.{24}/.test(caseId)) {
+                            data.results[caseId] = res.stats[caseId];
+                        }
+                    }
+                }
                 _super.prototype.save.call(_this, data);
                 _this.page.selectAnswer(data);
                 return data;
@@ -899,7 +1220,7 @@ var Page;
     Page.ImageCase = ImageCase;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -911,12 +1232,13 @@ var Page;
         __extends(InputCase, _super);
         function InputCase(page, data) {
             _super.call(this, page, data);
-            this.type = 2 /* Input */;
-            this.title = data.text;
+            this.type = Page.CaseType.Input;
+            this.title = data.label;
             this.expectedValue = data.type;
             this.value = '';
         }
         InputCase.prototype.send = function () {
+            var _this = this;
             var data = {};
             data.inputs = [];
             var sent = this.load();
@@ -930,6 +1252,12 @@ var Page;
             }
             return _super.prototype.makeSend.call(this, data).then(function () {
                 return data;
+            }).catch(function (err) {
+                if (err.data.code === 406) {
+                    _this.save({});
+                    return Bootstrap.$q.reject('Incorrect inputs sent. Try again.');
+                }
+                return Bootstrap.$q.reject(err.data.message);
             });
         };
         InputCase.prototype.validate = function () {
@@ -956,7 +1284,7 @@ var Page;
     Page.InputCase = InputCase;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -968,7 +1296,7 @@ var Page;
         __extends(IterationCase, _super);
         function IterationCase(page, data) {
             _super.call(this, page, data);
-            this.type = 3 /* Iteration */;
+            this.type = Page.CaseType.Iteration;
             this.selected = false;
             this.ordinal = data.ordinal;
             this.symbol = data.symbol;
@@ -996,7 +1324,7 @@ var Page;
     Page.IterationCase = IterationCase;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1008,7 +1336,7 @@ var Page;
         __extends(TextCase, _super);
         function TextCase(page, data) {
             _super.call(this, page, data);
-            this.type = 4 /* Text */;
+            this.type = Page.CaseType.Text;
             this.selected = false;
             this.correct = false;
             this.incorrect = false;
@@ -1045,7 +1373,44 @@ var Page;
     Page.TextCase = TextCase;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Page;
+(function (Page) {
+    var BuzzCase = (function (_super) {
+        __extends(BuzzCase, _super);
+        function BuzzCase(page, data) {
+            _super.call(this, page, data);
+            this.type = Page.CaseType.Buzz;
+            this.page = page;
+        }
+        BuzzCase.prototype.send = function () {
+            // We dont really send buzzes here, just increase buttonClickSum here
+            this.page.clickBuzzer();
+            var deferred = Bootstrap.$q.defer();
+            deferred.resolve({});
+            return deferred.promise;
+        };
+        BuzzCase.prototype.trueBuzzerSend = function (BCS) {
+            console.log('[ Buzzer ] True send (' + BCS + ')');
+            return _super.prototype.makeSend.call(this, { quizQuestionId: this.page.id, buttonClickSum: BCS }).then(function (res) {
+                var data = {};
+                // IMO we don't need that since buzzer have fake answerId's
+                // super.save(data);
+                // this.page.selectAnswer(data);
+                return data;
+            });
+        };
+        return BuzzCase;
+    })(Page.Case);
+    Page.BuzzCase = BuzzCase;
+})(Page || (Page = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1055,13 +1420,22 @@ var Page;
 (function (Page) {
     var EndPage = (function (_super) {
         __extends(EndPage, _super);
-        function EndPage(engageform, data) {
+        function EndPage(engageform, data, settings) {
             _super.call(this, engageform, data);
-            this.type = 1 /* EndPage */;
+            this.type = Page.Type.EndPage;
+            this.isCoverPage = true;
+            this.socialData = {
+                title: settings.share.title,
+                description: settings.share.description,
+                imageUrl: settings.share.imageUrl,
+                link: settings.share.link
+            };
             if (data.coverPage) {
                 this.button = data.coverPage.buttonText;
                 this.outcome = data.coverPage.outcome;
                 this.social = data.coverPage.showSocialShares;
+                this.exitLink = data.coverPage.exitLink;
+                this.link = data.coverPage.link;
                 if (data.coverPage.scoreRange) {
                     this.rangeMax = data.coverPage.scoreRange.max;
                     this.rangeMin = data.coverPage.scoreRange.min;
@@ -1073,7 +1447,7 @@ var Page;
     Page.EndPage = EndPage;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1086,7 +1460,7 @@ var Page;
         function Form(engageform, data) {
             var _this = this;
             _super.call(this, engageform, data);
-            this.type = 2 /* Form */;
+            this.type = Page.Type.Form;
             if (!data.forms) {
                 return;
             }
@@ -1108,9 +1482,11 @@ var Page;
                 }
             });
             if (validated) {
+                this.filled = true;
                 deferred.resolve(this.cases[0].send());
             }
             else {
+                this.filled = false;
                 deferred.resolve({});
             }
             return deferred.promise;
@@ -1125,7 +1501,7 @@ var Page;
     Page.Form = Form;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1138,7 +1514,7 @@ var Page;
         function MultiChoice(engageform, data) {
             var _this = this;
             _super.call(this, engageform, data);
-            this.type = 3 /* MultiChoice */;
+            this.type = Page.Type.MultiChoice;
             if (!data.answers) {
                 return;
             }
@@ -1179,7 +1555,7 @@ var Page;
     Page.MultiChoice = MultiChoice;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1192,7 +1568,7 @@ var Page;
         function PictureChoice(engageform, data) {
             var _this = this;
             _super.call(this, engageform, data);
-            this.type = 4 /* PictureChoice */;
+            this.type = Page.Type.PictureChoice;
             if (!data.answers) {
                 return;
             }
@@ -1233,7 +1609,7 @@ var Page;
     Page.PictureChoice = PictureChoice;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1246,7 +1622,8 @@ var Page;
         function Rateit(engageform, data) {
             var _this = this;
             _super.call(this, engageform, data);
-            this.type = 5 /* Rateit */;
+            this.type = Page.Type.Rateit;
+            this.selectedValue = 0;
             this.labelMin = data.rateIt.minLabel;
             this.labelMax = data.rateIt.maxLabel;
             for (var i = 1; i <= data.rateIt.maxRateItValue; i++) {
@@ -1257,6 +1634,7 @@ var Page;
             }
             this.sent().then(function (sent) {
                 if (sent.selectedValue) {
+                    _this.selectedValue = sent.selectedValue;
                     _this.selectAnswer(sent);
                 }
             });
@@ -1264,15 +1642,13 @@ var Page;
         Rateit.prototype.selectAnswer = function (sent) {
             if (sent.selectedValue) {
                 this.filled = true;
+                this.selectedValue = sent.selectedValue;
             }
             if (sent.result) {
                 this.result = sent.result;
             }
             this.cases.map(function (vcase) {
-                vcase.selected = false;
-                if (sent.selectedValue >= vcase.ordinal) {
-                    vcase.selected = true;
-                }
+                vcase.selected = sent.selectedValue >= vcase.ordinal;
             });
         };
         return Rateit;
@@ -1280,7 +1656,7 @@ var Page;
     Page.Rateit = Rateit;
 })(Page || (Page = {}));
 
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -1292,8 +1668,9 @@ var Page;
         __extends(StartPage, _super);
         function StartPage(engageform, data) {
             _super.call(this, engageform, data);
-            this.type = 6 /* StartPage */;
+            this.type = Page.Type.StartPage;
             this.button = 'Let\'s get started';
+            this.isCoverPage = true;
             if (data.coverPage) {
                 this.button = data.coverPage.buttonText || this.button;
             }
@@ -1303,4 +1680,89 @@ var Page;
     Page.StartPage = StartPage;
 })(Page || (Page = {}));
 
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Page;
+(function (Page) {
+    var Buzzer = (function (_super) {
+        __extends(Buzzer, _super);
+        function Buzzer(engageform, data) {
+            _super.call(this, engageform, data);
+            this.type = Page.Type.Buzzer;
+            this.buttonClickSum = 0;
+            console.log('[ Buzzer ] Constructor');
+            // Make only one case with buzzed ammount
+            this.cases.push(new Page.BuzzCase(this, { _id: 0, buttonClickSum: this.buttonClickSum }));
+            // Clear previous timeout
+            if (this.buzzLoop.hasOwnProperty('timeout')) {
+                clearTimeout(this.buzzLoop['timeout']);
+            } // Nasty array reference couse of compiler error ?
+            // Start loop
+            this.buzzLoop(0);
+            // FIXME: Relpace when themes will be ready
+            // this.buzzerTheme = data.buzzerTheme;
+            this.buzzerTheme = Bootstrap.config.fakeBuzzerTheme || {};
+        }
+        // selectAnswer(sent) {
+        //   console.log('[ Buzzer ] Select answer');
+        // };
+        // send(sent) {
+        //   console.log('[ Buzzer ] Send');
+        // };
+        Buzzer.prototype.buzzLoop = function (iteration) {
+            var _this = this;
+            console.log('[ Buzzer ] Buzz');
+            if (this.buttonClickSum > 0) {
+                // True send - POST to server, we dont need then here since socket respond with global buttonClickSum
+                this.cases[0].trueBuzzerSend(this.buttonClickSum);
+            }
+            // if (this._engageform && this._engageform.current) {
+            //   console.log(this._engageform.current._pageId);
+            //   console.log(this._pageId);
+            // }
+            // Not a buzzer - stop cycle
+            if (iteration > 0 && this.engageform && this.engageform.current && this.engageform.current.id !== this.id) {
+                return;
+            }
+            // Loop
+            // Nasty array reference couse of compiler error ?
+            this.buzzLoop['timeout'] = setTimeout(function () { _this.buzzLoop(iteration + 1); }, 3000);
+            // Clear buttonClickSum
+            this.buttonClickSum = 0;
+        };
+        Buzzer.prototype.clickBuzzer = function () {
+            // Limit buzzes
+            if (this.buttonClickSum < 100) {
+                this.buttonClickSum++;
+            }
+            console.log('[ Buzzer ] Click! (' + this.buttonClickSum + ')');
+        };
+        return Buzzer;
+    })(Page.Page);
+    Page.Buzzer = Buzzer;
+})(Page || (Page = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Page;
+(function (Page) {
+    var Poster = (function (_super) {
+        __extends(Poster, _super);
+        function Poster(engageform, data) {
+            _super.call(this, engageform, data);
+            this.type = Page.Type.Poster;
+        }
+        return Poster;
+    })(Page.Page);
+    Page.Poster = Poster;
+})(Page || (Page = {}));
+})(angular);
 //# sourceMappingURL=engageform.js.map
