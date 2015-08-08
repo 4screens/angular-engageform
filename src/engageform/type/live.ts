@@ -16,5 +16,11 @@ module Engageform {
       this.buildPages([page]);
       this.setCurrent(page._id);
     }
+
+    setCurrentEndPage(): ng.IPromise<API.IQuizFinish> {
+      var deferred = Bootstrap.$q.defer();
+      deferred.resolve();
+      return deferred.promise;
+    }
   }
 }

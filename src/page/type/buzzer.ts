@@ -19,7 +19,7 @@ module Page {
 
       // Clear previous timeout
       if (this.buzzLoop.hasOwnProperty('timeout')) {
-        clearTimeout(this.buzzLoop.timeout);
+        clearTimeout(this.buzzLoop['timeout']);
       } // Nasty array reference couse of compiler error ?
 
       // Start loop
@@ -58,7 +58,7 @@ module Page {
 
       // Loop
       // Nasty array reference couse of compiler error ?
-      this.buzzLoop.timeout = setTimeout(() => { this.buzzLoop(iteration + 1); }, 3000);
+      this.buzzLoop['timeout'] = setTimeout(() => { this.buzzLoop(iteration + 1); }, 3000);
 
       // Clear buttonClickSum
       this.buttonClickSum = 0;
