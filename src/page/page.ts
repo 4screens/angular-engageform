@@ -82,6 +82,23 @@ module Page {
       // "abstract"
     }
 
+    updateAnswers(data): void {
+      if (this.id !== data.questionId) {
+        return;
+      }
+
+      Bootstrap.$timeout(() => {
+        this.cases.map((vcase: ICase) => {
+          if (data[vcase.id]) {
+            var loaded = vcase.load();
+            loaded.results[vcase.id] = data[vcase.id];
+            vcase.save(loaded);
+            vcase.result = data[vcase.id] || 0;
+          }
+        });
+      });
+    }
+
     private getMediaUrl(imageData, imageFile): string {
       if (!imageFile) {
         return '';

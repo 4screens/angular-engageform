@@ -27,6 +27,7 @@ module Page {
 
     send(vcase: ICase): ng.IPromise<IPageSent>;
     selectAnswer(data): void;
+    updateAnswers(data): void;
     clickBuzzer?(): void;
   }
 

@@ -20,5 +20,7 @@ module Page {
     trueBuzzerSend?(BCS: number): void;
     send(): ng.IPromise<IPageSent>;
     validate(): boolean;
+    load(): IPageSent;
+    save(data: IPageSent): void;
   }
 }

@@ -131,7 +131,6 @@ module Engageform {
     cleanPages(): void {
       this._availablePages.length = 0;
       this._pages = {};
-      this.pages = {};
     }
 
     buildPages(pages): void {
