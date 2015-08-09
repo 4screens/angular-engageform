@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.7
+ * 4screens-angular-engageform v0.2.8
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -181,7 +181,6 @@ var Engageform;
         Engageform.prototype.cleanPages = function () {
             this._availablePages.length = 0;
             this._pages = {};
-            this.pages = {};
         };
         Engageform.prototype.buildPages = function (pages) {
             var _this = this;
@@ -458,6 +457,22 @@ var Page;
         };
         Page.prototype.selectAnswer = function (data) {
             // "abstract"
+        };
+        Page.prototype.updateAnswers = function (data) {
+            var _this = this;
+            if (this.id !== data.questionId) {
+                return;
+            }
+            Bootstrap.$timeout(function () {
+                _this.cases.map(function (vcase) {
+                    if (data[vcase.id]) {
+                        var loaded = vcase.load();
+                        loaded.results[vcase.id] = data[vcase.id];
+                        vcase.save(loaded);
+                        vcase.result = data[vcase.id] || 0;
+                    }
+                });
+            });
         };
         Page.prototype.getMediaUrl = function (imageData, imageFile) {
             if (!imageFile) {
