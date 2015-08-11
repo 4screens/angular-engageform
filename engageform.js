@@ -307,7 +307,7 @@ var Navigation;
                 this.hasPrev = this.position === 1 ? this.hasStartPages : true;
             }
         };
-        Navigation.prototype.pick = function ($event, vcase) {
+        Navigation.prototype.pick = function ($event, vcase, opts) {
             var _this = this;
             this.disableDefaultAction($event);
             this.animate = 'swipeNext';
@@ -321,6 +321,9 @@ var Navigation;
                                 case Engageform.Mode.Preview:
                                     if (!_this._engageform.current.filled && _this._engageform.current.settings.requiredAnswer) {
                                         _this._engageform.message = 'Answer is required to proceed to next question';
+                                        if (opts && opts.hasOwnProperty('quiet') && opts.quiet) {
+                                            _this._engageform.message = '';
+                                        }
                                         return;
                                     }
                                     break;
@@ -336,6 +339,9 @@ var Navigation;
                         }
                     }).catch(function (errorMessage) {
                         _this._engageform.message = errorMessage;
+                        if (opts && opts.hasOwnProperty('quiet') && opts.quiet) {
+                            _this._engageform.message = '';
+                        }
                     });
             }
         };
