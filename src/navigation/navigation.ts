@@ -74,7 +74,7 @@ module Navigation {
       }
     }
 
-    pick($event, vcase: Page.ICase): void {
+    pick($event, vcase: Page.ICase, opts?): void {
       this.disableDefaultAction($event);
       this.animate = 'swipeNext';
 
@@ -88,6 +88,9 @@ module Navigation {
                 case Engageform.Mode.Preview:
                   if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
                     this._engageform.message = 'Answer is required to proceed to next question';
+                    if (opts && opts.hasOwnProperty('quiet') && opts.quiet) {
+                      this._engageform.message = '';
+                    }
                     return;
                   }
                   break;
@@ -104,6 +107,9 @@ module Navigation {
 
           }).catch(errorMessage => {
             this._engageform.message = errorMessage;
+            if (opts && opts.hasOwnProperty('quiet') && opts.quiet) {
+              this._engageform.message = '';
+            }
           });
       }
     }
