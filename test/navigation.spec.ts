@@ -13,12 +13,13 @@ describe('Navigation:', () => {
 
     apiConfigMock = {
       backend: {
-        api: 'api',
-        domain: '',
+        api: '/api',
+        domain: '/domain',
+        imagesUrl: '/imgUrl',
         branding: {
-          text: 'Default branding text',
-          link: 'Default link',
-          imageUrl: 'Default URL'
+          text: 'text',
+          link: 'link',
+          imageUrl: '/url'
         }
       },
       engageform: {
@@ -40,10 +41,10 @@ describe('Navigation:', () => {
   });
 
   beforeEach(() => {
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b09e').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b09e').respond(
       getJSONFixture('engageform/55893267d5f6db0100d2b09e.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b09e/pages').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b09e/pages').respond(
       getJSONFixture('pages/55893267d5f6db0100d2b09e.json')
     );
   });

@@ -11,13 +11,13 @@ describe('Engageform:', () => {
 
     apiConfigMock = {
       backend: {
-        api: 'api',
-        domain: '',
+        api: '/api',
+        domain: '/domain',
         imagesUrl: '/imgUrl',
         branding: {
           text: 'text',
           link: 'link',
-          imageUrl: 'url'
+          imageUrl: '/url'
         }
       },
       engageform: {
@@ -38,34 +38,34 @@ describe('Engageform:', () => {
   });
 
   beforeEach(() => {
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b0bf').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b0bf').respond(
       getJSONFixture('engageform/55893267d5f6db0100d2b0bf.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b0f7').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b0f7').respond(
       getJSONFixture('engageform/55893267d5f6db0100d2b0f7.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b09e').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b09e').respond(
       getJSONFixture('engageform/55893267d5f6db0100d2b09e.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b09e?preview').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b09e?preview').respond(
       getJSONFixture('engageform/55893267d5f6db0100d2b09e.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b068').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b068').respond(
       getJSONFixture('engageform/55893267d5f6db0100d2b068.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b0bf/pages').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b0bf/pages').respond(
       getJSONFixture('pages/55893267d5f6db0100d2b0bf.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b0f7/pages').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b0f7/pages').respond(
       getJSONFixture('pages/55893267d5f6db0100d2b0f7.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b09e/pages').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b09e/pages').respond(
       getJSONFixture('pages/55893267d5f6db0100d2b09e.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b09e/pages?preview').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b09e/pages?preview').respond(
       getJSONFixture('pages/55893267d5f6db0100d2b09e.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b068/pages').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b068/pages').respond(
       getJSONFixture('pages/55893267d5f6db0100d2b068.json')
     );
   });
@@ -255,7 +255,7 @@ describe('Engageform:', () => {
         expect(ef.theme.buttonColor).toBe('#63b3e0');
         expect(ef.theme.font).toBe('Open Sans');
         expect(ef.theme.questionColor).toBe('#ffffff');
-        expect(ef.theme.customThemeCssFile).toBe('api/uploads/themes/e/9/0/55893267d5f6db0100d2b09e_theme.css');
+        expect(ef.theme.customThemeCssFile).toBe('/api/uploads/themes/e/9/0/55893267d5f6db0100d2b09e_theme.css');
         done();
       });
 
@@ -279,8 +279,9 @@ describe('Engageform:', () => {
         id: '55893267d5f6db0100d2b09e'
       }).then((ef) => {
         expect(ef.branding).toBeDefined();
+        console.log(ef.branding);
         expect({text: ef.branding.text, link: ef.branding.link, imageUrl: ef.branding.imageUrl})
-          .toEqual(jasmine.objectContaining({text: 'text', link: 'link', imageUrl: 'url'}));
+          .toEqual(jasmine.objectContaining({text: 'text', link: 'link', imageUrl: '/api/url'}));
         done();
       });
 
@@ -293,7 +294,7 @@ describe('Engageform:', () => {
       }).then((ef) => {
         expect(ef.branding).toBeDefined();
         expect({text: ef.branding.text, link: ef.branding.link, imageUrl: ef.branding.imageUrl})
-          .toEqual(jasmine.objectContaining({text: 'custom', link: 'custom', imageUrl: 'api/imgUrl/custom'}));
+          .toEqual(jasmine.objectContaining({text: 'custom', link: 'custom', imageUrl: '/api/imgUrl/custom'}));
         done();
       });
 

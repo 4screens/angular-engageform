@@ -13,8 +13,8 @@ describe('Page:', () => {
 
     apiConfigMock = {
       backend: {
-        api: 'api',
-        domain: ''
+        api: '/api',
+        domain: '/domain'
       },
       engageform: {
         engageformUrl: '/engageform/:engageformId',
@@ -35,10 +35,10 @@ describe('Page:', () => {
   });
 
   beforeEach(() => {
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b0f7').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b0f7').respond(
       getJSONFixture('engageform/55893267d5f6db0100d2b0f7.json')
     );
-    httpBackend.whenGET('/engageform/55893267d5f6db0100d2b0f7/pages').respond(
+    httpBackend.whenGET('/domain/engageform/55893267d5f6db0100d2b0f7/pages').respond(
       getJSONFixture('pages/55893267d5f6db0100d2b0f7.json')
     );
   });
