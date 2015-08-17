@@ -4,7 +4,28 @@ angular-engageform
 4screens angular client for engage form
 
 # Installation
-1. npm install -g gulp bower tsd
-2. npm install
-3. bower install
-4. tsd reinstall --save --overwrite
+
+You can install this package with `bower`.
+
+```shell
+bower install 4screens-engageform
+```
+
+# Development
+
+Preparation of the working environment.
+
+```shell
+npm install -g gulp bower tsd
+npm install
+bower install
+tsd reinstall --save --overwrite
+```
+
+# Distribute
+
+Release of a new version of the package.
+
+```shell
+gulp release --bump
+```
