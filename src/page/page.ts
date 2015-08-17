@@ -99,19 +99,5 @@ module Page {
       });
     }
 
-    private getMediaUrl(imageData, imageFile): string {
-      if (!imageFile) {
-        return '';
-      }
-      console.log(console);
-
-      return;
-      //
-      //if (imageFile.indexOf('http') === -1) {
-      //  imageFile = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imageFile;
-      //}
-      //
-      //return imageFile;
-    }
   }
 }
