@@ -1,16 +1,17 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var pkg = require('./package.json');
-var fs = require('fs');
 var path = require('path');
 var semver = require('semver');
 var sh = require('shelljs');
 
 var PATH = {
   bower_components: 'bower_components',
+  build: '.',
+  define: 'typings',
+  dist: 'release',
   source: 'src',
-  test: 'test',
-  define: 'typings'
+  test: 'test'
 };
 var FILES = [
   path.join('.', PATH.source, 'header.ts'),
@@ -59,16 +60,15 @@ var FILES = [
   path.join('.', PATH.source, 'util', 'cloudinary.ts')
 ];
 var BANNER = path.join('.', PATH.source, 'header.txt');
-var MAIN = path.join('.', 'engageform.js');
+var MAIN = 'engageform.js';
 var TESTS = [
   path.join('.', PATH.bower_components, 'angular', 'angular.js'),
   path.join('.', PATH.bower_components, 'angular-local-storage', 'dist', 'angular-local-storage.js'),
   path.join('.', PATH.bower_components, 'angular-mocks', 'angular-mocks.js'),
   path.join('.', PATH.bower_components, 'angular-sanitize', 'angular-sanitize.js'),
-  MAIN,
+  path.join('.', PATH.build, MAIN),
   path.join('.', PATH.test, '**', '*.spec.ts')
 ];
-
 
 gulp.task('bump', function() {
   var bump = plugins.util.env.bump || false;
@@ -108,18 +108,18 @@ gulp.task('build', ['header'], function() {
       footer: '})(angular);'
     }))
     .pipe(plugins.sourcemaps.write('.'))
-    .pipe(gulp.dest('.'));
+    .pipe(gulp.dest(PATH.build));
 });
 
 gulp.task('minify', ['build'], function() {
-  return gulp.src(MAIN)
+  return gulp.src(path.join('.', PATH.build, MAIN))
     .pipe(plugins.sourcemaps.init({loadMaps: true}))
     .pipe(plugins.uglify({
       preserveComments: 'some'
     }))
     .pipe(plugins.rename({extname: '.min.js'}))
     .pipe(plugins.sourcemaps.write('.'))
-    .pipe(gulp.dest('.'));
+    .pipe(gulp.dest(PATH.build));
 });
 
 gulp.task('develop', ['minify'], function() {
@@ -144,31 +144,49 @@ gulp.task('test', ['tslint'], function() {
     });
 });
 
-gulp.task('release::bump', ['minify'], function(done) {
+gulp.task('release::bump::commit', ['minify'], function() {
   if (plugins.util.env.bump) {
-    sh.exec('git add .');
-    sh.exec('git commit -m "chore(release): Bump version." --quiet');
-    sh.exec('git push');
+    return gulp.src(['./bower.json', './package.json'])
+      .pipe(plugins.git.add())
+      .pipe(plugins.git.commit('chore(release): Bump version.'));
   }
-
-  done();
 });
 
-gulp.task('release', ['release::bump'], function() {
-  sh.exec('mkdir release');
-  sh.exec('mv -f engageform.* release/');
+gulp.task('release::bump::push', ['release::bump::commit'], function(done) {
+  if (plugins.util.env.bump) {
+    return plugins.git.push('origin', 'v0.2.x', done);
+  }
+});
 
-  plugins.git.checkout('release', {quiet: true}, function (err) {
-    if (err) throw err;
+gulp.task('release::dist::cleanup', function() {
+  sh.rm('-rf', path.join('.', PATH.dist));
+});
 
-    sh.exec('mv release/* ./');
-    sh.exec('rm -r release');
-    sh.exec('git add engageform.js engageform.js.map engageform.min.js engageform.min.js.map');
-    sh.exec('git commit -m "feat(release): New build files." --quiet');
-    sh.exec('git push');
-    sh.exec('git tag v' + pkg.version);
-    sh.exec('git push -v origin refs/tags/v' + pkg.version);
-    sh.exec('git reset -q --hard HEAD');
-    sh.exec('git checkout v0.2.x --quiet');
+gulp.task('release::dist::clone', ['release::dist::cleanup'], function(done) {
+  return plugins.git.clone(pkg.repository.url, {args: PATH.dist}, function () {
+    plugins.git.checkout('release', {cwd: PATH.dist}, done);
   });
 });
+
+gulp.task('release::dist::commit', ['release::dist::clone', 'minify'], function() {
+  var diff = MAIN.split('.')[0] + '*';
+  sh.cp('-rf', diff, path.join('.', PATH.dist));
+
+  return gulp.src(path.join('.', PATH.dist, diff))
+    .pipe(plugins.git.add({cwd: PATH.dist}))
+    .pipe(plugins.git.commit('feat(release): New build files.', {cwd: PATH.dist}));
+});
+
+gulp.task('release::dist::push', ['release::dist::commit'], function(done) {
+  return plugins.git.push('origin', 'release', {cwd: PATH.dist}, done);
+});
+
+gulp.task('release::dist::tag', ['release::dist::push'], function(done) {
+  return plugins.git.tag('v' + pkg.version, 'v' + pkg.version, {cwd: PATH.dist}, function(err) {
+    if (err) throw err;
+
+    plugins.git.push('origin', 'refs/tags/v' + pkg.version, {cwd: PATH.dist}, done);
+  });
+});
+
+gulp.task('release', ['release::bump::push', 'release::dist::tag']);

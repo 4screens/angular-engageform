@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://Fulkman@github.com/4screens/angular-engageform.git"
+    "url": "git@github.com:4screens/angular-engageform.git"
   },
   "author": "Tomasz Pietrzak <tomasz.pietrzak@nopattern.net>",
   "license": {
