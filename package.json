@@ -28,7 +28,6 @@
     "gulp-concat": "^2.5.2",
     "gulp-git": "^1.2.4",
     "gulp-if": "^1.2.5",
-    "gulp-karma": "0.0.4",
     "gulp-load-plugins": "^1.0.0-rc.1",
     "gulp-plumber": "^1.0.1",
     "gulp-rename": "^1.2.2",

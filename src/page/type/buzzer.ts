@@ -10,6 +10,8 @@ module Page {
 
     buttonClickSum: number = 0;
 
+    private _timeout;
+
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
       super(engageform, data);
       console.log('[ Buzzer ] Constructor');
@@ -18,9 +20,9 @@ module Page {
       this.cases.push(<ICase>new BuzzCase(<IPage>this, { _id: 0, buttonClickSum: this.buttonClickSum }));
 
       // Clear previous timeout
-      if (this.buzzLoop.hasOwnProperty('timeout')) {
-        clearTimeout(this.buzzLoop['timeout']);
-      } // Nasty array reference couse of compiler error ?
+      if (this._timeout) {
+        Bootstrap.$timeout.cancel(this._timeout);
+      }
 
       // Start loop
       this.buzzLoop(0);
@@ -30,14 +32,6 @@ module Page {
       this.buzzerTheme = Bootstrap.config.fakeBuzzerTheme || {};
     }
 
-    // selectAnswer(sent) {
-    //   console.log('[ Buzzer ] Select answer');
-    // };
-
-    // send(sent) {
-    //   console.log('[ Buzzer ] Send');
-    // };
-
     private buzzLoop(iteration: number) {
       console.log('[ Buzzer ] Buzz');
       if (this.buttonClickSum > 0) {
@@ -46,19 +40,15 @@ module Page {
         this.cases[0].trueBuzzerSend(this.buttonClickSum);
       }
 
-      // if (this._engageform && this._engageform.current) {
-      //   console.log(this._engageform.current._pageId);
-      //   console.log(this._pageId);
-      // }
-
       // Not a buzzer - stop cycle
       if (iteration > 0 && this.engageform && this.engageform.current && this.engageform.current.id !== this.id) {
         return;
       }
 
       // Loop
-      // Nasty array reference couse of compiler error ?
-      this.buzzLoop['timeout'] = setTimeout(() => { this.buzzLoop(iteration + 1); }, 3000);
+      this._timeout = Bootstrap.$timeout(() => {
+        this.buzzLoop(iteration + 1);
+      }, 3000);
 
       // Clear buttonClickSum
       this.buttonClickSum = 0;

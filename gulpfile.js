@@ -4,6 +4,7 @@ var pkg = require('./package.json');
 var path = require('path');
 var semver = require('semver');
 var sh = require('shelljs');
+var KarmaServer = require('karma').server;
 
 var PATH = {
   bower_components: 'bower_components',
@@ -123,7 +124,7 @@ gulp.task('minify', ['build'], function() {
 });
 
 gulp.task('develop', ['minify'], function() {
-  gulp.watch(FILES, ['minify']);
+  gulp.watch(FILES, ['tslint']);
 });
 
 gulp.task('tslint', ['minify'], function () {
@@ -132,19 +133,14 @@ gulp.task('tslint', ['minify'], function () {
     .pipe(plugins.tslint.report('verbose'));
 });
 
-// TODO: gulp-karma does not include fixtures...
-gulp.task('test', ['tslint'], function() {
-  return gulp.src(TESTS)
-    .pipe(plugins.karma({
-      configFile: 'karma.conf.js',
-      action: 'run'
-    }))
-    .on('error', function(err) {
-      throw err;
-    });
+gulp.task('test', ['tslint'], function(done) {
+  KarmaServer.start({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done);
 });
 
-gulp.task('release::bump::commit', ['minify'], function() {
+gulp.task('release::bump::commit', ['test'], function() {
   if (plugins.util.env.bump) {
     return gulp.src(['./bower.json', './package.json'])
       .pipe(plugins.git.add())
@@ -168,7 +164,7 @@ gulp.task('release::dist::clone', ['release::dist::cleanup'], function(done) {
   });
 });
 
-gulp.task('release::dist::commit', ['release::dist::clone', 'minify'], function() {
+gulp.task('release::dist::commit', ['release::dist::clone', 'test'], function() {
   var diff = MAIN.split('.')[0] + '*';
   sh.cp('-rf', diff, path.join('.', PATH.dist));
 
