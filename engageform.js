@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.8
+ * 4screens-angular-engageform v0.2.10
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -563,19 +563,36 @@ var Util;
             if (imageData.containerHeight === width) {
                 baseWidth = 300;
             }
-            var manipulation = [];
-            manipulation.push('w_' + Math.round(width * (imageData.width / 100 || 1)));
+            var manipulation;
+            var imageWidth = Math.round(width * imageData.width / 100);
+            var imageHeight = Math.round(width * imageData.containerHeight / baseWidth);
+            var ox = Math.round(width * imageData.left / 100);
+            var oy = Math.round(imageHeight * imageData.top / 100);
+            manipulation = [];
+            manipulation.push('w_' + imageWidth);
             manipulation.push('f_auto');
             manipulation.push('q_82');
             manipulation.push('dpr_1.0');
             src += '/' + manipulation.join(',');
-            var resize = [];
-            resize.push('w_' + width);
-            resize.push('h_' + Math.round(imageData.containerHeight * (width / baseWidth)));
-            resize.push('x_' + Math.round(-1 * width * imageData.left / 100));
-            resize.push('y_' + Math.round(-1 * width * imageData.containerHeight * imageData.top / (100 * baseWidth)));
-            resize.push('c_crop');
-            src += '/' + resize.join(',');
+            manipulation = [];
+            manipulation.push('w_' + width);
+            manipulation.push('h_' + imageHeight);
+            manipulation.push('x_' + (-1 * ox));
+            manipulation.push('y_' + (-1 * oy));
+            manipulation.push('c_crop');
+            src += '/' + manipulation.join(',');
+            manipulation = [];
+            manipulation.push('w_' + (width + ox));
+            manipulation.push('h_' + (imageHeight + oy));
+            manipulation.push('c_mpad');
+            src += '/' + manipulation.join(',');
+            manipulation = [];
+            manipulation.push('w_' + width);
+            manipulation.push('h_' + imageHeight);
+            manipulation.push('x_0');
+            manipulation.push('y_0');
+            manipulation.push('c_crop');
+            src += '/' + manipulation.join(',');
             if (filepath.indexOf('http') === -1) {
                 src += '/' + this._uploadFolder;
             }
