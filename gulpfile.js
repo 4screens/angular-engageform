@@ -179,7 +179,9 @@ gulp.task('release::dist::push', ['release::dist::commit'], function(done) {
 
 gulp.task('release::dist::tag', ['release::dist::push'], function(done) {
   return plugins.git.tag('v' + pkg.version, 'v' + pkg.version, {cwd: PATH.dist}, function(err) {
-    if (err) throw err;
+    if (err) {
+      throw err;
+    }
 
     plugins.git.push('origin', 'refs/tags/v' + pkg.version, {cwd: PATH.dist}, done);
   });
