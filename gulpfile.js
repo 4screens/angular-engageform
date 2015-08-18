@@ -150,7 +150,16 @@ gulp.task('test', ['tslint'], function(done) {
   KarmaServer.start({
     configFile: __dirname + '/karma.conf.js',
     singleRun: true
-  }, done);
+  }, function(error) {
+    if (error) {
+      plugins.git.checkout('*.json', {args: '--'}, function(err) {
+        if (err) throw err;
+        done();
+      });
+    } else {
+      done();
+    }
+  });
 });
 
 gulp.task('release::bump::commit', ['test'], function() {
