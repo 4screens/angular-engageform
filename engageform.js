@@ -451,6 +451,7 @@ var Page;
             return deferred.promise;
         };
         Page.prototype.sent = function () {
+            var _this = this;
             var deferred = Bootstrap.$q.defer();
             var sent = {};
             switch (Bootstrap.mode) {
@@ -458,8 +459,21 @@ var Page;
                     sent = (Bootstrap.localStorage.get('page.' + this.id) || {});
                     break;
             }
-            deferred.resolve(sent);
+            if (this.settings.showResults && sent.results) {
+                this.getStatsById(this.id).then(function (data) {
+                    deferred.resolve(_this.refreshAnswer(sent, data));
+                }).catch(function () {
+                    deferred.resolve(sent);
+                });
+            }
+            else {
+                deferred.resolve(sent);
+            }
             return deferred.promise;
+        };
+        Page.prototype.refreshAnswer = function (sent, question) {
+            // "abstract"
+            return sent;
         };
         Page.prototype.selectAnswer = function (data) {
             // "abstract"
@@ -480,18 +494,15 @@ var Page;
                 });
             });
         };
-        Page.prototype.getMediaUrl = function (imageData, imageFile) {
-            if (!imageFile) {
-                return '';
-            }
-            console.log(console);
-            return;
-            //
-            //if (imageFile.indexOf('http') === -1) {
-            //  imageFile = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imageFile;
-            //}
-            //
-            //return imageFile;
+        Page.prototype.getStatsById = function (pageId) {
+            var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.pageStatsUrl;
+            url = url.replace(':pageId', pageId);
+            return Bootstrap.$http.get(url).then(function (res) {
+                if ([200, 304].indexOf(res.status) !== -1) {
+                    return res.data;
+                }
+                return Bootstrap.$q.reject(res);
+            });
         };
         return Page;
     })();
@@ -1037,8 +1048,12 @@ var Engageform;
         Score.prototype.setCurrentEndPage = function () {
             var _this = this;
             return _super.prototype.setCurrentEndPage.call(this).then(function (data) {
-                var score = Math.round(data.totalScore / data.maxScore * 100);
+                var score = 100;
                 var hasEndPage = false;
+                // Error divide by zero...
+                if (data.maxScore > 0) {
+                    score = Math.round(data.totalScore / data.maxScore * 100);
+                }
                 _this.endPages.map(function (pageId) {
                     var page = _this.pages[pageId];
                     if (page.rangeMin <= score && page.rangeMax >= score) {
@@ -1576,6 +1591,12 @@ var Page;
                 });
             }
         }
+        MultiChoice.prototype.refreshAnswer = function (sent, question) {
+            question.answers.map(function (answer) {
+                sent.results[answer._id] = answer.percent;
+            });
+            return sent;
+        };
         MultiChoice.prototype.selectAnswer = function (sent) {
             var _this = this;
             this.cases.map(function (vcase) {
@@ -1630,6 +1651,12 @@ var Page;
                 });
             }
         }
+        PictureChoice.prototype.refreshAnswer = function (sent, question) {
+            question.answers.map(function (answer) {
+                sent.results[answer._id] = answer.percent;
+            });
+            return sent;
+        };
         PictureChoice.prototype.selectAnswer = function (sent) {
             var _this = this;
             this.cases.map(function (vcase) {
@@ -1747,21 +1774,15 @@ var Page;
             // Make only one case with buzzed ammount
             this.cases.push(new Page.BuzzCase(this, { _id: 0, buttonClickSum: this.buttonClickSum }));
             // Clear previous timeout
-            if (this.buzzLoop.hasOwnProperty('timeout')) {
-                clearTimeout(this.buzzLoop['timeout']);
-            } // Nasty array reference couse of compiler error ?
+            if (this._timeout) {
+                Bootstrap.$timeout.cancel(this._timeout);
+            }
             // Start loop
             this.buzzLoop(0);
             // FIXME: Relpace when themes will be ready
             // this.buzzerTheme = data.buzzerTheme;
             this.buzzerTheme = Bootstrap.config.fakeBuzzerTheme || {};
         }
-        // selectAnswer(sent) {
-        //   console.log('[ Buzzer ] Select answer');
-        // };
-        // send(sent) {
-        //   console.log('[ Buzzer ] Send');
-        // };
         Buzzer.prototype.buzzLoop = function (iteration) {
             var _this = this;
             console.log('[ Buzzer ] Buzz');
@@ -1769,17 +1790,14 @@ var Page;
                 // True send - POST to server, we dont need then here since socket respond with global buttonClickSum
                 this.cases[0].trueBuzzerSend(this.buttonClickSum);
             }
-            // if (this._engageform && this._engageform.current) {
-            //   console.log(this._engageform.current._pageId);
-            //   console.log(this._pageId);
-            // }
             // Not a buzzer - stop cycle
             if (iteration > 0 && this.engageform && this.engageform.current && this.engageform.current.id !== this.id) {
                 return;
             }
             // Loop
-            // Nasty array reference couse of compiler error ?
-            this.buzzLoop['timeout'] = setTimeout(function () { _this.buzzLoop(iteration + 1); }, 3000);
+            this._timeout = Bootstrap.$timeout(function () {
+                _this.buzzLoop(iteration + 1);
+            }, 3000);
             // Clear buttonClickSum
             this.buttonClickSum = 0;
         };
