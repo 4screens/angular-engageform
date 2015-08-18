@@ -20,6 +20,7 @@ module Engageform {
 
     current: Page.IPage;
     navigation: Navigation.INavigation;
+    meta: Meta.IMeta;
 
     get id(): string {
       return this._engageformId;

@@ -22,6 +22,9 @@
     },
     "jasmine-jquery/jasmine-jquery.d.ts": {
       "commit": "c7b1128cc9a8f5797bade826e7632b36b06a856c"
+    },
+    "lodash/lodash.d.ts": {
+      "commit": "832c51db815c766fa42a2e995a7b3136ec6d15c2"
     }
   }
 }

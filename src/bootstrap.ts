@@ -1,6 +1,7 @@
 /// <reference path="api/api.ts" />
 /// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
+/// <reference path="meta/meta.ts" />
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
 /// <reference path="util/cloudinary.ts" />
@@ -88,6 +89,12 @@ class Bootstrap {
     }
   }
 
+  get meta(): Meta.IMeta {
+    if (this._engageform) {
+      return this._engageform.meta;
+    }
+  }
+
   get events(): Util.Events {
     if (this._events) {
       return this._events;
@@ -162,6 +169,7 @@ class Bootstrap {
       return this._engageform.initPages();
     }).then(function(engageform) {
       engageform.navigation = new Navigation.Navigation(<Engageform.IEngageform>engageform);
+      engageform.meta = new Meta.Meta(<Engageform.IEngageform>engageform);
       return engageform;
     });
   }

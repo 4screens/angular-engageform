@@ -40,6 +40,8 @@ var FILES = [
 
   path.join('.', PATH.source, 'navigation', 'navigation.ts'),
 
+  path.join('.', PATH.source, 'meta', 'meta.ts'),
+
   path.join('.', PATH.source, 'page', 'page.ts'),
   path.join('.', PATH.source, 'page', 'case.ts'),
   path.join('.', PATH.source, 'page', 'settings.ts'),
