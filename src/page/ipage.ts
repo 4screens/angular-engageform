@@ -26,6 +26,7 @@ module Page {
     buttonClickSum?: number;
 
     send(vcase: ICase): ng.IPromise<IPageSent>;
+    refreshAnswer(sent: IPageSent, question: API.IQuizQuestion): IPageSent;
     selectAnswer(data): void;
     updateAnswers(data): void;
     clickBuzzer?(): void;

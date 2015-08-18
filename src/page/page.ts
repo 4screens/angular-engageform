@@ -73,9 +73,23 @@ module Page {
           sent = <IPageSent>(Bootstrap.localStorage.get('page.' + this.id) || {});
           break;
       }
-      deferred.resolve(sent);
+
+      if (this.settings.showResults && sent.results) {
+        this.getStatsById(this.id).then((data: API.IQuizQuestion) => {
+          deferred.resolve(this.refreshAnswer(sent, data));
+        }).catch(() => {
+          deferred.resolve(sent);
+        });
+      } else {
+        deferred.resolve(sent);
+      }
 
       return deferred.promise;
+    }
+
+    refreshAnswer(sent: IPageSent, question: API.IQuizQuestion): IPageSent {
+      // "abstract"
+      return sent;
     }
 
     selectAnswer(data): void {
@@ -96,6 +110,19 @@ module Page {
             vcase.result = data[vcase.id] || 0;
           }
         });
+      });
+    }
+
+    private getStatsById(pageId): ng.IPromise<API.IQuizQuestion> {
+      var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.pageStatsUrl;
+      url = url.replace(':pageId', pageId);
+
+      return Bootstrap.$http.get(url).then((res) => {
+        if ([200, 304].indexOf(res.status) !== -1) {
+          return res.data;
+        }
+
+        return Bootstrap.$q.reject(res);
       });
     }
 
