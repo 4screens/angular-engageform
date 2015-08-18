@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.12
+ * 4screens-angular-engageform v0.2.13
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -74,6 +74,13 @@ var Engageform;
             this.theme = new Engageform_1.Theme(data);
             this.branding = new Branding.Branding(data.settings.branding);
         }
+        Object.defineProperty(Engageform.prototype, "id", {
+            get: function () {
+                return this._engageformId;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Engageform.prototype, "pages", {
             get: function () {
                 return this._pages;
@@ -915,6 +922,9 @@ var Engageform;
                 this.allowAnswerChange = !!data.settings.allowAnswerChange;
                 if (data.settings.share) {
                     this.share = data.settings.share;
+                    if (!this.share.imageUrl && Bootstrap.config.share && Bootstrap.config.share.defaultImgUrl) {
+                        this.share.imageUrl = Bootstrap.config.share.defaultImgUrl;
+                    }
                 }
             }
         }
@@ -1506,6 +1516,47 @@ var Page;
                 }
             }
         }
+        EndPage.prototype.personalizeShares = function () {
+            // console.log('[ Endpage ] Personalize shares');
+            if (this.engageform.typeName === 'outcome' || this.engageform.typeName === 'score') {
+                this.socialData.title = 'I got "' +
+                    (this.engageform.typeName === 'score' ? ((this.score || 0) + ' percent') : (this.outcome || '')) +
+                    '" on "' + this.cleanParam(this.engageform.title) + '" quiz. What about you ?';
+                if (this.media && this.settings.showMainMedia) {
+                    this.socialData.imageUrl = this.media;
+                }
+            }
+        };
+        EndPage.prototype.cleanParam = function (str) {
+            return str.replace(/#|\?|\/|\\|\=/g, '');
+        };
+        Object.defineProperty(EndPage.prototype, "fbLink", {
+            get: function () {
+                if (Bootstrap.config.backend && Bootstrap.config.backend.domain &&
+                    Bootstrap.config.share && Bootstrap.config.share.facebook &&
+                    this.socialData && this.socialData.title && this.socialData.description &&
+                    this.socialData.imageUrl && this.engageform && this.engageform.id) {
+                    this.personalizeShares();
+                    return Bootstrap.config.backend.domain + Bootstrap.config.share.facebook + '?quizId=' + this.engageform.id +
+                        '&description=' + this.cleanParam(this.socialData.description) + '&name=' +
+                        this.cleanParam(this.socialData.title) + '&image=' + this.socialData.imageUrl;
+                }
+                return null;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EndPage.prototype, "twLink", {
+            get: function () {
+                if (this.socialData && this.socialData.title && this.socialData.link) {
+                    this.personalizeShares();
+                    return 'https://twitter.com/intent/tweet?text=' + this.socialData.title + ' ' + this.socialData.link + ' via @4screens';
+                }
+                return null;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return EndPage;
     })(Page.Page);
     Page.EndPage = EndPage;
