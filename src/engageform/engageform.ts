@@ -21,6 +21,10 @@ module Engageform {
     current: Page.IPage;
     navigation: Navigation.INavigation;
 
+    get id(): string {
+      return this._engageformId;
+    }
+
     get pages(): Page.IPages {
       return this._pages;
     }

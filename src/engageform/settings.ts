@@ -16,6 +16,10 @@ module Engageform {
 
         if (data.settings.share) {
           this.share = data.settings.share;
+
+          if (!this.share.imageUrl && Bootstrap.config.share.defaultImgUrl) {
+            this.share.imageUrl = Bootstrap.config.share.defaultImgUrl;
+          }
         }
       }
     }

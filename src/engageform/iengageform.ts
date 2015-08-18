@@ -17,6 +17,9 @@ module Engageform {
     availablePages: string[];
     hasForms: boolean;
 
+    typeName: string;
+    id: string;
+
     isType(type: Type): boolean;
 
     initPages(): ng.IPromise<IEngageform>;
