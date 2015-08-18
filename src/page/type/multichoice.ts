@@ -22,6 +22,14 @@ module Page {
 
     }
 
+    refreshAnswer(sent: IPageSent, question: API.IQuizQuestion): IPageSent {
+      question.answers.map((answer: any) => {
+        sent.results[answer._id] = answer.percent;
+      });
+
+      return sent;
+    }
+
     selectAnswer(sent) {
       this.cases.map((vcase: ICase) => {
         vcase.selected = false;
