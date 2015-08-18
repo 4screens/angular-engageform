@@ -22,6 +22,12 @@ bower install
 tsd reinstall --save --overwrite
 ```
 
+Copy builded module to needed path after any changes (copy after any changes)
+
+```shell
+gulp publish --path *path*
+```
+
 # Distribute
 
 Release of a new version of the package.
