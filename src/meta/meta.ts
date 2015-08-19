@@ -8,8 +8,11 @@ module Meta {
 
     constructor(engageform: Engageform.IEngageform) {
       this._engageform = engageform;
-      this.globalTitle = this._engageform.settings.share.title || '';
-      this.globalDescription = this._engageform.settings.share.description || '';
+
+      if (this._engageform.settings.share) {
+        this.globalTitle = this._engageform.settings.share.title || '';
+        this.globalDescription = this._engageform.settings.share.description || '';
+      }
 
       if (this._engageform.endPages.length < 1 || !_.find(this._engageform.pages, { social: true }) ) {
         if (this._engageform.startPages.length && this._engageform.pages[this._engageform.startPages[0]].title) {
@@ -20,6 +23,7 @@ module Meta {
           this.globalDescription = '';
         }
       }
+
     }
   }
 }
