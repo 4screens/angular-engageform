@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.13
+ * 4screens-angular-engageform v0.2.14
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -396,6 +396,32 @@ var Navigation;
     Navigation_1.Navigation = Navigation;
 })(Navigation || (Navigation = {}));
 
+/// <reference path="imeta.ts" />
+var Meta;
+(function (Meta_1) {
+    var Meta = (function () {
+        function Meta(engageform) {
+            this.globalTitle = '';
+            this.globalDescription = '';
+            this._engageform = engageform;
+            this.globalTitle = this._engageform.settings.share.title || '';
+            this.globalDescription = this._engageform.settings.share.description || '';
+            if (this._engageform.endPages.length < 1 || !_.find(this._engageform.pages, { social: true })) {
+                if (this._engageform.startPages.length && this._engageform.pages[this._engageform.startPages[0]].title) {
+                    this.globalTitle = this._engageform.pages[this._engageform.startPages[0]].title;
+                    this.globalDescription = this._engageform.pages[this._engageform.startPages[0]].description;
+                }
+                else {
+                    this.globalTitle = '';
+                    this.globalDescription = '';
+                }
+            }
+        }
+        return Meta;
+    })();
+    Meta_1.Meta = Meta;
+})(Meta || (Meta = {}));
+
 /// <reference path="ipage.ts" />
 /// <reference path="ipages.ts" />
 /// <reference path="ipagesent.ts" />
@@ -649,6 +675,7 @@ var Util;
 /// <reference path="api/api.ts" />
 /// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
+/// <reference path="meta/meta.ts" />
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
 /// <reference path="util/cloudinary.ts" />
@@ -749,6 +776,15 @@ var Bootstrap = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Bootstrap.prototype, "meta", {
+        get: function () {
+            if (this._engageform) {
+                return this._engageform.meta;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Bootstrap.prototype, "events", {
         get: function () {
             if (this._events) {
@@ -825,6 +861,7 @@ var Bootstrap = (function () {
             return _this._engageform.initPages();
         }).then(function (engageform) {
             engageform.navigation = new Navigation.Navigation(engageform);
+            engageform.meta = new Meta.Meta(engageform);
             return engageform;
         });
     };
