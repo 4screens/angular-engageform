@@ -11,6 +11,7 @@ module.exports = function(config) {
       './bower_components/angular-local-storage/dist/angular-local-storage.js',
       './bower_components/angular-mocks/angular-mocks.js',
       './bower_components/angular-sanitize/angular-sanitize.js',
+      './bower_components/lodash/lodash.min.js',
       './engageform.js',
       './test/**/*.spec.ts',
 
