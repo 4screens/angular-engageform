@@ -63,7 +63,7 @@ var FILES = [
 
   path.join('.', PATH.source, 'user', 'user.ts'),
 
-  path.join('.', PATH.source, 'util', 'events.ts'),
+  path.join('.', PATH.source, 'util', 'event.ts'),
   path.join('.', PATH.source, 'util', 'cloudinary.ts')
 ];
 var BANNER = path.join('.', PATH.source, 'header.txt');

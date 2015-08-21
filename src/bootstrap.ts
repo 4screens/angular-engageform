@@ -5,7 +5,7 @@
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
 /// <reference path="util/cloudinary.ts" />
-/// <reference path="util/events.ts" />
+/// <reference path="util/event.ts" />
 
 class Bootstrap {
   static $http: ng.IHttpService;
@@ -18,7 +18,7 @@ class Bootstrap {
 
   private _engageform: Engageform.IEngageform;
   private _cloudinary: Util.Cloudinary;
-  private _events: Util.Events;
+  private _event: Util.Event;
 
   constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService,
               localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
@@ -30,7 +30,7 @@ class Bootstrap {
     Bootstrap.user = new User();
 
     this._cloudinary = new Util.Cloudinary();
-    this._events = new Util.Events();
+    this._event = new Util.Event();
   }
 
   get type(): Engageform.Type {
@@ -95,9 +95,9 @@ class Bootstrap {
     }
   }
 
-  get events(): Util.Events {
-    if (this._events) {
-      return this._events;
+  get event(): Util.Event {
+    if (this._event) {
+      return this._event;
     }
   }
 
