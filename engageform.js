@@ -72,12 +72,7 @@ var Engageform;
             this.title = data.title;
             this.settings = new Engageform_1.Settings(data);
             this.theme = new Engageform_1.Theme(data);
-            if (data.settings && data.settings.branding) {
-                this.branding = new Branding.Branding(data.settings.branding);
-            }
-            else {
-                this.branding = new Branding.Branding({});
-            }
+            this.branding = new Branding.Branding(data.settings.branding);
         }
         Object.defineProperty(Engageform.prototype, "id", {
             get: function () {
@@ -833,6 +828,10 @@ var Bootstrap = (function () {
                 data: opts
             });
         }
+        console.log('[instances]', Bootstrap._instances);
+        if (Bootstrap._instances[opts.id]) {
+            return Bootstrap._instances[opts.id];
+        }
         switch (opts.mode) {
             case 'preview':
                 Bootstrap.mode = Engageform.Mode.Preview;
@@ -885,7 +884,7 @@ var Bootstrap = (function () {
                         data: engageformData
                     });
             }
-            return _this._engageform.initPages();
+            return Bootstrap._instances[opts.id] = _this._engageform.initPages();
         }).then(function (engageform) {
             engageform.navigation = new Navigation.Navigation(engageform);
             engageform.meta = new Meta.Meta(engageform);
@@ -893,6 +892,7 @@ var Bootstrap = (function () {
         });
     };
     Bootstrap.mode = Engageform.Mode.Undefined;
+    Bootstrap._instances = {};
     return Bootstrap;
 })();
 Bootstrap.$inject = ['$http', '$q', '$timeout', 'localStorageService', 'ApiConfig'];
