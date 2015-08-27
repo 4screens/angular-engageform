@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.16
+ * 4screens-angular-engageform v0.2.17
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -72,7 +72,12 @@ var Engageform;
             this.title = data.title;
             this.settings = new Engageform_1.Settings(data);
             this.theme = new Engageform_1.Theme(data);
-            this.branding = new Branding.Branding(data.settings.branding);
+            if (data.settings && data.settings.branding) {
+                this.branding = new Branding.Branding(data.settings.branding);
+            }
+            else {
+                this.branding = new Branding.Branding({});
+            }
         }
         Object.defineProperty(Engageform.prototype, "id", {
             get: function () {
