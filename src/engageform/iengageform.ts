@@ -27,4 +27,8 @@ module Engageform {
     setCurrent(pageId: string);
     setCurrentEndPage(): ng.IPromise<API.IQuizFinish>;
   }
+
+  export interface IEngageformInstances {
+    [index: string]: ng.IPromise<Engageform.IEngageform>;
+  }
 }

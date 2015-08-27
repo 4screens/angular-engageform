@@ -15,10 +15,13 @@ class Bootstrap {
   static user: User;
   static config;
   static mode = Engageform.Mode.Undefined;
+  Engageform: Engageform.IEngageform;
 
   private _engageform: Engageform.IEngageform;
   private _cloudinary: Util.Cloudinary;
   private _event: Util.Event;
+
+  private static _instances: Engageform.IEngageformInstances = {};
 
   constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService,
               localStorage: ng.local.storage.ILocalStorageService, ApiConfig) {
@@ -113,6 +116,12 @@ class Bootstrap {
       });
     }
 
+    console.log('[instances]', Bootstrap._instances);
+
+    if (Bootstrap._instances[opts.id]) {
+      return Bootstrap._instances[opts.id];
+    }
+
     switch (opts.mode) {
       case 'preview':
         Bootstrap.mode = Engageform.Mode.Preview;
@@ -166,7 +175,8 @@ class Bootstrap {
             data: engageformData
           });
       }
-      return this._engageform.initPages();
+
+      return Bootstrap._instances[opts.id] = this._engageform.initPages();
     }).then(function(engageform) {
       engageform.navigation = new Navigation.Navigation(<Engageform.IEngageform>engageform);
       engageform.meta = new Meta.Meta(<Engageform.IEngageform>engageform);
