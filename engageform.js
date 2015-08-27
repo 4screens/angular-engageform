@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.11
+ * 4screens-angular-engageform v0.2.16
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -72,7 +72,12 @@ var Engageform;
             this.title = data.title;
             this.settings = new Engageform_1.Settings(data);
             this.theme = new Engageform_1.Theme(data);
-            this.branding = new Branding.Branding(data.settings.branding);
+            if (data.settings && data.settings.branding) {
+                this.branding = new Branding.Branding(data.settings.branding);
+            }
+            else {
+                this.branding = new Branding.Branding({});
+            }
         }
         Object.defineProperty(Engageform.prototype, "id", {
             get: function () {
@@ -651,27 +656,47 @@ var Util;
 
 var Util;
 (function (Util) {
-    var Events = (function () {
-        function Events() {
-            this.listeners = {};
+    var Event = (function () {
+        function Event() {
+            this._listener = {};
         }
-        Events.prototype.listen = function (name, callback) {
-            if (!this.listeners[name]) {
-                this.listeners[name] = [];
+        /**
+         * Register callback for given event.
+         *
+         * @param {String} event
+         * @param {Function} callback
+         */
+        Event.prototype.listen = function (event, callback) {
+            if (!this._listener[event]) {
+                this._listener[event] = [];
             }
-            this.listeners[name].push(callback);
+            this._listener[event].push({
+                next: callback
+            });
         };
-        Events.prototype.trigger = function (name, data) {
-            if (data === void 0) { data = {}; }
-            if (this.listeners[name]) {
-                for (var i = 0; i < this.listeners[name].length; i += 1) {
-                    this.listeners[name][i](data);
-                }
+        /**
+         * Fire event with given arguments.
+         *
+         * @param {string} event
+         * @param {args...} data
+         */
+        Event.prototype.trigger = function (event) {
+            var data = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                data[_i - 1] = arguments[_i];
+            }
+            var args = Array.apply(null, arguments).slice(1);
+            var listeners = this._listener[event];
+            if (!listeners) {
+                return;
+            }
+            for (var i = 0; i < listeners.length; i++) {
+                listeners[i].next.apply(null, args);
             }
         };
-        return Events;
+        return Event;
     })();
-    Util.Events = Events;
+    Util.Event = Event;
 })(Util || (Util = {}));
 
 /// <reference path="api/api.ts" />
@@ -681,7 +706,7 @@ var Util;
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
 /// <reference path="util/cloudinary.ts" />
-/// <reference path="util/events.ts" />
+/// <reference path="util/event.ts" />
 var Bootstrap = (function () {
     function Bootstrap($http, $q, $timeout, localStorage, ApiConfig) {
         Bootstrap.$http = $http;
@@ -691,7 +716,7 @@ var Bootstrap = (function () {
         Bootstrap.config = ApiConfig;
         Bootstrap.user = new User();
         this._cloudinary = new Util.Cloudinary();
-        this._events = new Util.Events();
+        this._event = new Util.Event();
     }
     Object.defineProperty(Bootstrap.prototype, "type", {
         get: function () {
@@ -787,10 +812,10 @@ var Bootstrap = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Bootstrap.prototype, "events", {
+    Object.defineProperty(Bootstrap.prototype, "event", {
         get: function () {
-            if (this._events) {
-                return this._events;
+            if (this._event) {
+                return this._event;
             }
         },
         enumerable: true,
