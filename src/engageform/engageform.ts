@@ -1,4 +1,5 @@
 /// <reference path="iengageform.ts" />
+/// <reference path="isendanswercallback.ts" />
 
 module Engageform {
   export class Engageform implements IEngageform {
@@ -9,6 +10,8 @@ module Engageform {
     private _endPages: string[] = [];
     private _availablePages: string[] = [];
     private _hasForms: boolean = false;
+
+    public sendAnswerCallback: ISendAnswerCallback;
 
     enabled: boolean = true;
     type: Type = Type.Undefined;
@@ -69,8 +72,10 @@ module Engageform {
       return this.type === type;
     }
 
-    constructor(data: API.IQuiz) {
+    constructor(data: API.IQuiz, sendAnswerCallback: ISendAnswerCallback) {
       this._engageformId = data._id;
+
+      this.sendAnswerCallback = sendAnswerCallback;
 
       this.title = data.title;
       this.settings = new Settings(data);
@@ -83,8 +88,8 @@ module Engageform {
     }
 
     initPages(): ng.IPromise<IEngageform> {
-      return this.getPagesById(this._engageformId).then((pages) => {
-        this.buildPages(pages);
+        return this.getPagesById(this._engageformId).then((pages) => {
+          this.buildPages(pages);
 
         return <IEngageform>this;
       });

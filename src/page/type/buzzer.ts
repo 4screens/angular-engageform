@@ -38,6 +38,10 @@ module Page {
 
         // True send - POST to server, we dont need then here since socket respond with global buttonClickSum
         this.cases[0].trueBuzzerSend(this.buttonClickSum);
+        this.cases[0].buttonClickSum = this.buttonClickSum;
+        this.engageform.sendAnswerCallback(this.engageform.title || this.engageform.id,
+                                           this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
+                                           this.cases[0]);
       }
 
       // Not a buzzer - stop cycle

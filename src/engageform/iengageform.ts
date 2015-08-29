@@ -1,5 +1,7 @@
 module Engageform {
   export interface IEngageform {
+    sendAnswerCallback: ISendAnswerCallback;
+
     enabled: boolean;
     type: Type;
     title: string;

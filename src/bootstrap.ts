@@ -151,19 +151,19 @@ class Bootstrap {
     return Engageform.Engageform.getById(opts.id).then((engageformData) => {
       switch (engageformData.type) {
         case 'outcome':
-          this._engageform = new Engageform.Outcome(engageformData);
+          this._engageform = new Engageform.Outcome(engageformData, opts.callback.sendAnswerCallback);
           break;
         case 'poll':
-          this._engageform = new Engageform.Poll(engageformData);
-          break;
+          this._engageform = new Engageform.Poll(engageformData, opts.callback.sendAnswerCallback);
+            break;
         case 'score':
-          this._engageform = new Engageform.Score(engageformData);
+          this._engageform = new Engageform.Score(engageformData, opts.callback.sendAnswerCallback);
           break;
         case 'survey':
-          this._engageform = new Engageform.Survey(engageformData);
+          this._engageform = new Engageform.Survey(engageformData, opts.callback.sendAnswerCallback);
           break;
         case 'live':
-          this._engageform = new Engageform.Live(engageformData);
+          this._engageform = new Engageform.Live(engageformData, opts.callback.sendAnswerCallback);
           break;
         default:
           return Bootstrap.$q.reject({

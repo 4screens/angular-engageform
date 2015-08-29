@@ -36,12 +36,18 @@ module Page {
       }
 
       if (sent.result) {
-        this.result = sent.result;
+          this.result = sent.result;
       }
 
       this.cases.map((vcase: ICase) => {
         vcase.selected = sent.selectedValue >= vcase.ordinal;
+
+        if (sent.selectedValue === vcase.ordinal) {
+            this.engageform.sendAnswerCallback(this.engageform.title || this.engageform.id,
+                    this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
+                    vcase);
+        }
       });
     }
-  }
+    }
 }
