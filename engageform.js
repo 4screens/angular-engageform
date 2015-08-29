@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.17
+ * 4screens-angular-engageform v0.2.18
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -57,10 +57,11 @@ var app = angular.module('4screens.engageform', [
 ]);
 
 /// <reference path="iengageform.ts" />
+/// <reference path="isendanswercallback.ts" />
 var Engageform;
 (function (Engageform_1) {
     var Engageform = (function () {
-        function Engageform(data) {
+        function Engageform(data, sendAnswerCallback) {
             this._pages = {};
             this._startPages = [];
             this._endPages = [];
@@ -69,6 +70,7 @@ var Engageform;
             this.enabled = true;
             this.type = Engageform_1.Type.Undefined;
             this._engageformId = data._id;
+            this.sendAnswerCallback = sendAnswerCallback;
             this.title = data.title;
             this.settings = new Engageform_1.Settings(data);
             this.theme = new Engageform_1.Theme(data);
@@ -865,19 +867,19 @@ var Bootstrap = (function () {
         return Engageform.Engageform.getById(opts.id).then(function (engageformData) {
             switch (engageformData.type) {
                 case 'outcome':
-                    _this._engageform = new Engageform.Outcome(engageformData);
+                    _this._engageform = new Engageform.Outcome(engageformData, opts.callback.sendAnswerCallback);
                     break;
                 case 'poll':
-                    _this._engageform = new Engageform.Poll(engageformData);
+                    _this._engageform = new Engageform.Poll(engageformData, opts.callback.sendAnswerCallback);
                     break;
                 case 'score':
-                    _this._engageform = new Engageform.Score(engageformData);
+                    _this._engageform = new Engageform.Score(engageformData, opts.callback.sendAnswerCallback);
                     break;
                 case 'survey':
-                    _this._engageform = new Engageform.Survey(engageformData);
+                    _this._engageform = new Engageform.Survey(engageformData, opts.callback.sendAnswerCallback);
                     break;
                 case 'live':
-                    _this._engageform = new Engageform.Live(engageformData);
+                    _this._engageform = new Engageform.Live(engageformData, opts.callback.sendAnswerCallback);
                     break;
                 default:
                     return Bootstrap.$q.reject({
@@ -1667,6 +1669,8 @@ var Page;
             });
             if (validated) {
                 this.filled = true;
+                console.log(this.cases[0]);
+                this.engageform.sendAnswerCallback(this.engageform.title || this.engageform.id, this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null, this.cases[0]);
                 deferred.resolve(this.cases[0].send());
             }
             else {
@@ -1724,6 +1728,7 @@ var Page;
                 vcase.correct = false;
                 vcase.incorrect = false;
                 if (vcase.id === sent.selectedCaseId) {
+                    _this.engageform.sendAnswerCallback(_this.engageform.title || _this.engageform.id, _this.engageform.current ? _this.engageform.current.title || _this.engageform.current.id : null, vcase);
                     _this.filled = true;
                     vcase.selected = true;
                 }
@@ -1784,6 +1789,7 @@ var Page;
                 vcase.correct = false;
                 vcase.incorrect = false;
                 if (vcase.id === sent.selectedCaseId) {
+                    _this.engageform.sendAnswerCallback(_this.engageform.title || _this.engageform.id, _this.engageform.current ? _this.engageform.current.title || _this.engageform.current.id : null, vcase);
                     _this.filled = true;
                     vcase.selected = true;
                 }
@@ -1836,6 +1842,7 @@ var Page;
             });
         }
         Rateit.prototype.selectAnswer = function (sent) {
+            var _this = this;
             if (sent.selectedValue) {
                 this.filled = true;
                 this.selectedValue = sent.selectedValue;
@@ -1845,6 +1852,9 @@ var Page;
             }
             this.cases.map(function (vcase) {
                 vcase.selected = sent.selectedValue >= vcase.ordinal;
+                if (sent.selectedValue === vcase.ordinal) {
+                    _this.engageform.sendAnswerCallback(_this.engageform.title || _this.engageform.id, _this.engageform.current ? _this.engageform.current.title || _this.engageform.current.id : null, vcase);
+                }
             });
         };
         return Rateit;
@@ -1909,6 +1919,8 @@ var Page;
             if (this.buttonClickSum > 0) {
                 // True send - POST to server, we dont need then here since socket respond with global buttonClickSum
                 this.cases[0].trueBuzzerSend(this.buttonClickSum);
+                this.cases[0].buttonClickSum = this.buttonClickSum;
+                this.engageform.sendAnswerCallback(this.engageform.title || this.engageform.id, this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null, this.cases[0]);
             }
             // Not a buzzer - stop cycle
             if (iteration > 0 && this.engageform && this.engageform.current && this.engageform.current.id !== this.id) {
