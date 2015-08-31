@@ -527,7 +527,7 @@ var Page;
             }
             Bootstrap.$timeout(function () {
                 _this.cases.map(function (vcase) {
-                    if (data[vcase.id]) {
+                    if (!_.isUndefined(data[vcase.id])) {
                         var loaded = vcase.load();
                         loaded.results[vcase.id] = data[vcase.id];
                         vcase.save(loaded);
