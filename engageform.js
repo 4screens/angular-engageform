@@ -525,6 +525,9 @@ var Page;
             if (this.id !== data.questionId) {
                 return;
             }
+            if (this.engageform.current && !_.isUndefined(data.avg)) {
+                this.engageform.current.result = data.avg;
+            }
             Bootstrap.$timeout(function () {
                 _this.cases.map(function (vcase) {
                     if (!_.isUndefined(data[vcase.id])) {
