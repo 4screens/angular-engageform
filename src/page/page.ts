@@ -103,7 +103,7 @@ module Page {
 
       Bootstrap.$timeout(() => {
         this.cases.map((vcase: ICase) => {
-          if (data[vcase.id]) {
+          if (!_.isUndefined(data[vcase.id])) {
             var loaded = vcase.load();
             loaded.results[vcase.id] = data[vcase.id];
             vcase.save(loaded);
