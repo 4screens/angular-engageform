@@ -101,6 +101,10 @@ module Page {
         return;
       }
 
+      if (this.engageform.current && !_.isUndefined(data.avg)) {
+        this.engageform.current.result = data.avg;
+      }
+
       Bootstrap.$timeout(() => {
         this.cases.map((vcase: ICase) => {
           if (!_.isUndefined(data[vcase.id])) {
