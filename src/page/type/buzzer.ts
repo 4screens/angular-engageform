@@ -12,6 +12,8 @@ module Page {
 
     private _timeout;
 
+    private _connected = false;
+
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
       super(engageform, data);
       console.log('[ Buzzer ] Constructor');
@@ -34,7 +36,14 @@ module Page {
 
     private buzzLoop(iteration: number) {
       console.log('[ Buzzer ] Buzz');
+
+      if (!this._connected) {
+        this.cases[0].trueBuzzerSend(0); // subscribe for buzzer update
+        this._connected = true;
+      }
+
       if (this.buttonClickSum > 0) {
+        this._connected = true;
 
         // True send - POST to server, we dont need then here since socket respond with global buttonClickSum
         this.cases[0].trueBuzzerSend(this.buttonClickSum);
