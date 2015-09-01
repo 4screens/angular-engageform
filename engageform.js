@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.21
+ * 4screens-angular-engageform v0.2.22
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -604,6 +604,47 @@ var Util;
         Cloudinary.getInstance = function () {
             return Cloudinary._instance;
         };
+        Cloudinary.prototype.prepareBackgroundImageUrl = function (filepath, width, height, blur, position) {
+            if (!filepath) {
+                return '';
+            }
+            var src = this._domain + '/' + this._accountName + '/image';
+            if (filepath.indexOf('http') !== -1) {
+                src += '/fetch';
+            }
+            else {
+                src += '/upload';
+            }
+            var manipulation;
+            var blured = blur ? blur * 100 : 0;
+            manipulation = [];
+            manipulation.push('w_' + width);
+            manipulation.push('f_auto');
+            manipulation.push('h_' + height);
+            switch (position) {
+                case 'fill':
+                    manipulation.push('c_fill');
+                    break;
+                case 'fit':
+                    manipulation.push('c_fit');
+                    break;
+                case 'tiled':
+                    break;
+                case 'centered':
+                    manipulation.push('c_limit');
+                    break;
+                case 'tiled':
+                    manipulation.push('c_limit');
+                    break;
+            }
+            manipulation.push('dpr_1.0');
+            manipulation.push('e_blur:' + blured);
+            src += '/' + manipulation.join(',');
+            if (filepath.indexOf('http') === -1) {
+                src += '/' + this._uploadFolder;
+            }
+            return src + '/' + filepath;
+        };
         Cloudinary.prototype.prepareImageUrl = function (filepath, width, imageData) {
             if (!filepath) {
                 return '';
@@ -1028,6 +1069,7 @@ var Engageform;
             this.font = '';
             this.questionColor = '';
             this.customThemeCssFile = '';
+            this.backgroundImageConvertedFile = '';
             if (data.theme) {
                 this.answerBackgroundColor = data.theme.answerBackgroundColor || '';
                 this.answerBorderColor = data.theme.answerBorderColor || '';
@@ -1043,8 +1085,14 @@ var Engageform;
                 if (data.theme.customThemeCssFile) {
                     this.customThemeCssFile = Bootstrap.config.backend.api + '/uploads/' + data.theme.customThemeCssFile;
                 }
+                if (data.theme.backgroundImageFile) {
+                    this.convertBackgroundImage();
+                }
             }
         }
+        Theme.prototype.convertBackgroundImage = function () {
+            this.backgroundImageConvertedFile = Util.Cloudinary.getInstance().prepareBackgroundImageUrl(this.backgroundImageFile, window.innerWidth, window.innerHeight, parseInt(this.backgroundImageBlur, 10), this.backgroundImagePosition);
+        };
         return Theme;
     })();
     Engageform.Theme = Theme;
