@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.22
+ * 4screens-angular-engageform v0.2.23
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -1955,6 +1955,7 @@ var Page;
             _super.call(this, engageform, data);
             this.type = Page.Type.Buzzer;
             this.buttonClickSum = 0;
+            this._connected = false;
             console.log('[ Buzzer ] Constructor');
             // Make only one case with buzzed ammount
             this.cases.push(new Page.BuzzCase(this, { _id: 0, buttonClickSum: this.buttonClickSum }));
@@ -1971,7 +1972,12 @@ var Page;
         Buzzer.prototype.buzzLoop = function (iteration) {
             var _this = this;
             console.log('[ Buzzer ] Buzz');
+            if (!this._connected) {
+                this.cases[0].trueBuzzerSend(0); // subscribe for buzzer update
+                this._connected = true;
+            }
             if (this.buttonClickSum > 0) {
+                this._connected = true;
                 // True send - POST to server, we dont need then here since socket respond with global buttonClickSum
                 this.cases[0].trueBuzzerSend(this.buttonClickSum);
                 this.cases[0].buttonClickSum = this.buttonClickSum;
