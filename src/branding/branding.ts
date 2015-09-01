@@ -34,27 +34,30 @@ module Branding {
     }
 
     constructor(data: IBrandingData = {}) {
+      var imgUrl;
+
       // If there's any branding data, it means that this is a custom branding.
       if (data.text || data.link || data.imageUrl) {
         this._isCustom = true;
       }
 
-      if (data.imageUrl) {
-        this._isCustomLogo = true;
-      }
-
       // Set the branding properties form the data object or from the default values.
-      this._text = data.text || this._defaultBranding.text;
-      this._link = data.link || this._defaultBranding.link;
+      this._text = typeof data.imageUrl === 'undefined' ? data.text : this._defaultBranding.text;
+      this._link = typeof data.imageUrl === 'undefined' ? data.link : this._defaultBranding.link;
 
       // Image URL is a bit complicated.
-      var imgUrl = data.imageUrl || this._defaultBranding.imageUrl;
+      if ( typeof data.imageUrl === 'undefined' ) {
+        imgUrl = this._defaultBranding.imageUrl;
+      } else {
+        imgUrl = data.imageUrl;
+        this._isCustomLogo = true;
+      }
 
       // The image's URL is a bit different if it is a default one, than when it is a custom.
       if (imgUrl === this._defaultBranding.imageUrl) {
         this._imageUrl = Bootstrap.config.backend.api + imgUrl;
       } else {
-        this._imageUrl = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imgUrl;
+        this._imageUrl = imgUrl ? Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imgUrl : '';
       }
     }
   }
