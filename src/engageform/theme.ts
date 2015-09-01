@@ -14,6 +14,7 @@ module Engageform {
     font: string = '';
     questionColor: string = '';
     customThemeCssFile: string = '';
+    backgroundImageConvertedFile: string = '';
 
     constructor(data: API.IQuiz) {
       if (data.theme) {
@@ -32,7 +33,21 @@ module Engageform {
         if (data.theme.customThemeCssFile) {
           this.customThemeCssFile = Bootstrap.config.backend.api + '/uploads/' + data.theme.customThemeCssFile;
         }
+
+        if (data.theme.backgroundImageFile) {
+          this.convertBackgroundImage();
+        }
       }
     }
-  }
+
+    convertBackgroundImage() {
+      this.backgroundImageConvertedFile = Util.Cloudinary.getInstance().prepareBackgroundImageUrl(
+        this.backgroundImageFile,
+        window.innerWidth,
+        window.innerHeight,
+        parseInt(this.backgroundImageBlur, 10),
+        this.backgroundImagePosition
+      );
+    }
+    }
 }

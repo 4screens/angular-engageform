@@ -12,5 +12,9 @@ module Engageform {
     font: string;
     questionColor: string;
     customThemeCssFile: string;
+
+    backgroundImageConvertedFile?: string;
+
+    convertBackgroundImage(): void;
   }
 }

@@ -22,6 +22,55 @@ module Util {
       return Cloudinary._instance;
     }
 
+    public prepareBackgroundImageUrl(filepath: string, width: number, height: number, blur: number, position: string) {
+      if (!filepath) {
+        return '';
+      }
+
+      var src = this._domain + '/' + this._accountName + '/image';
+
+      if (filepath.indexOf('http') !== -1) {
+        src += '/fetch';
+      } else {
+        src += '/upload';
+      }
+
+      var manipulation;
+      var blured = blur ? blur * 100 : 0;
+
+      manipulation = [];
+      manipulation.push('w_' + width);
+      manipulation.push('f_auto');
+      manipulation.push('h_' + height);
+
+      switch (position) {
+        case 'fill':
+          manipulation.push('c_fill');
+          break;
+        case 'fit':
+          manipulation.push('c_fit');
+          break;
+        case 'tiled':
+          break;
+        case 'centered':
+          manipulation.push('c_limit');
+          break;
+        case 'tiled':
+          manipulation.push('c_limit');
+          break;
+      }
+
+      manipulation.push('dpr_1.0');
+      manipulation.push('e_blur:' + blured);
+      src += '/' + manipulation.join(',');
+
+      if (filepath.indexOf('http') === -1) {
+        src += '/' + this._uploadFolder;
+      }
+
+      return src + '/' + filepath;
+    }
+
     public prepareImageUrl(filepath: string, width: number, imageData) {
       if (!filepath) {
         return '';

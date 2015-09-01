@@ -44,7 +44,7 @@ module Page {
       if (this.settings.showMainMedia) {
         this.media = Util.Cloudinary.getInstance().prepareImageUrl(
           data.imageFile,
-          680,
+          680, // zakładamy że media zawsze ma taką szerokość (MUST BE FIXXXXXED!!!!!)
           data.imageData
         );
       }
