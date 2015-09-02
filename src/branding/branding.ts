@@ -7,6 +7,7 @@ module Branding {
     private _link: string;
     private _imageUrl: string;
     private _isCustomLogo: boolean = false;
+    private _enabled: boolean;
 
     // Marks the branding if it is a custom, ie. user defined at least one own value.
     private _isCustom: boolean = false;
@@ -29,10 +30,16 @@ module Branding {
     public get text(): string {
       return this._text;
     }
+    public get enabled(): boolean {
+      return this._enabled;
+    }
 
     constructor(data: IBrandingData = {}) {
       var imgUrl;
       var defaultBranding = Bootstrap.config.backend.branding;
+
+      // Is branding enabled?
+      this._enabled = Boolean(data.state);
 
       // If there's any branding data, it means that this is a custom branding.
       if (data.text || data.link || data.imageUrl) {
