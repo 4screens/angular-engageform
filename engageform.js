@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.25
+ * 4screens-angular-engageform v0.2.26
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -973,26 +973,27 @@ var Branding;
             this._isCustomLogo = false;
             // Marks the branding if it is a custom, ie. user defined at least one own value.
             this._isCustom = false;
-            // Default branding values from settings.
-            this._defaultBranding = Bootstrap.config.backend.branding;
             var imgUrl;
+            var defaultBranding = Bootstrap.config.backend.branding;
+            // Is branding enabled? (State of the enabled branding is false, so negating that).
+            this._enabled = !data.state;
             // If there's any branding data, it means that this is a custom branding.
             if (data.text || data.link || data.imageUrl) {
                 this._isCustom = true;
             }
             // Set the branding properties form the data object or from the default values.
-            this._text = typeof data.imageUrl === 'undefined' ? data.text : this._defaultBranding.text;
-            this._link = typeof data.imageUrl === 'undefined' ? data.link : this._defaultBranding.link;
+            this._text = typeof data.text === 'undefined' ? defaultBranding.text : data.text;
+            this._link = typeof data.link === 'undefined' ? defaultBranding.link : data.link;
             // Image URL is a bit complicated.
             if (typeof data.imageUrl === 'undefined') {
-                imgUrl = this._defaultBranding.imageUrl;
+                imgUrl = defaultBranding.imageUrl;
             }
             else {
                 imgUrl = data.imageUrl;
                 this._isCustomLogo = true;
             }
             // The image's URL is a bit different if it is a default one, than when it is a custom.
-            if (imgUrl === this._defaultBranding.imageUrl) {
+            if (imgUrl === defaultBranding.imageUrl) {
                 this._imageUrl = Bootstrap.config.backend.api + imgUrl;
             }
             else {
@@ -1037,6 +1038,13 @@ var Branding;
         Object.defineProperty(Branding.prototype, "text", {
             get: function () {
                 return this._text;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Branding.prototype, "enabled", {
+            get: function () {
+                return this._enabled;
             },
             enumerable: true,
             configurable: true
