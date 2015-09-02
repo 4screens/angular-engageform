@@ -38,8 +38,8 @@ module Branding {
       var imgUrl;
       var defaultBranding = Bootstrap.config.backend.branding;
 
-      // Is branding enabled?
-      this._enabled = Boolean(data.state);
+      // Is branding enabled? (State of the enabled branding is false, so negating that).
+      this._enabled = !data.state;
 
       // If there's any branding data, it means that this is a custom branding.
       if (data.text || data.link || data.imageUrl) {
