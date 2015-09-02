@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.23
+ * 4screens-angular-engageform v0.2.24
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -67,6 +67,9 @@ var Engageform;
             this._endPages = [];
             this._availablePages = [];
             this._hasForms = false;
+            this.sendAnswerCallback = function () {
+                return;
+            };
             this.enabled = true;
             this.type = Engageform_1.Type.Undefined;
             this._engageformId = data._id;
