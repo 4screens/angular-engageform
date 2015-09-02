@@ -150,9 +150,14 @@ class Bootstrap {
 
     if (!opts.callback) {
       opts.callback = {
-          sendAnswerCallback: function(){}
-                             if (!opts.callback.sendAnswerCallback) {
-                .callback.sendAnswerCallback = function(){};
+          sendAnswerCallback: function() {
+              return;
+          }
+      };
+    } else if (!opts.callback.sendAnswerCallback) {
+      opts.callback.sendAnswerCallback = function(){
+        return;
+      };
     }
 
     return Engageform.Engageform.getById(opts.id).then((engageformData) => {
