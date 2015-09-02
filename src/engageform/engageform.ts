@@ -11,7 +11,9 @@ module Engageform {
     private _availablePages: string[] = [];
     private _hasForms: boolean = false;
 
-    public sendAnswerCallback: ISendAnswerCallback;
+    public sendAnswerCallback: ISendAnswerCallback = function() {
+      return;
+    };
 
     enabled: boolean = true;
     type: Type = Type.Undefined;
