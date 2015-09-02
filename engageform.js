@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.24
+ * 4screens-angular-engageform v0.2.25
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -910,6 +910,18 @@ var Bootstrap = (function () {
                     },
                     data: opts
                 });
+        }
+        if (!opts.callback) {
+            opts.callback = {
+                sendAnswerCallback: function () {
+                    return;
+                }
+            };
+        }
+        else if (!opts.callback.sendAnswerCallback) {
+            opts.callback.sendAnswerCallback = function () {
+                return;
+            };
         }
         return Engageform.Engageform.getById(opts.id).then(function (engageformData) {
             switch (engageformData.type) {
