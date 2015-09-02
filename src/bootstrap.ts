@@ -148,6 +148,13 @@ class Bootstrap {
         });
     }
 
+    if (!opts.callback) {
+      opts.callback = {
+          sendAnswerCallback: function(){}
+                             if (!opts.callback.sendAnswerCallback) {
+                .callback.sendAnswerCallback = function(){};
+    }
+
     return Engageform.Engageform.getById(opts.id).then((engageformData) => {
       switch (engageformData.type) {
         case 'outcome':
