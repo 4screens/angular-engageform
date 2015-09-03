@@ -49,8 +49,6 @@ module Util {
         case 'fit':
           manipulation.push('c_fit');
           break;
-        case 'tiled':
-          break;
         case 'centered':
           manipulation.push('c_limit');
           break;
