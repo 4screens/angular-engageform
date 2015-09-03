@@ -1,28 +1,27 @@
-/// <reference path="icloudinary.ts" />
+/// <reference path="../api/config.ts" />
 
 module Util {
-  export class Cloudinary implements ICloudinary {
-    private static _instance: Cloudinary;
-
-    private _accountName: string;
-    private _uploadFolder: string;
-    private _domain: string;
+  export class Cloudinary {
+    static _accountName: string;
+    static _uploadFolder: string;
+    static _domain: string;
 
     constructor() {
-      if (Bootstrap.config.cloudinary) {
-        this._accountName = Bootstrap.config.cloudinary.accountName || 'test4screens';
-        this._uploadFolder = Bootstrap.config.cloudinary.uploadFolder || 'console';
-        this._domain = Bootstrap.config.cloudinary.domain || 'https://res.cloudinary.com';
+      throw new Error('One does not simply instantiate Cloudinary.');
+    }
+
+    public static setConfig(options) {
+      if (!options || [options.accountName, options.uploadFolder, options.domain].indexOf(undefined) > -1) {
+        throw new Error('Missing properties in the Cloudinary API config.');
       }
 
-      Cloudinary._instance = this;
+      // TODO: move defaults to config.json. They're not defaults after all!
+      this._accountName = options.accountName || 'test4screens';
+      this._uploadFolder = options.uploadFolder || 'console';
+      this._domain = options.domain || 'https://res.cloudinary.com';
     }
 
-    public static getInstance(): Cloudinary {
-      return Cloudinary._instance;
-    }
-
-    public prepareBackgroundImageUrl(filepath: string, width: number, height: number, blur: number, position: string) {
+    public static prepareBackgroundImageUrl(filepath: string, width: number, height: number, blur: number, position: string) {
       if (!filepath) {
         return '';
       }
@@ -71,7 +70,7 @@ module Util {
       return src + '/' + filepath;
     }
 
-    public prepareImageUrl(filepath: string, width: number, imageData) {
+    public static prepareImageUrl(filepath: string, width: number, imageData) {
       if (!filepath) {
         return '';
       }

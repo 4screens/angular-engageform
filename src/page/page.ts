@@ -42,7 +42,7 @@ module Page {
         this.description = data.description || '';
       }
       if (this.settings.showMainMedia) {
-        this.media = Util.Cloudinary.getInstance().prepareImageUrl(
+        this.media = Util.Cloudinary.prepareImageUrl(
           data.imageFile,
           680, // zakładamy że media zawsze ma taką szerokość (MUST BE FIXXXXXED!!!!!)
           data.imageData
