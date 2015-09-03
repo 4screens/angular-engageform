@@ -2,23 +2,27 @@
 
 module Util {
   export class Cloudinary {
-    static _accountName: string;
-    static _uploadFolder: string;
-    static _domain: string;
+    static _accountName = '';
+    static _uploadFolder = '';
+    static _domain = '';
 
     constructor() {
       throw new Error('One does not simply instantiate Cloudinary.');
     }
 
+    /**
+     * Changes the account configuration of the module.
+     *
+     * @param {Config.ApiConfig.cloudinary} options Account data for accessing the CLoudinary service.
+     */
     public static setConfig(options) {
       if (!options || [options.accountName, options.uploadFolder, options.domain].indexOf(undefined) > -1) {
         throw new Error('Missing properties in the Cloudinary API config.');
       }
 
-      // TODO: move defaults to config.json. They're not defaults after all!
-      this._accountName = options.accountName || 'test4screens';
-      this._uploadFolder = options.uploadFolder || 'console';
-      this._domain = options.domain || 'https://res.cloudinary.com';
+      this._accountName = options.accountName;
+      this._uploadFolder = options.uploadFolder;
+      this._domain = options.domain;
     }
 
     public static prepareBackgroundImageUrl(filepath: string, width: number, height: number, blur: number, position: string) {
