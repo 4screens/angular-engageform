@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.28
+ * 4screens-angular-engageform v0.2.29
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -1996,7 +1996,6 @@ var Page;
             var _this = this;
             console.log('[ Buzzer ] Buzz');
             if (!this._connected) {
-                this.cases[0].trueBuzzerSend(0); // subscribe for buzzer update
                 this._connected = true;
             }
             if (this.buttonClickSum > 0) {
