@@ -1,10 +1,14 @@
 /// <reference path="../api/config.ts" />
 
 module Util {
+  export interface CloudinaryConfig {
+    accountName: string;
+    uploadFolder: string;
+    domain: string;
+  }
+
   export class Cloudinary {
-    static _accountName = '';
-    static _uploadFolder = '';
-    static _domain = '';
+    static _config: CloudinaryConfig;
 
     constructor() {
       throw new Error('One does not simply instantiate Cloudinary.');
@@ -15,14 +19,14 @@ module Util {
      *
      * @param {Config.ApiConfig.cloudinary} options Account data for accessing the CLoudinary service.
      */
-    public static setConfig(options) {
+    public static setConfig(options: CloudinaryConfig) {
       if (!options || [options.accountName, options.uploadFolder, options.domain].indexOf(undefined) > -1) {
         throw new Error('Missing properties in the Cloudinary API config.');
       }
 
-      this._accountName = options.accountName;
-      this._uploadFolder = options.uploadFolder;
-      this._domain = options.domain;
+      // This is a hack. Module has to have a reference to the ApiOptions.cloudinary object, since it is
+      // overwritten by the config retrieved later.
+      this._config = options;
     }
 
     public static prepareBackgroundImageUrl(filepath: string, width: number, height: number, blur: number, position: string) {
@@ -30,7 +34,7 @@ module Util {
         return '';
       }
 
-      var src = this._domain + '/' + this._accountName + '/image';
+      var src = this._config.domain + '/' + this._config.accountName + '/image';
 
       if (filepath.indexOf('http') !== -1) {
         src += '/fetch';
@@ -66,7 +70,7 @@ module Util {
       src += '/' + manipulation.join(',');
 
       if (filepath.indexOf('http') === -1) {
-        src += '/' + this._uploadFolder;
+        src += '/' + this._config.uploadFolder;
       }
 
       return src + '/' + filepath;
@@ -77,7 +81,7 @@ module Util {
         return '';
       }
 
-      var src = this._domain + '/' + this._accountName + '/image';
+      var src = this._config.domain + '/' + this._config.accountName + '/image';
       var baseWidth = 540;
 
       if (filepath.indexOf('http') !== -1) {
@@ -126,7 +130,7 @@ module Util {
       src += '/' + manipulation.join(',');
 
       if (filepath.indexOf('http') === -1) {
-        src += '/' + this._uploadFolder;
+        src += '/' + this._config.uploadFolder;
       }
 
       return src + '/' + filepath;

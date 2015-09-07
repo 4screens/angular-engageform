@@ -34,7 +34,7 @@ class Bootstrap {
 
     this._event = new Util.Event();
 
-    Util.Cloudinary.setConfig(ApiConfig.cloudinary);
+    Util.Cloudinary.setConfig(<Util.CloudinaryConfig>ApiConfig.cloudinary);
   }
 
   get type(): Engageform.Type {
