@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.31
+ * 4screens-angular-engageform v0.2.32
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -608,15 +608,15 @@ var Util;
             if (!options || [options.accountName, options.uploadFolder, options.domain].indexOf(undefined) > -1) {
                 throw new Error('Missing properties in the Cloudinary API config.');
             }
-            this._accountName = options.accountName;
-            this._uploadFolder = options.uploadFolder;
-            this._domain = options.domain;
+            // This is a hack. Module has to have a reference to the ApiOptions.cloudinary object, since it is
+            // overwritten by the config retrieved later.
+            this._config = options;
         };
         Cloudinary.prepareBackgroundImageUrl = function (filepath, width, height, blur, position) {
             if (!filepath) {
                 return '';
             }
-            var src = this._domain + '/' + this._accountName + '/image';
+            var src = this._config.domain + '/' + this._config.accountName + '/image';
             if (filepath.indexOf('http') !== -1) {
                 src += '/fetch';
             }
@@ -647,7 +647,7 @@ var Util;
             manipulation.push('e_blur:' + blured);
             src += '/' + manipulation.join(',');
             if (filepath.indexOf('http') === -1) {
-                src += '/' + this._uploadFolder;
+                src += '/' + this._config.uploadFolder;
             }
             return src + '/' + filepath;
         };
@@ -655,7 +655,7 @@ var Util;
             if (!filepath) {
                 return '';
             }
-            var src = this._domain + '/' + this._accountName + '/image';
+            var src = this._config.domain + '/' + this._config.accountName + '/image';
             var baseWidth = 540;
             if (filepath.indexOf('http') !== -1) {
                 src += '/fetch';
@@ -697,13 +697,10 @@ var Util;
             manipulation.push('c_crop');
             src += '/' + manipulation.join(',');
             if (filepath.indexOf('http') === -1) {
-                src += '/' + this._uploadFolder;
+                src += '/' + this._config.uploadFolder;
             }
             return src + '/' + filepath;
         };
-        Cloudinary._accountName = '';
-        Cloudinary._uploadFolder = '';
-        Cloudinary._domain = '';
         return Cloudinary;
     })();
     Util.Cloudinary = Cloudinary;
