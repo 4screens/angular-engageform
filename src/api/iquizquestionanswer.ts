@@ -9,7 +9,7 @@ module API {
     avgRateItValue?: string;
     stats?: {
       [index: string]: number;
-    }
+    };
     msg?: string;
   }
 }
