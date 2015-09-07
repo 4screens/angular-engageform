@@ -10,5 +10,6 @@ module API {
     stats?: {
       [index: string]: number;
     }
+    msg?: string;
   }
 }

@@ -49,7 +49,17 @@ module Page {
           return res.data;
         }
 
-        return Bootstrap.$q.reject(res);
+        if (res && res.data && res.data.msg) {
+          return Bootstrap.$q.reject(res.data.msg);
+        } else {
+          return Bootstrap.$q.reject();
+        }
+      }).catch((res: API.IQuizQuestionAnswerResponse) => {
+        if (res && res.data && res.data.msg) {
+          return Bootstrap.$q.reject(res.data.msg);
+        } else {
+          return Bootstrap.$q.reject();
+        }
       });
     }
 
