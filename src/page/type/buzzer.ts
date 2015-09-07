@@ -38,7 +38,6 @@ module Page {
       console.log('[ Buzzer ] Buzz');
 
       if (!this._connected) {
-        this.cases[0].trueBuzzerSend(0); // subscribe for buzzer update
         this._connected = true;
       }
 
