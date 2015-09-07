@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.29
+ * 4screens-angular-engageform v0.2.30
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -453,7 +453,7 @@ var Page;
                 this.description = data.description || '';
             }
             if (this.settings.showMainMedia) {
-                this.media = Util.Cloudinary.getInstance().prepareImageUrl(data.imageFile, 680, data.imageData);
+                this.media = Util.Cloudinary.prepareImageUrl(data.imageFile, 680, data.imageData);
             }
         }
         Object.defineProperty(Page.prototype, "id", {
@@ -592,22 +592,27 @@ var User = (function () {
     return User;
 })();
 
-/// <reference path="icloudinary.ts" />
+/// <reference path="../api/config.ts" />
 var Util;
 (function (Util) {
     var Cloudinary = (function () {
         function Cloudinary() {
-            if (Bootstrap.config.cloudinary) {
-                this._accountName = Bootstrap.config.cloudinary.accountName || 'test4screens';
-                this._uploadFolder = Bootstrap.config.cloudinary.uploadFolder || 'console';
-                this._domain = Bootstrap.config.cloudinary.domain || 'https://res.cloudinary.com';
-            }
-            Cloudinary._instance = this;
+            throw new Error('One does not simply instantiate Cloudinary.');
         }
-        Cloudinary.getInstance = function () {
-            return Cloudinary._instance;
+        /**
+         * Changes the account configuration of the module.
+         *
+         * @param {Config.ApiConfig.cloudinary} options Account data for accessing the CLoudinary service.
+         */
+        Cloudinary.setConfig = function (options) {
+            if (!options || [options.accountName, options.uploadFolder, options.domain].indexOf(undefined) > -1) {
+                throw new Error('Missing properties in the Cloudinary API config.');
+            }
+            this._accountName = options.accountName;
+            this._uploadFolder = options.uploadFolder;
+            this._domain = options.domain;
         };
-        Cloudinary.prototype.prepareBackgroundImageUrl = function (filepath, width, height, blur, position) {
+        Cloudinary.prepareBackgroundImageUrl = function (filepath, width, height, blur, position) {
             if (!filepath) {
                 return '';
             }
@@ -631,8 +636,6 @@ var Util;
                 case 'fit':
                     manipulation.push('c_fit');
                     break;
-                case 'tiled':
-                    break;
                 case 'centered':
                     manipulation.push('c_limit');
                     break;
@@ -648,7 +651,7 @@ var Util;
             }
             return src + '/' + filepath;
         };
-        Cloudinary.prototype.prepareImageUrl = function (filepath, width, imageData) {
+        Cloudinary.prepareImageUrl = function (filepath, width, imageData) {
             if (!filepath) {
                 return '';
             }
@@ -698,6 +701,9 @@ var Util;
             }
             return src + '/' + filepath;
         };
+        Cloudinary._accountName = '';
+        Cloudinary._uploadFolder = '';
+        Cloudinary._domain = '';
         return Cloudinary;
     })();
     Util.Cloudinary = Cloudinary;
@@ -749,6 +755,7 @@ var Util;
 })(Util || (Util = {}));
 
 /// <reference path="api/api.ts" />
+/// <reference path="api/config.ts" />
 /// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
 /// <reference path="meta/meta.ts" />
@@ -764,8 +771,8 @@ var Bootstrap = (function () {
         Bootstrap.localStorage = localStorage;
         Bootstrap.config = ApiConfig;
         Bootstrap.user = new User();
-        this._cloudinary = new Util.Cloudinary();
         this._event = new Util.Event();
+        Util.Cloudinary.setConfig(ApiConfig.cloudinary);
     }
     Object.defineProperty(Bootstrap.prototype, "type", {
         get: function () {
@@ -1114,7 +1121,7 @@ var Engageform;
             }
         }
         Theme.prototype.convertBackgroundImage = function () {
-            this.backgroundImageConvertedFile = Util.Cloudinary.getInstance().prepareBackgroundImageUrl(this.backgroundImageFile, window.innerWidth, window.innerHeight, parseInt(this.backgroundImageBlur, 10), this.backgroundImagePosition);
+            this.backgroundImageConvertedFile = Util.Cloudinary.prepareBackgroundImageUrl(this.backgroundImageFile, window.innerWidth, window.innerHeight, parseInt(this.backgroundImageBlur, 10), this.backgroundImagePosition);
         };
         return Theme;
     })();
@@ -1348,7 +1355,19 @@ var Page;
                     }
                     return res.data;
                 }
-                return Bootstrap.$q.reject(res);
+                if (res && res.data && res.data.msg) {
+                    return Bootstrap.$q.reject(res.data.msg);
+                }
+                else {
+                    return Bootstrap.$q.reject();
+                }
+            }).catch(function (res) {
+                if (res && res.data && res.data.msg) {
+                    return Bootstrap.$q.reject(res.data.msg);
+                }
+                else {
+                    return Bootstrap.$q.reject();
+                }
             });
         };
         Case.prototype.load = function () {
@@ -1410,7 +1429,7 @@ var Page;
             this.correct = false;
             this.incorrect = false;
             this.title = data.text;
-            this.media = Util.Cloudinary.getInstance().prepareImageUrl(data.imageFile, 300, data.imageData);
+            this.media = Util.Cloudinary.prepareImageUrl(data.imageFile, 300, data.imageData);
         }
         ImageCase.prototype.send = function () {
             var _this = this;
