@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.32
+ * 4screens-angular-engageform v0.2.33
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -326,6 +326,7 @@ var Navigation;
         };
         Navigation.prototype.pick = function ($event, vcase, opts) {
             var _this = this;
+            if (opts === void 0) { opts = { quiet: false }; }
             this.disableDefaultAction($event);
             this.animate = 'swipeNext';
             switch (Bootstrap.mode) {
@@ -337,9 +338,8 @@ var Navigation;
                                 case Engageform.Mode.Default:
                                 case Engageform.Mode.Preview:
                                     if (!_this._engageform.current.filled && _this._engageform.current.settings.requiredAnswer) {
-                                        _this._engageform.message = 'Answer is required to proceed to next question';
-                                        if (opts && opts.hasOwnProperty('quiet') && opts.quiet) {
-                                            _this._engageform.message = '';
+                                        if (!opts.quiet) {
+                                            _this._engageform.message = 'Answer is required to proceed to next question';
                                         }
                                         return;
                                     }
@@ -354,10 +354,9 @@ var Navigation;
                         else {
                             _this.move(vcase);
                         }
-                    }).catch(function (errorMessage) {
-                        _this._engageform.message = errorMessage;
-                        if (opts && opts.hasOwnProperty('quiet') && opts.quiet) {
-                            _this._engageform.message = '';
+                    }).catch(function (data) {
+                        if (!opts.quiet) {
+                            _this._engageform.message = data.message || '';
                         }
                     });
             }
@@ -1352,19 +1351,11 @@ var Page;
                     }
                     return res.data;
                 }
-                if (res && res.data && res.data.msg) {
-                    return Bootstrap.$q.reject(res.data.msg);
-                }
                 else {
-                    return Bootstrap.$q.reject();
+                    return Bootstrap.$q.reject(res.data || {});
                 }
             }).catch(function (res) {
-                if (res && res.data && res.data.msg) {
-                    return Bootstrap.$q.reject(res.data.msg);
-                }
-                else {
-                    return Bootstrap.$q.reject();
-                }
+                return Bootstrap.$q.reject(res.data || {});
             });
         };
         Case.prototype.load = function () {
@@ -1431,7 +1422,7 @@ var Page;
         ImageCase.prototype.send = function () {
             var _this = this;
             if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
-                return Bootstrap.$q.reject('Changing answer is not allowed');
+                return Bootstrap.$q.reject({ message: 'Changing answer is not allowed' });
             }
             return _super.prototype.makeSend.call(this, { selectedAnswerId: this.id }).then(function (res) {
                 var data = {};
@@ -1491,12 +1482,12 @@ var Page;
             }
             return _super.prototype.makeSend.call(this, data).then(function () {
                 return data;
-            }).catch(function (err) {
-                if (err.data.code === 406) {
+            }).catch(function (data) {
+                if (data.code === 406) {
+                    data.message = 'Incorrect inputs sent. Try again.';
                     _this.save({});
-                    return Bootstrap.$q.reject('Incorrect inputs sent. Try again.');
                 }
-                return Bootstrap.$q.reject(err.data.message);
+                return Bootstrap.$q.reject(data);
             });
         };
         InputCase.prototype.validate = function () {
@@ -1543,7 +1534,7 @@ var Page;
         IterationCase.prototype.send = function () {
             var _this = this;
             if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
-                return Bootstrap.$q.reject('Changing answer is not allowed');
+                return Bootstrap.$q.reject({ message: 'Changing answer is not allowed' });
             }
             return _super.prototype.makeSend.call(this, { quizQuestionId: this.page.id, rateItValue: this.ordinal }).then(function (res) {
                 var data = {};
@@ -1584,7 +1575,7 @@ var Page;
         TextCase.prototype.send = function () {
             var _this = this;
             if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
-                return Bootstrap.$q.reject('Changing answer is not allowed');
+                return Bootstrap.$q.reject({ message: 'Changing answer is not allowed' });
             }
             return _super.prototype.makeSend.call(this, { selectedAnswerId: this.id }).then(function (res) {
                 var data = {};
