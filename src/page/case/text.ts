@@ -17,7 +17,7 @@ module Page {
 
     send() {
       if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
-        return Bootstrap.$q.reject('Changing answer is not allowed');
+        return Bootstrap.$q.reject({message: 'Changing answer is not allowed'});
       }
 
       return super.makeSend({selectedAnswerId: this.id}).then((res) => {

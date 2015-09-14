@@ -47,19 +47,11 @@ module Page {
             Bootstrap.user.sessionId = res.data.userIdent;
           }
           return res.data;
-        }
-
-        if (res && res.data && res.data.msg) {
-          return Bootstrap.$q.reject(res.data.msg);
         } else {
-          return Bootstrap.$q.reject();
+          return Bootstrap.$q.reject(res.data || {});
         }
       }).catch((res: API.IQuizQuestionAnswerResponse) => {
-        if (res && res.data && res.data.msg) {
-          return Bootstrap.$q.reject(res.data.msg);
-        } else {
-          return Bootstrap.$q.reject();
-        }
+        return Bootstrap.$q.reject(res.data || {});
       });
     }
 
