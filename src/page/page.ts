@@ -109,9 +109,11 @@ module Page {
         this.cases.map((vcase: ICase) => {
           if (!_.isUndefined(data[vcase.id])) {
             var loaded = vcase.load();
-            loaded.results[vcase.id] = data[vcase.id];
-            vcase.save(loaded);
-            vcase.result = data[vcase.id] || 0;
+            if (loaded.results) {
+              loaded.results[vcase.id] = data[vcase.id];
+              vcase.save(loaded);
+              vcase.result = data[vcase.id] || 0;
+            }
           }
         });
       });
