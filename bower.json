@@ -1,6 +1,6 @@
 {
   "name": "4screens-engageform",
-  "version": "0.2.35",
+  "version": "0.2.36",
   "main": "engageform.js",
   "homepage": "https://github.com/4screens/angular-engageform",
   "authors": [
@@ -22,7 +22,7 @@
     "karma.conf.js"
   ],
   "dependencies": {
-    "4screens-util": "~0.1.1",
+    "4screens-util": "~0.1.2",
     "angular": "~1.4.0",
     "angular-local-storage": "~0.2.2",
     "angular-sanitize": "~1.4.0",
