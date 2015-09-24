@@ -1,5 +1,4 @@
 /// <reference path="api/api.ts" />
-/// <reference path="api/config.ts" />
 /// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
 /// <reference path="meta/meta.ts" />
@@ -118,8 +117,6 @@ class Bootstrap {
       });
     }
 
-    console.log('[instances]', Bootstrap._instances);
-
     if (Bootstrap._instances[opts.id]) {
       return Bootstrap._instances[opts.id];
     }
@@ -152,9 +149,9 @@ class Bootstrap {
 
     if (!opts.callback) {
       opts.callback = {
-          sendAnswerCallback: function() {
-              return;
-          }
+        sendAnswerCallback: function() {
+          return;
+        }
       };
     } else if (!opts.callback.sendAnswerCallback) {
       opts.callback.sendAnswerCallback = function(){

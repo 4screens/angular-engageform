@@ -3,7 +3,7 @@ module API {
     id: string;
     mode: string;
     callback: {
-      sendAnswerCallback: ISendAnswerCallback
+      sendAnswerCallback: any
     }
   }
 }

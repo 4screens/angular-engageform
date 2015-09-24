@@ -1,3 +1,4 @@
+/// <reference path="config.ts" />
 /// <reference path="iembed.ts" />
 /// <reference path="iquizquestion.ts" />
 /// <reference path="iquizquestionsres.ts" />
