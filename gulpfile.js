@@ -68,6 +68,7 @@ var FILES = [
 var BANNER = path.join('.', PATH.source, 'header.txt');
 var MAIN = 'engageform.js';
 var TESTS = [
+  path.join('.', PATH.bower_components, '4screens-util', 'util.js'),
   path.join('.', PATH.bower_components, 'angular', 'angular.js'),
   path.join('.', PATH.bower_components, 'angular-local-storage', 'dist', 'angular-local-storage.js'),
   path.join('.', PATH.bower_components, 'angular-mocks', 'angular-mocks.js'),

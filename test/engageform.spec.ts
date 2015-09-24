@@ -23,6 +23,11 @@ describe('Engageform:', () => {
       engageform: {
         engageformUrl: '/engageform/:engageformId',
         engageformPagesUrl: '/engageform/:engageformId/pages'
+      },
+      cloudinary: {
+        accountName: 'mockAccount',
+        uploadFolder: 'mockUpload',
+        domain: 'mockDomain'
       }
     };
     module(($provide) => {

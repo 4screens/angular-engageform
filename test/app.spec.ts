@@ -16,4 +16,8 @@ describe('Module:', () => {
     expect(hasModule('LocalStorageModule')).toBe(true);
   });
 
+  it('should have 4screens.util.cloudinary as a dependency', () => {
+    expect(hasModule('4screens.util.cloudinary')).toBe(true);
+  });
+
 });
