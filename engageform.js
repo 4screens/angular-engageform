@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.34
+ * 4screens-angular-engageform v0.2.35
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -53,6 +53,7 @@ var Page;
 
 /// <reference path="../typings/tsd.d.ts" />
 var app = angular.module('4screens.engageform', [
+    '4screens.util.cloudinary',
     'LocalStorageModule'
 ]);
 
@@ -452,7 +453,7 @@ var Page;
                 this.description = data.description || '';
             }
             if (this.settings.showMainMedia) {
-                this.media = Util.Cloudinary.prepareImageUrl(data.imageFile, 680, data.imageData);
+                this.media = Bootstrap.cloudinary.prepareImageUrl(data.imageFile, 680, data.imageData);
             }
         }
         Object.defineProperty(Page.prototype, "id", {
@@ -593,120 +594,6 @@ var User = (function () {
     return User;
 })();
 
-/// <reference path="../api/config.ts" />
-var Util;
-(function (Util) {
-    var Cloudinary = (function () {
-        function Cloudinary() {
-            throw new Error('One does not simply instantiate Cloudinary.');
-        }
-        /**
-         * Changes the account configuration of the module.
-         *
-         * @param {Config.ApiConfig.cloudinary} options Account data for accessing the CLoudinary service.
-         */
-        Cloudinary.setConfig = function (options) {
-            if (!options || [options.accountName, options.uploadFolder, options.domain].indexOf(undefined) > -1) {
-                throw new Error('Missing properties in the Cloudinary API config.');
-            }
-            // This is a hack. Module has to have a reference to the ApiOptions.cloudinary object, since it is
-            // overwritten by the config retrieved later.
-            this._config = options;
-        };
-        Cloudinary.prepareBackgroundImageUrl = function (filepath, width, height, blur, position) {
-            if (!filepath) {
-                return '';
-            }
-            var src = this._config.domain + '/' + this._config.accountName + '/image';
-            if (filepath.indexOf('http') !== -1) {
-                src += '/fetch';
-            }
-            else {
-                src += '/upload';
-            }
-            var manipulation;
-            var blured = blur ? blur * 100 : 0;
-            manipulation = [];
-            manipulation.push('w_' + width);
-            manipulation.push('f_auto');
-            manipulation.push('h_' + height);
-            switch (position) {
-                case 'fill':
-                    manipulation.push('c_fill');
-                    break;
-                case 'fit':
-                    manipulation.push('c_fit');
-                    break;
-                case 'centered':
-                    manipulation.push('c_limit');
-                    break;
-                case 'tiled':
-                    manipulation.push('c_limit');
-                    break;
-            }
-            manipulation.push('dpr_1.0');
-            manipulation.push('e_blur:' + blured);
-            src += '/' + manipulation.join(',');
-            if (filepath.indexOf('http') === -1) {
-                src += '/' + this._config.uploadFolder;
-            }
-            return src + '/' + filepath;
-        };
-        Cloudinary.prepareImageUrl = function (filepath, width, imageData) {
-            if (!filepath) {
-                return '';
-            }
-            var src = this._config.domain + '/' + this._config.accountName + '/image';
-            var baseWidth = 540;
-            if (filepath.indexOf('http') !== -1) {
-                src += '/fetch';
-            }
-            else {
-                src += '/upload';
-            }
-            if (imageData.containerHeight === width) {
-                baseWidth = 300;
-            }
-            var manipulation;
-            var imageWidth = Math.round(width * imageData.width / 100);
-            var imageHeight = Math.round(width * imageData.containerHeight / baseWidth);
-            var ox = Math.round(width * imageData.left / 100);
-            var oy = Math.round(imageHeight * imageData.top / 100);
-            manipulation = [];
-            manipulation.push('w_' + imageWidth);
-            manipulation.push('f_auto');
-            manipulation.push('q_82');
-            manipulation.push('dpr_1.0');
-            src += '/' + manipulation.join(',');
-            manipulation = [];
-            manipulation.push('w_' + width);
-            manipulation.push('h_' + imageHeight);
-            manipulation.push('x_' + (-1 * ox));
-            manipulation.push('y_' + (-1 * oy));
-            manipulation.push('c_crop');
-            src += '/' + manipulation.join(',');
-            manipulation = [];
-            manipulation.push('w_' + (width + ox));
-            manipulation.push('h_' + (imageHeight + oy));
-            manipulation.push('c_mpad');
-            src += '/' + manipulation.join(',');
-            manipulation = [];
-            manipulation.push('w_' + width);
-            manipulation.push('h_' + imageHeight);
-            manipulation.push('x_0');
-            manipulation.push('y_0');
-            manipulation.push('c_crop');
-            src += '/' + manipulation.join(',');
-            if (filepath.indexOf('http') === -1) {
-                src += '/' + this._config.uploadFolder;
-            }
-            return src + '/' + filepath;
-        };
-        return Cloudinary;
-    })();
-    Util.Cloudinary = Cloudinary;
-})(Util || (Util = {}));
-
 var Util;
 (function (Util) {
     var Event = (function () {
@@ -753,24 +640,23 @@ var Util;
 })(Util || (Util = {}));
 
 /// <reference path="api/api.ts" />
-/// <reference path="api/config.ts" />
 /// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
 /// <reference path="meta/meta.ts" />
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
-/// <reference path="util/cloudinary.ts" />
 /// <reference path="util/event.ts" />
 var Bootstrap = (function () {
-    function Bootstrap($http, $q, $timeout, localStorage, ApiConfig) {
+    function Bootstrap($http, $q, $timeout, cloudinary, localStorage, ApiConfig) {
         Bootstrap.$http = $http;
         Bootstrap.$q = $q;
         Bootstrap.$timeout = $timeout;
+        Bootstrap.cloudinary = cloudinary;
         Bootstrap.localStorage = localStorage;
         Bootstrap.config = ApiConfig;
         Bootstrap.user = new User();
         this._event = new Util.Event();
-        Util.Cloudinary.setConfig(ApiConfig.cloudinary);
+        Bootstrap.cloudinary.setConfig(ApiConfig.cloudinary);
     }
     Object.defineProperty(Bootstrap.prototype, "type", {
         get: function () {
@@ -887,7 +773,6 @@ var Bootstrap = (function () {
                 data: opts
             });
         }
-        console.log('[instances]', Bootstrap._instances);
         if (Bootstrap._instances[opts.id]) {
             return Bootstrap._instances[opts.id];
         }
@@ -962,11 +847,14 @@ var Bootstrap = (function () {
             return engageform;
         });
     };
+    Bootstrap.prototype.destroyInstances = function () {
+        Bootstrap._instances = {};
+    };
     Bootstrap.mode = Engageform.Mode.Undefined;
     Bootstrap._instances = {};
     return Bootstrap;
 })();
-Bootstrap.$inject = ['$http', '$q', '$timeout', 'localStorageService', 'ApiConfig'];
+Bootstrap.$inject = ['$http', '$q', '$timeout', 'cloudinary', 'localStorageService', 'ApiConfig'];
 app.service('Engageform', Bootstrap);
 
 /// <reference path="ibranding.ts" />
@@ -1119,7 +1007,7 @@ var Engageform;
             }
         }
         Theme.prototype.convertBackgroundImage = function () {
-            this.backgroundImageConvertedFile = Util.Cloudinary.prepareBackgroundImageUrl(this.backgroundImageFile, window.innerWidth, window.innerHeight, parseInt(this.backgroundImageBlur, 10), this.backgroundImagePosition);
+            this.backgroundImageConvertedFile = Bootstrap.cloudinary.prepareBackgroundImageUrl(this.backgroundImageFile, window.innerWidth, window.innerHeight, parseInt(this.backgroundImageBlur, 10), this.backgroundImagePosition);
         };
         return Theme;
     })();
@@ -1419,7 +1307,7 @@ var Page;
             this.correct = false;
             this.incorrect = false;
             this.title = data.text;
-            this.media = Util.Cloudinary.prepareImageUrl(data.imageFile, 300, data.imageData);
+            this.media = Bootstrap.cloudinary.prepareImageUrl(data.imageFile, 300, data.imageData);
         }
         ImageCase.prototype.send = function () {
             var _this = this;
