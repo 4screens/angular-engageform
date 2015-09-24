@@ -41,7 +41,7 @@ module Engageform {
     }
 
     convertBackgroundImage() {
-      this.backgroundImageConvertedFile = Util.Cloudinary.prepareBackgroundImageUrl(
+      this.backgroundImageConvertedFile = Bootstrap.cloudinary.prepareBackgroundImageUrl(
         this.backgroundImageFile,
         window.innerWidth,
         window.innerHeight,

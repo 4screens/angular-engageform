@@ -5,13 +5,13 @@
 /// <reference path="meta/meta.ts" />
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
-/// <reference path="util/cloudinary.ts" />
 /// <reference path="util/event.ts" />
 
 class Bootstrap {
   static $http: ng.IHttpService;
   static $q: ng.IQService;
   static $timeout: ng.ITimeoutService;
+  static cloudinary: any;
   static localStorage: ng.local.storage.ILocalStorageService;
   static user: User;
   static config;
@@ -23,18 +23,19 @@ class Bootstrap {
 
   private static _instances: Engageform.IEngageformInstances = {};
 
-  constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService,
+  constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, cloudinary: any,
               localStorage: ng.local.storage.ILocalStorageService, ApiConfig: Config.ApiConfig) {
     Bootstrap.$http = $http;
     Bootstrap.$q = $q;
     Bootstrap.$timeout = $timeout;
+    Bootstrap.cloudinary = cloudinary;
     Bootstrap.localStorage = localStorage;
     Bootstrap.config = ApiConfig;
     Bootstrap.user = new User();
 
     this._event = new Util.Event();
 
-    Util.Cloudinary.setConfig(<Util.CloudinaryConfig>ApiConfig.cloudinary);
+    Bootstrap.cloudinary.setConfig(ApiConfig.cloudinary);
   }
 
   get type(): Engageform.Type {
@@ -198,5 +199,5 @@ class Bootstrap {
   }
 }
 
-Bootstrap.$inject = ['$http', '$q', '$timeout', 'localStorageService', 'ApiConfig'];
+Bootstrap.$inject = ['$http', '$q', '$timeout', 'cloudinary', 'localStorageService', 'ApiConfig'];
 app.service('Engageform', Bootstrap);

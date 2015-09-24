@@ -63,8 +63,7 @@ var FILES = [
 
   path.join('.', PATH.source, 'user', 'user.ts'),
 
-  path.join('.', PATH.source, 'util', 'event.ts'),
-  path.join('.', PATH.source, 'util', 'cloudinary.ts')
+  path.join('.', PATH.source, 'util', 'event.ts')
 ];
 var BANNER = path.join('.', PATH.source, 'header.txt');
 var MAIN = 'engageform.js';

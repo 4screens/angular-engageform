@@ -14,7 +14,7 @@ module Page {
       super(page, data);
 
       this.title = data.text;
-      this.media = Util.Cloudinary.prepareImageUrl(
+      this.media = Bootstrap.cloudinary.prepareImageUrl(
         data.imageFile,
         300,
         data.imageData
