@@ -73,6 +73,8 @@ describe('Engageform:', () => {
   // make sure no expectations were missed in your tests.
   // (e.g. expectGET or expectPOST)
   afterEach(() => {
+    // remove all existing instances
+    Engageform.destroyInstances();
     //httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
   });

@@ -194,6 +194,10 @@ class Bootstrap {
       return engageform;
     });
   }
+
+  destroyInstances() {
+    Bootstrap._instances = {};
+  }
 }
 
 Bootstrap.$inject = ['$http', '$q', '$timeout', 'cloudinary', 'localStorageService', 'ApiConfig'];

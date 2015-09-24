@@ -148,20 +148,19 @@ gulp.task('tslint', ['minify'], function () {
 });
 
 gulp.task('test', ['tslint'], function(done) {
-  // KarmaServer.start({
-  //   configFile: __dirname + '/karma.conf.js',
-  //   singleRun: true
-  // }, function(error) {
-  //   if (error) {
-  //     plugins.git.checkout('*.json', {args: '--'}, function(err) {
-  //       if (err) throw err;
-  //       done();
-  //     });
-  //   } else {
-  //     done();
-  //   }
-  // });
-  done();
+   KarmaServer.start({
+     configFile: __dirname + '/karma.conf.js',
+     singleRun: true
+   }, function(error) {
+     if (error) {
+       plugins.git.checkout('*.json', {args: '--'}, function(err) {
+         if (err) throw err;
+         done();
+       });
+     } else {
+       done();
+     }
+   });
 });
 
 gulp.task('release::bump::commit', ['test'], function() {
