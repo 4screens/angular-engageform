@@ -7,6 +7,8 @@ module Page {
     title: string;
     description: string;
     media: string;
+    mediaWidth: number;
+    mediaHeight: number;
     filled: boolean;
     settings: ISetting;
     cases: ICase[];

@@ -10,7 +10,9 @@ module Page {
     incorrect?: boolean;
 
     title?: string;
-    image?: string;
+    media?: string;
+    mediaWidth?: number;
+    mediaHeight?: number;
     expectedValue?: string;
     value?: string;
     error?: string;

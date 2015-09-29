@@ -17,9 +17,11 @@ module API {
     }
     imageData: {
       containerHeight: number;
+      containerRatio: number;
       left: number;
       top: number;
       width: number;
+      height: number;
     }
     imageFile: string;
     requiredAnswer: boolean;

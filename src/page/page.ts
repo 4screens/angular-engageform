@@ -11,6 +11,8 @@ module Page {
     title: string = '';
     description: string = '';
     media: string = '';
+    mediaWidth: number;
+    mediaHeight: number;
     filled: boolean;
     settings: ISetting;
     cases: ICase[] = [];
@@ -47,6 +49,12 @@ module Page {
           680, // zakładamy że media zawsze ma taką szerokość (MUST BE FIXXXXXED!!!!!)
           data.imageData
         );
+        this.mediaWidth = 680;
+        if (data.imageData.containerRatio) {
+          this.mediaHeight = Math.round(680 * data.imageData.containerRatio);
+        } else {
+          this.mediaHeight = Math.round(data.imageData.containerHeight);
+        }
       }
     }
 
