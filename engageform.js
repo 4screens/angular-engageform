@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.36
+ * 4screens-angular-engageform v0.2.37
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -454,6 +454,13 @@ var Page;
             }
             if (this.settings.showMainMedia) {
                 this.media = Bootstrap.cloudinary.prepareImageUrl(data.imageFile, 680, data.imageData);
+                this.mediaWidth = 680;
+                if (data.imageData.containerRatio) {
+                    this.mediaHeight = Math.round(680 * data.imageData.containerRatio);
+                }
+                else {
+                    this.mediaHeight = Math.round(data.imageData.containerHeight);
+                }
             }
         }
         Object.defineProperty(Page.prototype, "id", {
@@ -1308,6 +1315,13 @@ var Page;
             this.incorrect = false;
             this.title = data.text;
             this.media = Bootstrap.cloudinary.prepareImageUrl(data.imageFile, 300, data.imageData);
+            this.mediaWidth = 300;
+            if (data.imageData.containerRatio) {
+                this.mediaHeight = Math.round(300 * data.imageData.containerRatio);
+            }
+            else {
+                this.mediaHeight = Math.round(data.imageData.containerHeight);
+            }
         }
         ImageCase.prototype.send = function () {
             var _this = this;
