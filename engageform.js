@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.37
+ * 4screens-angular-engageform v0.2.38
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -993,6 +993,9 @@ var Engageform;
             this.questionColor = '';
             this.customThemeCssFile = '';
             this.backgroundImageConvertedFile = '';
+            this.tabBorderColor = '';
+            this.tabFontColor = '';
+            this.tabColor = '';
             if (data.theme) {
                 this.answerBackgroundColor = data.theme.answerBackgroundColor || '';
                 this.answerBorderColor = data.theme.answerBorderColor || '';
@@ -1005,6 +1008,9 @@ var Engageform;
                 this.buttonColor = data.theme.buttonColor || '';
                 this.font = data.theme.font || '';
                 this.questionColor = data.theme.questionColor || '';
+                this.tabColor = data.theme.tabColor || '';
+                this.tabFontColor = data.theme.tabFontColor || '';
+                this.tabBorderColor = data.theme.tabBorderColor || '';
                 if (data.theme.customThemeCssFile) {
                     this.customThemeCssFile = Bootstrap.config.backend.api + '/uploads/' + data.theme.customThemeCssFile;
                 }
@@ -1019,6 +1025,31 @@ var Engageform;
         return Theme;
     })();
     Engageform.Theme = Theme;
+})(Engageform || (Engageform = {}));
+
+/// <reference path="itabs.ts" />
+var Engageform;
+(function (Engageform) {
+    var Tabs = (function () {
+        function Tabs(data) {
+            this.liveTitle = 'Live';
+            this.chatTitle = 'Chat';
+            this.logoUrl = '';
+            if (data.tabs) {
+                if (data.tabs.liveTitle) {
+                    this.liveTitle = data.tabs.liveTitle;
+                }
+                if (data.tabs.chatTitle) {
+                    this.chatTitle = data.tabs.chatTitle;
+                }
+                if (data.tabs.logoUrl) {
+                    this.logoUrl = data.tabs.logoUrl;
+                }
+            }
+        }
+        return Tabs;
+    })();
+    Engageform.Tabs = Tabs;
 })(Engageform || (Engageform = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
