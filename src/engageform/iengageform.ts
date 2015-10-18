@@ -7,6 +7,7 @@ module Engageform {
     title: string;
     settings: ISetting;
     theme: ITheme;
+    tabs: ITabs;
     branding: Branding.IBranding;
     meta: Meta.IMeta;
 

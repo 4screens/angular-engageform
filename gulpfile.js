@@ -31,6 +31,7 @@ var FILES = [
   path.join('.', PATH.source, 'engageform', 'engageform.ts'),
   path.join('.', PATH.source, 'engageform', 'settings.ts'),
   path.join('.', PATH.source, 'engageform', 'theme.ts'),
+  path.join('.', PATH.source, 'engageform', 'tabs.ts'),
 
   path.join('.', PATH.source, 'engageform', 'type', 'outcome.ts'),
   path.join('.', PATH.source, 'engageform', 'type', 'poll.ts'),

@@ -16,6 +16,10 @@ module Engageform {
     customThemeCssFile: string = '';
     backgroundImageConvertedFile: string = '';
 
+    tabBorderColor: string = '';
+    tabFontColor: string = '';
+    tabColor: string = '';
+
     constructor(data: API.IQuiz) {
       if (data.theme) {
         this.answerBackgroundColor = data.theme.answerBackgroundColor || '';
@@ -29,6 +33,9 @@ module Engageform {
         this.buttonColor = data.theme.buttonColor || '';
         this.font = data.theme.font || '';
         this.questionColor = data.theme.questionColor || '';
+        this.tabColor = data.theme.tabColor || '';
+        this.tabFontColor = data.theme.tabFontColor || '';
+        this.tabBorderColor = data.theme.tabBorderColor || '';
 
         if (data.theme.customThemeCssFile) {
           this.customThemeCssFile = Bootstrap.config.backend.api + '/uploads/' + data.theme.customThemeCssFile;

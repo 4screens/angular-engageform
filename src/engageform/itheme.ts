@@ -13,6 +13,10 @@ module Engageform {
     questionColor: string;
     customThemeCssFile: string;
 
+    tabBorderColor: string;
+    tabColor: string;
+    tabFontColor: string;
+
     backgroundImageConvertedFile?: string;
 
     convertBackgroundImage(): void;

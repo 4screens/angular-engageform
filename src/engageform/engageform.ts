@@ -22,6 +22,7 @@ module Engageform {
     settings: Settings;
     theme: Theme;
     branding: Branding.Branding;
+    tabs: Tabs;
 
     current: Page.IPage;
     navigation: Navigation.INavigation;
