@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.39
+ * 4screens-angular-engageform v0.2.40
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -78,6 +78,7 @@ var Engageform;
             this.title = data.title;
             this.settings = new Engageform_1.Settings(data);
             this.theme = new Engageform_1.Theme(data);
+            this.tabs = new Engageform_1.Tabs(data);
             if (data.settings && data.settings.branding) {
                 this.branding = new Branding.Branding(data.settings.branding);
             }
