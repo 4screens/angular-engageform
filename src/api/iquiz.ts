@@ -10,6 +10,7 @@ module API {
       chatTitle: string;
       liveTitle: string;
       logoUrl: string;
+      headerText: string;
     };
 
     settings: {
