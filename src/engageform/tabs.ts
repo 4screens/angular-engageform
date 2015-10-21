@@ -17,7 +17,8 @@ module Engageform {
         }
 
         if (data.tabs.logoUrl) {
-          this.logoUrl = data.tabs.logoUrl;
+          // The image's URL is a bit different if it is a default one, than when it is a custom.
+          this.logoUrl = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + data.tabs.logoUrl;
         }
       }
     }
