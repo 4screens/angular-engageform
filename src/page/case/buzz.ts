@@ -17,8 +17,6 @@ module Page {
     }
 
     trueBuzzerSend(BCS: number): ng.IPromise<IPageSent> {
-      console.log('[ Buzzer ] True send (' + BCS + ')');
-
       return super.makeSend({ quizQuestionId: this.page.id, buttonClickSum: BCS }).then((res) => {
         var data: IPageSent = <IPageSent>{};
 

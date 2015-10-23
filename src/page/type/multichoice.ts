@@ -3,9 +3,9 @@ module Page {
     type = Type.MultiChoice;
 
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
-        super(engageform, data);
+      super(engageform, data);
 
-        if (!data.answers) {
+      if (!data.answers) {
         return;
       }
 
@@ -30,16 +30,17 @@ module Page {
     }
 
     selectAnswer(sent) {
-
       this.cases.map((vcase: ICase) => {
         vcase.selected = false;
         vcase.correct = false;
         vcase.incorrect = false;
 
         if (vcase.id === sent.selectedCaseId) {
-            this.engageform.sendAnswerCallback(this.engageform.title || this.engageform.id,
-                  this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
-                  vcase);
+            this.engageform.sendAnswerCallback(
+              this.engageform.title || this.engageform.id,
+              this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
+              vcase
+            );
             this.filled = true;
             vcase.selected = true;
         }
@@ -57,6 +58,5 @@ module Page {
         }
       });
     }
-
   }
 }

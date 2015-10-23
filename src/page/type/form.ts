@@ -32,10 +32,11 @@ module Page {
 
       if (validated) {
         this.filled = true;
-        console.log(this.cases[0]);
-        this.engageform.sendAnswerCallback(this.engageform.title || this.engageform.id,
-              this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
-              this.cases[0]);
+        this.engageform.sendAnswerCallback(
+          this.engageform.title || this.engageform.id,
+          this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
+          this.cases[0]
+        );
         deferred.resolve(this.cases[0].send());
       } else {
           this.filled = false;

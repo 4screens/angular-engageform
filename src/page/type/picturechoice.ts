@@ -17,9 +17,7 @@ module Page {
         this.sent().then(sent => {
           this.selectAnswer(sent);
         });
-
       }
-
     }
 
     refreshAnswer(sent: IPageSent, question: API.IQuizQuestion): IPageSent {
@@ -37,9 +35,11 @@ module Page {
         vcase.incorrect = false;
 
         if (vcase.id === sent.selectedCaseId) {
-            this.engageform.sendAnswerCallback(this.engageform.title || this.engageform.id,
-                  this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
-                  vcase);
+            this.engageform.sendAnswerCallback(
+              this.engageform.title || this.engageform.id,
+              this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
+              vcase
+            );
             this.filled = true;
             vcase.selected = true;
         }

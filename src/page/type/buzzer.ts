@@ -16,7 +16,6 @@ module Page {
 
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
       super(engageform, data);
-      console.log('[ Buzzer ] Constructor');
 
       // Make only one case with buzzed ammount
       this.cases.push(<ICase>new BuzzCase(<IPage>this, { _id: 0, buttonClickSum: this.buttonClickSum }));
@@ -35,8 +34,6 @@ module Page {
     }
 
     private buzzLoop(iteration: number) {
-      console.log('[ Buzzer ] Buzz');
-
       if (!this._connected) {
         this._connected = true;
       }
@@ -71,8 +68,6 @@ module Page {
       if (this.buttonClickSum < 100) {
         this.buttonClickSum++;
       }
-
-      console.log('[ Buzzer ] Click! (' + this.buttonClickSum + ')');
     }
   }
 }
