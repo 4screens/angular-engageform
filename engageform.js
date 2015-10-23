@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.40
+ * 4screens-angular-engageform v0.2.41
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -68,9 +68,7 @@ var Engageform;
             this._endPages = [];
             this._availablePages = [];
             this._hasForms = false;
-            this.sendAnswerCallback = function () {
-                return;
-            };
+            this.sendAnswerCallback = function () { };
             this.enabled = true;
             this.type = Engageform_1.Type.Undefined;
             this._engageformId = data._id;
@@ -341,7 +339,7 @@ var Navigation;
                                 case Engageform.Mode.Preview:
                                     if (!_this._engageform.current.filled && _this._engageform.current.settings.requiredAnswer) {
                                         if (!opts.quiet) {
-                                            _this._engageform.message = 'Answer is required to proceed to next question';
+                                            _this.sendMessage('Answer is required to proceed to next question');
                                         }
                                         return;
                                     }
@@ -358,7 +356,7 @@ var Navigation;
                         }
                     }).catch(function (data) {
                         if (!opts.quiet) {
-                            _this._engageform.message = data.message || '';
+                            _this.sendMessage(data.message);
                         }
                     });
             }
@@ -390,7 +388,7 @@ var Navigation;
                         _this.hasFinish = false;
                     }).catch(function (err) {
                         if (err.data.msg) {
-                            _this._engageform.message = err.data.msg;
+                            _this.sendMessage(err.data.msg);
                         }
                     });
                 }
@@ -401,6 +399,13 @@ var Navigation;
                 $event.stopPropagation();
                 $event.preventDefault();
             }
+        };
+        Navigation.prototype.sendMessage = function (msg) {
+            var _this = this;
+            this._engageform.message = msg || '';
+            Bootstrap.$timeout(function () {
+                _this._engageform.message = '';
+            }, this._engageform.settings.hideMessageAfterDelay);
         };
         return Navigation;
     })();
@@ -618,9 +623,7 @@ var Util;
             if (!this._listener[event]) {
                 this._listener[event] = [];
             }
-            this._listener[event].push({
-                next: callback
-            });
+            this._listener[event].push(callback);
         };
         /**
          * Fire event with given arguments.
@@ -639,7 +642,7 @@ var Util;
                 return;
             }
             for (var i = 0; i < listeners.length; i++) {
-                listeners[i].next.apply(null, args);
+                listeners[i].apply(null, args);
             }
         };
         return Event;
@@ -811,15 +814,11 @@ var Bootstrap = (function () {
         }
         if (!opts.callback) {
             opts.callback = {
-                sendAnswerCallback: function () {
-                    return;
-                }
+                sendAnswerCallback: function () { }
             };
         }
         else if (!opts.callback.sendAnswerCallback) {
-            opts.callback.sendAnswerCallback = function () {
-                return;
-            };
+            opts.callback.sendAnswerCallback = function () { };
         }
         return Engageform.Engageform.getById(opts.id).then(function (engageformData) {
             switch (engageformData.type) {
@@ -961,8 +960,12 @@ var Engageform;
     var Settings = (function () {
         function Settings(data) {
             this.allowAnswerChange = false;
+            this.hideMessageAfterDelay = 3000;
             if (data.settings) {
                 this.allowAnswerChange = !!data.settings.allowAnswerChange;
+                if (data.settings.hideMessageAfterDelay) {
+                    this.hideMessageAfterDelay = data.settings.hideMessageAfterDelay;
+                }
                 if (data.settings.share) {
                     this.share = data.settings.share;
                     if (!this.share.imageUrl && Bootstrap.config.share && Bootstrap.config.share.defaultImgUrl) {
@@ -1036,6 +1039,7 @@ var Engageform;
             this.liveTitle = 'Live';
             this.chatTitle = 'Chat';
             this.logoUrl = '';
+            this.headerText = '';
             if (data.tabs) {
                 if (data.tabs.liveTitle) {
                     this.liveTitle = data.tabs.liveTitle;
@@ -1044,7 +1048,11 @@ var Engageform;
                     this.chatTitle = data.tabs.chatTitle;
                 }
                 if (data.tabs.logoUrl) {
-                    this.logoUrl = data.tabs.logoUrl;
+                    // The image's URL is a bit different if it is a default one, than when it is a custom.
+                    this.logoUrl = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + data.tabs.logoUrl;
+                }
+                if (data.tabs.headerText) {
+                    this.headerText = data.tabs.headerText;
                 }
             }
         }
@@ -1562,7 +1570,6 @@ var Page;
             return deferred.promise;
         };
         BuzzCase.prototype.trueBuzzerSend = function (BCS) {
-            console.log('[ Buzzer ] True send (' + BCS + ')');
             return _super.prototype.makeSend.call(this, { quizQuestionId: this.page.id, buttonClickSum: BCS }).then(function (res) {
                 var data = {};
                 // IMO we don't need that since buzzer have fake answerId's
@@ -1690,7 +1697,6 @@ var Page;
             });
             if (validated) {
                 this.filled = true;
-                console.log(this.cases[0]);
                 this.engageform.sendAnswerCallback(this.engageform.title || this.engageform.id, this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null, this.cases[0]);
                 deferred.resolve(this.cases[0].send());
             }
@@ -1922,7 +1928,6 @@ var Page;
             this.type = Page.Type.Buzzer;
             this.buttonClickSum = 0;
             this._connected = false;
-            console.log('[ Buzzer ] Constructor');
             // Make only one case with buzzed ammount
             this.cases.push(new Page.BuzzCase(this, { _id: 0, buttonClickSum: this.buttonClickSum }));
             // Clear previous timeout
@@ -1937,7 +1942,6 @@ var Page;
         }
         Buzzer.prototype.buzzLoop = function (iteration) {
             var _this = this;
-            console.log('[ Buzzer ] Buzz');
             if (!this._connected) {
                 this._connected = true;
             }
@@ -1964,7 +1968,6 @@ var Page;
             if (this.buttonClickSum < 100) {
                 this.buttonClickSum++;
             }
-            console.log('[ Buzzer ] Click! (' + this.buttonClickSum + ')');
         };
         return Buzzer;
     })(Page.Page);
