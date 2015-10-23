@@ -3,6 +3,7 @@
 module Engageform {
   export class Settings implements ISetting {
     allowAnswerChange: boolean = false;
+    hideMessageAfterDelay: number = 3000;
     share: {
       title: string;
       imageUrl: string;
@@ -13,6 +14,10 @@ module Engageform {
     constructor(data: API.IQuiz) {
       if (data.settings) {
         this.allowAnswerChange = !!data.settings.allowAnswerChange;
+
+        if (data.settings.hideMessageAfterDelay) {
+          this.hideMessageAfterDelay = data.settings.hideMessageAfterDelay;
+        }
 
         if (data.settings.share) {
           this.share = data.settings.share;

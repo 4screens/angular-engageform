@@ -88,7 +88,7 @@ module Navigation {
                 case Engageform.Mode.Preview:
                   if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
                     if (!opts.quiet) {
-                      this._engageform.message = 'Answer is required to proceed to next question';
+                      this.sendMessage('Answer is required to proceed to next question');
                     }
                     return;
                   }
@@ -106,7 +106,7 @@ module Navigation {
 
           }).catch(data => {
             if (!opts.quiet) {
-              this._engageform.message = data.message || '';
+              this.sendMessage(data.message);
             }
           });
       }
@@ -141,7 +141,7 @@ module Navigation {
             this.hasFinish = false;
           }).catch((err) => {
             if (err.data.msg) {
-              this._engageform.message = err.data.msg;
+              this.sendMessage(err.data.msg);
             }
           });
         }
@@ -153,6 +153,13 @@ module Navigation {
         $event.stopPropagation();
         $event.preventDefault();
       }
+    }
+
+    private sendMessage(msg) {
+      this._engageform.message = msg || '';
+      Bootstrap.$timeout(() => {
+        this._engageform.message = '';
+      }, this._engageform.settings.hideMessageAfterDelay);
     }
   }
 }

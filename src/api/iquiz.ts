@@ -16,6 +16,7 @@ module API {
     settings: {
       allowAnswerChange: boolean;
       branding?: Branding.IBrandingData,
+      hideMessageAfterDelay: number;
       share?: {
         title: string;
         imageUrl: string;
