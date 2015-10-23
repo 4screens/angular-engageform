@@ -9,7 +9,7 @@ module Util {
   }
 
   export interface IListener {
-    next: any;
+    (): void;
   }
 
   export class Event implements IEvent {
@@ -21,14 +21,13 @@ module Util {
      * @param {String} event
      * @param {Function} callback
      */
-    listen(event: string, callback: any): void {
+    listen(event: string, callback: IListener): void {
       if (!this._listener[event]) {
         this._listener[event] = [];
       }
 
-      this._listener[event].push({
-        next: callback
-      });
+      this._listener[event].push(callback);
+
     }
 
     /**
@@ -46,7 +45,7 @@ module Util {
       }
 
       for (var i = 0; i < listeners.length; i++) {
-        listeners[i].next.apply(null, args);
+        listeners[i].apply(null, args);
       }
     }
   }
