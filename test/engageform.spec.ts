@@ -273,6 +273,7 @@ describe('Engageform:', () => {
         id: '55893267d5f6db0100d2b09e'
       }).then((ef) => {
         expect(ef.settings.allowAnswerChange).toBeFalsy();
+        expect(ef.settings.hideMessageAfterDelay).toBe(3000);
         done();
       });
 
