@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.41
+ * 4screens-angular-engageform v0.2.42
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -512,11 +512,7 @@ var Page;
             var _this = this;
             var deferred = Bootstrap.$q.defer();
             var sent = {};
-            switch (Bootstrap.mode) {
-                default:
-                    sent = (Bootstrap.localStorage.get('page.' + this.id) || {});
-                    break;
-            }
+            sent = (Bootstrap.localStorage.get('page.' + this.id) || {});
             if (this.settings.showResults && sent.results) {
                 this.getStatsById(this.id).then(function (data) {
                     deferred.resolve(_this.refreshAnswer(sent, data));
@@ -551,8 +547,8 @@ var Page;
                         if (loaded.results) {
                             loaded.results[vcase.id] = data[vcase.id];
                             vcase.save(loaded);
-                            vcase.result = data[vcase.id] || 0;
                         }
+                        vcase.result = data[vcase.id] || 0;
                     }
                 });
             });
