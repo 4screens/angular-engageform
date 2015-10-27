@@ -76,11 +76,7 @@ module Page {
       var deferred = Bootstrap.$q.defer();
       var sent = <IPageSent>{};
 
-      switch (Bootstrap.mode) {
-        default:
-          sent = <IPageSent>(Bootstrap.localStorage.get('page.' + this.id) || {});
-          break;
-      }
+      sent = <IPageSent>(Bootstrap.localStorage.get('page.' + this.id) || {});
 
       if (this.settings.showResults && sent.results) {
         this.getStatsById(this.id).then((data: API.IQuizQuestion) => {
@@ -120,8 +116,9 @@ module Page {
             if (loaded.results) {
               loaded.results[vcase.id] = data[vcase.id];
               vcase.save(loaded);
-              vcase.result = data[vcase.id] || 0;
             }
+
+            vcase.result = data[vcase.id] || 0;
           }
         });
       });
