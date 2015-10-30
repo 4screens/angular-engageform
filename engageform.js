@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.42
+ * 4screens-angular-engageform v0.2.43
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -1616,14 +1616,11 @@ var Page;
             if (this.engageform.typeName === 'outcome' || this.engageform.typeName === 'score') {
                 this.socialData.title = 'I got "' +
                     (this.engageform.typeName === 'score' ? ((this.score || 0) + ' percent') : (this.outcome || '')) +
-                    '" on "' + this.cleanParam(this.engageform.title) + '" quiz. What about you ?';
+                    '" on "' + this.engageform.title + '" quiz. What about you?';
                 if (this.media && this.settings.showMainMedia) {
                     this.socialData.imageUrl = this.media;
                 }
             }
-        };
-        EndPage.prototype.cleanParam = function (str) {
-            return str.replace(/#|\?|\/|\\|\=/g, '');
         };
         Object.defineProperty(EndPage.prototype, "fbLink", {
             get: function () {
@@ -1633,8 +1630,8 @@ var Page;
                     this.socialData.imageUrl && this.engageform && this.engageform.id) {
                     this.personalizeShares();
                     return Bootstrap.config.backend.domain + Bootstrap.config.share.facebook + '?quizId=' + this.engageform.id +
-                        '&description=' + this.cleanParam(this.socialData.description) + '&name=' +
-                        this.cleanParam(this.socialData.title) + '&image=' + this.socialData.imageUrl;
+                        '&description=' + encodeURIComponent(this.socialData.description) + '&name=' +
+                        encodeURIComponent(this.socialData.title) + '&image=' + this.socialData.imageUrl;
                 }
                 return null;
             },
@@ -1645,7 +1642,8 @@ var Page;
             get: function () {
                 if (this.socialData && this.socialData.title && this.socialData.link) {
                     this.personalizeShares();
-                    return 'https://twitter.com/intent/tweet?text=' + this.socialData.title + ' ' + this.socialData.link + ' via @4screens';
+                    return 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(this.socialData.title)
+                        + ' ' + this.socialData.link + ' via @4screens';
                 }
                 return null;
             },
