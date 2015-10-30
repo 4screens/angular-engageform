@@ -45,16 +45,12 @@ module Page {
       if (this.engageform.typeName === 'outcome' || this.engageform.typeName === 'score') {
         this.socialData.title = 'I got "' +
         (this.engageform.typeName === 'score' ? ((this.score || 0) + ' percent') : (this.outcome || '')) +
-        '" on "' + this.cleanParam(this.engageform.title) + '" quiz. What about you ?';
+        '" on "' + this.engageform.title + '" quiz. What about you?';
 
         if (this.media && this.settings.showMainMedia) {
           this.socialData.imageUrl = this.media;
         }
       }
-    }
-
-    private cleanParam(str: string) {
-        return str.replace(/#|\?|\/|\\|\=/g, '');
     }
 
     get fbLink() {
@@ -66,8 +62,8 @@ module Page {
         ) {
         this.personalizeShares();
         return Bootstrap.config.backend.domain + Bootstrap.config.share.facebook + '?quizId=' + this.engageform.id +
-          '&description=' + this.cleanParam(this.socialData.description) + '&name=' +
-          this.cleanParam(this.socialData.title) + '&image=' + this.socialData.imageUrl;
+          '&description=' + encodeURIComponent(this.socialData.description) + '&name=' +
+          encodeURIComponent(this.socialData.title) + '&image=' + this.socialData.imageUrl;
       }
       return null;
     }
@@ -75,7 +71,8 @@ module Page {
     get twLink() {
       if (this.socialData && this.socialData.title && this.socialData.link) {
         this.personalizeShares();
-        return 'https://twitter.com/intent/tweet?text=' + this.socialData.title + ' ' + this.socialData.link + ' via @4screens';
+        return 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(this.socialData.title)
+          + ' ' + this.socialData.link + ' via @4screens';
       }
       return null;
     }
