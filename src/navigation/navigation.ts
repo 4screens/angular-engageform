@@ -21,6 +21,8 @@ module Navigation {
     hasStartPages: boolean = false;
     hasEndPages: boolean = false;
 
+    waitingForPageChange: ng.IPromise<Page.ICase>;
+
     constructor(engageform: Engageform.IEngageform) {
       this._engageform = engageform;
       this.size = engageform.availablePages.length;
@@ -74,42 +76,49 @@ module Navigation {
       }
     }
 
-    pick($event, vcase: Page.ICase, opts = {quiet: false}): void {
+    pick($event, vcase: Page.ICase, opts = {quiet: false}): ng.IPromise<Page.ICase> {
+      let current = this._engageform.current;
+      let isNormalMode = Bootstrap.mode === Engageform.Mode.Default || Bootstrap.mode === Engageform.Mode.Preview;
+
       this.disableDefaultAction($event);
       this.animate = 'swipeNext';
 
-      switch (Bootstrap.mode) {
-        default:
-          this._engageform.current.send(vcase).then(() => {
-            this._engageform.message = '';
-            if (this._engageform.current) {
-              switch (Bootstrap.mode) {
-                case Engageform.Mode.Default:
-                case Engageform.Mode.Preview:
-                  if (!this._engageform.current.filled && this._engageform.current.settings.requiredAnswer) {
-                    if (!opts.quiet) {
-                      this.sendMessage('Answer is required to proceed to next question');
-                    }
-                    return;
-                  }
-                  break;
-              }
-            }
+      // Send the answer.
+      return current.send(vcase).then(() => {
+        this._engageform.message = '';
 
-            if (vcase) {
-              Bootstrap.$timeout(() => {
-                this.move(vcase);
-              }, this._engageform.current.settings.showCorrectAnswer || this._engageform.current.settings.showResults ? 3000 : 200);
-            } else {
-              this.move(vcase);
-            }
+        // Prevent the question change when there's no answer selected and the page requires it.
+        if (isNormalMode && !current.filled && current.settings.requiredAnswer) {
+          if (!opts.quiet) {
+            this.sendMessage('Answer is required to proceed to the next question.');
+          }
 
-          }).catch(data => {
-            if (!opts.quiet) {
-              this.sendMessage(data.message);
-            }
-          });
-      }
+          return vcase;
+        } else {
+          // Change the page with a slight delay, or do it instantly.
+          let pageChangeDelay =  vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 2000 : 200) : 0;
+
+          // Extend the change timeout when user selected another answer while waiting for change.
+          if (this.waitingForPageChange) {
+            Bootstrap.$timeout.cancel(this.waitingForPageChange);
+          }
+
+          // Schedule the page change.
+          this.waitingForPageChange = Bootstrap.$timeout(() => {
+            this.waitingForPageChange = null;
+            this.move(vcase);
+            return vcase;
+          }, pageChangeDelay);
+
+          return this.waitingForPageChange;
+        }
+      }).catch(data => {
+        if (!opts.quiet) {
+          this.sendMessage(data.message);
+        }
+
+        return data;
+      });
     }
     next = this.pick;
     finish = this.pick;
