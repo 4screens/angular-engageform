@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.43
+ * 4screens-angular-engageform v0.2.44
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -327,39 +327,41 @@ var Navigation;
         Navigation.prototype.pick = function ($event, vcase, opts) {
             var _this = this;
             if (opts === void 0) { opts = { quiet: false }; }
+            var current = this._engageform.current;
+            var isNormalMode = Bootstrap.mode === Engageform.Mode.Default || Bootstrap.mode === Engageform.Mode.Preview;
             this.disableDefaultAction($event);
             this.animate = 'swipeNext';
-            switch (Bootstrap.mode) {
-                default:
-                    this._engageform.current.send(vcase).then(function () {
-                        _this._engageform.message = '';
-                        if (_this._engageform.current) {
-                            switch (Bootstrap.mode) {
-                                case Engageform.Mode.Default:
-                                case Engageform.Mode.Preview:
-                                    if (!_this._engageform.current.filled && _this._engageform.current.settings.requiredAnswer) {
-                                        if (!opts.quiet) {
-                                            _this.sendMessage('Answer is required to proceed to next question');
-                                        }
-                                        return;
-                                    }
-                                    break;
-                            }
-                        }
-                        if (vcase) {
-                            Bootstrap.$timeout(function () {
-                                _this.move(vcase);
-                            }, _this._engageform.current.settings.showResults ? 500 : 200);
-                        }
-                        else {
-                            _this.move(vcase);
-                        }
-                    }).catch(function (data) {
-                        if (!opts.quiet) {
-                            _this.sendMessage(data.message);
-                        }
-                    });
-            }
+            // Send the answer.
+            return current.send(vcase).then(function () {
+                _this._engageform.message = '';
+                // Prevent the question change when there's no answer selected and the page requires it.
+                if (isNormalMode && !current.filled && current.settings.requiredAnswer) {
+                    if (!opts.quiet) {
+                        _this.sendMessage('Answer is required to proceed to the next question.');
+                    }
+                    return vcase;
+                }
+                else {
+                    // Change the page with a slight delay, or do it instantly.
+                    var pageChangeDelay = vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 2000 : 200) : 0;
+                    // Extend the change timeout when user selected another answer while waiting for change.
+                    if (_this.waitingForPageChange) {
+                        Bootstrap.$timeout.cancel(_this.waitingForPageChange);
+                    }
+                    // Schedule the page change.
+                    _this.waitingForPageChange = Bootstrap.$timeout(function () {
+                        _this.waitingForPageChange = null;
+                        _this.move(vcase);
+                        return vcase;
+                    }, pageChangeDelay);
+                    return _this.waitingForPageChange;
+                }
+            }).catch(function (data) {
+                if (!opts.quiet) {
+                    _this.sendMessage(data.message);
+                }
+                return data;
+            });
         };
         Navigation.prototype.move = function (vcase) {
             var _this = this;
