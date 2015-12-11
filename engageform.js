@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.44
+ * 4screens-angular-engageform v0.2.45
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -506,9 +506,11 @@ var Page;
             if (vcase) {
                 return vcase.send();
             }
-            var deferred = Bootstrap.$q.defer();
-            deferred.resolve();
-            return deferred.promise;
+            else {
+                var deferred = Bootstrap.$q.defer();
+                deferred.resolve();
+                return deferred.promise;
+            }
         };
         Page.prototype.sent = function () {
             var _this = this;
@@ -1266,6 +1268,11 @@ var Page;
             enumerable: true,
             configurable: true
         });
+        /**
+         * Method created mostly to mislead programmer making him think this is how the answer is sent. Too bad!
+         * You've been goofed! The real sending is done in subclasses.
+         * @returns {IPromise<T>}
+         */
         Case.prototype.send = function () {
             var deferred = Bootstrap.$q.defer();
             deferred.resolve({});
@@ -1758,13 +1765,12 @@ var Page;
                 if (sent.results) {
                     vcase.result = sent.results[vcase.id] || 0;
                 }
-                if (sent.correctCaseId && (vcase.id === sent.correctCaseId || vcase.id === sent.selectedCaseId)) {
-                    if (vcase.id === sent.correctCaseId) {
-                        vcase.correct = true;
-                    }
-                    else {
-                        vcase.incorrect = true;
-                    }
+                // Mark case as correct or incorrect.
+                if (vcase.id === sent.correctCaseId) {
+                    vcase.correct = true;
+                }
+                else {
+                    vcase.incorrect = true;
                 }
             });
         };
@@ -1819,13 +1825,12 @@ var Page;
                 if (sent.results) {
                     vcase.result = sent.results[vcase.id] || 0;
                 }
-                if (sent.correctCaseId && (vcase.id === sent.correctCaseId || vcase.id === sent.selectedCaseId)) {
-                    if (vcase.id === sent.correctCaseId) {
-                        vcase.correct = true;
-                    }
-                    else {
-                        vcase.incorrect = true;
-                    }
+                // Mark case as correct or incorrect.
+                if (vcase.id === sent.correctCaseId) {
+                    vcase.correct = true;
+                }
+                else {
+                    vcase.incorrect = true;
                 }
             });
         };
