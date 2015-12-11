@@ -65,11 +65,11 @@ module Page {
 
       if (vcase) {
         return vcase.send();
+      } else {
+        let deferred = Bootstrap.$q.defer();
+        deferred.resolve();
+        return deferred.promise;
       }
-
-      var deferred = Bootstrap.$q.defer();
-      deferred.resolve();
-      return deferred.promise;
     }
 
     sent(): ng.IPromise<IPageSent> {

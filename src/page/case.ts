@@ -24,6 +24,11 @@ module Page {
       this._page = page;
     }
 
+    /**
+     * Method created mostly to mislead programmer making him think this is how the answer is sent. Too bad!
+     * You've been goofed! The real sending is done in subclasses.
+     * @returns {IPromise<T>}
+     */
     send(): ng.IPromise<IPageSent> {
       var deferred = Bootstrap.$q.defer();
       deferred.resolve(<IPageSent>{});

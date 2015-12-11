@@ -48,12 +48,11 @@ module Page {
           vcase.result = sent.results[vcase.id] || 0;
         }
 
-        if (sent.correctCaseId && (vcase.id === sent.correctCaseId || vcase.id === sent.selectedCaseId)) {
-          if (vcase.id === sent.correctCaseId) {
-            vcase.correct = true;
-          } else {
-            vcase.incorrect = true;
-          }
+        // Mark case as correct or incorrect.
+        if (vcase.id === sent.correctCaseId) {
+          vcase.correct = true;
+        } else {
+          vcase.incorrect = true;
         }
       });
     }
