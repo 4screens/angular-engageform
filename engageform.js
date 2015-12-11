@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.45
+ * 4screens-angular-engageform v0.2.46
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -305,8 +305,17 @@ var Navigation;
             this.move(null);
             this.hasPrev = true;
         };
+        /**
+         * Clears the page change timeout.
+         */
+        Navigation.prototype.stopPageChange = function () {
+            if (this.waitingForPageChange) {
+                Bootstrap.$timeout.cancel(this.waitingForPageChange);
+            }
+        };
         Navigation.prototype.prev = function ($event) {
             this.disableDefaultAction($event);
+            this.stopPageChange();
             this.animate = 'swipePrev';
             if (this._engageform.current) {
                 this._engageform.message = '';
@@ -330,6 +339,7 @@ var Navigation;
             var current = this._engageform.current;
             var isNormalMode = Bootstrap.mode === Engageform.Mode.Default || Bootstrap.mode === Engageform.Mode.Preview;
             this.disableDefaultAction($event);
+            this.stopPageChange();
             this.animate = 'swipeNext';
             // Send the answer.
             return current.send(vcase).then(function () {
@@ -344,10 +354,6 @@ var Navigation;
                 else {
                     // Change the page with a slight delay, or do it instantly.
                     var pageChangeDelay = vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 2000 : 200) : 0;
-                    // Extend the change timeout when user selected another answer while waiting for change.
-                    if (_this.waitingForPageChange) {
-                        Bootstrap.$timeout.cancel(_this.waitingForPageChange);
-                    }
                     // Schedule the page change.
                     _this.waitingForPageChange = Bootstrap.$timeout(function () {
                         _this.waitingForPageChange = null;
