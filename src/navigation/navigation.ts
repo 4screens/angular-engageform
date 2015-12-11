@@ -53,8 +53,18 @@ module Navigation {
       this.hasPrev = true;
     }
 
+    /**
+     * Clears the page change timeout.
+     */
+    stopPageChange() {
+      if (this.waitingForPageChange) {
+        Bootstrap.$timeout.cancel(this.waitingForPageChange);
+      }
+    }
+
     prev($event): void {
       this.disableDefaultAction($event);
+      this.stopPageChange();
       this.animate = 'swipePrev';
 
       if (this._engageform.current) {
@@ -81,6 +91,7 @@ module Navigation {
       let isNormalMode = Bootstrap.mode === Engageform.Mode.Default || Bootstrap.mode === Engageform.Mode.Preview;
 
       this.disableDefaultAction($event);
+      this.stopPageChange();
       this.animate = 'swipeNext';
 
       // Send the answer.
@@ -97,11 +108,6 @@ module Navigation {
         } else {
           // Change the page with a slight delay, or do it instantly.
           let pageChangeDelay =  vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 2000 : 200) : 0;
-
-          // Extend the change timeout when user selected another answer while waiting for change.
-          if (this.waitingForPageChange) {
-            Bootstrap.$timeout.cancel(this.waitingForPageChange);
-          }
 
           // Schedule the page change.
           this.waitingForPageChange = Bootstrap.$timeout(() => {
