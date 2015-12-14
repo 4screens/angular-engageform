@@ -2,11 +2,6 @@ module Page {
   export class ImageCase extends Case {
     type = CaseType.Image;
 
-    result: number;
-    selected: boolean = false;
-    correct: boolean = false;
-    incorrect: boolean = false;
-
     title: string;
     media: string;
     mediaWidth: number;

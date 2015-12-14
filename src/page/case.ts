@@ -7,6 +7,12 @@ module Page {
 
     type = CaseType.Undefined;
 
+    selected: boolean = false;
+    correct: boolean = false;
+    incorrect: boolean = false;
+
+    result: number = 0;
+
     get id(): string {
       return this._caseId;
     }
@@ -22,6 +28,24 @@ module Page {
     constructor(page: IPage, data) {
       this._caseId = data._id;
       this._page = page;
+    }
+
+    /**
+     * Method used to inform if the correct or incorrect indicator should be shown. Combine with ngIf or ngShow.
+     * Indicator is shown when the page's settinsg allows so and (1) the answer is selected or (2) the questions is
+     * answered and the case is correct.
+     * @returns {boolean} Should the indicator be shown?
+     */
+    shouldShowIndicator(): boolean {
+      return this._page.settings.showCorrectAnswer && (this.selected || (this._page.filled && this.correct));
+    }
+
+    /**
+     * Informs if the results should be shown (when the page is filled and set to do so).
+     * @returns {boolean} Should result be shown.
+     */
+    shouldShowResults(): boolean {
+      return this._page.settings.showResults && this._page.filled;
     }
 
     /**

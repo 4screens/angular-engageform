@@ -8,6 +8,15 @@ module Page {
 
     selectedValue: number = 0;
 
+    /**
+     * Rateit is unique in a way it shows results. Typically it's the cases matter to show them, but here it's
+     * the page that has results, so the method is required here.
+     * @returns {boolean} Should the result be shown?
+     */
+    shouldShowResults(): boolean {
+      return this.settings.showResults && this.result > 0;
+    }
+
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
       super(engageform, data);
 

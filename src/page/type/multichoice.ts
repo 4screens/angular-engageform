@@ -18,7 +18,6 @@ module Page {
           this.selectAnswer(sent);
         });
       }
-
     }
 
     refreshAnswer(sent: IPageSent, question: API.IQuizQuestion): IPageSent {

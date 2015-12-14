@@ -1,12 +1,6 @@
 module Page {
   export class TextCase extends Case {
     type = CaseType.Text;
-
-    result: number;
-    selected: boolean = false;
-    correct: boolean = false;
-    incorrect: boolean = false;
-
     title: string;
 
     constructor(page: IPage, data) {
