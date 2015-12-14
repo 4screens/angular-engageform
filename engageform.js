@@ -1254,6 +1254,10 @@ var Page;
     var Case = (function () {
         function Case(page, data) {
             this.type = Page.CaseType.Undefined;
+            this.selected = false;
+            this.correct = false;
+            this.incorrect = false;
+            this.result = 0;
             this._caseId = data._id;
             this._page = page;
         }
@@ -1274,6 +1278,22 @@ var Page;
             enumerable: true,
             configurable: true
         });
+        /**
+         * Method used to inform if the correct or incorrect indicator should be shown. Combine with ngIf or ngShow.
+         * Indicator is shown when the page's settinsg allows so and (1) the answer is selected or (2) the questions is
+         * answered and the case is correct.
+         * @returns {boolean} Should the indicator be shown?
+         */
+        Case.prototype.shouldShowIndicator = function () {
+            return this._page.settings.showCorrectAnswer && (this.selected || (this._page.filled && this.correct));
+        };
+        /**
+         * Informs if the results should be shown (when the page is filled and set to do so).
+         * @returns {boolean} Should result be shown.
+         */
+        Case.prototype.shouldShowResults = function () {
+            return this._page.settings.showResults && this._page.filled;
+        };
         /**
          * Method created mostly to mislead programmer making him think this is how the answer is sent. Too bad!
          * You've been goofed! The real sending is done in subclasses.
@@ -1361,9 +1381,6 @@ var Page;
         function ImageCase(page, data) {
             _super.call(this, page, data);
             this.type = Page.CaseType.Image;
-            this.selected = false;
-            this.correct = false;
-            this.incorrect = false;
             this.title = data.text;
             this.media = Bootstrap.cloudinary.prepareImageUrl(data.imageFile, 300, data.imageData);
             this.mediaWidth = 300;
@@ -1522,9 +1539,6 @@ var Page;
         function TextCase(page, data) {
             _super.call(this, page, data);
             this.type = Page.CaseType.Text;
-            this.selected = false;
-            this.correct = false;
-            this.incorrect = false;
             this.title = data.text;
         }
         TextCase.prototype.send = function () {
@@ -1875,6 +1889,14 @@ var Page;
                 }
             });
         }
+        /**
+         * Rateit is unique in a way it shows results. Typically it's the cases matter to show them, but here it's
+         * the page that has results, so the method is required here.
+         * @returns {boolean} Should the result be shown?
+         */
+        Rateit.prototype.shouldShowResults = function () {
+            return this.settings.showResults && this.result > 0;
+        };
         Rateit.prototype.selectAnswer = function (sent) {
             var _this = this;
             if (sent.selectedValue) {
