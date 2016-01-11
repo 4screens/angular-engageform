@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.46
+ * 4screens-angular-engageform v0.2.48
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -77,6 +77,7 @@ var Engageform;
             this.settings = new Engageform_1.Settings(data);
             this.theme = new Engageform_1.Theme(data);
             this.tabs = new Engageform_1.Tabs(data);
+            this.event = new Util.Event();
             if (data.settings && data.settings.branding) {
                 this.branding = new Branding.Branding(data.settings.branding);
             }
@@ -301,6 +302,7 @@ var Navigation;
         Navigation.prototype.start = function ($event) {
             this.disableDefaultAction($event);
             this.enabled = true;
+            // FIXME: Why would you do that? щ(°Д°щ) But I'm not removing it. Hell knows what depends on this stupidity.
             this.hasStart = false;
             this.move(null);
             this.hasPrev = true;
@@ -371,6 +373,12 @@ var Navigation;
         };
         Navigation.prototype.move = function (vcase) {
             var _this = this;
+            this._engageform.event.trigger('form::pageWillChange', {
+                currentPosition: this.position,
+                // You might wonder why I'm not using this.hasStart. Well, that's because some genius decided to
+                // make it false on the navigation start so it can't be used.
+                isStartPage: Boolean(this.position === 0 && this._engageform.startPages.length)
+            });
             this.position++;
             if (this._engageform.availablePages.length >= this.position) {
                 this.updateDistance();
@@ -672,6 +680,9 @@ var Bootstrap = (function () {
         Bootstrap.localStorage = localStorage;
         Bootstrap.config = ApiConfig;
         Bootstrap.user = new User();
+        // FIXME: This is inaccessible inside the library, since it's the consumer app that creates the instance so it
+        // isn't possible to actually trigger any event! I'm leaving it here because I don't care enough to check
+        // if any app tries to subscribe for this event. I'm almost sure it's safe to remove, though.
         this._event = new Util.Event();
         Bootstrap.cloudinary.setConfig(ApiConfig.cloudinary);
     }
