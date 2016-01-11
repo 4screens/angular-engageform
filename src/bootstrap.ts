@@ -32,6 +32,9 @@ class Bootstrap {
     Bootstrap.config = ApiConfig;
     Bootstrap.user = new User();
 
+    // FIXME: This is inaccessible inside the library, since it's the consumer app that creates the instance so it
+    // isn't possible to actually trigger any event! I'm leaving it here because I don't care enough to check
+    // if any app tries to subscribe for this event. I'm almost sure it's safe to remove, though.
     this._event = new Util.Event();
 
     Bootstrap.cloudinary.setConfig(ApiConfig.cloudinary);

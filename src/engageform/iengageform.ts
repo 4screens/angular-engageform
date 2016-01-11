@@ -24,6 +24,8 @@ module Engageform {
     typeName: string;
     id: string;
 
+    event: Util.Event;
+
     isType(type: Type): boolean;
 
     initPages(): ng.IPromise<IEngageform>;

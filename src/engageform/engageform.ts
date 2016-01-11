@@ -26,6 +26,8 @@ module Engageform {
     navigation: Navigation.INavigation;
     meta: Meta.IMeta;
 
+    event: Util.Event;
+
     get id(): string {
       return this._engageformId;
     }
@@ -82,6 +84,8 @@ module Engageform {
       this.settings = new Settings(data);
       this.theme = new Theme(data);
       this.tabs = new Tabs(data);
+
+      this.event = new Util.Event();
 
       if (data.settings && data.settings.branding) {
         this.branding = new Branding.Branding(data.settings.branding);
