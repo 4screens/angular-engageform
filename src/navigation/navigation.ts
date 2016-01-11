@@ -48,7 +48,10 @@ module Navigation {
       this.disableDefaultAction($event);
 
       this.enabled = true;
+
+      // FIXME: Why would you do that? щ(°Д°щ) But I'm not removing it. Hell knows what depends on this stupidity.
       this.hasStart = false;
+
       this.move(null);
       this.hasPrev = true;
     }
@@ -130,7 +133,16 @@ module Navigation {
     finish = this.pick;
 
     private move(vcase: Page.ICase): void {
+      this._engageform.event.trigger('form::pageWillChange', {
+        currentPosition: this.position,
+
+        // You might wonder why I'm not using this.hasStart. Well, that's because some genius decided to
+        // make it false on the navigation start so it can't be used.
+        isStartPage: Boolean(this.position === 0 && this._engageform.startPages.length)
+      });
+
       this.position++;
+
       if (this._engageform.availablePages.length >= this.position) {
         this.updateDistance();
         this._engageform.setCurrent(this._engageform.availablePages[this.position - 1]);
