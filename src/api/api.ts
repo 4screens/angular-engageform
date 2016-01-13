@@ -8,3 +8,5 @@
 /// <reference path="iquizres.ts" />
 /// <reference path="iquizfinish.ts" />
 /// <reference path="iquizfinishres.ts" />
+/// <reference path="pages.ts" />
+/// <reference path="iquizandpagesinit.ts" />

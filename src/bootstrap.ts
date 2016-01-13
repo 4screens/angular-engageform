@@ -6,6 +6,8 @@
 /// <reference path="user/user.ts" />
 /// <reference path="util/event.ts" />
 
+import IPromise = angular.IPromise;
+
 class Bootstrap {
   static $http: ng.IHttpService;
   static $q: ng.IQService;
@@ -22,6 +24,10 @@ class Bootstrap {
 
   private static _instances: Engageform.IEngageformInstances = {};
 
+  // Stores the constructors of quizzes mapped by names. Values are assigned in constructor because the modules
+  // dependency is spaghetti-like and constructors will be undefined at this point.
+  static quizzesConstructors;
+
   constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, cloudinary: any,
               localStorage: ng.local.storage.ILocalStorageService, ApiConfig: Config.ApiConfig) {
     Bootstrap.$http = $http;
@@ -31,6 +37,15 @@ class Bootstrap {
     Bootstrap.localStorage = localStorage;
     Bootstrap.config = ApiConfig;
     Bootstrap.user = new User();
+
+    // Map names to constructors.
+    Bootstrap.quizzesConstructors = {
+      outcome: Engageform.Outcome,
+      poll: Engageform.Poll,
+      score: Engageform.Score,
+      survey: Engageform.Survey,
+      live: Engageform.Live
+    };
 
     // FIXME: This is inaccessible inside the library, since it's the consumer app that creates the instance so it
     // isn't possible to actually trigger any event! I'm leaving it here because I don't care enough to check
@@ -158,39 +173,28 @@ class Bootstrap {
       opts.callback.sendAnswerCallback = function() {};
     }
 
-    return Engageform.Engageform.getById(opts.id).then((engageformData) => {
-      switch (engageformData.type) {
-        case 'outcome':
-          this._engageform = new Engageform.Outcome(engageformData, opts.callback.sendAnswerCallback);
-          break;
-        case 'poll':
-          this._engageform = new Engageform.Poll(engageformData, opts.callback.sendAnswerCallback);
-            break;
-        case 'score':
-          this._engageform = new Engageform.Score(engageformData, opts.callback.sendAnswerCallback);
-          break;
-        case 'survey':
-          this._engageform = new Engageform.Survey(engageformData, opts.callback.sendAnswerCallback);
-          break;
-        case 'live':
-          this._engageform = new Engageform.Live(engageformData, opts.callback.sendAnswerCallback);
-          break;
-        default:
-          return Bootstrap.$q.reject({
-            status: 'error',
-            error: {
-              code: 406,
-              message: 'Type property not supported.'
-            },
-            data: engageformData
-          });
+    // Initialize the quiz.
+    return Bootstrap.$q.all({
+      quizData: Engageform.Engageform.getById(opts.id),
+      pages: Engageform.Engageform.getPagesById(opts.id)
+    }).then((data: API.IQuizAndPagesInit) => {
+      // If the quiz doesn't have a supported constructor, reject the promise with error.
+      if (!Bootstrap.quizzesConstructors[data.quizData.type]) {
+        return Bootstrap.$q.reject({
+          status: 'error',
+          error: {
+            code: 406,
+            message: 'Type property not supported.'
+          },
+          data: data.quizData
+        });
       }
 
-      return Bootstrap._instances[opts.id] = this._engageform.initPages();
-    }).then(function(engageform) {
-      engageform.navigation = new Navigation.Navigation(<Engageform.IEngageform>engageform);
-      engageform.meta = new Meta.Meta(<Engageform.IEngageform>engageform);
-      return engageform;
+      // Create the Engageform's instance.
+      this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData, data.pages,
+        opts.callback.sendAnswerCallback);
+
+      return this._engageform;
     });
   }
 

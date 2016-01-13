@@ -75,7 +75,7 @@ module Engageform {
       return this.type === type;
     }
 
-    constructor(data: API.IQuiz, sendAnswerCallback: ISendAnswerCallback) {
+    constructor(data: API.IQuiz, pages: API.IPages, sendAnswerCallback: ISendAnswerCallback) {
       this._engageformId = data._id;
 
       this.sendAnswerCallback = sendAnswerCallback;
@@ -92,14 +92,11 @@ module Engageform {
       } else {
         this.branding = new Branding.Branding({});
       }
-    }
 
-    initPages(): ng.IPromise<IEngageform> {
-        return this.getPagesById(this._engageformId).then((pages) => {
-          this.buildPages(pages);
+      this.buildPages(pages);
 
-        return <IEngageform>this;
-      });
+      this.navigation = new Navigation.Navigation(this);
+      this.meta = new Meta.Meta(this);
     }
 
     initPage(page: API.IQuiz) {
@@ -154,8 +151,8 @@ module Engageform {
       this._pages = {};
     }
 
-    buildPages(pages): void {
-      pages.map((page) => {
+    buildPages(pages: API.IPages): void {
+      pages.map((page: API.IQuizQuestion) => {
         switch (page.type) {
           case 'multiChoice':
             this._availablePages.push(page._id);
@@ -198,7 +195,7 @@ module Engageform {
       });
     }
 
-    private getPagesById(engageformId: string): ng.IPromise<API.IQuizQuestion[]> {
+    static getPagesById(engageformId: string): ng.IPromise<API.IQuizQuestion[]> {
       var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformPagesUrl;
           url = url.replace(':engageformId', engageformId);
 

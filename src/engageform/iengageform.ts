@@ -28,7 +28,6 @@ module Engageform {
 
     isType(type: Type): boolean;
 
-    initPages(): ng.IPromise<IEngageform>;
     setCurrent(pageId: string);
     setCurrentEndPage(): ng.IPromise<API.IQuizFinish>;
   }
