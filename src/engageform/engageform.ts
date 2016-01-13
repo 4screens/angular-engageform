@@ -77,6 +77,14 @@ module Engageform {
       return this.type === type;
     }
 
+    /**
+     * Informs if the quiz is currently in a default mode.
+     * @returns {Boolean}
+     */
+    isDefaultMode(): boolean {
+      return Boolean(this.mode === Engageform.Mode.Default || this.mode === Engageform.Mode.Preview);
+    }
+
     constructor(data: API.IQuiz, pages: API.IPages, mode: Engageform.Mode,
                 sendAnswerCallback: ISendAnswerCallback = () => {}) {
       this._engageformId = data._id;

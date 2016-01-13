@@ -29,6 +29,7 @@ module Engageform {
     mode: Engageform.Mode;
 
     isType(type: Type): boolean;
+    isDefaultMode(): boolean;
 
     setCurrent(pageId: string);
     setCurrentEndPage(): ng.IPromise<API.IQuizFinish>;

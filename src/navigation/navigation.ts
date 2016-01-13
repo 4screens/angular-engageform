@@ -91,7 +91,6 @@ module Navigation {
 
     pick($event, vcase: Page.ICase, opts = {quiet: false}): ng.IPromise<Page.ICase> {
       let current = this._engageform.current;
-      let isNormalMode = Bootstrap.mode === Engageform.Mode.Default || Bootstrap.mode === Engageform.Mode.Preview;
 
       this.disableDefaultAction($event);
       this.stopPageChange();
@@ -102,7 +101,7 @@ module Navigation {
         this._engageform.message = '';
 
         // Prevent the question change when there's no answer selected and the page requires it.
-        if (isNormalMode && !current.filled && current.settings.requiredAnswer) {
+        if (this._engageform.isDefaultMode() && !current.filled && current.settings.requiredAnswer) {
           if (!opts.quiet) {
             this.sendMessage('Answer is required to proceed to the next question.');
           }
