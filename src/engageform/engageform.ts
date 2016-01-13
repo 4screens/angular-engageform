@@ -82,7 +82,7 @@ module Engageform {
      * @returns {Boolean}
      */
     isDefaultMode(): boolean {
-      return Boolean(this.mode === Engageform.Mode.Default || this.mode === Engageform.Mode.Preview);
+      return Boolean(this.mode === Mode.Default || this.mode === Mode.Preview);
     }
 
     constructor(data: API.IQuiz, pages: API.IPages, mode: Engageform.Mode,
