@@ -98,7 +98,7 @@ module Navigation {
 
       // Send the answer.
       return current.send(vcase).then(() => {
-        this._engageform.message = '';
+        this.sendMessage();
 
         // Prevent the question change when there's no answer selected and the page requires it.
         if (this._engageform.isDefaultMode() && !current.filled && current.settings.requiredAnswer) {
@@ -181,8 +181,8 @@ module Navigation {
       }
     }
 
-    private sendMessage(msg) {
-      this._engageform.message = msg || '';
+    private sendMessage(msg = '') {
+      this._engageform.message = msg;
       Bootstrap.$timeout(() => {
         this._engageform.message = '';
       }, this._engageform.settings.hideMessageAfterDelay);
