@@ -133,23 +133,6 @@ module Engageform {
       });
     }
 
-    static getById(id: string): ng.IPromise<API.IQuiz> {
-      var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformUrl;
-      url = url.replace(':engageformId', id);
-
-      if (Bootstrap.mode !== Mode.Default) {
-        url += '?preview';
-      }
-
-      return Bootstrap.$http.get(url).then((res: API.IQuizResponse) => {
-        if ([200, 304].indexOf(res.status) !== -1) {
-          return res.data;
-        }
-
-        return Bootstrap.$q.reject(res);
-      });
-    }
-
     cleanPages(): void {
       this._availablePages.length = 0;
       this._pages = {};
@@ -196,22 +179,6 @@ module Engageform {
             this._pages[page._id] = new Page.Poster(<IEngageform>this, page);
             break;
         }
-      });
-    }
-
-    static getPagesById(engageformId: string): ng.IPromise<API.IQuizQuestion[]> {
-      var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformPagesUrl;
-          url = url.replace(':engageformId', engageformId);
-
-      if (Bootstrap.mode !== Mode.Default) {
-        url += '?preview';
-      }
-      return Bootstrap.$http.get(url).then(function (res) {
-        if ([200, 304].indexOf(res.status) !== -1) {
-          return res.data;
-        }
-
-        this.$q.reject(res);
       });
     }
   }

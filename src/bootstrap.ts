@@ -169,8 +169,8 @@ class Bootstrap {
 
     // Initialize the quiz.
     return Bootstrap.$q.all({
-      quizData: Engageform.Engageform.getById(opts.id),
-      pages: Engageform.Engageform.getPagesById(opts.id)
+      quizData: Bootstrap.getData('quiz', opts.id),
+      pages: Bootstrap.getData('pages', opts.id)
     }).then((data: API.IQuizAndPagesInit) => {
       // If the quiz doesn't have a supported constructor, reject the promise with error.
       if (!Bootstrap.quizzesConstructors[data.quizData.type]) {
@@ -189,6 +189,45 @@ class Bootstrap {
         Bootstrap.mode, opts.callback ? opts.callback.sendAnswerCallback : null);
 
       return this._engageform;
+    });
+  }
+
+	/**
+   * Fetches the two types of data from the API: quiz data and pages data.
+   * @param type Resource type: quiz or pages.
+   * @param id ID of the quiz.
+   * @returns {IPromise<API.IQuizQuestion[]|API.IQuiz>}
+   */
+  static getData(type: string, id: string): ng.IPromise<API.IQuizQuestion[]|API.IQuiz> {
+    const resourcesPaths = {
+      quiz: 'engageformUrl',
+      pages: 'engageformPagesUrl'
+    };
+
+    // Basic validation.
+    if (!resourcesPaths[type]) {
+      throw new Error(`Resource path for ${type} type of data is unknown.`);
+    }
+
+    // Decide the data URL depending on the type.
+    let url = Bootstrap.config.backend.domain +
+      Bootstrap.config.engageform[type === 'quiz' ? 'engageformUrl' : 'engageformPagesUrl'];
+
+    // Valid ID required.
+    url = url.replace(':engageformId', id);
+
+    // Inform the backend it shouldn't store statistics when a quiz is not in a default mode.
+    if (Bootstrap.mode !== Engageform.Mode.Default) {
+      url += '?preview';
+    }
+
+    // Go, fetch the data.
+    return Bootstrap.$http.get(url).then(function (res) {
+      if ([200, 304].indexOf(res.status) !== -1) {
+        return res.data;
+      }
+
+      Bootstrap.$q.reject(res);
     });
   }
 
