@@ -28,6 +28,9 @@ class Bootstrap {
   // dependency is spaghetti-like and constructors will be undefined at this point.
   static quizzesConstructors;
 
+  // Modes the library can operates in. Values assigned later due to the spaghetti.
+  static modes;
+
   constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, cloudinary: any,
               localStorage: ng.local.storage.ILocalStorageService, ApiConfig: Config.ApiConfig) {
     Bootstrap.$http = $http;
@@ -45,6 +48,14 @@ class Bootstrap {
       score: Engageform.Score,
       survey: Engageform.Survey,
       live: Engageform.Live
+    };
+
+    Bootstrap.modes = {
+      preview: Engageform.Mode.Preview,
+      summary: Engageform.Mode.Summary,
+      results: Engageform.Mode.Result,
+      'default': Engageform.Mode.Default,
+      '': Engageform.Mode.Default
     };
 
     // FIXME: This is inaccessible inside the library, since it's the consumer app that creates the instance so it
@@ -124,6 +135,7 @@ class Bootstrap {
   }
 
   init(opts: API.IEmbed): ng.IPromise<Engageform.IEngageform> {
+    // Options are required and need to have a quiz ID.
     if (!opts || !opts.id) {
       return Bootstrap.$q.reject({
         status: 'error',
@@ -135,43 +147,25 @@ class Bootstrap {
       });
     }
 
+    // Return already initialised instance if already exists.
     if (Bootstrap._instances[opts.id]) {
       return Bootstrap._instances[opts.id];
     }
 
-    switch (opts.mode) {
-      case 'preview':
-        Bootstrap.mode = Engageform.Mode.Preview;
-        break;
-      case 'summary':
-        Bootstrap.mode = Engageform.Mode.Summary;
-        break;
-      case 'result':
-        Bootstrap.mode = Engageform.Mode.Result;
-        break;
-      case 'default':
-      case '':
-      case undefined:
-        Bootstrap.mode = Engageform.Mode.Default;
-        break;
-      default:
-        return Bootstrap.$q.reject({
-          status: 'error',
-          error: {
-            code: 406,
-            message: 'Mode property not supported.'
-          },
-          data: opts
-        });
+    // If the requested mode is not supported, reject the initialisation.
+    if (!Bootstrap.modes[opts.mode]) {
+      return Bootstrap.$q.reject({
+        status: 'error',
+        error: {
+          code: 406,
+          message: 'Mode property not supported.'
+        },
+        data: opts
+      });
     }
 
-    if (!opts.callback) {
-      opts.callback = {
-        sendAnswerCallback: function() {}
-      };
-    } else if (!opts.callback.sendAnswerCallback) {
-      opts.callback.sendAnswerCallback = function() {};
-    }
+    // Set the mode in which the whole library operates.
+    Bootstrap.mode = Bootstrap.modes[opts.mode];
 
     // Initialize the quiz.
     return Bootstrap.$q.all({
@@ -192,7 +186,7 @@ class Bootstrap {
 
       // Create the Engageform's instance.
       this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData, data.pages,
-        opts.callback.sendAnswerCallback);
+        Bootstrap.mode, opts.callback ? opts.callback.sendAnswerCallback : null);
 
       return this._engageform;
     });

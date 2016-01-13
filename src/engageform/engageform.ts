@@ -11,7 +11,7 @@ module Engageform {
     private _availablePages: string[] = [];
     private _hasForms: boolean = false;
 
-    public sendAnswerCallback: ISendAnswerCallback = function() {};
+    public sendAnswerCallback: ISendAnswerCallback;
 
     enabled: boolean = true;
     type: Type = Type.Undefined;
@@ -27,6 +27,8 @@ module Engageform {
     meta: Meta.IMeta;
 
     event: Util.Event;
+
+    mode: Engageform.Mode;
 
     get id(): string {
       return this._engageformId;
@@ -75,8 +77,10 @@ module Engageform {
       return this.type === type;
     }
 
-    constructor(data: API.IQuiz, pages: API.IPages, sendAnswerCallback: ISendAnswerCallback) {
+    constructor(data: API.IQuiz, pages: API.IPages, mode: Engageform.Mode,
+                sendAnswerCallback: ISendAnswerCallback = () => {}) {
       this._engageformId = data._id;
+      this.mode = mode;
 
       this.sendAnswerCallback = sendAnswerCallback;
 

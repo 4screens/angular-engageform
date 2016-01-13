@@ -26,6 +26,8 @@ module Engageform {
 
     event: Util.Event;
 
+    mode: Engageform.Mode;
+
     isType(type: Type): boolean;
 
     setCurrent(pageId: string);
