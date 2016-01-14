@@ -1,10 +1,10 @@
 /// <reference path="api/api.ts" />
-/// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
 /// <reference path="meta/meta.ts" />
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
 /// <reference path="util/event.ts" />
+/// <reference path="engageform/engageform.ts" />
 
 import IPromise = angular.IPromise;
 

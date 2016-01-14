@@ -30,6 +30,8 @@ module Engageform {
 
     mode: Engageform.Mode;
 
+    static pagesConsturctors;
+
     get id(): string {
       return this._engageformId;
     }
@@ -87,6 +89,18 @@ module Engageform {
 
     constructor(data: API.IQuiz, pages: API.IPages, mode: Engageform.Mode,
                 sendAnswerCallback: ISendAnswerCallback = () => {}) {
+      // As always, due to the initialisation drama, those values are only available about now.
+      Engageform.pagesConsturctors = {
+        multiChoice: Page.MultiChoice,
+        pictureChoice: Page.PictureChoice,
+        rateIt: Page.Rateit,
+        forms: Page.Form,
+        startPage: Page.StartPage,
+        endPage: Page.EndPage,
+        buzzer: Page.Buzzer,
+        poster: Page.Poster
+      };
+
       this._engageformId = data._id;
       this.mode = mode;
 
@@ -105,18 +119,67 @@ module Engageform {
         this.branding = new Branding.Branding({});
       }
 
-      this.buildPages(pages);
+      // Handle pages creation.
+      let builtPages = this.buildPages(pages, this.settings);
 
+      // Store the pages on the instance.
+      builtPages.forEach(page => this.storePage(page));
+
+      // Does the quiz have any form-type pages?
+      this._hasForms = builtPages.some(page => page.type === Page.Type.Form);
+
+      // Create meta objects.
       this.navigation = new Navigation.Navigation(this);
       this.meta = new Meta.Meta(this);
     }
 
-    initPage(page: API.IQuiz) {
-      // ..Abstract for liveEvent
+    /**
+     * Stores a single page on the quiz instance.
+     *
+     * There are two type of stores. One stores only the IDs and start and end pages are stored in different
+     * collections. There's also a general collection for all pages where instances are held.
+     *
+     * @param page The page to be stored.
+     * @returns {Page.Page} The same page.
+     */
+    storePage(page: Page.Page): Page.Page {
+      if (page.type === Page.Type.StartPage) {
+        this._startPages.push(page.id);
+      } else if (page.type === Page.Type.EndPage) {
+        this._endPages.push(page.id);
+      } else {
+        this._availablePages.push(page.id);
+      }
+
+      this._pages[page.id] = page;
+
+      return page;
     }
 
-    setCurrent(pageId: string) {
-      this.current = <Page.IPage>this._pages[pageId];
+    /**
+     * Initialises a single page that will take place of the current one.
+     *
+     * @param page Page data for creating the page's instance.
+     * @returns {Page.Page} Built page.
+     */
+    initPage(page: API.IQuizQuestion): Page.IPage {
+      // Build and store the page.
+      this.storePage(this.buildPages([page], this.settings)[0]);
+
+      // Set the currently visible page.
+      return this.setCurrent(page._id);
+    }
+
+    /**
+     * Sets the currently visible page by finding it by ID.
+     *
+     * @param pageId Page's ID to show.
+     * @returns {IPage} The visible page.
+     */
+    setCurrent(pageId: string): Page.IPage {
+      let page = this._pages[pageId];
+      this.current = page;
+      return page;
     }
 
     setCurrentEndPage(): ng.IPromise<API.IQuizFinish> {
@@ -146,48 +209,35 @@ module Engageform {
       this._pages = {};
     }
 
-    buildPages(pages: API.IPages): void {
-      pages.map((page: API.IQuizQuestion) => {
-        switch (page.type) {
-          case 'multiChoice':
-            this._availablePages.push(page._id);
-            this._pages[page._id] = new Page.MultiChoice(<IEngageform>this, page);
-            break;
-          case 'pictureChoice':
-            this._availablePages.push(page._id);
-            this._pages[page._id] = new Page.PictureChoice(<IEngageform>this, page);
-            break;
-          case 'rateIt':
-            this._availablePages.push(page._id);
-            this._pages[page._id] = new Page.Rateit(<IEngageform>this, page);
-            break;
-          case 'forms':
-            // Store information about this engageform having a form-type question.
-            this._hasForms = true;
+	  /**
+     * Builds pages from data delegating the construction to this.createPage method and
+     * filters out possibly unsupported pages.
+     *
+     * @param pages Array with pages data.
+     * @param settings this.settings of the current quiz.
+     * @returns {Page.Page[]} Array of pages.
+	   */
+    buildPages(pages: API.IPages, settings: Settings): Page.Page[]  {
+      return pages
 
-            this._availablePages.push(page._id);
-            this._pages[page._id] = new Page.Form(<IEngageform>this, page);
-            break;
-          case 'startPage':
-            this._startPages.push(page._id);
-            this._pages[page._id] = new Page.StartPage(<IEngageform>this, page);
-            break;
-          case 'endPage':
-            this._endPages.push(page._id);
-            this._pages[page._id] = new Page.EndPage(<IEngageform>this, page, this.settings);
-            break;
+        // Construct page instances.
+        .map((page: API.IQuizQuestion) => this.createPage(page, settings))
 
-          // EngageNow exclusive page types
-          case 'buzzer':
-            this._availablePages.push(page._id);
-            this._pages[page._id] = new Page.Buzzer(<IEngageform>this, page);
-            break;
-          case 'poster':
-            this._availablePages.push(page._id);
-            this._pages[page._id] = new Page.Poster(<IEngageform>this, page);
-            break;
-        }
-      });
+        // Filter no-values since there might have been unsupported types.
+        .filter(val => Boolean(val));
+    }
+
+	  /**
+     * Creates a single page. If the type is not supported (ie. doesn't have a constructor) will return undefined.
+     *
+     * @param page Pages data.
+     * @param settings this.settings.
+     * @returns {Page.Page|void} Page instance or undefined if unsupported type.
+     */
+    createPage(page: API.IQuizQuestion, settings: Settings): Page.Page {
+      if (Engageform.pagesConsturctors[page.type]) {
+        return new Engageform.pagesConsturctors[page.type](this, page, settings);
+      }
     }
   }
 }

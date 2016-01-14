@@ -8,13 +8,12 @@ module Engageform {
       return deferred.promise;
     };
 
-    initPage(page) {
-      // Clean old pages
+    initPage(page: API.IQuizQuestion): Page.IPage {
+      // Clean other pages.
       this.cleanPages();
 
-      // Build new
-      this.buildPages([page]);
-      this.setCurrent(page._id);
+      // Initialize the single page.
+      return super.initPage(page);
     }
 
     setCurrentEndPage(): ng.IPromise<API.IQuizFinish> {
