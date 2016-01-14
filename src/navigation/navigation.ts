@@ -90,6 +90,14 @@ module Navigation {
     }
 
     pick($event, vcase: Page.ICase, opts = {quiet: false}): ng.IPromise<Page.ICase> {
+      // Move page but don't do anything else when the quiz is nor in a normal mode.
+      if (!this._engageform.isNormalMode()) {
+        let defer = Bootstrap.$q.defer();
+        defer.resolve(vcase);
+        this.move(vcase);
+        return defer.promise;
+      }
+
       let current = this._engageform.current;
 
       this.disableDefaultAction($event);
