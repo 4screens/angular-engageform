@@ -101,7 +101,7 @@ module Navigation {
         this.sendMessage();
 
         // Prevent the question change when there's no answer selected and the page requires it.
-        if (this._engageform.isDefaultMode() && !current.filled && current.settings.requiredAnswer) {
+        if (this._engageform.isNormalMode() && !current.filled && current.settings.requiredAnswer) {
           if (!opts.quiet) {
             this.sendMessage('Answer is required to proceed to the next question.');
           }

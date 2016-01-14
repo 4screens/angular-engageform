@@ -80,10 +80,14 @@ module Engageform {
     }
 
     /**
-     * Informs if the quiz is currently in a default mode.
+     * Informs if the quiz is currently in a "normal" mode, so all features should work as intended.
+     * Normal mode means either default or preview mode.
+     *
+     * One of the feature that depends on this mode is the availability of start and end pages.
+     *
      * @returns {Boolean}
      */
-    isDefaultMode(): boolean {
+    isNormalMode(): boolean {
       return Boolean(this.mode === Mode.Default || this.mode === Mode.Preview);
     }
 
