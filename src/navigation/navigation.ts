@@ -154,7 +154,9 @@ module Navigation {
           this.hasNext = true;
         } else if (this._engageform.availablePages.length === this.position) {
           // Finisher is not available when the engageform is of a type "poll" and doesn't have any form-type question.
-          this.hasFinish = !(this._engageform.isType(Engageform.Type.Poll) && !this._engageform.hasForms);
+          // Also when it's not working in normal mode (ie. summary doesn't submit).
+          this.hasFinish = this._engageform.isNormalMode() &&
+            !(this._engageform.isType(Engageform.Type.Poll) && !this._engageform.hasForms);
         }
 
       } else {
