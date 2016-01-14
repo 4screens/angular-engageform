@@ -143,14 +143,20 @@ module Engageform {
      * There are two type of stores. One stores only the IDs and start and end pages are stored in different
      * collections. There's also a general collection for all pages where instances are held.
      *
+     * Start and end pages are not stored in the summary mode.
+     *
      * @param page The page to be stored.
      * @returns {Page.Page} The same page.
      */
     storePage(page: Page.Page): Page.Page {
       if (page.type === Page.Type.StartPage) {
-        this._startPages.push(page.id);
+        if (this.isNormalMode()) {
+          this._startPages.push(page.id);
+        }
       } else if (page.type === Page.Type.EndPage) {
-        this._endPages.push(page.id);
+        if (this.isNormalMode()) {
+          this._endPages.push(page.id);
+        }
       } else {
         this._availablePages.push(page.id);
       }
