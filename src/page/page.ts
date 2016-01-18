@@ -119,7 +119,7 @@ module Page {
         return singleCase.id;
       });
 
-      // Create fake cases when there's a result but no
+      // Create fake cases when there's a result but no answer for that.
       for (let k in results.stats) {
         if (casesWithResults.indexOf(k) === -1
           // There's the questionId in the API…
@@ -131,7 +131,11 @@ module Page {
           // Create the fake answer to show results…
           let fakeCase: ICase = <ICase>this.createCase({
             text: '[Removed answer]',
-            _id: k
+            _id: k,
+            imageData: {
+              // Comes from the backend by default.
+              height: 100
+            }
           });
 
           // … and set those results…
@@ -179,6 +183,5 @@ module Page {
         return Bootstrap.$q.reject(res);
       });
     }
-
   }
 }
