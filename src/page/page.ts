@@ -106,7 +106,7 @@ module Page {
      */
     setResults(results: API.Result) {
       this.cases.forEach((singleCase: ICase) => {
-        singleCase.result = Number(results.stats[singleCase.id]);
+        singleCase.result = Number(results.stats[singleCase.id]) || 0;
       });
       // TODO: fake case
     }
