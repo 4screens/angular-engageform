@@ -1,6 +1,7 @@
 module Page {
   export class Form extends Page {
     type = Type.Form;
+    count = 0;
 
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
       super(engageform, data);
@@ -54,6 +55,10 @@ module Page {
       this.cases.map((vcase: ICase) => {
         vcase.value = sent[vcase.id] || '';
       });
+    }
+
+    setResults(results: API.Result) {
+      this.count = results.count;
     }
   }
 }
