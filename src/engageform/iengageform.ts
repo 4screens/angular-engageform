@@ -30,6 +30,8 @@ module Engageform {
 
     isType(type: Type): boolean;
     isNormalMode(): boolean;
+    isSummaryMode(): boolean;
+    isPreviewMode(): boolean;
 
     setCurrent(pageId: string);
     setCurrentEndPage(): ng.IPromise<API.IQuizFinish>;

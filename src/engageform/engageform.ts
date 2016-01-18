@@ -91,6 +91,22 @@ module Engageform {
       return Boolean(this.mode === Mode.Default || this.mode === Mode.Preview);
     }
 
+    /**
+     * Informs if the quiz works in the summary mode.
+     * @returns {Boolean} Is summary mode?
+     */
+    isSummaryMode(): boolean {
+      return Boolean(this.mode === Mode.Summary);
+    }
+
+    /**
+     * Informs if the quiz works in the preview mode.
+     * @returns {Boolean} Is preview mode?
+     */
+    isPreviewMode(): boolean {
+      return Boolean(this.mode === Mode.Preview);
+    }
+
     constructor(data: API.IQuiz, pages: API.IPages, mode: Engageform.Mode,
                 sendAnswerCallback: ISendAnswerCallback = () => {}) {
       // As always, due to the initialisation drama, those values are only available about now.
