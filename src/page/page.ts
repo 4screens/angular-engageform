@@ -100,15 +100,47 @@ module Page {
       // "abstract"
     }
 
+    createCase(data, symbol?): void|ICase {
+      // "abstract
+      return;
+    }
+
     /**
      * Sets the provided results on the page's cases.
      * @param results Object containing data with results that should be set on the cases.
      */
     setResults(results: API.Result) {
-      this.cases.forEach((singleCase: ICase) => {
+      let casesWithResults = this.cases.map((singleCase: ICase) => {
+        // Set's the result on the case. Side effect, but makes the whole method a bit faster. Otherwise there
+        // would be a need for more loops when creating fake answers.
         singleCase.result = Number(results.stats[singleCase.id]) || 0;
+
+        // Returns the ID of the case so there's no need to loop them later
+        return singleCase.id;
       });
-      // TODO: fake case
+
+      // Create fake cases when there's a result but no
+      for (let k in results.stats) {
+        if (casesWithResults.indexOf(k) === -1
+          // There's the questionId in the API…
+          && k !== 'questionId'
+
+          // Don't create the case for rateits.
+          && this.type !== Type.Rateit) {
+
+          // Create the fake answer to show results…
+          let fakeCase: ICase = <ICase>this.createCase({
+            text: '[Removed answer]',
+            _id: k
+          });
+
+          // … and set those results…
+          fakeCase.result = Number(results.stats[fakeCase.id]);
+
+          // … and add them to the answers pool.
+          this.cases.push(fakeCase);
+        }
+      }
     }
 
     updateAnswers(data): void {

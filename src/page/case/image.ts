@@ -17,7 +17,7 @@ module Page {
         data.imageData
       );
       this.mediaWidth = 300;
-      if (data.imageData.containerRatio) {
+      if (data.imageData && data.imageData.containerRatio) {
         this.mediaHeight = Math.round(300 * data.imageData.containerRatio);
       } else {
         this.mediaHeight = Math.round(data.imageData.containerHeight);
