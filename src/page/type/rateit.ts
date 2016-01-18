@@ -23,12 +23,9 @@ module Page {
       this.labelMin = data.rateIt.minLabel;
       this.labelMax = data.rateIt.maxLabel;
 
-      for (var i = 1; i <= data.rateIt.maxRateItValue; i++) {
-        this.cases.push(<ICase>new IterationCase(<IPage>this, {
-          ordinal: i,
-          symbol: data.rateIt.rateType
-        }));
-      }
+      this.cases = Array.apply(null, Array(data.rateIt.maxRateItValue)).map((value, index) => {
+        return this.createCase(index + 1, data.rateIt.rateType);
+      });
 
       this.sent().then(sent => {
         if (sent.selectedValue) {
@@ -36,6 +33,10 @@ module Page {
           this.selectAnswer(sent);
         }
       });
+    }
+
+    createCase(ordinal, symbol): ICase {
+      return new IterationCase(this, { ordinal, symbol });
     }
 
     selectAnswer(sent) {

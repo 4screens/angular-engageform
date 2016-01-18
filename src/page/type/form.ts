@@ -9,8 +9,8 @@ module Page {
         return;
       }
 
-      data.forms.inputs.map((input) => {
-        this.cases.push(<ICase>new InputCase(<IPage>this, input));
+      this.cases = data.forms.inputs.map((input) => {
+        return this.createCase(input);
       });
 
       if (this.cases.length) {
@@ -18,6 +18,10 @@ module Page {
           this.selectAnswer(sent);
         });
       }
+    }
+
+    createCase(input): ICase {
+      return new InputCase(this, input);
     }
 
     send(vcase: ICase): ng.IPromise<IPageSent> {

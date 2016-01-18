@@ -9,8 +9,8 @@ module Page {
         return;
       }
 
-      data.answers.map((answer) => {
-        this.cases.push(<ICase>new TextCase(<IPage>this, answer));
+      this.cases = data.answers.map((answer) => {
+        return this.createCase(answer);
       });
 
       if (this.cases.length) {
@@ -18,6 +18,10 @@ module Page {
           this.selectAnswer(sent);
         });
       }
+    }
+
+    createCase(answer): ICase {
+      return new TextCase(this, answer);
     }
 
     refreshAnswer(sent: IPageSent, question: API.IQuizQuestion): IPageSent {
