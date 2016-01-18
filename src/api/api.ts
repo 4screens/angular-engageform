@@ -10,3 +10,4 @@
 /// <reference path="iquizfinishres.ts" />
 /// <reference path="pages.ts" />
 /// <reference path="iquizandpagesinit.ts" />
+/// <reference path="iresult.ts" />

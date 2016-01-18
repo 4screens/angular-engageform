@@ -32,6 +32,8 @@ module Page {
     selectAnswer(data): void;
     updateAnswers(data): void;
     clickBuzzer?(): void;
+
+    setResults(results: API.Result): void;
   }
 
   export interface ISocialData {

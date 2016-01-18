@@ -1,0 +1,13 @@
+module API {
+  // More specyfic variant of the iquestionanswer interface.
+  export interface Result {
+    selected: boolean;
+    stats: {
+      // Answer stats. They are numbers, but need to handle the questionId, which is a string.
+      [key: string]: number|string;
+
+      // The ID of question of which results are stored in the object.
+      questionId: string;
+    };
+  }
+}

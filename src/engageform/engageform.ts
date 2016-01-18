@@ -264,6 +264,26 @@ module Engageform {
       if (Engageform.pagesConsturctors[page.type]) {
         return new Engageform.pagesConsturctors[page.type](this, page, settings);
       }
+
+      this.setResults([{
+        selected: true,
+        stats: {
+          asdasd: 12,
+          questionId: 'asd'
+        }
+      }]);
+    }
+
+    /**
+     *
+     * @param results
+     */
+    setResults(results: API.Result[]) {
+      results.forEach((questionResults: API.Result) => {
+        if (this._pages[questionResults.stats.questionId]) {
+          this._pages[questionResults.stats.questionId].setResults(questionResults);
+        }
+      });
     }
   }
 }

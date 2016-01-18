@@ -100,6 +100,17 @@ module Page {
       // "abstract"
     }
 
+    /**
+     * Sets the provided results on the page's cases.
+     * @param results Object containing data with results that should be set on the cases.
+     */
+    setResults(results: API.Result) {
+      this.cases.forEach((singleCase: ICase) => {
+        singleCase.result = Number(results.stats[singleCase.id]);
+      });
+      // TODO: fake case
+    }
+
     updateAnswers(data): void {
       if (this.id !== data.questionId) {
         return;
