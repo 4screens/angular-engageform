@@ -59,5 +59,9 @@ module Page {
         }
       });
     }
+
+    setResults(results: API.Result) {
+      this.result = results.average;
     }
+  }
 }

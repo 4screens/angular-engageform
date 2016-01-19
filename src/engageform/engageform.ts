@@ -275,7 +275,7 @@ module Engageform {
     }
 
     /**
-     *
+     * Takes the results data and applies them on the pages.
      * @param results
      */
     setResults(results: API.Result[]) {
