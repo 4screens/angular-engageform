@@ -46,7 +46,8 @@ module Page {
      * @returns {boolean} Should result be shown.
      */
     shouldShowResults(): boolean {
-      return this._page.engageform.isSummaryMode() || this._page.settings.showResults && this._page.filled;
+      return this._page.engageform.isSummaryMode() ||
+        this._page.settings.showResults && this._page.filled && !this._page.engageform.isResultsMode();
     }
 
     /**
