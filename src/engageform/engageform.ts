@@ -100,6 +100,14 @@ module Engageform {
     }
 
     /**
+     * Informs if the quiz works in the results mode.
+     * @returns {Boolean} Is results mode?
+     */
+    isResultsMode(): boolean {
+      return Boolean(this.mode === Mode.Result);
+    }
+
+    /**
      * Informs if the quiz works in the preview mode.
      * @returns {Boolean} Is preview mode?
      */
@@ -265,7 +273,7 @@ module Engageform {
         return new Engageform.pagesConsturctors[page.type](this, page, settings);
       }
 
-      this.setResults([{
+      this.setSummary([{
         selected: true,
         stats: {
           asdasd: 12,
@@ -278,12 +286,29 @@ module Engageform {
      * Takes the results data and applies them on the pages.
      * @param results
      */
-    setResults(results: API.Result[]) {
+    setSummary(results: API.Result[]) {
       results.forEach((questionResults: API.Result) => {
         if (this._pages[questionResults.stats.questionId]) {
           this._pages[questionResults.stats.questionId].setResults(questionResults);
         }
       });
+    }
+
+    /**
+     * In results mode, sets the user picked answers on the pages.
+     * @param questions
+     */
+    setAnswers({ questions }: { questions: { [index: string]: API.Answer } }): void {
+      for (let questionId in questions) {
+        if (this._pages[questionId]) {
+          let props = questions[questionId];
+          this._pages[questionId].selectAnswer({
+            selectedCaseId: props.selectedAnswerId,
+            inputs: props.inputs,
+            selectedValue: props.rateItValue
+          });
+        }
+      }
     }
   }
 }

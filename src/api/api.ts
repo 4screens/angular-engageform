@@ -11,3 +11,4 @@
 /// <reference path="pages.ts" />
 /// <reference path="iquizandpagesinit.ts" />
 /// <reference path="iresult.ts" />
+/// <reference path="ianswer.ts" />

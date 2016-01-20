@@ -54,6 +54,15 @@ module Page {
     selectAnswer(sent) {
       this.cases.map((vcase: ICase) => {
         vcase.value = sent[vcase.id] || '';
+
+        // In results mode, there might be data containing user inputs, so set it as the case value.
+        if (sent.inputs) {
+          sent.inputs.forEach((inputData: {_id: string, value: string}) => {
+            if (inputData._id === vcase.id) {
+              vcase.value = inputData.value;
+            }
+          });
+        }
       });
     }
 
