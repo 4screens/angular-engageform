@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.48
+ * 4screens-angular-engageform v0.2.49
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -56,209 +56,6 @@ var app = angular.module('4screens.engageform', [
     '4screens.util.cloudinary',
     'LocalStorageModule'
 ]);
-
-/// <reference path="iengageform.ts" />
-/// <reference path="isendanswercallback.ts" />
-var Engageform;
-(function (Engageform_1) {
-    var Engageform = (function () {
-        function Engageform(data, sendAnswerCallback) {
-            this._pages = {};
-            this._startPages = [];
-            this._endPages = [];
-            this._availablePages = [];
-            this._hasForms = false;
-            this.sendAnswerCallback = function () { };
-            this.enabled = true;
-            this.type = Engageform_1.Type.Undefined;
-            this._engageformId = data._id;
-            this.sendAnswerCallback = sendAnswerCallback;
-            this.title = data.title;
-            this.settings = new Engageform_1.Settings(data);
-            this.theme = new Engageform_1.Theme(data);
-            this.tabs = new Engageform_1.Tabs(data);
-            this.event = new Util.Event();
-            if (data.settings && data.settings.branding) {
-                this.branding = new Branding.Branding(data.settings.branding);
-            }
-            else {
-                this.branding = new Branding.Branding({});
-            }
-        }
-        Object.defineProperty(Engageform.prototype, "id", {
-            get: function () {
-                return this._engageformId;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Engageform.prototype, "pages", {
-            get: function () {
-                return this._pages;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Engageform.prototype, "startPages", {
-            get: function () {
-                return this._startPages;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Engageform.prototype, "endPages", {
-            get: function () {
-                return this._endPages;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Engageform.prototype, "availablePages", {
-            get: function () {
-                return this._availablePages;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Engageform.prototype, "typeName", {
-            get: function () {
-                return Engageform_1.Type[this.type].toLowerCase();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Engageform.prototype, "hasForms", {
-            /**
-             * @public
-             * @description
-             * Returns boolean information about the presence of form-type in the current engageform.
-             *
-             * @returns {boolean} Are there any form-type questions?
-             */
-            get: function () {
-                return this._hasForms;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * @public
-         * @description
-         * Checks if the current engageform is of provided type. Takes Types enum as an argument.
-         *
-         * @param {Type} type Engageform type from the Type enum.
-         * @returns {boolean} Is it?
-         */
-        Engageform.prototype.isType = function (type) {
-            return this.type === type;
-        };
-        Engageform.prototype.initPages = function () {
-            var _this = this;
-            return this.getPagesById(this._engageformId).then(function (pages) {
-                _this.buildPages(pages);
-                return _this;
-            });
-        };
-        Engageform.prototype.initPage = function (page) {
-            // ..Abstract for liveEvent
-        };
-        Engageform.prototype.setCurrent = function (pageId) {
-            this.current = this._pages[pageId];
-        };
-        Engageform.prototype.setCurrentEndPage = function () {
-            var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformFinishUrl;
-            url = url.replace(':engageformId', this._engageformId);
-            if (Bootstrap.mode !== Engageform_1.Mode.Default) {
-                url += '?preview';
-            }
-            return Bootstrap.$http.post(url, {
-                userIdent: Bootstrap.user.sessionId,
-                globalUserIdent: Bootstrap.user.id
-            }).then(function (res) {
-                if ([200, 304].indexOf(res.status) !== -1) {
-                    Bootstrap.localStorage.clearAll();
-                    Bootstrap.user.id = res.data.globalUserIdent;
-                    return res.data;
-                }
-                return this.$q.reject(res);
-            });
-        };
-        Engageform.getById = function (id) {
-            var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformUrl;
-            url = url.replace(':engageformId', id);
-            if (Bootstrap.mode !== Engageform_1.Mode.Default) {
-                url += '?preview';
-            }
-            return Bootstrap.$http.get(url).then(function (res) {
-                if ([200, 304].indexOf(res.status) !== -1) {
-                    return res.data;
-                }
-                return Bootstrap.$q.reject(res);
-            });
-        };
-        Engageform.prototype.cleanPages = function () {
-            this._availablePages.length = 0;
-            this._pages = {};
-        };
-        Engageform.prototype.buildPages = function (pages) {
-            var _this = this;
-            pages.map(function (page) {
-                switch (page.type) {
-                    case 'multiChoice':
-                        _this._availablePages.push(page._id);
-                        _this._pages[page._id] = new Page.MultiChoice(_this, page);
-                        break;
-                    case 'pictureChoice':
-                        _this._availablePages.push(page._id);
-                        _this._pages[page._id] = new Page.PictureChoice(_this, page);
-                        break;
-                    case 'rateIt':
-                        _this._availablePages.push(page._id);
-                        _this._pages[page._id] = new Page.Rateit(_this, page);
-                        break;
-                    case 'forms':
-                        // Store information about this engageform having a form-type question.
-                        _this._hasForms = true;
-                        _this._availablePages.push(page._id);
-                        _this._pages[page._id] = new Page.Form(_this, page);
-                        break;
-                    case 'startPage':
-                        _this._startPages.push(page._id);
-                        _this._pages[page._id] = new Page.StartPage(_this, page);
-                        break;
-                    case 'endPage':
-                        _this._endPages.push(page._id);
-                        _this._pages[page._id] = new Page.EndPage(_this, page, _this.settings);
-                        break;
-                    // EngageNow exclusive page types
-                    case 'buzzer':
-                        _this._availablePages.push(page._id);
-                        _this._pages[page._id] = new Page.Buzzer(_this, page);
-                        break;
-                    case 'poster':
-                        _this._availablePages.push(page._id);
-                        _this._pages[page._id] = new Page.Poster(_this, page);
-                        break;
-                }
-            });
-        };
-        Engageform.prototype.getPagesById = function (engageformId) {
-            var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformPagesUrl;
-            url = url.replace(':engageformId', engageformId);
-            if (Bootstrap.mode !== Engageform_1.Mode.Default) {
-                url += '?preview';
-            }
-            return Bootstrap.$http.get(url).then(function (res) {
-                if ([200, 304].indexOf(res.status) !== -1) {
-                    return res.data;
-                }
-                this.$q.reject(res);
-            });
-        };
-        return Engageform;
-    })();
-    Engageform_1.Engageform = Engageform;
-})(Engageform || (Engageform = {}));
 
 /// <reference path="inavigation.ts" />
 var Navigation;
@@ -338,16 +135,22 @@ var Navigation;
         Navigation.prototype.pick = function ($event, vcase, opts) {
             var _this = this;
             if (opts === void 0) { opts = { quiet: false }; }
+            // Move page but don't do anything else when the quiz is nor in a normal mode.
+            if (!this._engageform.isNormalMode()) {
+                var defer = Bootstrap.$q.defer();
+                defer.resolve(vcase);
+                this.move(vcase);
+                return defer.promise;
+            }
             var current = this._engageform.current;
-            var isNormalMode = Bootstrap.mode === Engageform.Mode.Default || Bootstrap.mode === Engageform.Mode.Preview;
             this.disableDefaultAction($event);
             this.stopPageChange();
             this.animate = 'swipeNext';
             // Send the answer.
             return current.send(vcase).then(function () {
-                _this._engageform.message = '';
+                _this.sendMessage();
                 // Prevent the question change when there's no answer selected and the page requires it.
-                if (isNormalMode && !current.filled && current.settings.requiredAnswer) {
+                if (!current.filled && current.settings.requiredAnswer) {
                     if (!opts.quiet) {
                         _this.sendMessage('Answer is required to proceed to the next question.');
                     }
@@ -391,7 +194,9 @@ var Navigation;
                 }
                 else if (this._engageform.availablePages.length === this.position) {
                     // Finisher is not available when the engageform is of a type "poll" and doesn't have any form-type question.
-                    this.hasFinish = !(this._engageform.isType(Engageform.Type.Poll) && !this._engageform.hasForms);
+                    // Also when it's not working in normal mode (ie. summary doesn't submit).
+                    this.hasFinish = this._engageform.isNormalMode() &&
+                        !(this._engageform.isType(Engageform.Type.Poll) && !this._engageform.hasForms);
                 }
             }
             else {
@@ -418,7 +223,8 @@ var Navigation;
         };
         Navigation.prototype.sendMessage = function (msg) {
             var _this = this;
-            this._engageform.message = msg || '';
+            if (msg === void 0) { msg = ''; }
+            this._engageform.message = msg;
             Bootstrap.$timeout(function () {
                 _this._engageform.message = '';
             }, this._engageform.settings.hideMessageAfterDelay);
@@ -550,6 +356,43 @@ var Page;
         Page.prototype.selectAnswer = function (data) {
             // "abstract"
         };
+        Page.prototype.createCase = function (data, symbol) {
+            // "abstract
+            return;
+        };
+        /**
+         * Sets the provided results on the page's cases.
+         * @param results Object containing data with results that should be set on the cases.
+         */
+        Page.prototype.setResults = function (results) {
+            var casesWithResults = this.cases.map(function (singleCase) {
+                // Set's the result on the case. Side effect, but makes the whole method a bit faster. Otherwise there
+                // would be a need for more loops when creating fake answers.
+                singleCase.result = Number(results.stats[singleCase.id]) || 0;
+                // Returns the ID of the case so there's no need to loop them later
+                return singleCase.id;
+            });
+            // Create fake cases when there's a result but no answer for that.
+            for (var k in results.stats) {
+                if (casesWithResults.indexOf(k) === -1
+                    && k !== 'questionId'
+                    && this.type !== Page_1.Type.Rateit) {
+                    // Create the fake answer to show results…
+                    var fakeCase = this.createCase({
+                        text: '[Removed answer]',
+                        _id: k,
+                        imageData: {
+                            // Comes from the backend by default.
+                            height: 100
+                        }
+                    });
+                    // … and set those results…
+                    fakeCase.result = Number(results.stats[fakeCase.id]);
+                    // … and add them to the answers pool.
+                    this.cases.push(fakeCase);
+                }
+            }
+        };
         Page.prototype.updateAnswers = function (data) {
             var _this = this;
             if (this.id !== data.questionId) {
@@ -664,13 +507,302 @@ var Util;
     Util.Event = Event;
 })(Util || (Util = {}));
 
+/// <reference path="iengageform.ts" />
+/// <reference path="isendanswercallback.ts" />
+var Engageform;
+(function (Engageform_1) {
+    var Engageform = (function () {
+        function Engageform(data, pages, mode, sendAnswerCallback) {
+            var _this = this;
+            if (sendAnswerCallback === void 0) { sendAnswerCallback = function () { }; }
+            this._pages = {};
+            this._startPages = [];
+            this._endPages = [];
+            this._availablePages = [];
+            this._hasForms = false;
+            this.enabled = true;
+            this.type = Engageform_1.Type.Undefined;
+            // As always, due to the initialisation drama, those values are only available about now.
+            Engageform.pagesConsturctors = {
+                multiChoice: Page.MultiChoice,
+                pictureChoice: Page.PictureChoice,
+                rateIt: Page.Rateit,
+                forms: Page.Form,
+                startPage: Page.StartPage,
+                endPage: Page.EndPage,
+                buzzer: Page.Buzzer,
+                poster: Page.Poster
+            };
+            this._engageformId = data._id;
+            this.mode = mode;
+            this.sendAnswerCallback = sendAnswerCallback;
+            this.title = data.title;
+            this.settings = new Engageform_1.Settings(data);
+            this.theme = new Engageform_1.Theme(data);
+            this.tabs = new Engageform_1.Tabs(data);
+            this.event = new Util.Event();
+            if (data.settings && data.settings.branding) {
+                this.branding = new Branding.Branding(data.settings.branding);
+            }
+            else {
+                this.branding = new Branding.Branding({});
+            }
+            // Handle pages creation.
+            var builtPages = this.buildPages(pages, this.settings);
+            // Store the pages on the instance.
+            builtPages.forEach(function (page) { return _this.storePage(page); });
+            // Does the quiz have any form-type pages?
+            this._hasForms = builtPages.some(function (page) { return page.type === Page.Type.Form; });
+            // Create meta objects.
+            this.navigation = new Navigation.Navigation(this);
+            this.meta = new Meta.Meta(this);
+        }
+        Object.defineProperty(Engageform.prototype, "id", {
+            get: function () {
+                return this._engageformId;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engageform.prototype, "pages", {
+            get: function () {
+                return this._pages;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engageform.prototype, "startPages", {
+            get: function () {
+                return this._startPages;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engageform.prototype, "endPages", {
+            get: function () {
+                return this._endPages;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engageform.prototype, "availablePages", {
+            get: function () {
+                return this._availablePages;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engageform.prototype, "typeName", {
+            get: function () {
+                return Engageform_1.Type[this.type].toLowerCase();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engageform.prototype, "hasForms", {
+            /**
+             * @public
+             * @description
+             * Returns boolean information about the presence of form-type in the current engageform.
+             *
+             * @returns {boolean} Are there any form-type questions?
+             */
+            get: function () {
+                return this._hasForms;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * @public
+         * @description
+         * Checks if the current engageform is of provided type. Takes Types enum as an argument.
+         *
+         * @param {Type} type Engageform type from the Type enum.
+         * @returns {boolean} Is it?
+         */
+        Engageform.prototype.isType = function (type) {
+            return this.type === type;
+        };
+        /**
+         * Informs if the quiz is currently in a "normal" mode, so all features should work as intended.
+         * Normal mode means either default or preview mode.
+         *
+         * One of the feature that depends on this mode is the availability of start and end pages.
+         *
+         * @returns {Boolean}
+         */
+        Engageform.prototype.isNormalMode = function () {
+            return Boolean(this.mode === Engageform_1.Mode.Default || this.mode === Engageform_1.Mode.Preview);
+        };
+        /**
+         * Informs if the quiz works in the summary mode.
+         * @returns {Boolean} Is summary mode?
+         */
+        Engageform.prototype.isSummaryMode = function () {
+            return Boolean(this.mode === Engageform_1.Mode.Summary);
+        };
+        /**
+         * Informs if the quiz works in the results mode.
+         * @returns {Boolean} Is results mode?
+         */
+        Engageform.prototype.isResultsMode = function () {
+            return Boolean(this.mode === Engageform_1.Mode.Result);
+        };
+        /**
+         * Informs if the quiz works in the preview mode.
+         * @returns {Boolean} Is preview mode?
+         */
+        Engageform.prototype.isPreviewMode = function () {
+            return Boolean(this.mode === Engageform_1.Mode.Preview);
+        };
+        /**
+         * Stores a single page on the quiz instance.
+         *
+         * There are two type of stores. One stores only the IDs and start and end pages are stored in different
+         * collections. There's also a general collection for all pages where instances are held.
+         *
+         * Start and end pages are not stored in the summary mode.
+         *
+         * @param page The page to be stored.
+         * @returns {Page.Page} The same page.
+         */
+        Engageform.prototype.storePage = function (page) {
+            if (page.type === Page.Type.StartPage) {
+                if (this.isNormalMode()) {
+                    this._startPages.push(page.id);
+                }
+            }
+            else if (page.type === Page.Type.EndPage) {
+                if (this.isNormalMode()) {
+                    this._endPages.push(page.id);
+                }
+            }
+            else {
+                this._availablePages.push(page.id);
+            }
+            this._pages[page.id] = page;
+            return page;
+        };
+        /**
+         * Initialises a single page that will take place of the current one.
+         *
+         * @param page Page data for creating the page's instance.
+         * @returns {Page.Page} Built page.
+         */
+        Engageform.prototype.initPage = function (page) {
+            // Build and store the page.
+            this.storePage(this.buildPages([page], this.settings)[0]);
+            // Set the currently visible page.
+            return this.setCurrent(page._id);
+        };
+        /**
+         * Sets the currently visible page by finding it by ID.
+         *
+         * @param pageId Page's ID to show.
+         * @returns {IPage} The visible page.
+         */
+        Engageform.prototype.setCurrent = function (pageId) {
+            var page = this._pages[pageId];
+            this.current = page;
+            return page;
+        };
+        Engageform.prototype.setCurrentEndPage = function () {
+            var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformFinishUrl;
+            url = url.replace(':engageformId', this._engageformId);
+            if (Bootstrap.mode !== Engageform_1.Mode.Default) {
+                url += '?preview';
+            }
+            return Bootstrap.$http.post(url, {
+                userIdent: Bootstrap.user.sessionId,
+                globalUserIdent: Bootstrap.user.id
+            }).then(function (res) {
+                if ([200, 304].indexOf(res.status) !== -1) {
+                    Bootstrap.localStorage.clearAll();
+                    Bootstrap.user.id = res.data.globalUserIdent;
+                    return res.data;
+                }
+                return this.$q.reject(res);
+            });
+        };
+        Engageform.prototype.cleanPages = function () {
+            this._availablePages.length = 0;
+            this._pages = {};
+        };
+        /**
+       * Builds pages from data delegating the construction to this.createPage method and
+       * filters out possibly unsupported pages.
+       *
+       * @param pages Array with pages data.
+       * @param settings this.settings of the current quiz.
+       * @returns {Page.Page[]} Array of pages.
+         */
+        Engageform.prototype.buildPages = function (pages, settings) {
+            var _this = this;
+            return pages
+                .map(function (page) { return _this.createPage(page, settings); })
+                .filter(function (val) { return Boolean(val); });
+        };
+        /**
+       * Creates a single page. If the type is not supported (ie. doesn't have a constructor) will return undefined.
+       *
+       * @param page Pages data.
+       * @param settings this.settings.
+       * @returns {Page.Page|void} Page instance or undefined if unsupported type.
+       */
+        Engageform.prototype.createPage = function (page, settings) {
+            if (Engageform.pagesConsturctors[page.type]) {
+                return new Engageform.pagesConsturctors[page.type](this, page, settings);
+            }
+            this.setSummary([{
+                    selected: true,
+                    stats: {
+                        asdasd: 12,
+                        questionId: 'asd'
+                    }
+                }]);
+        };
+        /**
+         * Takes the results data and applies them on the pages.
+         * @param results
+         */
+        Engageform.prototype.setSummary = function (results) {
+            var _this = this;
+            results.forEach(function (questionResults) {
+                if (_this._pages[questionResults.stats.questionId]) {
+                    _this._pages[questionResults.stats.questionId].setResults(questionResults);
+                }
+            });
+        };
+        /**
+         * In results mode, sets the user picked answers on the pages.
+         * @param questions
+         */
+        Engageform.prototype.setAnswers = function (_a) {
+            var questions = _a.questions;
+            for (var questionId in questions) {
+                if (this._pages[questionId]) {
+                    var props = questions[questionId];
+                    this._pages[questionId].selectAnswer({
+                        selectedCaseId: props.selectedAnswerId,
+                        inputs: props.inputs,
+                        selectedValue: props.rateItValue
+                    });
+                }
+            }
+        };
+        return Engageform;
+    })();
+    Engageform_1.Engageform = Engageform;
+})(Engageform || (Engageform = {}));
+
 /// <reference path="api/api.ts" />
-/// <reference path="engageform/engageform.ts" />
 /// <reference path="navigation/navigation.ts" />
 /// <reference path="meta/meta.ts" />
 /// <reference path="page/page.ts" />
 /// <reference path="user/user.ts" />
 /// <reference path="util/event.ts" />
+/// <reference path="engageform/engageform.ts" />
 var Bootstrap = (function () {
     function Bootstrap($http, $q, $timeout, cloudinary, localStorage, ApiConfig) {
         Bootstrap.$http = $http;
@@ -680,6 +812,21 @@ var Bootstrap = (function () {
         Bootstrap.localStorage = localStorage;
         Bootstrap.config = ApiConfig;
         Bootstrap.user = new User();
+        // Map names to constructors.
+        Bootstrap.quizzesConstructors = {
+            outcome: Engageform.Outcome,
+            poll: Engageform.Poll,
+            score: Engageform.Score,
+            survey: Engageform.Survey,
+            live: Engageform.Live
+        };
+        Bootstrap.modes = {
+            preview: Engageform.Mode.Preview,
+            summary: Engageform.Mode.Summary,
+            results: Engageform.Mode.Result,
+            'default': Engageform.Mode.Default,
+            '': Engageform.Mode.Default
+        };
         // FIXME: This is inaccessible inside the library, since it's the consumer app that creates the instance so it
         // isn't possible to actually trigger any event! I'm leaving it here because I don't care enough to check
         // if any app tries to subscribe for this event. I'm almost sure it's safe to remove, though.
@@ -791,6 +938,7 @@ var Bootstrap = (function () {
     });
     Bootstrap.prototype.init = function (opts) {
         var _this = this;
+        // Options are required and need to have a quiz ID.
         if (!opts || !opts.id) {
             return Bootstrap.$q.reject({
                 status: 'error',
@@ -801,74 +949,74 @@ var Bootstrap = (function () {
                 data: opts
             });
         }
+        // Return already initialised instance if already exists.
         if (Bootstrap._instances[opts.id]) {
             return Bootstrap._instances[opts.id];
         }
-        switch (opts.mode) {
-            case 'preview':
-                Bootstrap.mode = Engageform.Mode.Preview;
-                break;
-            case 'summary':
-                Bootstrap.mode = Engageform.Mode.Summary;
-                break;
-            case 'result':
-                Bootstrap.mode = Engageform.Mode.Result;
-                break;
-            case 'default':
-            case '':
-            case undefined:
-                Bootstrap.mode = Engageform.Mode.Default;
-                break;
-            default:
+        // If the requested mode is not supported, reject the initialisation.
+        if (!Bootstrap.modes[opts.mode]) {
+            return Bootstrap.$q.reject({
+                status: 'error',
+                error: {
+                    code: 406,
+                    message: 'Mode property not supported.'
+                },
+                data: opts
+            });
+        }
+        // Set the mode in which the whole library operates.
+        Bootstrap.mode = Bootstrap.modes[opts.mode];
+        // Initialize the quiz.
+        return Bootstrap.$q.all({
+            quizData: Bootstrap.getData('quiz', opts.id),
+            pages: Bootstrap.getData('pages', opts.id)
+        }).then(function (data) {
+            // If the quiz doesn't have a supported constructor, reject the promise with error.
+            if (!Bootstrap.quizzesConstructors[data.quizData.type]) {
                 return Bootstrap.$q.reject({
                     status: 'error',
                     error: {
                         code: 406,
-                        message: 'Mode property not supported.'
+                        message: 'Type property not supported.'
                     },
-                    data: opts
+                    data: data.quizData
                 });
-        }
-        if (!opts.callback) {
-            opts.callback = {
-                sendAnswerCallback: function () { }
-            };
-        }
-        else if (!opts.callback.sendAnswerCallback) {
-            opts.callback.sendAnswerCallback = function () { };
-        }
-        return Engageform.Engageform.getById(opts.id).then(function (engageformData) {
-            switch (engageformData.type) {
-                case 'outcome':
-                    _this._engageform = new Engageform.Outcome(engageformData, opts.callback.sendAnswerCallback);
-                    break;
-                case 'poll':
-                    _this._engageform = new Engageform.Poll(engageformData, opts.callback.sendAnswerCallback);
-                    break;
-                case 'score':
-                    _this._engageform = new Engageform.Score(engageformData, opts.callback.sendAnswerCallback);
-                    break;
-                case 'survey':
-                    _this._engageform = new Engageform.Survey(engageformData, opts.callback.sendAnswerCallback);
-                    break;
-                case 'live':
-                    _this._engageform = new Engageform.Live(engageformData, opts.callback.sendAnswerCallback);
-                    break;
-                default:
-                    return Bootstrap.$q.reject({
-                        status: 'error',
-                        error: {
-                            code: 406,
-                            message: 'Type property not supported.'
-                        },
-                        data: engageformData
-                    });
             }
-            return Bootstrap._instances[opts.id] = _this._engageform.initPages();
-        }).then(function (engageform) {
-            engageform.navigation = new Navigation.Navigation(engageform);
-            engageform.meta = new Meta.Meta(engageform);
-            return engageform;
+            // Create the Engageform's instance.
+            _this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData, data.pages, Bootstrap.mode, opts.callback ? opts.callback.sendAnswerCallback : function () { });
+            return _this._engageform;
+        });
+    };
+    /**
+   * Fetches the two types of data from the API: quiz data and pages data.
+   * @param type Resource type: quiz or pages.
+   * @param id ID of the quiz.
+   * @returns {IPromise<API.IQuizQuestion[]|API.IQuiz>}
+   */
+    Bootstrap.getData = function (type, id) {
+        var resourcesPaths = {
+            quiz: 'engageformUrl',
+            pages: 'engageformPagesUrl'
+        };
+        // Basic validation.
+        if (!resourcesPaths[type]) {
+            throw new Error("Resource path for " + type + " type of data is unknown.");
+        }
+        // Decide the data URL depending on the type.
+        var url = Bootstrap.config.backend.domain +
+            Bootstrap.config.engageform[type === 'quiz' ? 'engageformUrl' : 'engageformPagesUrl'];
+        // Valid ID required.
+        url = url.replace(':engageformId', id);
+        // Inform the backend it shouldn't store statistics when a quiz is not in a default mode.
+        if (Bootstrap.mode !== Engageform.Mode.Default) {
+            url += '?preview';
+        }
+        // Go, fetch the data.
+        return Bootstrap.$http.get(url).then(function (res) {
+            if ([200, 304].indexOf(res.status) !== -1) {
+                return res.data;
+            }
+            Bootstrap.$q.reject(res);
         });
     };
     Bootstrap.prototype.destroyInstances = function () {
@@ -1243,11 +1391,10 @@ var Engageform;
         };
         ;
         Live.prototype.initPage = function (page) {
-            // Clean old pages
+            // Clean other pages.
             this.cleanPages();
-            // Build new
-            this.buildPages([page]);
-            this.setCurrent(page._id);
+            // Initialize the single page.
+            return _super.prototype.initPage.call(this, page);
         };
         Live.prototype.setCurrentEndPage = function () {
             var deferred = Bootstrap.$q.defer();
@@ -1291,19 +1438,21 @@ var Page;
         });
         /**
          * Method used to inform if the correct or incorrect indicator should be shown. Combine with ngIf or ngShow.
-         * Indicator is shown when the page's settinsg allows so and (1) the answer is selected or (2) the questions is
-         * answered and the case is correct.
+         * Indicator is shown when the page's settings allow so and (1) the answer is selected or (2) the questions is
+         * answered and the case is correct. Not shown in the summary and results modes.
          * @returns {boolean} Should the indicator be shown?
          */
         Case.prototype.shouldShowIndicator = function () {
-            return this._page.settings.showCorrectAnswer && (this.selected || (this._page.filled && this.correct));
+            return !this._page.engageform.isSummaryMode() && !this._page.engageform.isResultsMode()
+                && this._page.settings.showCorrectAnswer && (this.selected || (this._page.filled && this.correct));
         };
         /**
-         * Informs if the results should be shown (when the page is filled and set to do so).
+         * Informs if the results should be shown (in the summary mode or when the page is filled and set to do so).
          * @returns {boolean} Should result be shown.
          */
         Case.prototype.shouldShowResults = function () {
-            return this._page.settings.showResults && this._page.filled;
+            return this._page.engageform.isSummaryMode() ||
+                this._page.settings.showResults && this._page.filled && !this._page.engageform.isResultsMode();
         };
         /**
          * Method created mostly to mislead programmer making him think this is how the answer is sent. Too bad!
@@ -1395,7 +1544,7 @@ var Page;
             this.title = data.text;
             this.media = Bootstrap.cloudinary.prepareImageUrl(data.imageFile, 300, data.imageData);
             this.mediaWidth = 300;
-            if (data.imageData.containerRatio) {
+            if (data.imageData && data.imageData.containerRatio) {
                 this.mediaHeight = Math.round(300 * data.imageData.containerRatio);
             }
             else {
@@ -1709,11 +1858,12 @@ var Page;
             var _this = this;
             _super.call(this, engageform, data);
             this.type = Page.Type.Form;
+            this.count = 0;
             if (!data.forms) {
                 return;
             }
-            data.forms.inputs.map(function (input) {
-                _this.cases.push(new Page.InputCase(_this, input));
+            this.cases = data.forms.inputs.map(function (input) {
+                return _this.createCase(input);
             });
             if (this.cases.length) {
                 this.sent().then(function (sent) {
@@ -1721,6 +1871,9 @@ var Page;
                 });
             }
         }
+        Form.prototype.createCase = function (input) {
+            return new Page.InputCase(this, input);
+        };
         Form.prototype.send = function (vcase) {
             var deferred = Bootstrap.$q.defer();
             var validated = true;
@@ -1743,7 +1896,18 @@ var Page;
         Form.prototype.selectAnswer = function (sent) {
             this.cases.map(function (vcase) {
                 vcase.value = sent[vcase.id] || '';
+                // In results mode, there might be data containing user inputs, so set it as the case value.
+                if (sent.inputs) {
+                    sent.inputs.forEach(function (inputData) {
+                        if (inputData._id === vcase.id) {
+                            vcase.value = inputData.value;
+                        }
+                    });
+                }
             });
+        };
+        Form.prototype.setResults = function (results) {
+            this.count = results.count;
         };
         return Form;
     })(Page.Page);
@@ -1767,8 +1931,8 @@ var Page;
             if (!data.answers) {
                 return;
             }
-            data.answers.map(function (answer) {
-                _this.cases.push(new Page.TextCase(_this, answer));
+            this.cases = data.answers.map(function (answer) {
+                return _this.createCase(answer);
             });
             if (this.cases.length) {
                 this.sent().then(function (sent) {
@@ -1776,6 +1940,9 @@ var Page;
                 });
             }
         }
+        MultiChoice.prototype.createCase = function (answer) {
+            return new Page.TextCase(this, answer);
+        };
         MultiChoice.prototype.refreshAnswer = function (sent, question) {
             question.answers.map(function (answer) {
                 sent.results[answer._id] = answer.percent;
@@ -1827,8 +1994,8 @@ var Page;
             if (!data.answers) {
                 return;
             }
-            data.answers.map(function (answer) {
-                _this.cases.push(new Page.ImageCase(_this, answer));
+            this.cases = data.answers.map(function (answer) {
+                return _this.createCase(answer);
             });
             if (this.cases.length) {
                 this.sent().then(function (sent) {
@@ -1836,6 +2003,9 @@ var Page;
                 });
             }
         }
+        PictureChoice.prototype.createCase = function (answer) {
+            return new Page.ImageCase(this, answer);
+        };
         PictureChoice.prototype.refreshAnswer = function (sent, question) {
             question.answers.map(function (answer) {
                 sent.results[answer._id] = answer.percent;
@@ -1887,12 +2057,9 @@ var Page;
             this.selectedValue = 0;
             this.labelMin = data.rateIt.minLabel;
             this.labelMax = data.rateIt.maxLabel;
-            for (var i = 1; i <= data.rateIt.maxRateItValue; i++) {
-                this.cases.push(new Page.IterationCase(this, {
-                    ordinal: i,
-                    symbol: data.rateIt.rateType
-                }));
-            }
+            this.cases = Array.apply(null, Array(data.rateIt.maxRateItValue)).map(function (value, index) {
+                return _this.createCase(index + 1, data.rateIt.rateType);
+            });
             this.sent().then(function (sent) {
                 if (sent.selectedValue) {
                     _this.selectedValue = sent.selectedValue;
@@ -1907,6 +2074,9 @@ var Page;
          */
         Rateit.prototype.shouldShowResults = function () {
             return this.settings.showResults && this.result > 0;
+        };
+        Rateit.prototype.createCase = function (ordinal, symbol) {
+            return new Page.IterationCase(this, { ordinal: ordinal, symbol: symbol });
         };
         Rateit.prototype.selectAnswer = function (sent) {
             var _this = this;
@@ -1923,6 +2093,10 @@ var Page;
                     _this.engageform.sendAnswerCallback(_this.engageform.title || _this.engageform.id, _this.engageform.current ? _this.engageform.current.title || _this.engageform.current.id : null, vcase);
                 }
             });
+        };
+        Rateit.prototype.setResults = function (results) {
+            this.result = results.average;
+            this.selectedValue = results.average;
         };
         return Rateit;
     })(Page.Page);
