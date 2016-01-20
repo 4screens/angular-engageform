@@ -33,11 +33,12 @@ module Page {
     /**
      * Method used to inform if the correct or incorrect indicator should be shown. Combine with ngIf or ngShow.
      * Indicator is shown when the page's settings allow so and (1) the answer is selected or (2) the questions is
-     * answered and the case is correct.
+     * answered and the case is correct. Not shown in the summary and results modes.
      * @returns {boolean} Should the indicator be shown?
      */
     shouldShowIndicator(): boolean {
-      return this._page.settings.showCorrectAnswer && (this.selected || (this._page.filled && this.correct));
+      return !this._page.engageform.isSummaryMode() && !this._page.engageform.isResultsMode()
+        && this._page.settings.showCorrectAnswer && (this.selected || (this._page.filled && this.correct));
     }
 
     /**
