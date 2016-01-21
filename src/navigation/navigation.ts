@@ -47,6 +47,7 @@ module Navigation {
     start($event): void {
       this.disableDefaultAction($event);
 
+      this.animate = 'swipeNext';
       this.enabled = true;
 
       // FIXME: Why would you do that? щ(°Д°щ) But I'm not removing it. Hell knows what depends on this stupidity.
