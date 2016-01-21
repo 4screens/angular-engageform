@@ -304,7 +304,6 @@ module Engageform {
     }
 
     setResultPage(stats: API.EndStats[]) {
-      console.log('GOT END PAGES', stats);
       let data = {
         _id: 'summaryPage',
         type: 'summaryPage',
@@ -315,7 +314,6 @@ module Engageform {
       };
 
       let resultPage = new Page.SummaryPage(this, <API.IQuizQuestion>data);
-      console.log('RESPA', resultPage);
 
       this.storePage(resultPage);
     }
