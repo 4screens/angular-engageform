@@ -61,6 +61,7 @@ var FILES = [
   path.join('.', PATH.source, 'page', 'type', 'startpage.ts'),
   path.join('.', PATH.source, 'page', 'type', 'buzzer.ts'),
   path.join('.', PATH.source, 'page', 'type', 'poster.ts'),
+  path.join('.', PATH.source, 'page', 'type', 'summaryPage.ts'),
 
   path.join('.', PATH.source, 'user', 'user.ts'),
 

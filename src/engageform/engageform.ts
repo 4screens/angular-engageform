@@ -272,14 +272,6 @@ module Engageform {
       if (Engageform.pagesConsturctors[page.type]) {
         return new Engageform.pagesConsturctors[page.type](this, page, settings);
       }
-
-      this.setSummary([{
-        selected: true,
-        stats: {
-          asdasd: 12,
-          questionId: 'asd'
-        }
-      }]);
     }
 
     /**
@@ -309,6 +301,23 @@ module Engageform {
           });
         }
       }
+    }
+
+    setResultPage(stats: API.EndStats[]) {
+      console.log('GOT END PAGES', stats);
+      let data = {
+        _id: 'summaryPage',
+        type: 'summaryPage',
+        settings: {
+          showCorrectAnswer: true
+        },
+        stats
+      };
+
+      let resultPage = new Page.SummaryPage(this, <API.IQuizQuestion>data);
+      console.log('RESPA', resultPage);
+
+      this.storePage(resultPage);
     }
   }
 }

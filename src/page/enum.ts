@@ -17,6 +17,7 @@ module Page {
     Rateit,
     StartPage,
     Buzzer,
-    Poster
+    Poster,
+    SummaryPage
   }
 }

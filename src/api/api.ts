@@ -12,3 +12,4 @@
 /// <reference path="iquizandpagesinit.ts" />
 /// <reference path="iresult.ts" />
 /// <reference path="ianswer.ts" />
+/// <reference path="endStats.ts" />

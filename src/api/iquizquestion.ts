@@ -52,5 +52,6 @@ module API {
       imgPressedSrc: string,
       audioSrc: string
     };
+    stats: API.EndStats[]
   }
 }
