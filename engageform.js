@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.49
+ * 4screens-angular-engageform v0.2.50
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -47,6 +47,7 @@ var Page;
         Type[Type["StartPage"] = 6] = "StartPage";
         Type[Type["Buzzer"] = 7] = "Buzzer";
         Type[Type["Poster"] = 8] = "Poster";
+        Type[Type["SummaryPage"] = 9] = "SummaryPage";
     })(Page.Type || (Page.Type = {}));
     var Type = Page.Type;
 })(Page || (Page = {}));
@@ -754,13 +755,6 @@ var Engageform;
             if (Engageform.pagesConsturctors[page.type]) {
                 return new Engageform.pagesConsturctors[page.type](this, page, settings);
             }
-            this.setSummary([{
-                    selected: true,
-                    stats: {
-                        asdasd: 12,
-                        questionId: 'asd'
-                    }
-                }]);
         };
         /**
          * Takes the results data and applies them on the pages.
@@ -790,6 +784,20 @@ var Engageform;
                     });
                 }
             }
+        };
+        Engageform.prototype.setResultPage = function (stats) {
+            console.log('GOT END PAGES', stats);
+            var data = {
+                _id: 'summaryPage',
+                type: 'summaryPage',
+                settings: {
+                    showCorrectAnswer: true
+                },
+                stats: stats
+            };
+            var resultPage = new Page.SummaryPage(this, data);
+            console.log('RESPA', resultPage);
+            this.storePage(resultPage);
         };
         return Engageform;
     })();
@@ -2205,6 +2213,32 @@ var Page;
         return Poster;
     })(Page.Page);
     Page.Poster = Poster;
+})(Page || (Page = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var Page;
+(function (Page) {
+    var SummaryPage = (function (_super) {
+        __extends(SummaryPage, _super);
+        function SummaryPage(engageform, data) {
+            _super.call(this, engageform, data);
+            this.type = Page.Type.SummaryPage;
+            if (engageform.type === Engageform.Type.Outcome) {
+                this.title = 'Outcomes';
+            }
+            else {
+                this.title = 'Scores';
+            }
+            this.stats = data.stats;
+        }
+        return SummaryPage;
+    })(Page.Page);
+    Page.SummaryPage = SummaryPage;
 })(Page || (Page = {}));
 })(angular);
 //# sourceMappingURL=engageform.js.map
