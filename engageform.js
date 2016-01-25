@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.50
+ * 4screens-angular-engageform v0.2.51
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -99,6 +99,7 @@ var Navigation;
         };
         Navigation.prototype.start = function ($event) {
             this.disableDefaultAction($event);
+            this.animate = 'swipeNext';
             this.enabled = true;
             // FIXME: Why would you do that? щ(°Д°щ) But I'm not removing it. Hell knows what depends on this stupidity.
             this.hasStart = false;
@@ -541,6 +542,7 @@ var Engageform;
             this.settings = new Engageform_1.Settings(data);
             this.theme = new Engageform_1.Theme(data);
             this.tabs = new Engageform_1.Tabs(data);
+            this.themeType = this.getThemeType(data.theme.backgroundColor);
             this.event = new Util.Event();
             if (data.settings && data.settings.branding) {
                 this.branding = new Branding.Branding(data.settings.branding);
@@ -786,7 +788,6 @@ var Engageform;
             }
         };
         Engageform.prototype.setResultPage = function (stats) {
-            console.log('GOT END PAGES', stats);
             var data = {
                 _id: 'summaryPage',
                 type: 'summaryPage',
@@ -796,8 +797,42 @@ var Engageform;
                 stats: stats
             };
             var resultPage = new Page.SummaryPage(this, data);
-            console.log('RESPA', resultPage);
             this.storePage(resultPage);
+        };
+        Engageform.prototype.getThemeType = function (color) {
+            var colorRGB = this.colorToRgb(color);
+            if ((colorRGB.red * 0.299 + colorRGB.green * 0.587 + colorRGB.blue * 0.114) > 186) {
+                return 'light';
+            }
+            else {
+                return 'dark';
+            }
+        };
+        Engageform.prototype.colorToRgb = function (color) {
+            var colorParts, temp, triplets;
+            if (color[0] === '#') {
+                color = color.substr(1);
+            }
+            else {
+                colorParts = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+                color = (colorParts && colorParts.length === 4) ? ('0' + parseInt(colorParts[1], 10).toString(16)).slice(-2) +
+                    ('0' + parseInt(colorParts[2], 10).toString(16)).slice(-2) +
+                    ('0' + parseInt(colorParts[3], 10).toString(16)).slice(-2) : '';
+            }
+            if (color.length === 3) {
+                temp = color;
+                color = '';
+                temp = /^([a-f0-9])([a-f0-9])([a-f0-9])$/i.exec(temp).slice(1);
+                for (var i = 0; i < 3; i++) {
+                    color += temp[i] + temp[i];
+                }
+            }
+            triplets = /^([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i.exec(color).slice(1);
+            return {
+                red: parseInt(triplets[0], 16),
+                green: parseInt(triplets[1], 16),
+                blue: parseInt(triplets[2], 16)
+            };
         };
         return Engageform;
     })();
