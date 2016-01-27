@@ -136,7 +136,7 @@ gulp.task('publish', ['minify'], function() {
 });
 
 gulp.task('publish::copy', ['tslint'], function() {
-  return gulp.src(MAIN)
+  return gulp.src([MAIN, MAIN + '.map'])
     .pipe(gulp.dest(plugins.minimist.path || '../4screens-suros/app/bower_components/4screens-engageform2/'));
 });
 
