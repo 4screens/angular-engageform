@@ -116,7 +116,7 @@ module Engageform {
       return Boolean(this.mode === Mode.Preview);
     }
 
-    constructor(data: API.IQuiz, pages: API.IPages, mode: Engageform.Mode,
+    constructor(data: API.IQuiz, mode: Engageform.Mode, pages: API.IPages = [],
                 sendAnswerCallback: ISendAnswerCallback = () => {}) {
       // As always, due to the initialisation drama, those values are only available about now.
       Engageform.pagesConsturctors = {

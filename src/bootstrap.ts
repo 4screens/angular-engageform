@@ -192,8 +192,8 @@ class Bootstrap {
       }
 
       // Create the Engageform's instance.
-      this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData, data.pages,
-        Bootstrap.mode, opts.callback ? opts.callback.sendAnswerCallback : () => {});
+      this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData,
+        Bootstrap.mode, data.pages, opts.callback ? opts.callback.sendAnswerCallback : () => {});
 
       return this._engageform;
     });
