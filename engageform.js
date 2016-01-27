@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.51
+ * 4screens-angular-engageform v0.2.52
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -514,8 +514,9 @@ var Util;
 var Engageform;
 (function (Engageform_1) {
     var Engageform = (function () {
-        function Engageform(data, pages, mode, sendAnswerCallback) {
+        function Engageform(data, mode, pages, sendAnswerCallback) {
             var _this = this;
+            if (pages === void 0) { pages = []; }
             if (sendAnswerCallback === void 0) { sendAnswerCallback = function () { }; }
             this._pages = {};
             this._startPages = [];
@@ -1009,11 +1010,16 @@ var Bootstrap = (function () {
         }
         // Set the mode in which the whole library operates.
         Bootstrap.mode = Bootstrap.modes[opts.mode];
+        // Create the promises map that will have to resolve before the quiz is initialised.
+        var initializationPromises = {
+            quizData: Bootstrap.getData('quiz', opts.id)
+        };
+        // If the quiz is not live get the pages before initialising it.
+        if (!opts.live) {
+            initializationPromises.pages = Bootstrap.getData('pages', opts.id);
+        }
         // Initialize the quiz.
-        return Bootstrap.$q.all({
-            quizData: Bootstrap.getData('quiz', opts.id),
-            pages: Bootstrap.getData('pages', opts.id)
-        }).then(function (data) {
+        return Bootstrap.$q.all(initializationPromises).then(function (data) {
             // If the quiz doesn't have a supported constructor, reject the promise with error.
             if (!Bootstrap.quizzesConstructors[data.quizData.type]) {
                 return Bootstrap.$q.reject({
@@ -1026,7 +1032,7 @@ var Bootstrap = (function () {
                 });
             }
             // Create the Engageform's instance.
-            _this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData, data.pages, Bootstrap.mode, opts.callback ? opts.callback.sendAnswerCallback : function () { });
+            _this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData, Bootstrap.mode, data.pages, opts.callback ? opts.callback.sendAnswerCallback : function () { });
             return _this._engageform;
         });
     };
