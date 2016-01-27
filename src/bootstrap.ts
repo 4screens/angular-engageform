@@ -167,11 +167,18 @@ class Bootstrap {
     // Set the mode in which the whole library operates.
     Bootstrap.mode = Bootstrap.modes[opts.mode];
 
+    // Create the promises map that will have to resolve before the quiz is initialised.
+    let initializationPromises: {[index: string]: any; quizData: ng.IPromise<API.IQuiz>; pages?: ng.IPromise<API.IPages>} = {
+      quizData: Bootstrap.getData('quiz', opts.id)
+    };
+
+    // If the quiz is not live get the pages before initialising it.
+    if (!opts.live) {
+      initializationPromises.pages = Bootstrap.getData('pages', opts.id);
+    }
+
     // Initialize the quiz.
-    return Bootstrap.$q.all({
-      quizData: Bootstrap.getData('quiz', opts.id),
-      pages: Bootstrap.getData('pages', opts.id)
-    }).then((data: API.IQuizAndPagesInit) => {
+    return Bootstrap.$q.all(initializationPromises).then((data: API.IQuizAndPagesInit) => {
       // If the quiz doesn't have a supported constructor, reject the promise with error.
       if (!Bootstrap.quizzesConstructors[data.quizData.type]) {
         return Bootstrap.$q.reject({
