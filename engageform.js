@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.52
+ * 4screens-angular-engageform v0.2.53
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -996,6 +996,10 @@ var Bootstrap = (function () {
         // Return already initialised instance if already exists.
         if (Bootstrap._instances[opts.id]) {
             return Bootstrap._instances[opts.id];
+        }
+        // When mode is not provided, set id to default.
+        if (typeof opts.mode === 'undefined') {
+            opts.mode = 'default';
         }
         // If the requested mode is not supported, reject the initialisation.
         if (!Bootstrap.modes[opts.mode]) {
