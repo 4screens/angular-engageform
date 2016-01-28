@@ -152,6 +152,11 @@ class Bootstrap {
       return Bootstrap._instances[opts.id];
     }
 
+    // When mode is not provided, set id to default.
+    if (typeof opts.mode === 'undefined') {
+      opts.mode = 'default';
+    }
+
     // If the requested mode is not supported, reject the initialisation.
     if (!Bootstrap.modes[opts.mode]) {
       return Bootstrap.$q.reject({
