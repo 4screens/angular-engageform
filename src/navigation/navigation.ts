@@ -91,6 +91,10 @@ module Navigation {
     }
 
     pick($event, vcase: Page.ICase, opts = {quiet: false}): ng.IPromise<Page.ICase> {
+      this.disableDefaultAction($event);
+      this.stopPageChange();
+      this.animate = 'swipeNext';
+
       // Move page but don't do anything else when the quiz is nor in a normal mode.
       if (!this._engageform.isNormalMode()) {
         let defer = Bootstrap.$q.defer();
@@ -100,10 +104,6 @@ module Navigation {
       }
 
       let current = this._engageform.current;
-
-      this.disableDefaultAction($event);
-      this.stopPageChange();
-      this.animate = 'swipeNext';
 
       // Send the answer.
       return current.send(vcase).then(() => {
