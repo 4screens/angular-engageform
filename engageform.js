@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.53
+ * 4screens-angular-engageform v0.2.54
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -137,6 +137,9 @@ var Navigation;
         Navigation.prototype.pick = function ($event, vcase, opts) {
             var _this = this;
             if (opts === void 0) { opts = { quiet: false }; }
+            this.disableDefaultAction($event);
+            this.stopPageChange();
+            this.animate = 'swipeNext';
             // Move page but don't do anything else when the quiz is nor in a normal mode.
             if (!this._engageform.isNormalMode()) {
                 var defer = Bootstrap.$q.defer();
@@ -145,9 +148,6 @@ var Navigation;
                 return defer.promise;
             }
             var current = this._engageform.current;
-            this.disableDefaultAction($event);
-            this.stopPageChange();
-            this.animate = 'swipeNext';
             // Send the answer.
             return current.send(vcase).then(function () {
                 _this.sendMessage();
