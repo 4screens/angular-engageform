@@ -6,11 +6,14 @@ module Page {
     constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
       super(engageform, data);
 
-      if (engageform.type === Engageform.Type.Outcome) {
-        this.title = 'Outcomes';
-
+      if (data.text) {
+        this.title = data.text;
       } else {
-        this.title = 'Scores';
+        if (engageform.type === Engageform.Type.Outcome) {
+          this.title = 'Outcomes';
+        } else {
+          this.title = 'Scores';
+        }
       }
 
       this.stats = data.stats;

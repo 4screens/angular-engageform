@@ -321,6 +321,32 @@ module Engageform {
       this.storePage(resultPage);
     }
 
+	  /**
+     * Creates a page showing user's outcome or score in adequate quiz types. Used only in the results-preview mode.
+     * @param data
+     */
+    setUserResultPage(data) {
+      const pageData = {
+        _id: 'RESULT_PAGE',
+        type: 'summaryPage',
+        settings: {}
+      };
+
+      if (data.type === 'outcome') {
+        _.extend(pageData, {
+          text: 'User\'s outcome: ' + data.outcome
+        });
+      } else {
+        _.extend(pageData, {
+          text: 'User\'s score: ' + data.score + ' / ' + data.maxScore
+        });
+      }
+
+      let resultPage = new Page.SummaryPage(this, <API.IQuizQuestion>pageData);
+
+      this.storePage(resultPage);
+    }
+
     getThemeType(color ) {
       const colorRGB = this.colorToRgb( color );
 
