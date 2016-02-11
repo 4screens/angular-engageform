@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.54
+ * 4screens-angular-engageform v0.2.55
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -798,6 +798,29 @@ var Engageform;
                 stats: stats
             };
             var resultPage = new Page.SummaryPage(this, data);
+            this.storePage(resultPage);
+        };
+        /**
+       * Creates a page showing user's outcome or score in adequate quiz types. Used only in the results-preview mode.
+       * @param data
+       */
+        Engageform.prototype.setUserResultPage = function (data) {
+            var pageData = {
+                _id: 'RESULT_PAGE',
+                type: 'summaryPage',
+                settings: {}
+            };
+            if (data.type === 'outcome') {
+                _.extend(pageData, {
+                    text: 'User\'s outcome: ' + data.outcome
+                });
+            }
+            else {
+                _.extend(pageData, {
+                    text: 'User\'s score: ' + data.score + ' / ' + data.maxScore
+                });
+            }
+            var resultPage = new Page.SummaryPage(this, pageData);
             this.storePage(resultPage);
         };
         Engageform.prototype.getThemeType = function (color) {
@@ -2273,11 +2296,16 @@ var Page;
         function SummaryPage(engageform, data) {
             _super.call(this, engageform, data);
             this.type = Page.Type.SummaryPage;
-            if (engageform.type === Engageform.Type.Outcome) {
-                this.title = 'Outcomes';
+            if (data.text) {
+                this.title = data.text;
             }
             else {
-                this.title = 'Scores';
+                if (engageform.type === Engageform.Type.Outcome) {
+                    this.title = 'Outcomes';
+                }
+                else {
+                    this.title = 'Scores';
+                }
             }
             this.stats = data.stats;
         }
