@@ -142,6 +142,8 @@ module Engageform {
       this.theme = new Theme(data);
       this.tabs = new Tabs(data);
 
+      this.texts = data.texts;
+
       this.themeType = this.getThemeType(data.theme.backgroundColor);
 
       this.event = new Util.Event();

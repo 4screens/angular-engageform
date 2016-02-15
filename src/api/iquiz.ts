@@ -1,4 +1,6 @@
 /// <reference path="../branding/ibranding.ts" />
+/// <reference path="../engageform/itexts.ts"/>
+
 
 module API {
   export interface IQuiz {
@@ -12,6 +14,8 @@ module API {
       logoUrl: string;
       headerText: string;
     };
+
+    texts: Engageform.ITexts;
 
     settings: {
       allowAnswerChange: boolean;
