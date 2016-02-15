@@ -23,6 +23,8 @@ module Engageform {
     tabs: Tabs;
     themeType: string;
 
+    texts: ITexts;
+
     current: Page.IPage;
     navigation: Navigation.INavigation;
     meta: Meta.IMeta;

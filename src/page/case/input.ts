@@ -35,6 +35,7 @@ module Page {
         return data;
       }).catch((data) => {
         if (data.code === 406) {
+          data.textKey = 'INCORRECT_INPUT';
           data.message = 'Incorrect inputs sent. Try again.';
           this.save(<IPageSent>{});
         }

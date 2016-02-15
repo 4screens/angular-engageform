@@ -112,7 +112,7 @@ module Navigation {
         // Prevent the question change when there's no answer selected and the page requires it.
         if (!current.filled && current.settings.requiredAnswer) {
           if (!opts.quiet) {
-            this.sendMessage('Answer is required to proceed to the next question.');
+            this.sendMessage(this._engageform.texts.ANSWER_REQUIRED_TO_PROCEED);
           }
 
           return vcase;
@@ -131,7 +131,7 @@ module Navigation {
         }
       }).catch(data => {
         if (!opts.quiet) {
-          this.sendMessage(data.message);
+          this.sendMessage(this._engageform.texts[data.textKey] || data.message);
         }
 
         return data;

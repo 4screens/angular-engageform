@@ -1,3 +1,5 @@
+///<reference path="itexts.ts"/>
+
 module Engageform {
   export interface IEngageform {
     sendAnswerCallback: ISendAnswerCallback;
@@ -10,6 +12,8 @@ module Engageform {
     tabs: ITabs;
     branding: Branding.IBranding;
     meta: Meta.IMeta;
+
+    texts: ITexts;
 
     current: Page.IPage;
     message: string;
