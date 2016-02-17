@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.55
+ * 4screens-angular-engageform v0.2.56
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -154,7 +154,7 @@ var Navigation;
                 // Prevent the question change when there's no answer selected and the page requires it.
                 if (!current.filled && current.settings.requiredAnswer) {
                     if (!opts.quiet) {
-                        _this.sendMessage('Answer is required to proceed to the next question.');
+                        _this.sendMessage(_this._engageform.texts.ANSWER_REQUIRED_TO_PROCEED);
                     }
                     return vcase;
                 }
@@ -171,7 +171,7 @@ var Navigation;
                 }
             }).catch(function (data) {
                 if (!opts.quiet) {
-                    _this.sendMessage(data.message);
+                    _this.sendMessage(_this._engageform.texts[data.textKey] || data.message);
                 }
                 return data;
             });
@@ -543,6 +543,7 @@ var Engageform;
             this.settings = new Engageform_1.Settings(data);
             this.theme = new Engageform_1.Theme(data);
             this.tabs = new Engageform_1.Tabs(data);
+            this.texts = data.texts;
             this.themeType = this.getThemeType(data.theme.backgroundColor);
             this.event = new Util.Event();
             if (data.settings && data.settings.branding) {
@@ -1630,7 +1631,7 @@ var Page;
         ImageCase.prototype.send = function () {
             var _this = this;
             if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
-                return Bootstrap.$q.reject({ message: 'Changing answer is not allowed' });
+                return Bootstrap.$q.reject({ textKey: 'CHANGING_NOT_ALLOWED', message: 'Changing answer is not allowed' });
             }
             return _super.prototype.makeSend.call(this, { selectedAnswerId: this.id }).then(function (res) {
                 var data = {};
@@ -1692,6 +1693,7 @@ var Page;
                 return data;
             }).catch(function (data) {
                 if (data.code === 406) {
+                    data.textKey = 'INCORRECT_INPUT';
                     data.message = 'Incorrect inputs sent. Try again.';
                     _this.save({});
                 }
@@ -1742,7 +1744,7 @@ var Page;
         IterationCase.prototype.send = function () {
             var _this = this;
             if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
-                return Bootstrap.$q.reject({ message: 'Changing answer is not allowed' });
+                return Bootstrap.$q.reject({ textKey: 'CHANGING_NOT_ALLOWED', message: 'Changing answer is not allowed' });
             }
             return _super.prototype.makeSend.call(this, { quizQuestionId: this.page.id, rateItValue: this.ordinal }).then(function (res) {
                 var data = {};
@@ -1780,7 +1782,7 @@ var Page;
         TextCase.prototype.send = function () {
             var _this = this;
             if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
-                return Bootstrap.$q.reject({ message: 'Changing answer is not allowed' });
+                return Bootstrap.$q.reject({ textKey: 'CHANGING_NOT_ALLOWED', message: 'Changing answer is not allowed' });
             }
             return _super.prototype.makeSend.call(this, { selectedAnswerId: this.id }).then(function (res) {
                 var data = {};
@@ -2192,10 +2194,9 @@ var Page;
         function StartPage(engageform, data) {
             _super.call(this, engageform, data);
             this.type = Page.Type.StartPage;
-            this.button = 'Let\'s get started';
             this.isCoverPage = true;
-            if (data.coverPage) {
-                this.button = data.coverPage.buttonText || this.button;
+            if (data.coverPage && data.coverPage.buttonText !== undefined) {
+                this.button = data.coverPage.buttonText;
             }
         }
         return StartPage;
