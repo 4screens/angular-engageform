@@ -15,6 +15,7 @@ module API {
       headerText: string;
     };
 
+    language: string;
     texts: Engageform.ITexts;
 
     settings: {
