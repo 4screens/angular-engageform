@@ -43,7 +43,8 @@ module Page {
       if (this.settings.showDescription) {
         this.description = data.description || '';
       }
-      if (this.settings.showMainMedia) {
+
+      if (this.settings.showMainMedia && data.imageData) {
         this.media = Bootstrap.cloudinary.prepareImageUrl(
           data.imageFile,
           680, // zakładamy że media zawsze ma taką szerokość (MUST BE FIXXXXXED!!!!!)
@@ -53,7 +54,7 @@ module Page {
         if (data.imageData.containerRatio) {
           this.mediaHeight = Math.round(680 * data.imageData.containerRatio);
         } else {
-          this.mediaHeight = Math.round(data.imageData.containerHeight);
+          this.mediaHeight = Math.round(data.imageData.containerHeight || 0);
         }
       }
     }
