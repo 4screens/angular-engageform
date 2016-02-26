@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.56
+ * 4screens-angular-engageform v0.2.58
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -282,14 +282,14 @@ var Page;
             if (this.settings.showDescription) {
                 this.description = data.description || '';
             }
-            if (this.settings.showMainMedia) {
+            if (this.settings.showMainMedia && data.imageData) {
                 this.media = Bootstrap.cloudinary.prepareImageUrl(data.imageFile, 680, data.imageData);
                 this.mediaWidth = 680;
                 if (data.imageData.containerRatio) {
                     this.mediaHeight = Math.round(680 * data.imageData.containerRatio);
                 }
                 else {
-                    this.mediaHeight = Math.round(data.imageData.containerHeight);
+                    this.mediaHeight = Math.round(data.imageData.containerHeight || 0);
                 }
             }
         }
@@ -1625,7 +1625,7 @@ var Page;
                 this.mediaHeight = Math.round(300 * data.imageData.containerRatio);
             }
             else {
-                this.mediaHeight = Math.round(data.imageData.containerHeight);
+                this.mediaHeight = Math.round(data.imageData.containerHeight || 0);
             }
         }
         ImageCase.prototype.send = function () {
