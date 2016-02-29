@@ -45,7 +45,7 @@ module Page {
       if (this.engageform.typeName === 'outcome' || this.engageform.typeName === 'score') {
         // Replace $TITLE$ and $RESULT$ tags in the translation and set the title.
         this.socialData.title = this.engageform.texts.SCORE_AND_OUTCOME_SHARE
-          .replace(/\$RESULT\$/gi, String(this.score))
+          .replace(/\$RESULT\$/gi, this.outcome || String(this.score || ''))
           .replace(/\$TITLE\$/gi, this.engageform.title);
 
         if (this.media && this.settings.showMainMedia) {
