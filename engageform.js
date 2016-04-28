@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.59
+ * 4screens-angular-engageform v0.2.60
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -232,7 +232,7 @@ var Navigation;
             }, this._engageform.settings.hideMessageAfterDelay);
         };
         return Navigation;
-    })();
+    }());
     Navigation_1.Navigation = Navigation;
 })(Navigation || (Navigation = {}));
 
@@ -260,7 +260,7 @@ var Meta;
             }
         }
         return Meta;
-    })();
+    }());
     Meta_1.Meta = Meta;
 })(Meta || (Meta = {}));
 
@@ -283,7 +283,8 @@ var Page;
                 this.description = data.description || '';
             }
             if (this.settings.showMainMedia && data.imageData) {
-                this.media = Bootstrap.cloudinary.prepareImageUrl(data.imageFile, 680, data.imageData);
+                this.media = Bootstrap.cloudinary.prepareImageUrl(data.imageFile, 680, // zakładamy że media zawsze ma taką szerokość (MUST BE FIXXXXXED!!!!!)
+                data.imageData);
                 this.mediaWidth = 680;
                 if (data.imageData.containerRatio) {
                     this.mediaHeight = Math.round(680 * data.imageData.containerRatio);
@@ -427,7 +428,7 @@ var Page;
             });
         };
         return Page;
-    })();
+    }());
     Page_1.Page = Page;
 })(Page || (Page = {}));
 
@@ -464,7 +465,7 @@ var User = (function () {
         configurable: true
     });
     return User;
-})();
+}());
 
 var Util;
 (function (Util) {
@@ -505,7 +506,7 @@ var Util;
             }
         };
         return Event;
-    })();
+    }());
     Util.Event = Event;
 })(Util || (Util = {}));
 
@@ -860,7 +861,7 @@ var Engageform;
             };
         };
         return Engageform;
-    })();
+    }());
     Engageform_1.Engageform = Engageform;
 })(Engageform || (Engageform = {}));
 
@@ -1102,7 +1103,7 @@ var Bootstrap = (function () {
     Bootstrap.mode = Engageform.Mode.Undefined;
     Bootstrap._instances = {};
     return Bootstrap;
-})();
+}());
 Bootstrap.$inject = ['$http', '$q', '$timeout', 'cloudinary', 'localStorageService', 'ApiConfig'];
 app.service('Engageform', Bootstrap);
 
@@ -1192,7 +1193,7 @@ var Branding;
             configurable: true
         });
         return Branding;
-    })();
+    }());
     Branding_1.Branding = Branding;
 })(Branding || (Branding = {}));
 
@@ -1217,7 +1218,7 @@ var Engageform;
             }
         }
         return Settings;
-    })();
+    }());
     Engageform.Settings = Settings;
 })(Engageform || (Engageform = {}));
 
@@ -1269,7 +1270,7 @@ var Engageform;
             this.backgroundImageConvertedFile = Bootstrap.cloudinary.prepareBackgroundImageUrl(this.backgroundImageFile, window.innerWidth, window.innerHeight, parseInt(this.backgroundImageBlur, 10), this.backgroundImagePosition);
         };
         return Theme;
-    })();
+    }());
     Engageform.Theme = Theme;
 })(Engageform || (Engageform = {}));
 
@@ -1299,15 +1300,14 @@ var Engageform;
             }
         }
         return Tabs;
-    })();
+    }());
     Engageform.Tabs = Tabs;
 })(Engageform || (Engageform = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Engageform;
 (function (Engageform) {
@@ -1336,15 +1336,14 @@ var Engageform;
             });
         };
         return Outcome;
-    })(Engageform.Engageform);
+    }(Engageform.Engageform));
     Engageform.Outcome = Outcome;
 })(Engageform || (Engageform = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Engageform;
 (function (Engageform) {
@@ -1368,15 +1367,14 @@ var Engageform;
             });
         };
         return Poll;
-    })(Engageform.Engageform);
+    }(Engageform.Engageform));
     Engageform.Poll = Poll;
 })(Engageform || (Engageform = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Engageform;
 (function (Engageform) {
@@ -1411,15 +1409,14 @@ var Engageform;
             });
         };
         return Score;
-    })(Engageform.Engageform);
+    }(Engageform.Engageform));
     Engageform.Score = Score;
 })(Engageform || (Engageform = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Engageform;
 (function (Engageform) {
@@ -1443,15 +1440,14 @@ var Engageform;
             });
         };
         return Survey;
-    })(Engageform.Engageform);
+    }(Engageform.Engageform));
     Engageform.Survey = Survey;
 })(Engageform || (Engageform = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Engageform;
 (function (Engageform) {
@@ -1479,7 +1475,7 @@ var Engageform;
             return deferred.promise;
         };
         return Live;
-    })(Engageform.Engageform);
+    }(Engageform.Engageform));
     Engageform.Live = Live;
 })(Engageform || (Engageform = {}));
 
@@ -1578,7 +1574,7 @@ var Page;
             // "abstract"
         };
         return Case;
-    })();
+    }());
     Page.Case = Case;
 })(Page || (Page = {}));
 
@@ -1601,15 +1597,14 @@ var Page;
             }
         }
         return Settings;
-    })();
+    }());
     Page.Settings = Settings;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -1655,15 +1650,14 @@ var Page;
             });
         };
         return ImageCase;
-    })(Page.Case);
+    }(Page.Case));
     Page.ImageCase = ImageCase;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -1720,15 +1714,14 @@ var Page;
             return false;
         };
         return InputCase;
-    })(Page.Case);
+    }(Page.Case));
     Page.InputCase = InputCase;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -1760,15 +1753,14 @@ var Page;
             });
         };
         return IterationCase;
-    })(Page.Case);
+    }(Page.Case));
     Page.IterationCase = IterationCase;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -1806,15 +1798,14 @@ var Page;
             });
         };
         return TextCase;
-    })(Page.Case);
+    }(Page.Case));
     Page.TextCase = TextCase;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -1842,15 +1833,14 @@ var Page;
             });
         };
         return BuzzCase;
-    })(Page.Case);
+    }(Page.Case));
     Page.BuzzCase = BuzzCase;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -1883,7 +1873,7 @@ var Page;
             if (this.engageform.typeName === 'outcome' || this.engageform.typeName === 'score') {
                 // Replace $TITLE$ and $RESULT$ tags in the translation and set the title.
                 this.socialData.title = this.engageform.texts.SCORE_AND_OUTCOME_SHARE
-                    .replace(/\$RESULT\$/gi, this.outcome || String(this.score || ''))
+                    .replace(/\$RESULT\$/gi, this.outcome || String(this.score || 0))
                     .replace(/\$TITLE\$/gi, this.engageform.title);
                 if (this.media && this.settings.showMainMedia) {
                     this.socialData.imageUrl = this.media;
@@ -1919,15 +1909,14 @@ var Page;
             configurable: true
         });
         return EndPage;
-    })(Page.Page);
+    }(Page.Page));
     Page.EndPage = EndPage;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -1989,15 +1978,14 @@ var Page;
             this.count = results.count;
         };
         return Form;
-    })(Page.Page);
+    }(Page.Page));
     Page.Form = Form;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -2052,15 +2040,14 @@ var Page;
             });
         };
         return MultiChoice;
-    })(Page.Page);
+    }(Page.Page));
     Page.MultiChoice = MultiChoice;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -2115,15 +2102,14 @@ var Page;
             });
         };
         return PictureChoice;
-    })(Page.Page);
+    }(Page.Page));
     Page.PictureChoice = PictureChoice;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -2178,15 +2164,14 @@ var Page;
             this.selectedValue = results.average;
         };
         return Rateit;
-    })(Page.Page);
+    }(Page.Page));
     Page.Rateit = Rateit;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -2201,15 +2186,14 @@ var Page;
             }
         }
         return StartPage;
-    })(Page.Page);
+    }(Page.Page));
     Page.StartPage = StartPage;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -2262,15 +2246,14 @@ var Page;
             }
         };
         return Buzzer;
-    })(Page.Page);
+    }(Page.Page));
     Page.Buzzer = Buzzer;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -2281,15 +2264,14 @@ var Page;
             this.type = Page.Type.Poster;
         }
         return Poster;
-    })(Page.Page);
+    }(Page.Page));
     Page.Poster = Poster;
 })(Page || (Page = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Page;
 (function (Page) {
@@ -2312,7 +2294,7 @@ var Page;
             this.stats = data.stats;
         }
         return SummaryPage;
-    })(Page.Page);
+    }(Page.Page));
     Page.SummaryPage = SummaryPage;
 })(Page || (Page = {}));
 })(angular);
