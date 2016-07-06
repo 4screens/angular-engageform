@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.60
+ * 4screens-angular-engageform v0.2.61
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -526,6 +526,12 @@ var Engageform;
             this._hasForms = false;
             this.enabled = true;
             this.type = Engageform_1.Type.Undefined;
+            this.setUserIdent = function (id) {
+              Bootstrap.user.sessionId = id;
+            };
+            this.getUserIdent = function (id) {
+              return Bootstrap.user.sessionId;
+            };
             // As always, due to the initialisation drama, those values are only available about now.
             Engageform.pagesConsturctors = {
                 multiChoice: Page.MultiChoice,
