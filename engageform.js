@@ -148,6 +148,8 @@ var Navigation;
                 return defer.promise;
             }
             var current = this._engageform.current;
+            // Check answer.
+            if (vcase && (current._engageform.settings.allowAnswerChange || !current.filled)) { vcase.selected = true; }
             // Send the answer.
             return current.send(vcase).then(function () {
                 _this.sendMessage();
@@ -160,7 +162,7 @@ var Navigation;
                 }
                 else {
                     // Change the page with a slight delay, or do it instantly.
-                    var pageChangeDelay = vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 2000 : 200) : 0;
+                    var pageChangeDelay = vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 1000 : 200) : 0;
                     // Schedule the page change.
                     _this.waitingForPageChange = Bootstrap.$timeout(function () {
                         _this.waitingForPageChange = null;
