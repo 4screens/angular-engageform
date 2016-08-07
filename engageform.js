@@ -149,7 +149,10 @@ var Navigation;
             }
             var current = this._engageform.current;
             // Check answer.
-            if (vcase && (current._engageform.settings.allowAnswerChange || !current.filled)) { vcase.selected = true; }
+            if (vcase && (current._engageform.settings.allowAnswerChange || !current.filled)) {
+              vcase.selected = true; 
+              vcase.incorrect = false;
+            }
             // Send the answer.
             return current.send(vcase).then(function () {
                 _this.sendMessage();
