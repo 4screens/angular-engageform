@@ -150,7 +150,7 @@ var Navigation;
             var current = this._engageform.current;
             // Check answer.
             if (vcase && (current._engageform.settings.allowAnswerChange || !current.filled)) {
-              vcase.selected = true; 
+              vcase.selected = true;
               vcase.incorrect = false;
             }
             // Send the answer.
@@ -1861,10 +1861,11 @@ var Page;
             _super.call(this, engageform, data);
             this.type = Page.Type.EndPage;
             this.isCoverPage = true;
+            var prefix = 'https://res.cloudinary.com/fourscreens/image/upload/w_528,fl_lossy,f_auto,q_auto,dpr_1.0/w_772,h_382,c_mpad/w_680,h_381,x_0,y_0,c_crop/console/';
             this.socialData = {
                 title: settings.share.title,
                 description: settings.share.description,
-                imageUrl: settings.share.imageUrl,
+                imageUrl: prefix + settings.share.imageUrl,
                 link: settings.share.link
             };
             if (data.coverPage) {
