@@ -1861,11 +1861,10 @@ var Page;
             _super.call(this, engageform, data);
             this.type = Page.Type.EndPage;
             this.isCoverPage = true;
-            var prefix = 'https://res.cloudinary.com/fourscreens/image/upload/w_528,fl_lossy,f_auto,q_auto,dpr_1.0/w_772,h_382,c_mpad/w_680,h_381,x_0,y_0,c_crop/console/';
             this.socialData = {
                 title: settings.share.title,
                 description: settings.share.description,
-                imageUrl: prefix + settings.share.imageUrl,
+                imageUrl:  Bootstrap.cloudinary.preparePreviewImageUrl(settings.share.imageUrl, 680),
                 link: settings.share.link
             };
             if (data.coverPage) {
