@@ -1279,6 +1279,8 @@ var Engageform;
         }
         Theme.prototype.convertBackgroundImage = function () {
             this.backgroundImageConvertedFile = Bootstrap.cloudinary.prepareBackgroundImageUrl(this.backgroundImageFile, window.innerWidth, window.innerHeight, parseInt(this.backgroundImageBlur, 10), this.backgroundImagePosition);
+            console.log(window.innerHeight);
+            console.log(this.backgroundImageConvertedFile);
         };
         return Theme;
     }());
