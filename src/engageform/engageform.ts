@@ -168,6 +168,16 @@ module Engageform {
       this.meta = new Meta.Meta(this);
     }
 
+    // Made by Masters
+    setUserIdent(id) {
+      Bootstrap.user.sessionId = id;
+    }
+
+    // Made by Masters
+    getUserIdent(id) {
+      return Bootstrap.user.sessionId;
+    }
+
     /**
      * Stores a single page on the quiz instance.
      *

@@ -105,6 +105,15 @@ module Navigation {
 
       let current = this._engageform.current;
 
+      // Made by Masters
+      // (Mat fixed a bug: was `current._engageform.settings` the `current` doesn't have a `settings` property.
+      // Check answer.
+      if (vcase && (this._engageform.settings.allowAnswerChange || !current.filled)) {
+        vcase.selected = true;
+        // Made by Masters
+        vcase.incorrect = false;
+      }
+
       // Send the answer.
       return current.send(vcase).then(() => {
         this.sendMessage();
@@ -118,7 +127,8 @@ module Navigation {
           return vcase;
         } else {
           // Change the page with a slight delay, or do it instantly.
-          let pageChangeDelay =  vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 2000 : 200) : 0;
+          // Made by Masters (only the timeout change from 2000 to 1000).
+          let pageChangeDelay = vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 1000 : 200) : 0;
 
           // Schedule the page change.
           this.waitingForPageChange = Bootstrap.$timeout(() => {

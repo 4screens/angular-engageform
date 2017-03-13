@@ -22,7 +22,8 @@ module Page {
       this.socialData = <ISocialData>{
         title: settings.share.title,
         description: settings.share.description,
-        imageUrl: settings.share.imageUrl,
+        // Made by Masters
+        imageUrl: Bootstrap.cloudinary.preparePreviewImageUrl(settings.share.imageUrl, 680),
         link: settings.share.link
       };
 
