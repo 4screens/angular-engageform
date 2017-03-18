@@ -173,7 +173,7 @@ class Bootstrap {
     Bootstrap.mode = Bootstrap.modes[opts.mode];
 
     // Create the promises map that will have to resolve before the quiz is initialised.
-    let initializationPromises: {[index: string]: any; quizData: ng.IPromise<API.IQuiz>; pages?: ng.IPromise<API.IPages>} = {
+    let initializationPromises: { [index: string]: any; quizData: ng.IPromise<API.IQuiz>; pages?: ng.IPromise<API.IPages> } = {
       quizData: Bootstrap.getData('quiz', opts.id)
     };
 
@@ -198,19 +198,20 @@ class Bootstrap {
 
       // Create the Engageform's instance.
       this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData,
-        Bootstrap.mode, data.pages, opts.callback ? opts.callback.sendAnswerCallback : () => {});
+        Bootstrap.mode, data.pages, opts.embedSettings, opts.callback ? opts.callback.sendAnswerCallback : () => {
+        });
 
       return this._engageform;
     });
   }
 
-	/**
+  /**
    * Fetches the two types of data from the API: quiz data and pages data.
    * @param type Resource type: quiz or pages.
    * @param id ID of the quiz.
    * @returns {IPromise<API.IQuizQuestion[]|API.IQuiz>}
    */
-  static getData(type: string, id: string): ng.IPromise<API.IQuizQuestion[]|API.IQuiz> {
+  static getData(type: string, id: string): ng.IPromise<API.IQuizQuestion[] | API.IQuiz> {
     const resourcesPaths = {
       quiz: 'engageformUrl',
       pages: 'engageformPagesUrl'

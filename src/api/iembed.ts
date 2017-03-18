@@ -5,6 +5,7 @@ module API {
     live: boolean;
     callback: {
       sendAnswerCallback: any
-    }
+    };
+    embedSettings: IEmbedSettings;
   }
 }
