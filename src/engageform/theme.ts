@@ -1,6 +1,7 @@
 /// <reference path="itheme.ts" />
 
 module Engageform {
+  import IEmbedSettings = API.IEmbedSettings;
   export class Theme implements ITheme {
     answerBackgroundColor: string = '';
     answerBorderColor: string = '';
@@ -20,7 +21,10 @@ module Engageform {
     tabFontColor: string = '';
     tabColor: string = '';
 
-    constructor(data: API.IQuiz) {
+    embedSettings: IEmbedSettings;
+
+    constructor(data: API.IQuiz, embedSettings: IEmbedSettings) {
+      this.embedSettings = embedSettings;
       if (data.theme) {
         this.answerBackgroundColor = data.theme.answerBackgroundColor || '';
         this.answerBorderColor = data.theme.answerBorderColor || '';
@@ -50,11 +54,13 @@ module Engageform {
     convertBackgroundImage() {
       this.backgroundImageConvertedFile = Bootstrap.cloudinary.prepareBackgroundImageUrl(
         this.backgroundImageFile,
+        // Picture will always cover the full width.
         window.innerWidth,
-        window.innerHeight,
+        // If the height is automatic, do not cut the picture
+        this.embedSettings.height === 'auto' ? null : window.innerHeight,
         parseInt(this.backgroundImageBlur, 10),
         this.backgroundImagePosition
       );
     }
-    }
+  }
 }

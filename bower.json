@@ -22,7 +22,7 @@
     "karma.conf.js"
   ],
   "dependencies": {
-    "4screens-util": "~0.1.2",
+    "4screens-util": "~0.2.0",
     "angular": "~1.4.0",
     "angular-local-storage": "~0.2.2",
     "angular-sanitize": "~1.4.0",
