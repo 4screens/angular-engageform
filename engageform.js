@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.2.61
+ * 4screens-angular-engageform v0.3.0
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -148,10 +148,13 @@ var Navigation;
                 return defer.promise;
             }
             var current = this._engageform.current;
+            // Made by Masters
+            // (Mat fixed a bug: was `current._engageform.settings` the `current` doesn't have a `settings` property.
             // Check answer.
-            if (vcase && (current._engageform.settings.allowAnswerChange || !current.filled)) {
-              vcase.selected = true;
-              vcase.incorrect = false;
+            if (vcase && (this._engageform.settings.allowAnswerChange || !current.filled)) {
+                vcase.selected = true;
+                // Made by Masters
+                vcase.incorrect = false;
             }
             // Send the answer.
             return current.send(vcase).then(function () {
@@ -165,6 +168,7 @@ var Navigation;
                 }
                 else {
                     // Change the page with a slight delay, or do it instantly.
+                    // Made by Masters (only the timeout change from 2000 to 1000).
                     var pageChangeDelay = vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 1000 : 200) : 0;
                     // Schedule the page change.
                     _this.waitingForPageChange = Bootstrap.$timeout(function () {
@@ -520,10 +524,11 @@ var Util;
 var Engageform;
 (function (Engageform_1) {
     var Engageform = (function () {
-        function Engageform(data, mode, pages, sendAnswerCallback) {
+        function Engageform(data, mode, pages, embedSettings, sendAnswerCallback) {
             var _this = this;
             if (pages === void 0) { pages = []; }
-            if (sendAnswerCallback === void 0) { sendAnswerCallback = function () { }; }
+            if (sendAnswerCallback === void 0) { sendAnswerCallback = function () {
+            }; }
             this._pages = {};
             this._startPages = [];
             this._endPages = [];
@@ -531,12 +536,6 @@ var Engageform;
             this._hasForms = false;
             this.enabled = true;
             this.type = Engageform_1.Type.Undefined;
-            this.setUserIdent = function (id) {
-              Bootstrap.user.sessionId = id;
-            };
-            this.getUserIdent = function (id) {
-              return Bootstrap.user.sessionId;
-            };
             // As always, due to the initialisation drama, those values are only available about now.
             Engageform.pagesConsturctors = {
                 multiChoice: Page.MultiChoice,
@@ -550,10 +549,11 @@ var Engageform;
             };
             this._engageformId = data._id;
             this.mode = mode;
+            this.embedSettings = embedSettings;
             this.sendAnswerCallback = sendAnswerCallback;
             this.title = data.title;
             this.settings = new Engageform_1.Settings(data);
-            this.theme = new Engageform_1.Theme(data);
+            this.theme = new Engageform_1.Theme(data, embedSettings);
             this.tabs = new Engageform_1.Tabs(data);
             this.texts = data.texts;
             this.themeType = this.getThemeType(data.theme.backgroundColor);
@@ -673,6 +673,14 @@ var Engageform;
         Engageform.prototype.isPreviewMode = function () {
             return Boolean(this.mode === Engageform_1.Mode.Preview);
         };
+        // Made by Masters
+        Engageform.prototype.setUserIdent = function (id) {
+            Bootstrap.user.sessionId = id;
+        };
+        // Made by Masters
+        Engageform.prototype.getUserIdent = function (id) {
+            return Bootstrap.user.sessionId;
+        };
         /**
          * Stores a single page on the quiz instance.
          *
@@ -747,12 +755,12 @@ var Engageform;
             this._pages = {};
         };
         /**
-       * Builds pages from data delegating the construction to this.createPage method and
-       * filters out possibly unsupported pages.
-       *
-       * @param pages Array with pages data.
-       * @param settings this.settings of the current quiz.
-       * @returns {Page.Page[]} Array of pages.
+         * Builds pages from data delegating the construction to this.createPage method and
+         * filters out possibly unsupported pages.
+         *
+         * @param pages Array with pages data.
+         * @param settings this.settings of the current quiz.
+         * @returns {Page.Page[]} Array of pages.
          */
         Engageform.prototype.buildPages = function (pages, settings) {
             var _this = this;
@@ -761,12 +769,12 @@ var Engageform;
                 .filter(function (val) { return Boolean(val); });
         };
         /**
-       * Creates a single page. If the type is not supported (ie. doesn't have a constructor) will return undefined.
-       *
-       * @param page Pages data.
-       * @param settings this.settings.
-       * @returns {Page.Page|void} Page instance or undefined if unsupported type.
-       */
+         * Creates a single page. If the type is not supported (ie. doesn't have a constructor) will return undefined.
+         *
+         * @param page Pages data.
+         * @param settings this.settings.
+         * @returns {Page.Page|void} Page instance or undefined if unsupported type.
+         */
         Engageform.prototype.createPage = function (page, settings) {
             if (Engageform.pagesConsturctors[page.type]) {
                 return new Engageform.pagesConsturctors[page.type](this, page, settings);
@@ -814,9 +822,9 @@ var Engageform;
             this.storePage(resultPage);
         };
         /**
-       * Creates a page showing user's outcome or score in adequate quiz types. Used only in the results-preview mode.
-       * @param data
-       */
+         * Creates a page showing user's outcome or score in adequate quiz types. Used only in the results-preview mode.
+         * @param data
+         */
         Engageform.prototype.setUserResultPage = function (data) {
             var pageData = {
                 _id: 'RESULT_PAGE',
@@ -1072,16 +1080,17 @@ var Bootstrap = (function () {
                 });
             }
             // Create the Engageform's instance.
-            _this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData, Bootstrap.mode, data.pages, opts.callback ? opts.callback.sendAnswerCallback : function () { });
+            _this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData, Bootstrap.mode, data.pages, opts.embedSettings, opts.callback ? opts.callback.sendAnswerCallback : function () {
+            });
             return _this._engageform;
         });
     };
     /**
-   * Fetches the two types of data from the API: quiz data and pages data.
-   * @param type Resource type: quiz or pages.
-   * @param id ID of the quiz.
-   * @returns {IPromise<API.IQuizQuestion[]|API.IQuiz>}
-   */
+     * Fetches the two types of data from the API: quiz data and pages data.
+     * @param type Resource type: quiz or pages.
+     * @param id ID of the quiz.
+     * @returns {IPromise<API.IQuizQuestion[]|API.IQuiz>}
+     */
     Bootstrap.getData = function (type, id) {
         var resourcesPaths = {
             quiz: 'engageformUrl',
@@ -1237,7 +1246,7 @@ var Engageform;
 var Engageform;
 (function (Engageform) {
     var Theme = (function () {
-        function Theme(data) {
+        function Theme(data, embedSettings) {
             this.answerBackgroundColor = '';
             this.answerBorderColor = '';
             this.answerColor = '';
@@ -1254,6 +1263,7 @@ var Engageform;
             this.tabBorderColor = '';
             this.tabFontColor = '';
             this.tabColor = '';
+            this.embedSettings = embedSettings;
             if (data.theme) {
                 this.answerBackgroundColor = data.theme.answerBackgroundColor || '';
                 this.answerBorderColor = data.theme.answerBorderColor || '';
@@ -1278,9 +1288,11 @@ var Engageform;
             }
         }
         Theme.prototype.convertBackgroundImage = function () {
-            this.backgroundImageConvertedFile = Bootstrap.cloudinary.prepareBackgroundImageUrl(this.backgroundImageFile, window.innerWidth, window.innerHeight, parseInt(this.backgroundImageBlur, 10), this.backgroundImagePosition);
-            console.log(window.innerHeight);
-            console.log(this.backgroundImageConvertedFile);
+            this.backgroundImageConvertedFile = Bootstrap.cloudinary.prepareBackgroundImageUrl(this.backgroundImageFile, 
+            // Picture will always cover the full width.
+            window.innerWidth, 
+            // If the height is automatic, do not cut the picture
+            this.embedSettings.height === 'auto' ? null : window.innerHeight, parseInt(this.backgroundImageBlur, 10), this.backgroundImagePosition);
         };
         return Theme;
     }());
@@ -1866,7 +1878,8 @@ var Page;
             this.socialData = {
                 title: settings.share.title,
                 description: settings.share.description,
-                imageUrl:  Bootstrap.cloudinary.preparePreviewImageUrl(settings.share.imageUrl, 680),
+                // Made by Masters
+                imageUrl: Bootstrap.cloudinary.preparePreviewImageUrl(settings.share.imageUrl, 680),
                 link: settings.share.link
             };
             if (data.coverPage) {
