@@ -48,7 +48,7 @@ module Branding {
 
       // Set the branding properties form the data object or from the default values.
       this._text = typeof data.text === 'undefined' ? defaultBranding.text : data.text;
-      this._link = typeof data.link === 'undefined' ? defaultBranding.link : data.link;
+      this._link = data.link || defaultBranding.link;
 
       // Image URL is a bit complicated.
       if ( typeof data.imageUrl === 'undefined' ) {
