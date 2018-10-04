@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.3.0
+ * 4screens-angular-engageform v0.3.1
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -2288,6 +2288,11 @@ var Page;
         function Poster(engageform, data) {
             _super.call(this, engageform, data);
             this.type = Page.Type.Poster;
+            if (data.coverPage) {
+                this.button = data.coverPage.buttonText;
+                this.exitLink = data.coverPage.exitLink;
+                this.link = data.coverPage.link;
+            }
         }
         return Poster;
     }(Page.Page));
