@@ -27,6 +27,11 @@ module API {
         imageUrl: string;
         link: string;
         description: string;
+      },
+      tracking?: {
+        gtm?: {
+          id?: string
+        }
       }
     };
     theme: {

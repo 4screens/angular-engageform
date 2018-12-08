@@ -10,10 +10,13 @@ module Engageform {
       link: string;
       description: string;
     };
+    tracking = null
 
     constructor(data: API.IQuiz) {
       if (data.settings) {
         this.allowAnswerChange = !!data.settings.allowAnswerChange;
+
+        this.tracking = data.settings.tracking
 
         if (data.settings.hideMessageAfterDelay) {
           this.hideMessageAfterDelay = data.settings.hideMessageAfterDelay;
