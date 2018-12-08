@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.3.1
+ * 4screens-angular-engageform v0.3.2
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -1224,8 +1224,10 @@ var Engageform;
         function Settings(data) {
             this.allowAnswerChange = false;
             this.hideMessageAfterDelay = 3000;
+            this.tracking = null;
             if (data.settings) {
                 this.allowAnswerChange = !!data.settings.allowAnswerChange;
+                this.tracking = data.settings.tracking;
                 if (data.settings.hideMessageAfterDelay) {
                     this.hideMessageAfterDelay = data.settings.hideMessageAfterDelay;
                 }
