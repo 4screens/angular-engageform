@@ -16,7 +16,7 @@ module Engageform {
       if (data.settings) {
         this.allowAnswerChange = !!data.settings.allowAnswerChange;
 
-        this.tracking = data.settings.tracking
+        this.tracking = data.settings.tracking;
 
         if (data.settings.hideMessageAfterDelay) {
           this.hideMessageAfterDelay = data.settings.hideMessageAfterDelay;
