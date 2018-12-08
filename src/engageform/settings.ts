@@ -10,7 +10,7 @@ module Engageform {
       link: string;
       description: string;
     };
-    tracking = null
+    tracking = null;
 
     constructor(data: API.IQuiz) {
       if (data.settings) {
