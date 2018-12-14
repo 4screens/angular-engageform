@@ -13,6 +13,9 @@ module Page {
 
     result: number = 0;
 
+    title = undefined
+    ordinal = undefined
+
     get id(): string {
       return this._caseId;
     }
@@ -72,11 +75,19 @@ module Page {
       data.quizQuestionId = this.page.id;
       data.userIdent = Bootstrap.user.sessionId;
 
+      const eventValies = {
+        questionId: this._page.id,
+        questionTitle: this._page.title,
+        answerId: this.id,
+        answerValue: (data.inputs && data.inputs.map(function(input) {return input.value})) || this.title || this.ordinal
+      };
+
       return Bootstrap.$http.post(url, data).then((res: API.IQuizQuestionAnswerResponse) => {
         if ([200, 304].indexOf(res.status) !== -1) {
           if (!data.userIdent) {
             Bootstrap.user.sessionId = res.data.userIdent;
           }
+          this._page._engageform.event.trigger('answer', eventValies);
           return res.data;
         } else {
           return Bootstrap.$q.reject(res.data || {});
