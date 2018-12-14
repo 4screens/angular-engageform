@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.3.3
+ * 4screens-angular-engageform v0.3.4
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -1516,6 +1516,8 @@ var Page;
             this.correct = false;
             this.incorrect = false;
             this.result = 0;
+            this.title = undefined;
+            this.ordinal = undefined;
             this._caseId = data._id;
             this._page = page;
         }
@@ -1565,6 +1567,7 @@ var Page;
             return deferred.promise;
         };
         Case.prototype.makeSend = function (data) {
+            var _this = this;
             var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.pageResponseUrl;
             url = url.replace(':pageId', this.page.id);
             if (Bootstrap.mode !== Engageform.Mode.Default) {
@@ -1572,11 +1575,18 @@ var Page;
             }
             data.quizQuestionId = this.page.id;
             data.userIdent = Bootstrap.user.sessionId;
+            var eventValies = {
+                questionId: this._page.id,
+                questionTitle: this._page.title,
+                answerId: this.id,
+                answerValue: (data.inputs && data.inputs.map(function (input) { return input.value; })) || this.title || this.ordinal
+            };
             return Bootstrap.$http.post(url, data).then(function (res) {
                 if ([200, 304].indexOf(res.status) !== -1) {
                     if (!data.userIdent) {
                         Bootstrap.user.sessionId = res.data.userIdent;
                     }
+                    _this._page._engageform.event.trigger('answer', eventValies);
                     return res.data;
                 }
                 else {
