@@ -13,8 +13,8 @@ module Page {
 
     result: number = 0;
 
-    title = undefined
-    ordinal = undefined
+    title = undefined;
+    ordinal = undefined;
 
     get id(): string {
       return this._caseId;
@@ -79,7 +79,7 @@ module Page {
         questionId: this._page.id,
         questionTitle: this._page.title,
         answerId: this.id,
-        answerValue: (data.inputs && data.inputs.map(function(input) {return input.value})) || this.title || this.ordinal
+        answerValue: (data.inputs && data.inputs.map(function(input) { return input.value; })) || this.title || this.ordinal
       };
 
       return Bootstrap.$http.post(url, data).then((res: API.IQuizQuestionAnswerResponse) => {
