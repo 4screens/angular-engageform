@@ -15,7 +15,6 @@ var PATH = {
   define: 'typings',
   dist: 'release',
   source: 'src',
-  test: 'test'
 };
 var FILES = [
   path.join('.', PATH.source, 'header.ts'),
@@ -125,39 +124,22 @@ gulp.task('publish', ['minify'], function() {
   gulp.watch(FILES, ['publish::copy']);
 });
 
-gulp.task('publish::copy', ['tslint'], function() {
+gulp.task('publish::copy', ['lint'], function() {
   return gulp.src([MAIN, MAIN + '.map'])
     .pipe(gulp.dest(plugins.minimist.path || '../4screens-suros/app/bower_components/4screens-engageform2/'));
 });
 
 gulp.task('develop', ['minify'], function() {
-  gulp.watch(FILES, ['tslint']);
+  gulp.watch(FILES, ['lint']);
 });
 
-gulp.task('tslint', ['minify'], function () {
+gulp.task('lint', ['minify'], function () {
   return gulp.src(FILES)
     .pipe(plugins.tslint())
     .pipe(plugins.tslint.report('verbose'));
 });
 
-gulp.task('test', ['tslint'], function(done) {
-   //KarmaServer.start({
-   //  configFile: __dirname + '/karma.conf.js',
-   //  singleRun: true
-   //}, function(error) {
-   //  if (error) {
-   //    plugins.git.checkout('*.json', {args: '--'}, function(err) {
-   //      if (err) throw err;
-   //      done();
-   //    });
-   //  } else {
-   //    done();
-   //  }
-   //});
-  done();
-});
-
-gulp.task('release::bump::commit', ['test'], function() {
+gulp.task('release::bump::commit', ['lint'], function() {
   if (plugins.util.env.bump) {
     return gulp.src(['./package.json'])
       .pipe(plugins.git.add())
@@ -181,7 +163,7 @@ gulp.task('release::dist::clone', ['release::dist::cleanup'], function(done) {
   });
 });
 
-gulp.task('release::dist::commit', ['release::dist::clone', 'test'], function() {
+gulp.task('release::dist::commit', ['release::dist::clone', 'lint'], function() {
   var diff = MAIN.split('.')[0] + '*';
   sh.cp('-rf', diff, path.join('.', PATH.dist));
 
