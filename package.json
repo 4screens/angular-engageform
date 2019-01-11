@@ -3,8 +3,7 @@
   "version": "0.3.4",
   "description": "4screens EngageForm",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git@github.com:4screens/angular-engageform.git"
@@ -12,6 +11,9 @@
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/4screens/angular-engageform/issues"
+  },
+  "engines": {
+    "node": "10.15.0"
   },
   "homepage": "https://github.com/4screens/angular-engageform",
   "devDependencies": {
