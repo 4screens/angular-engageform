@@ -1,23 +1,15 @@
 {
   "name": "4screens-angular-engageform",
   "version": "0.3.4",
-  "description": "Angular 4screens EngageForm",
+  "description": "4screens EngageForm",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "test": "karma start"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:4screens/angular-engageform.git"
   },
-  "author": "Tomasz Pietrzak <tomasz.pietrzak@nopattern.net>",
-  "license": {
-    "type": "proprietary",
-    "url": "https://nopattern.net/"
-  },
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/4screens/angular-engageform/issues"
   },
