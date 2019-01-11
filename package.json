@@ -17,11 +17,11 @@
   },
   "homepage": "https://github.com/4screens/angular-engageform",
   "devDependencies": {
-    "typescript": "^1.5.0-beta",
+    "typescript": "^3.2.2",
     "4screens-util": "4screens/util#master",
-    "angular": "~1.4.0",
-    "angular-local-storage": "~0.2.2",
-    "angular-sanitize": "~1.4.0",
-    "lodash": "~3.10.1"
+    "angular": "~1.7.5",
+    "angular-local-storage": "~0.7.1",
+    "angular-sanitize": "~1.7.5",
+    "lodash": "~4.17.11"
   }
 }
