@@ -1,6 +1,4 @@
-/// <reference path="iuser.ts" />
-
-class User implements IUser {
+export default class User implements UserProperties {
   private _id: string;
   private _sessionId: string;
 

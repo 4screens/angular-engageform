@@ -1,17 +1,20 @@
-module Page {
-  export class Poster extends Page {
-    type = Type.Poster;
-    private button: string;
-    private exitLink: boolean;
-    private link: string;
+import Page from '../page'
+import { PageType } from '../page-type.enum'
+import EngageformProperties from '../../engageform/engageform-properties'
+import QuizQuestion from '../../api/quiz-question'
 
-    constructor(engageform: Engageform.IEngageform, data: API.IQuizQuestion) {
-      super(engageform, data);
-      if (data.coverPage) {
-        this.button = data.coverPage.buttonText;
-        this.exitLink = data.coverPage.exitLink;
-        this.link = data.coverPage.link;
-      }
+export default class Poster extends Page {
+  type = PageType.Poster
+  private button: string
+  private exitLink: boolean
+  private link: string
+
+  constructor(engageform: EngageformProperties, data: QuizQuestion) {
+    super(engageform, data)
+    if (data.coverPage) {
+      this.button = data.coverPage.buttonText
+      this.exitLink = data.coverPage.exitLink
+      this.link = data.coverPage.link
     }
   }
 }

@@ -1,3 +1,4 @@
-module API {
-  export interface IPages extends Array<API.IQuizQuestion> {}
+import QuizQuestion from './quiz-question'
+
+export default interface Pages extends Array<QuizQuestion> {
 }

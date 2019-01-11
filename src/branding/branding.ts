@@ -1,69 +1,74 @@
-/// <reference path="ibranding.ts" />
+import BrandingProperties from './branding-properties'
+import BrandingValues from './branding-values'
 
-module Branding {
-  export class Branding implements IBranding {
-    // Basic properties.
-    private _text: string;
-    private _link: string;
-    private _imageUrl: string;
-    private _isCustomLogo: boolean = false;
-    private _enabled: boolean;
+export default class Branding implements BrandingProperties {
+  // Basic properties.
+  private _text: string
+  private _link: string
+  private _imageUrl: string
+  private _isCustomLogo: boolean = false
+  private _enabled: boolean
 
-    // Marks the branding if it is a custom, ie. user defined at least one own value.
-    private _isCustom: boolean = false;
+  // Marks the branding if it is a custom, ie. user defined at least one own value.
+  private _isCustom: boolean = false
 
-    public get isCustom(): boolean {
-      return this._isCustom;
+  public get isCustom(): boolean {
+    return this._isCustom
+  }
+
+  public get isCustomLogo(): boolean {
+    return this._isCustomLogo
+  }
+
+  public get isDefault(): boolean {
+    return !this._isCustom
+  }
+
+  public get imageUrl(): string {
+    return this._imageUrl
+  }
+
+  public get link(): string {
+    return this._link
+  }
+
+  public get text(): string {
+    return this._text
+  }
+
+  public get enabled(): boolean {
+    return this._enabled
+  }
+
+  constructor(data: BrandingValues = {}) {
+    var imgUrl
+    var defaultBranding = Bootstrap.config.backend.branding
+
+    // Is branding enabled? (State of the enabled branding is false, so negating that).
+    this._enabled = !data.state
+
+    // If there's any branding data, it means that this is a custom branding.
+    if (data.text || data.link || data.imageUrl) {
+      this._isCustom = true
     }
-    public get isCustomLogo(): boolean {
-      return this._isCustomLogo;
-    }
-    public get isDefault(): boolean {
-      return !this._isCustom;
-    }
-    public get imageUrl(): string {
-      return this._imageUrl;
-    }
-    public get link(): string {
-      return this._link;
-    }
-    public get text(): string {
-      return this._text;
-    }
-    public get enabled(): boolean {
-      return this._enabled;
+
+    // Set the branding properties form the data object or from the default values.
+    this._text = typeof data.text === 'undefined' ? defaultBranding.text : data.text
+    this._link = data.link || defaultBranding.link
+
+    // Image URL is a bit complicated.
+    if (typeof data.imageUrl === 'undefined') {
+      imgUrl = defaultBranding.imageUrl
+    } else {
+      imgUrl = data.imageUrl
+      this._isCustomLogo = true
     }
 
-    constructor(data: IBrandingData = {}) {
-      var imgUrl;
-      var defaultBranding = Bootstrap.config.backend.branding;
-
-      // Is branding enabled? (State of the enabled branding is false, so negating that).
-      this._enabled = !data.state;
-
-      // If there's any branding data, it means that this is a custom branding.
-      if (data.text || data.link || data.imageUrl) {
-        this._isCustom = true;
-      }
-
-      // Set the branding properties form the data object or from the default values.
-      this._text = typeof data.text === 'undefined' ? defaultBranding.text : data.text;
-      this._link = data.link || defaultBranding.link;
-
-      // Image URL is a bit complicated.
-      if ( typeof data.imageUrl === 'undefined' ) {
-        imgUrl = defaultBranding.imageUrl;
-      } else {
-        imgUrl = data.imageUrl;
-        this._isCustomLogo = true;
-      }
-
-      // The image's URL is a bit different if it is a default one, than when it is a custom.
-      if (imgUrl === defaultBranding.imageUrl) {
-        this._imageUrl = Bootstrap.config.backend.api + imgUrl;
-      } else {
-        this._imageUrl = imgUrl ? Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imgUrl : '';
-      }
+    // The image's URL is a bit different if it is a default one, than when it is a custom.
+    if (imgUrl === defaultBranding.imageUrl) {
+      this._imageUrl = Bootstrap.config.backend.api + imgUrl
+    } else {
+      this._imageUrl = imgUrl ? Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imgUrl : ''
     }
   }
 }

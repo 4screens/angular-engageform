@@ -1,33 +1,32 @@
-/// <reference path="isettings.ts" />
+import SettingsProperties from './settings-properties'
+import Quiz from '../api/quiz'
 
-module Engageform {
-  export class Settings implements ISetting {
-    allowAnswerChange: boolean = false;
-    hideMessageAfterDelay: number = 3000;
-    share: {
-      title: string;
-      imageUrl: string;
-      link: string;
-      description: string;
-    };
-    tracking = null;
+export default class Settings implements SettingsProperties {
+  allowAnswerChange: boolean = false
+  hideMessageAfterDelay: number = 3000
+  share: {
+    title: string;
+    imageUrl: string;
+    link: string;
+    description: string;
+  }
+  tracking = null
 
-    constructor(data: API.IQuiz) {
-      if (data.settings) {
-        this.allowAnswerChange = !!data.settings.allowAnswerChange;
+  constructor(data: Quiz) {
+    if (data.settings) {
+      this.allowAnswerChange = !!data.settings.allowAnswerChange
 
-        this.tracking = data.settings.tracking;
+      this.tracking = data.settings.tracking
 
-        if (data.settings.hideMessageAfterDelay) {
-          this.hideMessageAfterDelay = data.settings.hideMessageAfterDelay;
-        }
+      if (data.settings.hideMessageAfterDelay) {
+        this.hideMessageAfterDelay = data.settings.hideMessageAfterDelay
+      }
 
-        if (data.settings.share) {
-          this.share = data.settings.share;
+      if (data.settings.share) {
+        this.share = data.settings.share
 
-          if (!this.share.imageUrl && Bootstrap.config.share && Bootstrap.config.share.defaultImgUrl) {
-            this.share.imageUrl = Bootstrap.config.share.defaultImgUrl;
-          }
+        if (!this.share.imageUrl && Bootstrap.config.share && Bootstrap.config.share.defaultImgUrl) {
+          this.share.imageUrl = Bootstrap.config.share.defaultImgUrl
         }
       }
     }

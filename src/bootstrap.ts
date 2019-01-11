@@ -1,12 +1,22 @@
-/// <reference path="api/api.ts" />
-/// <reference path="navigation/navigation.ts" />
-/// <reference path="meta/meta.ts" />
-/// <reference path="page/page.ts" />
-/// <reference path="user/user.ts" />
-/// <reference path="util/event.ts" />
-/// <reference path="engageform/engageform.ts" />
-
-import IPromise = angular.IPromise;
+import angular from 'angular'
+import { EngageformMode } from './engageform/engageform-mode.enum'
+import User from './user/user'
+import Event from './util/event'
+import EngageformProperties from './engageform/engageform-properties'
+import EngageformInstances from './engageform/engageform-instances'
+import ApiConfig from './api/api-config'
+import Outcome from './engageform/form-types/outcome'
+import Poll from './engageform/form-types/poll'
+import Score from './engageform/form-types/score'
+import Survey from './engageform/form-types/survey'
+import Live from './engageform/form-types/live'
+import { EngageformType } from './engageform/engageform-type.enum'
+import { Theme } from './engageform/theme'
+import ThemeProperties from './engageform/theme-properties'
+import PageProperties from './page/page-properties'
+import NavigationProperties from './navigation/navigation-properties'
+import BrandingProperties from './branding/branding-properties'
+import MetaProperties from './meta/meta-properties'
 
 class Bootstrap {
   static $http: ng.IHttpService;
@@ -16,13 +26,13 @@ class Bootstrap {
   static localStorage: ng.local.storage.ILocalStorageService;
   static user: User;
   static config;
-  static mode = Engageform.Mode.Undefined;
-  Engageform: Engageform.IEngageform;
+  static mode = EngageformMode.Undefined;
+  Engageform: EngageformProperties;
 
-  private _engageform: Engageform.IEngageform;
-  private _event: Util.Event;
+  private _engageform: EngageformProperties;
+  private _event: Event;
 
-  private static _instances: Engageform.IEngageformInstances = {};
+  private static _instances: EngageformInstances = {};
 
   // Stores the constructors of quizzes mapped by names. Values are assigned in constructor because the modules
   // dependency is spaghetti-like and constructors will be undefined at this point.
@@ -32,7 +42,7 @@ class Bootstrap {
   static modes;
 
   constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, cloudinary: any,
-              localStorage: ng.local.storage.ILocalStorageService, ApiConfig: Config.ApiConfig) {
+              localStorage: ng.local.storage.ILocalStorageService, ApiConfig: ApiConfig) {
     Bootstrap.$http = $http;
     Bootstrap.$q = $q;
     Bootstrap.$timeout = $timeout;
@@ -43,47 +53,47 @@ class Bootstrap {
 
     // Map names to constructors.
     Bootstrap.quizzesConstructors = {
-      outcome: Engageform.Outcome,
-      poll: Engageform.Poll,
-      score: Engageform.Score,
-      survey: Engageform.Survey,
-      live: Engageform.Live
+      outcome: Outcome,
+      poll: Poll,
+      score: Score,
+      survey: Survey,
+      live: Live
     };
 
     Bootstrap.modes = {
-      preview: Engageform.Mode.Preview,
-      summary: Engageform.Mode.Summary,
-      results: Engageform.Mode.Result,
-      'default': Engageform.Mode.Default,
-      '': Engageform.Mode.Default
+      preview: EngageformMode.Preview,
+      summary: EngageformMode.Summary,
+      results: EngageformMode.Result,
+      'default': EngageformMode.Default,
+      '': EngageformMode.Default
     };
 
     // FIXME: This is inaccessible inside the library, since it's the consumer app that creates the instance so it
     // isn't possible to actually trigger any event! I'm leaving it here because I don't care enough to check
     // if any app tries to subscribe for this event. I'm almost sure it's safe to remove, though.
-    this._event = new Util.Event();
+    this._event = new Event();
 
     Bootstrap.cloudinary.setConfig(ApiConfig.cloudinary);
   }
 
-  get type(): Engageform.Type {
+  get type(): EngageformType {
     if (this._engageform) {
       return this._engageform.type;
     }
 
-    return Engageform.Type.Undefined;
+    return EngageformType.Undefined;
   }
 
   get Type() {
-    return Engageform.Type;
+    return EngageformType;
   }
 
-  get mode(): Engageform.Mode {
+  get mode(): EngageformMode {
     return Bootstrap.mode;
   }
 
   get Mode() {
-    return Engageform.Mode;
+    return EngageformMode;
   }
 
   get title(): string {
@@ -92,25 +102,25 @@ class Bootstrap {
     }
   }
 
-  get theme(): Engageform.ITheme {
+  get theme(): ThemeProperties {
     if (this._engageform) {
       return this._engageform.theme;
     }
   }
 
-  get current(): Page.IPage {
+  get current(): PageProperties {
     if (this._engageform) {
       return this._engageform.current;
     }
   }
 
-  get navigation(): Navigation.INavigation {
+  get navigation(): NavigationProperties {
     if (this._engageform) {
       return this._engageform.navigation;
     }
   }
 
-  get branding(): Branding.IBranding {
+  get branding(): BrandingProperties {
     if (this._engageform) {
       return this._engageform.branding;
     }
@@ -122,19 +132,19 @@ class Bootstrap {
     }
   }
 
-  get meta(): Meta.IMeta {
+  get meta(): MetaProperties {
     if (this._engageform) {
       return this._engageform.meta;
     }
   }
 
-  get event(): Util.Event {
+  get event(): Event {
     if (this._event) {
       return this._event;
     }
   }
 
-  init(opts: API.IEmbed): ng.IPromise<Engageform.IEngageform> {
+  init(opts: API.IEmbed): angular.IPromise<Engageform.IEngageform> {
     // Options are required and need to have a quiz ID.
     if (!opts || !opts.id) {
       return Bootstrap.$q.reject({
@@ -230,7 +240,7 @@ class Bootstrap {
     url = url.replace(':engageformId', id);
 
     // Inform the backend it shouldn't store statistics when a quiz is not in a default mode.
-    if (Bootstrap.mode !== Engageform.Mode.Default) {
+    if (Bootstrap.mode !== EngageformMode.Default) {
       url += '?preview';
     }
 
