@@ -7,15 +7,14 @@ module.exports = function(config) {
     ],
 
     files: [
-      './bower_components/angular/angular.js',
-      './bower_components/4screens-util/util.js',
-      './bower_components/angular-local-storage/dist/angular-local-storage.js',
-      './bower_components/angular-mocks/angular-mocks.js',
-      './bower_components/angular-sanitize/angular-sanitize.js',
-      './bower_components/lodash/lodash.min.js',
+      './node_modules/angular/angular.js',
+      './node_modules/4screens-util/util.js',
+      './node_modules/angular-local-storage/dist/angular-local-storage.js',
+      './node_modules/angular-mocks/angular-mocks.js',
+      './node_modules/angular-sanitize/angular-sanitize.js',
+      './node_modules/lodash/lodash.min.js',
       './engageform.js',
-      // FIXME: What are those tests testing, anyway?
-      //'./test/**/*.spec.ts',
+      './test/**/*.spec.ts',
 
       // fixtures
       {

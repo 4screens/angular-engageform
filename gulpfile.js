@@ -11,7 +11,6 @@ var KarmaServer = require('karma').server;
 plugins.minimist = require('minimist')(process.argv.slice(2));
 
 var PATH = {
-  bower_components: 'bower_components',
   build: '.',
   define: 'typings',
   dist: 'release',
@@ -69,15 +68,6 @@ var FILES = [
 ];
 var BANNER = path.join('.', PATH.source, 'header.txt');
 var MAIN = 'engageform.js';
-var TESTS = [
-  path.join('.', PATH.bower_components, '4screens-util', 'util.js'),
-  path.join('.', PATH.bower_components, 'angular', 'angular.js'),
-  path.join('.', PATH.bower_components, 'angular-local-storage', 'dist', 'angular-local-storage.js'),
-  path.join('.', PATH.bower_components, 'angular-mocks', 'angular-mocks.js'),
-  path.join('.', PATH.bower_components, 'angular-sanitize', 'angular-sanitize.js'),
-  path.join('.', PATH.build, MAIN),
-  path.join('.', PATH.test, '**', '*.spec.ts')
-];
 
 gulp.task('bump', function() {
   var bump = plugins.util.env.bump || false;
@@ -86,7 +76,7 @@ gulp.task('bump', function() {
     pkg.version = semver.inc(pkg.version, 'patch');
   }
 
-  return gulp.src(['./bower.json', './package.json'])
+  return gulp.src(['./package.json'])
     .pipe(plugins.if(bump, plugins.bump({
       version: pkg.version
     })))
@@ -169,7 +159,7 @@ gulp.task('test', ['tslint'], function(done) {
 
 gulp.task('release::bump::commit', ['test'], function() {
   if (plugins.util.env.bump) {
-    return gulp.src(['./bower.json', './package.json'])
+    return gulp.src(['./package.json'])
       .pipe(plugins.git.add())
       .pipe(plugins.git.commit('chore(release): Bump version.'));
   }
