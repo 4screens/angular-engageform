@@ -1,8 +1,11 @@
 import angular from 'angular'
+import Embed from './api/embed.interface'
 import app from './app'
 import Branding from './branding/branding'
 import AppConfig from './config.interface'
+import Engageform from './engageform/engageform'
 import { EngageformMode } from './engageform/engageform-mode.enum'
+import { Maybe, MaybeString } from './types'
 import User from './user/user'
 import Event from './util/event'
 import EngageformProperties from './engageform/engageform-properties'
@@ -23,15 +26,14 @@ export default class Bootstrap {
     return Bootstrap.config[key]
   }
 
+  static user = User.create()
   static $http: ng.IHttpService
   static $q: ng.IQService
   static $timeout: ng.ITimeoutService
   static cloudinary: any
   static localStorage: ng.local.storage.ILocalStorageService
-  static user: User
   static config: AppConfig
   static mode = EngageformMode.Undefined
-  Engageform: EngageformProperties
 
   private _engageform: EngageformProperties
   private _event: Event
@@ -40,10 +42,22 @@ export default class Bootstrap {
 
   // Stores the constructors of quizzes mapped by names. Values are assigned in constructor because the modules
   // dependency is spaghetti-like and constructors will be undefined at this point.
-  static quizzesConstructors
+  static quizzesConstructors = {
+    outcome: Outcome,
+    poll: Poll,
+    score: Score,
+    survey: Survey,
+    live: Live
+  }
 
   // Modes the library can operates in. Values assigned later due to the spaghetti.
-  static modes
+  static modes = {
+    preview: EngageformMode.Preview,
+    summary: EngageformMode.Summary,
+    results: EngageformMode.Result,
+    'default': EngageformMode.Default,
+    '': EngageformMode.Default
+  }
 
   constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, cloudinary: any,
               localStorage: ng.local.storage.ILocalStorageService, ApiConfig: AppConfig) {
@@ -53,24 +67,6 @@ export default class Bootstrap {
     Bootstrap.cloudinary = cloudinary
     Bootstrap.localStorage = localStorage
     Bootstrap.config = ApiConfig
-    Bootstrap.user = new User()
-
-    // Map names to constructors.
-    Bootstrap.quizzesConstructors = {
-      outcome: Outcome,
-      poll: Poll,
-      score: Score,
-      survey: Survey,
-      live: Live
-    }
-
-    Bootstrap.modes = {
-      preview: EngageformMode.Preview,
-      summary: EngageformMode.Summary,
-      results: EngageformMode.Result,
-      'default': EngageformMode.Default,
-      '': EngageformMode.Default
-    }
 
     // FIXME: This is inaccessible inside the library, since it's the consumer app that creates the instance so it
     // isn't possible to actually trigger any event! I'm leaving it here because I don't care enough to check
