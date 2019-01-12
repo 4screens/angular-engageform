@@ -1,9 +1,9 @@
 import angular from 'angular'
-import Bootstrap from '../bootstrap'
-import Engageform from '../engageform/engageform'
-import { EngageformType } from '../engageform/engageform-type.enum'
-import Case from '../page/case'
-import { Nullable } from '../types'
+import Bootstrap from './bootstrap'
+import Engageform from './engageform/engageform'
+import { EngageformType } from './engageform/engageform-type.enum'
+import Case from './page/case'
+import { Nullable } from './types'
 
 export class Navigation {
   static fromEnageform(engageform: Engageform): Navigation {

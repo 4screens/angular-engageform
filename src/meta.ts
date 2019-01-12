@@ -1,5 +1,5 @@
 import { find } from 'lodash'
-import Engageform from '../engageform/engageform'
+import Engageform from './engageform/engageform'
 
 export default class Meta {
   static fromEngageform(engageform: Engageform): Meta {

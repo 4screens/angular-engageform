@@ -1,5 +1,5 @@
-import Bootstrap from '../bootstrap'
-import { NullableString } from '../types'
+import Bootstrap from './bootstrap'
+import { NullableString } from './types'
 
 export default class User {
   static create() {

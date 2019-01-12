@@ -13,11 +13,11 @@ import Poll from './engageform/form-types/poll'
 import Score from './engageform/form-types/score'
 import Survey from './engageform/form-types/survey'
 import ThemeProperties from './engageform/theme-properties'
-import { Navigation } from './navigation/navigation'
+import { Navigation } from './navigation'
 import PageProperties from './page/page-properties'
 import { Maybe, MaybeString } from './types'
-import User from './user/user'
-import Event from './util/event'
+import User from './user'
+import Event from './event'
 
 export default class Bootstrap {
   static getConfig<K extends keyof AppConfig>(key: K): AppConfig[K] {
