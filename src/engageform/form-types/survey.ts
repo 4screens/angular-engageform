@@ -1,9 +1,10 @@
 import angular from 'angular'
-import { Type } from '../engageform-type.enum'
-import QuizFinish from '../../api/quiz-finish'
+import QuizFinish from '../../api/quiz-finish.interface'
+import Engageform from '../engageform'
+import { EngageformType } from '../engageform-type.enum'
 
 export default class Survey extends Engageform {
-  type = Type.Survey
+  type = EngageformType.Survey
 
   setCurrentEndPage(): angular.IPromise<QuizFinish> {
     return super.setCurrentEndPage().then((data) => {

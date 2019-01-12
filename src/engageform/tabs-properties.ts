@@ -1,5 +1,5 @@
 export default interface TabsProperties {
-  liveTitle: string;
-  chatTitle: string;
-  logoUrl: string;
+  liveTitle: string
+  chatTitle: string
+  logoUrl: string
 }

@@ -1,14 +1,15 @@
+import Bootstrap from '../bootstrap'
 import SettingsProperties from './settings-properties'
-import Quiz from '../api/quiz'
+import Quiz from '../api/quiz.interface'
 
 export default class Settings implements SettingsProperties {
   allowAnswerChange: boolean = false
   hideMessageAfterDelay: number = 3000
   share: {
-    title: string;
-    imageUrl: string;
-    link: string;
-    description: string;
+    title: string
+    imageUrl: string
+    link: string
+    description: string
   }
   tracking = null
 

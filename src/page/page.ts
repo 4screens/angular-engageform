@@ -1,17 +1,22 @@
 import angular from 'angular'
-import {isUndefined} from 'lodash'
+import { isUndefined } from 'lodash'
+import Result from '../api/result.interface'
+import Bootstrap from '../bootstrap'
 import EngageformProperties from '../engageform/engageform-properties'
+import Case from './case'
 import PageProperties from './page-properties'
+import PageSentProperties from './page-sent.interface'
 import PageSettingsProperties from './page-settings-properties'
 import CaseProperties from './case-properties'
-import QuizQuestion from '../api/quiz-question'
+import QuizQuestion from '../api/quiz-question.interface'
 import PageSettings from './page-settings'
+import { PageType } from './page-type.enum'
 
 export default class Page implements PageProperties {
   private _pageId: string
   private _engageform: EngageformProperties
 
-  type: Type
+  type: PageType
   title: string = ''
   description: string = ''
   media: string = ''
@@ -63,7 +68,7 @@ export default class Page implements PageProperties {
     }
   }
 
-  send(vcase: ICase): ng.IPromise<IPageSent> {
+  send(vcase: Case): ng.IPromise<PageSentProperties> {
     if (this._engageform.enabled === false) {
       return Bootstrap.$q.reject('Engageform already ended.')
     }
@@ -77,14 +82,14 @@ export default class Page implements PageProperties {
     }
   }
 
-  sent(): ng.IPromise<IPageSent> {
+  sent(): ng.IPromise<PageSentProperties> {
     var deferred = Bootstrap.$q.defer()
-    var sent = <IPageSent>{}
+    var sent = <PageSentProperties>{}
 
-    sent = <IPageSent>(Bootstrap.localStorage.get('page.' + this.id) || {})
+    sent = <PageSentProperties>(Bootstrap.localStorage.get('page.' + this.id) || {})
 
     if (this.settings.showResults && sent.results) {
-      this.getStatsById(this.id).then((data: API.IQuizQuestion) => {
+      this.getStatsById(this.id).then((data: QuizQuestion) => {
         deferred.resolve(this.refreshAnswer(sent, data))
       }).catch(() => {
         deferred.resolve(sent)
@@ -96,16 +101,16 @@ export default class Page implements PageProperties {
     return deferred.promise
   }
 
-  refreshAnswer(sent: IPageSent, question: API.IQuizQuestion): IPageSent {
+  refreshAnswer(sent: PageSentProperties, question: QuizQuestion): PageSentProperties {
     // "abstract"
     return sent
   }
 
-  selectAnswer(data): void {
+  selectAnswer(data: any): void {
     // "abstract"
   }
 
-  createCase(data, symbol?): void | ICase {
+  createCase(data: any, symbol?: any): void | Case {
     // "abstract
     return
   }
@@ -114,8 +119,8 @@ export default class Page implements PageProperties {
    * Sets the provided results on the page's cases.
    * @param results Object containing data with results that should be set on the cases.
    */
-  setResults(results: API.Result) {
-    let casesWithResults = this.cases.map((singleCase: ICase) => {
+  setResults(results: Result) {
+    let casesWithResults = this.cases.map((singleCase: Case) => {
       // Set's the result on the case. Side effect, but makes the whole method a bit faster. Otherwise there
       // would be a need for more loops when creating fake answers.
       singleCase.result = Number(results.stats[singleCase.id]) || 0
@@ -131,10 +136,10 @@ export default class Page implements PageProperties {
         && k !== 'questionId'
 
         // Don't create the case for rateits.
-        && this.type !== Type.Rateit) {
+        && this.type !== PageType.Rateit) {
 
         // Create the fake answer to show results…
-        let fakeCase: ICase = <ICase>this.createCase({
+        let fakeCase: Case = <Case>this.createCase({
           text: '[Removed answer]',
           _id: k,
           imageData: {
@@ -152,17 +157,17 @@ export default class Page implements PageProperties {
     }
   }
 
-  updateAnswers(data): void {
+  updateAnswers(data: any): void {
     if (this.id !== data.questionId) {
       return
     }
 
-    if (this.engageform.current && !_.isUndefined(data.avg)) {
+    if (this.engageform.current && !isUndefined(data.avg)) {
       this.engageform.current.result = data.avg
     }
 
     Bootstrap.$timeout(() => {
-      this.cases.map((vcase: ICase) => {
+      this.cases.map((vcase: Case) => {
         if (!isUndefined(data[vcase.id])) {
           var loaded = vcase.load()
           if (loaded.results) {

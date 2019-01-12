@@ -1,12 +1,17 @@
+import QuizQuestion from '../api/quiz-question.interface'
+import Result from '../api/result.interface'
 import EngageformProperties from '../engageform/engageform-properties'
-import PageSettingsProperties from './page-settings-properties'
+import Case from './case'
 import CaseProperties from './case-properties'
+import PageSentProperties from './page-sent.interface'
+import PageSettingsProperties from './page-settings-properties'
+import { PageType } from './page-type.enum'
 
 export default interface PageProperties {
   id: string;
   engageform: EngageformProperties;
 
-  type: Type;
+  type: PageType;
   title: string;
   description: string;
   media: string;
@@ -30,15 +35,15 @@ export default interface PageProperties {
   labelMax?: string;
   buttonClickSum?: number;
 
-  send(vcase: ICase): ng.IPromise<IPageSent>;
+  send(vcase: Case): angular.IPromise<PageSentProperties>;
 
-  refreshAnswer(sent: IPageSent, question: API.IQuizQuestion): IPageSent;
+  refreshAnswer(sent: PageSentProperties, question: QuizQuestion): PageSentProperties;
 
-  selectAnswer(data): void;
+  selectAnswer(data: any): void;
 
-  updateAnswers(data): void;
+  updateAnswers(data: any): void;
 
   clickBuzzer?(): void;
 
-  setResults(results: API.Result): void;
+  setResults(results: Result): void;
 }

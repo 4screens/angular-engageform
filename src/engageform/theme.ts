@@ -1,6 +1,7 @@
+import Bootstrap from '../bootstrap'
 import ThemeProperties from './theme-properties'
-import EmbedSettings from '../api/embed-settings'
-import Quiz from '../api/quiz'
+import EmbedSettings from '../api/embed-settings.interface'
+import Quiz from '../api/quiz.interface'
 
 export class Theme implements ThemeProperties {
   answerBackgroundColor: string = ''

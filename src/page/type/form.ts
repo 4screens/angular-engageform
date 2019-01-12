@@ -1,11 +1,12 @@
+import Bootstrap from '../../bootstrap'
 import { PageType } from '../page-type.enum'
 import Page from '../page'
 import EngageformProperties from '../../engageform/engageform-properties'
-import QuizQuestion from '../../api/quiz-question'
+import QuizQuestion from '../../api/quiz-question.interface'
 import CaseProperties from '../case-properties'
 import InputCase from '../case/input'
 import PageSentProperties from '../page-sent.interface'
-import Result from '../../api/result'
+import Result from '../../api/result.interface'
 
 export default class Form extends Page {
   type = PageType.Form

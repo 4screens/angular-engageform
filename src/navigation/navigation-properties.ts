@@ -1,3 +1,5 @@
+import Case from '../page/case'
+
 export default interface NavigationProperties {
   enabled: boolean;
   position: number;
@@ -20,9 +22,9 @@ export default interface NavigationProperties {
 
   prev($event: any): void;
 
-  pick($event: any, vcase: Page.ICase): void;
+  pick($event: any, vcase: Case): void;
 
-  next($event: any, vcase: Page.ICase): void;
+  next($event: any, vcase: Case): void;
 
-  finish($event: any, vcase: Page.ICase): void;
+  finish($event: any, vcase: Case): void;
 }

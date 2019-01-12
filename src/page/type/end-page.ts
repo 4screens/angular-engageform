@@ -1,8 +1,9 @@
+import Bootstrap from '../../bootstrap'
 import { PageType } from '../page-type.enum'
 import Page from '../page'
 import SocialData from '../social-data.interface'
 import EngageformProperties from '../../engageform/engageform-properties'
-import QuizQuestion from '../../api/quiz-question'
+import QuizQuestion from '../../api/quiz-question.interface'
 import SettingsProperties from '../../engageform/settings-properties'
 
 export class EndPage extends Page {

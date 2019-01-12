@@ -1,4 +1,4 @@
-import QuizQuestion from '../api/quiz-question'
+import QuizQuestion from '../api/quiz-question.interface'
 import PageSettingsProperties from './page-settings-properties'
 
 export default class PageSettings implements PageSettingsProperties {

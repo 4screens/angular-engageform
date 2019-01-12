@@ -1,4 +1,4 @@
 interface UserProperties {
-  id: string;
-  sessionId: string;
+  id: string
+  sessionId: string
 }

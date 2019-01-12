@@ -1,6 +1,12 @@
+import QuizQuestionAnswerResponse from '../api/quiz-question-answer-response.interface'
+import QuizQuestionAnswer from '../api/quiz-question-answer.interface'
+import Bootstrap from '../bootstrap'
+import { EngageformMode } from '../engageform/engageform-mode.enum'
 import CaseProperties from './case-properties'
 import { CaseType } from './case-type.enum'
+import Page from './page'
 import PageProperties from './page-properties'
+import PageSentProperties from './page-sent.interface'
 
 export default class Case implements CaseProperties {
   private _caseId: string
@@ -25,11 +31,11 @@ export default class Case implements CaseProperties {
     this._caseId = caseId
   }
 
-  get page(): IPage {
+  get page(): Page {
     return this._page
   }
 
-  constructor(page: IPage, data) {
+  constructor(page: Page, data: any) {
     this._caseId = data._id
     this._page = page
   }
@@ -59,17 +65,17 @@ export default class Case implements CaseProperties {
    * You've been goofed! The real sending is done in subclasses.
    * @returns {IPromise<T>}
    */
-  send(): ng.IPromise<IPageSent> {
+  send(): ng.IPromise<PageSentProperties> {
     var deferred = Bootstrap.$q.defer()
-    deferred.resolve(<IPageSent>{})
+    deferred.resolve(<PageSentProperties>{})
     return deferred.promise
   }
 
-  makeSend(data: API.IQuizQuestionAnswer): ng.IPromise<API.IQuizQuestionAnswer> {
+  makeSend(data: API.IQuizQuestionAnswer): ng.IPromise<QuizQuestionAnswer> {
     var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.pageResponseUrl
     url = url.replace(':pageId', this.page.id)
 
-    if (Bootstrap.mode !== Engageform.Mode.Default) {
+    if (Bootstrap.mode !== EngageformMode.Default) {
       url += '?preview'
     }
 
@@ -85,7 +91,7 @@ export default class Case implements CaseProperties {
       })) || this.title || this.ordinal
     }
 
-    return Bootstrap.$http.post(url, data).then((res: API.IQuizQuestionAnswerResponse) => {
+    return Bootstrap.$http.post(url, data).then((res: QuizQuestionAnswerResponse) => {
       if ([200, 304].indexOf(res.status) !== -1) {
         if (!data.userIdent) {
           Bootstrap.user.sessionId = res.data.userIdent
@@ -95,16 +101,16 @@ export default class Case implements CaseProperties {
       } else {
         return Bootstrap.$q.reject(res.data || {})
       }
-    }).catch((res: API.IQuizQuestionAnswerResponse) => {
+    }).catch((res: QuizQuestionAnswerResponse) => {
       return Bootstrap.$q.reject(res.data || {})
     })
   }
 
-  load(): IPageSent {
-    return <IPageSent>Bootstrap.localStorage.get('page.' + this.page.id) || <IPageSent>{}
+  load(): PageSentProperties {
+    return <PageSentProperties>Bootstrap.localStorage.get('page.' + this.page.id) || <PageSentProperties>{}
   }
 
-  save(data: IPageSent): void {
+  save(data: PageSentProperties): void {
     Bootstrap.localStorage.set('page.' + this.page.id, data)
   }
 

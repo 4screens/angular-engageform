@@ -1,3 +1,4 @@
+import Bootstrap from '../../bootstrap'
 import Case from '../case'
 import { CaseType } from '../case-type.enum'
 import PageProperties from '../page-properties'

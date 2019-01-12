@@ -1,11 +1,11 @@
 export default interface SettingsProperties {
-  allowAnswerChange: boolean;
-  hideMessageAfterDelay: number;
+  allowAnswerChange: boolean
+  hideMessageAfterDelay: number
   share?: {
-    title: string;
-    imageUrl: string;
-    link: string;
-    description: string;
+    title: string
+    imageUrl: string
+    link: string
+    description: string
   },
   tracking?: {
     gtm?: {

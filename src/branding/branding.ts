@@ -1,5 +1,5 @@
-import BrandingProperties from './branding-properties'
-import BrandingValues from './branding-values'
+import BrandingProperties from './branding-properties.interface'
+import BrandingValues from './branding-values.interface'
 
 export default class Branding implements BrandingProperties {
   // Basic properties.

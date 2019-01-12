@@ -1,45 +1,60 @@
+import QuizFinish from '../api/quiz-finish.interface'
+import Branding from '../branding/branding'
+import { Meta } from '../meta/meta'
+import { Navigation } from '../navigation/navigation'
+import Page from '../page/page'
+import { Pages } from '../page/pages.interface'
+import Event from '../util/event'
+import { EngageformMode } from './engageform-mode.enum'
+import { EngageformType } from './engageform-type.enum'
+import SendAnswerCallback from './send-answer-callback'
+import SettingsProperties from './settings-properties'
+import Tabs from './tabs'
+import Texts from './texts'
+import ThemeProperties from './theme-properties'
+
 export default interface EngageformProperties {
-  sendAnswerCallback: ISendAnswerCallback;
+  sendAnswerCallback: SendAnswerCallback
 
-  enabled: boolean;
-  type: Type;
-  title: string;
-  settings: ISetting;
-  theme: ITheme;
-  tabs: ITabs;
-  branding: Branding.IBranding;
-  meta: Meta.IMeta;
+  enabled: boolean
+  type: EngageformType
+  title: string
+  settings: SettingsProperties
+  theme: ThemeProperties
+  tabs: Tabs
+  branding: Branding
+  meta: Meta
 
-  texts: ITexts;
+  texts: Texts
 
-  current: Page.IPage;
-  message: string;
-  navigation: Navigation.INavigation;
+  current: Page
+  message: string
+  navigation: Navigation
 
-  pages: Page.IPages;
-  startPages: string[];
-  endPages: string[];
-  availablePages: string[];
-  hasForms: boolean;
+  pages: Pages
+  startPages: string[]
+  endPages: string[]
+  availablePages: string[]
+  hasForms: boolean
 
-  typeName: string;
-  id: string;
+  typeName: string
+  id: string
 
-  event: Util.Event;
+  event: Event
 
-  mode: Engageform.Mode;
+  mode: EngageformMode
 
-  isType(type: Type): boolean;
+  isType(type: EngageformType): boolean
 
-  isNormalMode(): boolean;
+  isNormalMode(): boolean
 
-  isSummaryMode(): boolean;
+  isSummaryMode(): boolean
 
-  isPreviewMode(): boolean;
+  isPreviewMode(): boolean
 
-  isResultsMode(): boolean;
+  isResultsMode(): boolean
 
-  setCurrent(pageId: string);
+  setCurrent(pageId: string): void
 
-  setCurrentEndPage(): ng.IPromise<API.IQuizFinish>;
+  setCurrentEndPage(): ng.IPromise<QuizFinish>
 }

@@ -1,8 +1,9 @@
+import Bootstrap from '../../bootstrap'
 import Page from '../page'
 import { PageType } from '../page-type.enum'
 import CaseProperties from '../case-properties'
 import BuzzCase from '../case/buzz'
-import QuizQuestion from '../../api/quiz-question'
+import QuizQuestion from '../../api/quiz-question.interface'
 import { IPromise } from 'angular'
 import EngageformProperties from '../../engageform/engageform-properties'
 

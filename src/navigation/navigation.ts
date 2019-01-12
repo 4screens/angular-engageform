@@ -1,4 +1,7 @@
 import angular from 'angular'
+import Bootstrap from '../bootstrap'
+import Case from '../page/case'
+import Page from '../page/page'
 import NavigationProperties from './navigation-properties'
 import EngageformProperties from '../engageform/engageform-properties'
 import Engageform from '../engageform/engageform'
@@ -23,7 +26,7 @@ export class Navigation implements NavigationProperties {
   hasStartPages: boolean = false
   hasEndPages: boolean = false
 
-  waitingForPageChange: angular.IPromise<Page.ICase>
+  waitingForPageChange: angular.IPromise<Case>
 
   constructor(engageform: EngageformProperties) {
     this._engageform = engageform
@@ -46,7 +49,7 @@ export class Navigation implements NavigationProperties {
     return this.distance = this.position / this.size
   }
 
-  start($event): void {
+  start($event: any): void {
     this.disableDefaultAction($event)
 
     this.animate = 'swipeNext'
@@ -68,7 +71,7 @@ export class Navigation implements NavigationProperties {
     }
   }
 
-  prev($event): void {
+  prev($event: any): void {
     this.disableDefaultAction($event)
     this.stopPageChange()
     this.animate = 'swipePrev'
@@ -92,7 +95,7 @@ export class Navigation implements NavigationProperties {
     }
   }
 
-  pick($event, vcase: Page.ICase, opts = {quiet: false}): ng.IPromise<Page.ICase> {
+  pick($event: any, vcase: Case, opts = {quiet: false}): ng.IPromise<Case> {
     this.disableDefaultAction($event)
     this.stopPageChange()
     this.animate = 'swipeNext'
@@ -153,7 +156,7 @@ export class Navigation implements NavigationProperties {
   next = this.pick
   finish = this.pick
 
-  private move(vcase: Page.ICase): void {
+  private move(vcase: Case): void {
     this._engageform.event.trigger('form::pageWillChange', {
       currentPosition: this.position,
 
@@ -198,7 +201,7 @@ export class Navigation implements NavigationProperties {
     }
   }
 
-  private disableDefaultAction($event) {
+  private disableDefaultAction($event: any) {
     if ($event) {
       $event.stopPropagation()
       $event.preventDefault()

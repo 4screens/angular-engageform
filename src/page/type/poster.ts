@@ -1,7 +1,7 @@
 import Page from '../page'
 import { PageType } from '../page-type.enum'
 import EngageformProperties from '../../engageform/engageform-properties'
-import QuizQuestion from '../../api/quiz-question'
+import QuizQuestion from '../../api/quiz-question.interface'
 
 export default class Poster extends Page {
   type = PageType.Poster

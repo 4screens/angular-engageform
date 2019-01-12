@@ -1,6 +1,10 @@
+import { CaseType } from './case-type.enum'
+import Page from './page'
+import PageSentProperties from './page-sent.interface'
+
 export default interface CaseProperties {
   id: string;
-  page: IPage;
+  page: Page;
   type: CaseType;
 
   result?: number;
@@ -20,11 +24,11 @@ export default interface CaseProperties {
 
   trueBuzzerSend?(BCS: number): void;
 
-  send(): ng.IPromise<IPageSent>;
+  send(): angular.IPromise<PageSentProperties>;
 
   validate(): boolean;
 
-  load(): IPageSent;
+  load(): PageSentProperties;
 
-  save(data: IPageSent): void;
+  save(data: PageSentProperties): void;
 }

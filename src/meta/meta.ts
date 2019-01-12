@@ -1,4 +1,4 @@
-import {find} from 'lodash'
+import { find } from 'lodash'
 import MetaProperties from './meta-properties'
 import EngageformProperties from '../engageform/engageform-properties'
 

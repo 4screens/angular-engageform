@@ -1,44 +1,71 @@
+import Answer from '../api/answer.interface'
+import EmbedSettings from '../api/embed-settings.interface'
+import EndStats from '../api/end-stats.interface'
+import QuizFinishResponse from '../api/quiz-finish-response.interface'
+import QuizFinish from '../api/quiz-finish.interface'
+import QuizQuestion from '../api/quiz-question.interface'
+import Quiz from '../api/quiz.interface'
+import Result from '../api/result.interface'
+import Bootstrap from '../bootstrap'
+import Branding from '../branding/branding'
+import BrandingProperties from '../branding/branding-properties.interface'
+import { Meta } from '../meta/meta'
+import MetaProperties from '../meta/meta-properties'
+import { Navigation } from '../navigation/navigation'
+import Page from '../page/page'
+import PageProperties from '../page/page-properties'
+import { PageType } from '../page/page-type.enum'
+import { Pages } from '../page/pages.interface'
+import SummaryPage from '../page/type/summary-page'
+import Event from '../util/event'
+import { EngageformMode } from './engageform-mode.enum'
 import EngageformProperties from './engageform-properties'
+import { EngageformType } from './engageform-type.enum'
+import SendAnswerCallback from './send-answer-callback'
+import Settings from './settings'
+import Tabs from './tabs'
+import Texts from './texts'
+import { Theme } from './theme'
 
 export default class Engageform implements EngageformProperties {
   private _engageformId: string
-  private _pages: Page.IPages = {}
+  private _pages: Pages = {}
 
   private _startPages: string[] = []
   private _endPages: string[] = []
   private _availablePages: string[] = []
   private _hasForms: boolean = false
 
-  public sendAnswerCallback: ISendAnswerCallback
+  public sendAnswerCallback: SendAnswerCallback
 
   enabled: boolean = true
-  type: Type = Type.Undefined
+  type = EngageformType.Undefined
   title: string
   message: string
   settings: Settings
   theme: Theme
-  branding: Branding.Branding
+  branding: BrandingProperties
   tabs: Tabs
   themeType: string
-  embedSettings: API.IEmbedSettings
+  embedSettings: EmbedSettings
 
-  texts: ITexts
+  texts: Texts
 
-  current: Page.IPage
-  navigation: Navigation.INavigation
-  meta: Meta.IMeta
+  current: PageProperties
+  navigation: Navigation
+  meta: MetaProperties
 
-  event: Util.Event
+  event: Event
 
-  mode: Engageform.Mode
+  mode: EngageformMode
 
-  static pagesConsturctors
+  static pagesConsturctors: any
 
   get id(): string {
     return this._engageformId
   }
 
-  get pages(): Page.IPages {
+  get pages(): Pages {
     return this._pages
   }
 
@@ -55,7 +82,7 @@ export default class Engageform implements EngageformProperties {
   }
 
   get typeName(): string {
-    return Type[this.type].toLowerCase()
+    return EngageformType[this.type].toLowerCase()
   }
 
   /**
@@ -77,7 +104,7 @@ export default class Engageform implements EngageformProperties {
    * @param {Type} type Engageform type from the Type enum.
    * @returns {boolean} Is it?
    */
-  isType(type: Type): boolean {
+  isType(type: EngageformType): boolean {
     return this.type === type
   }
 
@@ -90,7 +117,7 @@ export default class Engageform implements EngageformProperties {
    * @returns {Boolean}
    */
   isNormalMode(): boolean {
-    return Boolean(this.mode === Mode.Default || this.mode === Mode.Preview)
+    return Boolean(this.mode === EngageformMode.Default || this.mode === EngageformMode.Preview)
   }
 
   /**
@@ -98,7 +125,7 @@ export default class Engageform implements EngageformProperties {
    * @returns {Boolean} Is summary mode?
    */
   isSummaryMode(): boolean {
-    return Boolean(this.mode === Mode.Summary)
+    return Boolean(this.mode === EngageformMode.Summary)
   }
 
   /**
@@ -106,7 +133,7 @@ export default class Engageform implements EngageformProperties {
    * @returns {Boolean} Is results mode?
    */
   isResultsMode(): boolean {
-    return Boolean(this.mode === Mode.Result)
+    return Boolean(this.mode === EngageformMode.Result)
   }
 
   /**
@@ -114,22 +141,22 @@ export default class Engageform implements EngageformProperties {
    * @returns {Boolean} Is preview mode?
    */
   isPreviewMode(): boolean {
-    return Boolean(this.mode === Mode.Preview)
+    return Boolean(this.mode === EngageformMode.Preview)
   }
 
-  constructor(data: API.IQuiz, mode: Engageform.Mode, pages: API.IPages = [], embedSettings: IEmbedSettings,
-              sendAnswerCallback: ISendAnswerCallback = () => {
+  constructor(data: Quiz, mode: EngageformMode, pages: Pages, embedSettings: EmbedSettings,
+              sendAnswerCallback: SendAnswerCallback = () => {
               }) {
     // As always, due to the initialisation drama, those values are only available about now.
     Engageform.pagesConsturctors = {
-      multiChoice: Page.MultiChoice,
-      pictureChoice: Page.PictureChoice,
-      rateIt: Page.Rateit,
-      forms: Page.Form,
-      startPage: Page.StartPage,
-      endPage: Page.EndPage,
-      buzzer: Page.Buzzer,
-      poster: Page.Poster
+      multiChoice: PageType.MultiChoice,
+      pictureChoice: PageType.PictureChoice,
+      rateIt: PageType.Rateit,
+      forms: PageType.Form,
+      startPage: PageType.StartPage,
+      endPage: PageType.EndPage,
+      buzzer: PageType.Buzzer,
+      poster: PageType.Poster
     }
 
     this._engageformId = data._id
@@ -147,16 +174,16 @@ export default class Engageform implements EngageformProperties {
 
     this.themeType = this.getThemeType(data.theme.backgroundColor)
 
-    this.event = new Util.Event()
+    this.event = new Event()
 
     if (data.settings && data.settings.branding) {
-      this.branding = new Branding.Branding(data.settings.branding)
+      this.branding = new Branding(data.settings.branding)
     } else {
-      this.branding = new Branding.Branding({})
+      this.branding = new Branding({})
     }
 
     // Handle pages creation.
-    let builtPages = this.buildPages(pages, this.settings)
+    let builtPages = this.buildPages(pages || [], this.settings)
 
     // Store the pages on the instance.
     builtPages.forEach(page => this.storePage(page))
@@ -165,17 +192,17 @@ export default class Engageform implements EngageformProperties {
     this._hasForms = builtPages.some(page => page.type === Page.Type.Form)
 
     // Create meta objects.
-    this.navigation = new Navigation.Navigation(this)
-    this.meta = new Meta.Meta(this)
+    this.navigation = new Navigation(this)
+    this.meta = new Meta(this)
   }
 
   // Made by Masters
-  setUserIdent(id) {
+  setUserIdent(id: any) {
     Bootstrap.user.sessionId = id
   }
 
   // Made by Masters
-  getUserIdent(id) {
+  getUserIdent(id: any) {
     return Bootstrap.user.sessionId
   }
 
@@ -190,12 +217,12 @@ export default class Engageform implements EngageformProperties {
    * @param page The page to be stored.
    * @returns {Page.Page} The same page.
    */
-  storePage(page: Page.Page): Page.Page {
-    if (page.type === Page.Type.StartPage) {
+  storePage(page: Page): Page {
+    if (page.type === PageType.StartPage) {
       if (this.isNormalMode()) {
         this._startPages.push(page.id)
       }
-    } else if (page.type === Page.Type.EndPage) {
+    } else if (page.type === PageType.EndPage) {
       if (this.isNormalMode()) {
         this._endPages.push(page.id)
       }
@@ -214,7 +241,7 @@ export default class Engageform implements EngageformProperties {
    * @param page Page data for creating the page's instance.
    * @returns {Page.Page} Built page.
    */
-  initPage(page: API.IQuizQuestion): Page.IPage {
+  initPage(page: QuizQuestion): Page {
     // Build and store the page.
     this.storePage(this.buildPages([page], this.settings)[0])
 
@@ -228,24 +255,24 @@ export default class Engageform implements EngageformProperties {
    * @param pageId Page's ID to show.
    * @returns {IPage} The visible page.
    */
-  setCurrent(pageId: string): Page.IPage {
+  setCurrent(pageId: string): Page {
     let page = this._pages[pageId]
     this.current = page
     return page
   }
 
-  setCurrentEndPage(): ng.IPromise<API.IQuizFinish> {
+  setCurrentEndPage(): angular.IPromise<QuizFinish> {
     var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformFinishUrl
     url = url.replace(':engageformId', this._engageformId)
 
-    if (Bootstrap.mode !== Mode.Default) {
+    if (Bootstrap.mode !== EngageformMode.Default) {
       url += '?preview'
     }
 
     return Bootstrap.$http.post(url, {
       userIdent: Bootstrap.user.sessionId,
       globalUserIdent: Bootstrap.user.id
-    }).then(function (res: API.IQuizFinishResponse) {
+    }).then(function (res: QuizFinishResponse) {
       if ([200, 304].indexOf(res.status) !== -1) {
         Bootstrap.localStorage.clearAll()
         Bootstrap.user.id = res.data.globalUserIdent
@@ -269,11 +296,11 @@ export default class Engageform implements EngageformProperties {
    * @param settings this.settings of the current quiz.
    * @returns {Page.Page[]} Array of pages.
    */
-  buildPages(pages: API.IPages, settings: Settings): Page.Page[] {
+  buildPages(pages: Page, settings: Settings): Page[] {
     return pages
 
     // Construct page instances.
-      .map((page: API.IQuizQuestion) => this.createPage(page, settings))
+      .map((page: QuizQuestion) => this.createPage(page, settings))
 
       // Filter no-values since there might have been unsupported types.
       .filter(val => Boolean(val))
@@ -286,7 +313,7 @@ export default class Engageform implements EngageformProperties {
    * @param settings this.settings.
    * @returns {Page.Page|void} Page instance or undefined if unsupported type.
    */
-  createPage(page: API.IQuizQuestion, settings: Settings): Page.Page {
+  createPage(page: QuizQuestion, settings: Settings): Page {
     if (Engageform.pagesConsturctors[page.type]) {
       return new Engageform.pagesConsturctors[page.type](this, page, settings)
     }
@@ -296,8 +323,8 @@ export default class Engageform implements EngageformProperties {
    * Takes the results data and applies them on the pages.
    * @param results
    */
-  setSummary(results: API.Result[]) {
-    results.forEach((questionResults: API.Result) => {
+  setSummary(results: Result[]) {
+    results.forEach((questionResults: Result) => {
       if (this._pages[questionResults.stats.questionId]) {
         this._pages[questionResults.stats.questionId].setResults(questionResults)
       }
@@ -308,7 +335,7 @@ export default class Engageform implements EngageformProperties {
    * In results mode, sets the user picked answers on the pages.
    * @param questions
    */
-  setAnswers({questions}: { questions: { [index: string]: API.Answer } }): void {
+  setAnswers({questions}: { questions: { [index: string]: Answer } }): void {
     for (let questionId in questions) {
       if (this._pages[questionId]) {
         let props = questions[questionId]
@@ -321,7 +348,7 @@ export default class Engageform implements EngageformProperties {
     }
   }
 
-  setResultPage(stats: API.EndStats[]) {
+  setResultPage(stats: EndStats[]) {
     let data = {
       _id: 'summaryPage',
       type: 'summaryPage',
@@ -331,7 +358,7 @@ export default class Engageform implements EngageformProperties {
       stats
     }
 
-    let resultPage = new Page.SummaryPage(this, <API.IQuizQuestion>data)
+    let resultPage = new SummaryPage(this, <QuizQuestion>data)
 
     this.storePage(resultPage)
   }
@@ -340,7 +367,7 @@ export default class Engageform implements EngageformProperties {
    * Creates a page showing user's outcome or score in adequate quiz types. Used only in the results-preview mode.
    * @param data
    */
-  setUserResultPage(data) {
+  setUserResultPage(data: any) {
     const pageData = {
       _id: 'RESULT_PAGE',
       type: 'summaryPage',
@@ -357,12 +384,12 @@ export default class Engageform implements EngageformProperties {
       })
     }
 
-    let resultPage = new Page.SummaryPage(this, <API.IQuizQuestion>pageData)
+    let resultPage = new SummaryPage(this, <QuizQuestion>pageData)
 
     this.storePage(resultPage)
   }
 
-  getThemeType(color) {
+  getThemeType(color: any) {
     const colorRGB = this.colorToRgb(color)
 
     if ((colorRGB.red * 0.299 + colorRGB.green * 0.587 + colorRGB.blue * 0.114) > 186) {
@@ -372,7 +399,7 @@ export default class Engageform implements EngageformProperties {
     }
   }
 
-  colorToRgb(color) {
+  colorToRgb(color: any) {
     let colorParts, temp, triplets
     if (color[0] === '#') {
       color = color.substr(1)

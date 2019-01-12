@@ -1,5 +1,6 @@
+import Bootstrap from '../bootstrap'
 import TabsProperties from './tabs-properties'
-import Quiz from '../api/quiz'
+import Quiz from '../api/quiz.interface'
 
 export default class Tabs implements TabsProperties {
   liveTitle: string = 'Live'
