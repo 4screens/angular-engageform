@@ -100,55 +100,55 @@ export default class Bootstrap {
     return EngageformMode
   }
 
-  get title(): string {
+  get title(): MaybeString {
     if (this._engageform) {
       return this._engageform.title
     }
   }
 
-  get theme(): ThemeProperties {
+  get theme(): Maybe<ThemeProperties> {
     if (this._engageform) {
       return this._engageform.theme
     }
   }
 
-  get current(): PageProperties {
+  get current(): Maybe<PageProperties> {
     if (this._engageform) {
       return this._engageform.current
     }
   }
 
-  get navigation(): NavigationProperties {
+  get navigation(): Maybe<NavigationProperties> {
     if (this._engageform) {
       return this._engageform.navigation
     }
   }
 
-  get branding(): Branding {
+  get branding(): Maybe<Branding> {
     if (this._engageform) {
       return this._engageform.branding
     }
   }
 
-  get message(): string {
+  get message(): MaybeString {
     if (this._engageform) {
       return this._engageform.message
     }
   }
 
-  get meta(): MetaProperties {
+  get meta(): Maybe<MetaProperties> {
     if (this._engageform) {
       return this._engageform.meta
     }
   }
 
-  get event(): Event {
+  get event(): Maybe<Event> {
     if (this._event) {
       return this._event
     }
   }
 
-  init(opts: API.IEmbed): angular.IPromise<Engageform.IEngageform> {
+  init(opts: Embed): angular.IPromise<Engageform> {
     // Options are required and need to have a quiz ID.
     if (!opts || !opts.id) {
       return Bootstrap.$q.reject({
