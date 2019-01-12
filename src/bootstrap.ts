@@ -1,11 +1,12 @@
 import angular from 'angular'
 import app from './app'
+import Branding from './branding/branding'
+import AppConfig from './config.interface'
 import { EngageformMode } from './engageform/engageform-mode.enum'
 import User from './user/user'
 import Event from './util/event'
 import EngageformProperties from './engageform/engageform-properties'
 import EngageformInstances from './engageform/engageform-instances'
-import ApiConfig from './api/api-config.interface'
 import Outcome from './engageform/form-types/outcome'
 import Poll from './engageform/form-types/poll'
 import Score from './engageform/form-types/score'
@@ -15,17 +16,20 @@ import { EngageformType } from './engageform/engageform-type.enum'
 import ThemeProperties from './engageform/theme-properties'
 import PageProperties from './page/page-properties'
 import NavigationProperties from './navigation/navigation-properties'
-import BrandingProperties from './branding/branding-properties.interface'
 import MetaProperties from './meta/meta-properties'
 
 export default class Bootstrap {
+  static getConfig<K extends keyof AppConfig>(key: K): AppConfig[K] {
+    return Bootstrap.config[key]
+  }
+
   static $http: ng.IHttpService
   static $q: ng.IQService
   static $timeout: ng.ITimeoutService
   static cloudinary: any
   static localStorage: ng.local.storage.ILocalStorageService
   static user: User
-  static config
+  static config: AppConfig
   static mode = EngageformMode.Undefined
   Engageform: EngageformProperties
 
@@ -42,7 +46,7 @@ export default class Bootstrap {
   static modes
 
   constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, cloudinary: any,
-              localStorage: ng.local.storage.ILocalStorageService, ApiConfig: ApiConfig) {
+              localStorage: ng.local.storage.ILocalStorageService, ApiConfig: AppConfig) {
     Bootstrap.$http = $http
     Bootstrap.$q = $q
     Bootstrap.$timeout = $timeout
@@ -120,7 +124,7 @@ export default class Bootstrap {
     }
   }
 
-  get branding(): BrandingProperties {
+  get branding(): Branding {
     if (this._engageform) {
       return this._engageform.branding
     }
@@ -259,5 +263,5 @@ export default class Bootstrap {
   }
 }
 
-Bootstrap.$inject = ['$http', '$q', '$timeout', 'cloudinary', 'localStorageService', 'ApiConfig']
+Bootstrap.$inject = ['$http', '$q', '$timeout', 'cloudinary', 'localStorageService', 'AppConfig']
 app.service('Engageform', Bootstrap)

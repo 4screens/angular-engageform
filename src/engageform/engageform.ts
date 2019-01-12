@@ -8,7 +8,6 @@ import Quiz from '../api/quiz.interface'
 import Result from '../api/result.interface'
 import Bootstrap from '../bootstrap'
 import Branding from '../branding/branding'
-import BrandingProperties from '../branding/branding-properties.interface'
 import { Meta } from '../meta/meta'
 import MetaProperties from '../meta/meta-properties'
 import { Navigation } from '../navigation/navigation'
@@ -44,7 +43,7 @@ export default class Engageform implements EngageformProperties {
   message: string
   settings: Settings
   theme: Theme
-  branding: BrandingProperties
+  branding: Branding
   tabs: Tabs
   themeType: string
   embedSettings: EmbedSettings
@@ -176,11 +175,7 @@ export default class Engageform implements EngageformProperties {
 
     this.event = new Event()
 
-    if (data.settings && data.settings.branding) {
-      this.branding = new Branding(data.settings.branding)
-    } else {
-      this.branding = new Branding({})
-    }
+    this.branding = Branding.create(data.settings && data.settings.branding)
 
     // Handle pages creation.
     let builtPages = this.buildPages(pages || [], this.settings)

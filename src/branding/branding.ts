@@ -1,27 +1,43 @@
-import BrandingProperties from './branding-properties.interface'
-import BrandingValues from './branding-values.interface'
+import Bootstrap from '../bootstrap'
+import { BrandingConfig } from '../config.interface'
 
-export default class Branding implements BrandingProperties {
-  // Basic properties.
+type BrandingCreationProperties = Partial<BrandingConfig>
+
+export default class Branding {
+  static create(brandingProperties: BrandingCreationProperties = {}): Branding {
+    return new Branding(brandingProperties, Branding.arePropertiesCustom(brandingProperties))
+  }
+
+  private static arePropertiesCustom({text, link, imageUrl}: BrandingCreationProperties): boolean {
+    return Boolean(Branding.isTextCustom(text) || link || Branding.isImageCustom(imageUrl))
+  }
+
+  private static isTextCustom(text?: string): text is string {
+    return typeof text !== 'undefined'
+  }
+
+  private static isImageCustom(imageUrl?: string): boolean {
+    return typeof imageUrl !== 'undefined' && imageUrl !== Branding.default.imageUrl
+  }
+
+  private static default = Bootstrap.getConfig('backend').branding
+
   private _text: string
   private _link: string
   private _imageUrl: string
-  private _isCustomLogo: boolean = false
+  private _isCustomLogo = false
   private _enabled: boolean
 
-  // Marks the branding if it is a custom, ie. user defined at least one own value.
-  private _isCustom: boolean = false
-
   public get isCustom(): boolean {
-    return this._isCustom
+    return this._custom
+  }
+
+  public get isDefault(): boolean {
+    return !this._custom
   }
 
   public get isCustomLogo(): boolean {
     return this._isCustomLogo
-  }
-
-  public get isDefault(): boolean {
-    return !this._isCustom
   }
 
   public get imageUrl(): string {
@@ -40,35 +56,18 @@ export default class Branding implements BrandingProperties {
     return this._enabled
   }
 
-  constructor(data: BrandingValues = {}) {
-    var imgUrl
-    var defaultBranding = Bootstrap.config.backend.branding
+  private constructor({state, text, link, imageUrl}: BrandingCreationProperties = {}, private _custom: boolean) {
+    // State of the enabled branding is false, so negating that.
+    this._enabled = !state
 
-    // Is branding enabled? (State of the enabled branding is false, so negating that).
-    this._enabled = !data.state
+    this._text = Branding.isTextCustom(text) ? text : Branding.default.text
+    this._link = link || Branding.default.link
 
-    // If there's any branding data, it means that this is a custom branding.
-    if (data.text || data.link || data.imageUrl) {
-      this._isCustom = true
-    }
-
-    // Set the branding properties form the data object or from the default values.
-    this._text = typeof data.text === 'undefined' ? defaultBranding.text : data.text
-    this._link = data.link || defaultBranding.link
-
-    // Image URL is a bit complicated.
-    if (typeof data.imageUrl === 'undefined') {
-      imgUrl = defaultBranding.imageUrl
-    } else {
-      imgUrl = data.imageUrl
+    if (Branding.isImageCustom(imageUrl)) {
+      this._imageUrl = imageUrl ? `${Bootstrap.getConfig('backend').api + Bootstrap.getConfig('backend').imagesUrl}/${imageUrl}` : ''
       this._isCustomLogo = true
-    }
-
-    // The image's URL is a bit different if it is a default one, than when it is a custom.
-    if (imgUrl === defaultBranding.imageUrl) {
-      this._imageUrl = Bootstrap.config.backend.api + imgUrl
     } else {
-      this._imageUrl = imgUrl ? Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + imgUrl : ''
+      this._imageUrl = Bootstrap.config.backend.api + imageUrl
     }
   }
 }
