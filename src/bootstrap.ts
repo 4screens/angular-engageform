@@ -4,22 +4,20 @@ import app from './app'
 import Branding from './branding/branding'
 import AppConfig from './config.interface'
 import Engageform from './engageform/engageform'
-import { EngageformMode } from './engageform/engageform-mode.enum'
-import { Maybe, MaybeString } from './types'
-import User from './user/user'
-import Event from './util/event'
-import EngageformProperties from './engageform/engageform-properties'
 import EngageformInstances from './engageform/engageform-instances'
+import { EngageformMode } from './engageform/engageform-mode.enum'
+import { EngageformType } from './engageform/engageform-type.enum'
+import Live from './engageform/form-types/live'
 import Outcome from './engageform/form-types/outcome'
 import Poll from './engageform/form-types/poll'
 import Score from './engageform/form-types/score'
 import Survey from './engageform/form-types/survey'
-import Live from './engageform/form-types/live'
-import { EngageformType } from './engageform/engageform-type.enum'
 import ThemeProperties from './engageform/theme-properties'
+import { Navigation } from './navigation/navigation'
 import PageProperties from './page/page-properties'
-import NavigationProperties from './navigation/navigation-properties'
-import MetaProperties from './meta/meta-properties'
+import { Maybe, MaybeString } from './types'
+import User from './user/user'
+import Event from './util/event'
 
 export default class Bootstrap {
   static getConfig<K extends keyof AppConfig>(key: K): AppConfig[K] {
@@ -35,7 +33,7 @@ export default class Bootstrap {
   static config: AppConfig
   static mode = EngageformMode.Undefined
 
-  private _engageform: EngageformProperties
+  private _engageform: Engageform
   private _event: Event
 
   private static _instances: EngageformInstances = {}
@@ -114,7 +112,7 @@ export default class Bootstrap {
     }
   }
 
-  get navigation(): Maybe<NavigationProperties> {
+  get navigation(): Maybe<Navigation> {
     if (this._engageform) {
       return this._engageform.navigation
     }

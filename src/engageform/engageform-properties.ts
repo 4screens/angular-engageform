@@ -1,6 +1,6 @@
 import QuizFinish from '../api/quiz-finish.interface'
 import Branding from '../branding/branding'
-import { Meta } from '../meta/meta'
+import Meta from '../meta/meta'
 import { Navigation } from '../navigation/navigation'
 import Page from '../page/page'
 import { Pages } from '../page/pages.interface'

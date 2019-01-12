@@ -1,13 +1,16 @@
 import angular from 'angular'
 import Bootstrap from '../bootstrap'
-import Case from '../page/case'
-import Page from '../page/page'
-import NavigationProperties from './navigation-properties'
-import EngageformProperties from '../engageform/engageform-properties'
 import Engageform from '../engageform/engageform'
+import { EngageformType } from '../engageform/engageform-type.enum'
+import Case from '../page/case'
+import { Nullable } from '../types'
 
-export class Navigation implements NavigationProperties {
-  private _engageform: EngageformProperties
+export class Navigation {
+  static fromEnageform(engageform: Engageform): Navigation {
+    return new Navigation(engageform)
+  }
+
+  private _engageform: Engageform
 
   enabled: boolean = false
   position: number = 0
@@ -26,18 +29,18 @@ export class Navigation implements NavigationProperties {
   hasStartPages: boolean = false
   hasEndPages: boolean = false
 
-  waitingForPageChange: angular.IPromise<Case>
+  waitingForPageChange: Nullable<angular.IPromise<Case>> = null
 
-  constructor(engageform: EngageformProperties) {
+  private constructor(engageform: Engageform) {
     this._engageform = engageform
+
     this.size = engageform.availablePages.length
+    this.hasEndPages = Boolean(engageform.endPages.length)
 
-    this.hasEndPages = Boolean(this._engageform.endPages.length)
-
-    if (this._engageform.startPages.length) {
+    if (engageform.startPages.length) {
       this.hasStart = true
       this.hasStartPages = true
-      this._engageform.setCurrent(this._engageform.startPages[0])
+      this._engageform.setCurrent(engageform.startPages[0])
     } else {
       this.enabled = true
       this.move(null)
@@ -102,7 +105,7 @@ export class Navigation implements NavigationProperties {
 
     // Move page but don't do anything else when the quiz is nor in a normal mode.
     if (!this._engageform.isNormalMode()) {
-      let defer = Bootstrap.$q.defer()
+      let defer = Bootstrap.$q.defer<Case>()
       defer.resolve(vcase)
       this.move(vcase)
       return defer.promise
@@ -181,7 +184,7 @@ export class Navigation implements NavigationProperties {
         // Finisher is not available when the engageform is of a type "poll" and doesn't have any form-type question.
         // Also when it's not working in normal mode (ie. summary doesn't submit).
         this.hasFinish = this._engageform.isNormalMode() &&
-          !(this._engageform.isType(Engageform.Type.Poll) && !this._engageform.hasForms)
+          !(this._engageform.isType(EngageformType.Poll) && !this._engageform.hasForms)
       }
 
     } else {

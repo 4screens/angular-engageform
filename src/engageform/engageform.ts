@@ -8,8 +8,7 @@ import Quiz from '../api/quiz.interface'
 import Result from '../api/result.interface'
 import Bootstrap from '../bootstrap'
 import Branding from '../branding/branding'
-import { Meta } from '../meta/meta'
-import MetaProperties from '../meta/meta-properties'
+import Meta from '../meta/meta'
 import { Navigation } from '../navigation/navigation'
 import Page from '../page/page'
 import PageProperties from '../page/page-properties'
@@ -52,7 +51,7 @@ export default class Engageform implements EngageformProperties {
 
   current: PageProperties
   navigation: Navigation
-  meta: MetaProperties
+  meta: Meta
 
   event: Event
 
@@ -184,11 +183,11 @@ export default class Engageform implements EngageformProperties {
     builtPages.forEach(page => this.storePage(page))
 
     // Does the quiz have any form-type pages?
-    this._hasForms = builtPages.some(page => page.type === Page.Type.Form)
+    this._hasForms = builtPages.some(page => page.type === PageType.Form)
 
     // Create meta objects.
-    this.navigation = new Navigation(this)
-    this.meta = new Meta(this)
+    this.navigation = Navigation.fromEnageform(this)
+    this.meta = Meta.fromEngageform(this)
   }
 
   // Made by Masters
