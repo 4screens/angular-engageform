@@ -1,4 +1,6 @@
 import Bootstrap from '../../bootstrap'
+import {defaults} from 'lodash'
+import { MaybeBoolean, MaybeNumber, MaybeString } from '../../types'
 import { PageType } from '../page-type.enum'
 import Page from '../page'
 import SocialData from '../social-data.interface'
@@ -7,33 +9,35 @@ import QuizQuestion from '../../api/quiz-question.interface'
 import SettingsProperties from '../../engageform/settings-properties'
 
 export class EndPage extends Page {
-  type = PageType.EndPage
+  readonly type = PageType.EndPage
+  readonly isCoverPage = true
 
   /* outcome */
-  button: string
-  outcome: string
-  social: boolean
+  button: MaybeString
+  outcome: MaybeString
+  social: MaybeBoolean
 
   /* score */
-  score: number
-  rangeMin: number
-  rangeMax: number
-  exitLink: boolean
-  link: string
+  score: MaybeNumber
+  rangeMin: MaybeNumber
+  rangeMax: MaybeNumber
+  exitLink: MaybeBoolean
+  link: MaybeString
   socialData: SocialData
 
-  isCoverPage = true
 
   constructor(engageform: EngageformProperties, data: QuizQuestion, settings: SettingsProperties) {
     super(engageform, data)
-
-    this.socialData = <SocialData>{
-      title: settings.share.title,
-      description: settings.share.description,
-      // Made by Masters
-      imageUrl: Bootstrap.cloudinary.preparePreviewImageUrl(settings.share.imageUrl, 680),
-      link: settings.share.link
+    const shareSettings: SocialData = defaults({}, settings.share, {
+      title: '',
+      description: '',
+      link: '',
+      imageUrl: ''
+    })
+    if (shareSettings.imageUrl) {
+      shareSettings.imageUrl = Bootstrap.cloudinary.preparePreviewImageUrl(shareSettings.imageUrl, 680)
     }
+    this.socialData = shareSettings
 
     if (data.coverPage) {
       this.button = data.coverPage.buttonText
@@ -65,13 +69,13 @@ export class EndPage extends Page {
 
   get fbLink() {
     if (
-      Bootstrap.config.backend && Bootstrap.config.backend.domain &&
-      Bootstrap.config.share && Bootstrap.config.share.facebook &&
+      Bootstrap.getConfig('backend') && Bootstrap.getConfig('backend').domain &&
+      Bootstrap.getConfig('share') && Bootstrap.getConfig('share').facebook &&
       this.socialData && this.socialData.title && this.socialData.description &&
       this.socialData.imageUrl && this.engageform && this.engageform.id
     ) {
       this.personalizeShares()
-      return Bootstrap.config.backend.domain + Bootstrap.config.share.facebook + '?quizId=' + this.engageform.id +
+      return Bootstrap.getConfig('backend').domain + Bootstrap.getConfig('share').facebook + '?quizId=' + this.engageform.id +
         '&description=' + encodeURIComponent(this.socialData.description) + '&name=' +
         encodeURIComponent(this.socialData.title) + '&image=' + this.socialData.imageUrl
     }

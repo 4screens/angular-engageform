@@ -6,7 +6,7 @@ import EngageformProperties from '../../engageform/engageform-properties'
 import QuizQuestion from '../../api/quiz-question.interface'
 
 export default class SummaryPage extends Page {
-  type = PageType.SummaryPage
+  readonly type = PageType.SummaryPage
   stats: EndStats[]
 
   constructor(engageform: EngageformProperties, data: QuizQuestion) {

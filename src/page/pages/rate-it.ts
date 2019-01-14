@@ -6,7 +6,7 @@ import IterationCase from '../case/iteration'
 import Result from '../../api/result.interface'
 
 export default class RateIt extends Page {
-  type = CaseType.Rateit
+  readonly type = CaseType.Rateit
 
   result: number
   labelMin: string

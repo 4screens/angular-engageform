@@ -1,4 +1,5 @@
 export default interface AppConfig {
+  share: ShareConfiguration
   cloudinary: CloudinaryConfig
   backend: BackendConfig
   engageform: EngageformConfig
@@ -26,4 +27,8 @@ export interface CloudinaryConfig {
   accountName: string
   uploadFolder: string
   domain: string
+}
+
+export interface ShareConfiguration {
+  facebook?: string
 }

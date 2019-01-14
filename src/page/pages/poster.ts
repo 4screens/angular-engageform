@@ -4,7 +4,7 @@ import EngageformProperties from '../../engageform/engageform-properties'
 import QuizQuestion from '../../api/quiz-question.interface'
 
 export default class Poster extends Page {
-  type = PageType.Poster
+  readonly type = PageType.Poster
   private button: string
   private exitLink: boolean
   private link: string

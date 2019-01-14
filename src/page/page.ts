@@ -13,6 +13,9 @@ import PageSettings from './page-settings'
 import { PageType } from './page-type.enum'
 
 export default abstract class Page implements PageProperties {
+  static Type = PageType
+  static CaseType = CaseType
+
   private _pageId: string
   private _engageform: EngageformProperties
 
@@ -32,14 +35,6 @@ export default abstract class Page implements PageProperties {
 
   get engageform(): EngageformProperties {
     return this._engageform
-  }
-
-  get Type() {
-    return PageType
-  }
-
-  get CaseType() {
-    return CaseType
   }
 
   constructor(engageform: EngageformProperties, data: QuizQuestion) {

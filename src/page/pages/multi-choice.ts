@@ -7,7 +7,7 @@ import { TextCase } from '../case/text'
 import PageSentProperties from '../page-sent.interface'
 
 export default class MultiChoice extends Page {
-  type = PageType.MultiChoice
+  readonly type = PageType.MultiChoice
 
   constructor(engageform: EngageformProperties, data: QuizQuestion) {
     super(engageform, data)
