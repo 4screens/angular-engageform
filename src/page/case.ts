@@ -115,13 +115,7 @@ export default class Case implements CaseProperties {
   }
 
   validate(): boolean {
-    // "abstract"
     return true
-  }
-
-  // Buzzer need extra send, so we made this abstract
-  trueBuzzerSend(BCS: number) {
-    // "abstract"
   }
 }
 
