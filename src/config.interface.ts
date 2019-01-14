@@ -1,9 +1,15 @@
 export default interface AppConfig {
   cloudinary: CloudinaryConfig
   backend: BackendConfig
+  engageform: EngageformConfig
+}
+
+export interface EngageformConfig {
+  pageResponseUrl: string
 }
 
 export interface BackendConfig {
+  domain: string
   api: string,
   imagesUrl: string
   branding: BrandingConfig

@@ -4,27 +4,27 @@ import Result from '../api/result.interface'
 import Bootstrap from '../bootstrap'
 import EngageformProperties from '../engageform/engageform-properties'
 import Case from './case'
+import { CaseType } from './case-type.enum'
 import PageProperties from './page-properties'
 import PageSentProperties from './page-sent.interface'
 import PageSettingsProperties from './page-settings-properties'
-import CaseProperties from './case-properties'
 import QuizQuestion from '../api/quiz-question.interface'
 import PageSettings from './page-settings'
 import { PageType } from './page-type.enum'
 
-export default class Page implements PageProperties {
+export default abstract class Page implements PageProperties {
   private _pageId: string
   private _engageform: EngageformProperties
 
-  type: PageType
-  title: string = ''
-  description: string = ''
-  media: string = ''
-  mediaWidth: number
-  mediaHeight: number
-  filled: boolean
+  type: PageType = PageType.Undefined
+  title = ''
+  description = ''
+  media = ''
+  mediaWidth = 0
+  mediaHeight = 0
+  filled = false
   settings: PageSettingsProperties
-  cases: CaseProperties[] = []
+  cases: Case[] = []
 
   get id(): string {
     return this._pageId
@@ -35,7 +35,7 @@ export default class Page implements PageProperties {
   }
 
   get Type() {
-    return Type
+    return PageType
   }
 
   get CaseType() {

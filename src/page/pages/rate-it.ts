@@ -2,7 +2,6 @@ import Page from '../page'
 import { CaseType } from '../case-type.enum'
 import EngageformProperties from '../../engageform/engageform-properties'
 import QuizQuestion from '../../api/quiz-question.interface'
-import CaseProperties from '../case-properties'
 import IterationCase from '../case/iteration'
 import Result from '../../api/result.interface'
 

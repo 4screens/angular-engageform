@@ -14,7 +14,7 @@ export default class User {
 
   get id(): NullableString {
     if (!this._id) {
-      this._id = Bootstrap.localStorage.get<string>(User.idKey)
+      this._id = Bootstrap.localStorage.get<NullableString>(User.idKey)
     }
     return this._id
   }
@@ -26,7 +26,7 @@ export default class User {
 
   get sessionId(): NullableString {
     if (!this._sessionId) {
-      this._sessionId = Bootstrap.localStorage.get<string | null>(User.sessionIdKey)
+      this._sessionId = Bootstrap.localStorage.get<NullableString>(User.sessionIdKey)
     }
     return this._sessionId
   }

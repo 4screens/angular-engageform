@@ -1,12 +1,12 @@
 export default interface PageSentProperties {
-  selectedCaseId: string
-  correctCaseId: string
-  selectedValue: number
-  result: number
-  results: {
+  selectedCaseId?: string
+  correctCaseId?: string
+  selectedValue?: number
+  result?: number
+  results?: {
     [index: string]: number
   }
-  inputs: {
+  inputs?: {
     _id: string
     value: string
   }[]

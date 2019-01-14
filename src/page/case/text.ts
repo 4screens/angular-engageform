@@ -1,16 +1,15 @@
 import Bootstrap from '../../bootstrap'
+import { WithId } from '../../types'
 import Case from '../case'
 import { CaseType } from '../case-type.enum'
-import PageProperties from '../page-properties'
+import Page from '../page'
 import PageSentProperties from '../page-sent.interface'
 
 export class TextCase extends Case {
-  type = CaseType.Text
-  title: string
+  readonly type = CaseType.Text
 
-  constructor(page: PageProperties, data: any) {
+  constructor(page: Page, data: WithId & { text: string }) {
     super(page, data)
-
     this.title = data.text
   }
 
@@ -20,7 +19,7 @@ export class TextCase extends Case {
     }
 
     return super.makeSend({selectedAnswerId: this.id}).then((res) => {
-      var data: PageSentProperties = <PageSentProperties>{}
+      const data: PageSentProperties = <PageSentProperties>{}
 
       if (res.selectedAnswerId) {
         data.selectedCaseId = res.selectedAnswerId
@@ -30,7 +29,7 @@ export class TextCase extends Case {
         data.correctCaseId = res.correctAnswerId
       }
 
-      for (var caseId in res.stats) {
+      for (const caseId in res.stats) {
         if (res.stats.hasOwnProperty(caseId)) {
           data.results = data.results || {}
           if (/.{24}/.test(caseId)) {

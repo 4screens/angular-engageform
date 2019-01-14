@@ -2,42 +2,29 @@ import QuizQuestionAnswerResponse from '../api/quiz-question-answer-response.int
 import QuizQuestionAnswer from '../api/quiz-question-answer.interface'
 import Bootstrap from '../bootstrap'
 import { EngageformMode } from '../engageform/engageform-mode.enum'
-import CaseProperties from './case-properties'
+import { Id, MaybeNumber, MaybeString, WithId } from '../types'
 import { CaseType } from './case-type.enum'
 import Page from './page'
-import PageProperties from './page-properties'
 import PageSentProperties from './page-sent.interface'
 
-export default class Case implements CaseProperties {
-  private _caseId: string
-  private _page: PageProperties
+export default abstract class Case {
+  // TODO: how to type this?
+  // static create<T extends Case>(caseConstructor: T) {
+  //   return new caseConstructor()
+  // }
 
-  type = CaseType.Undefined
+  readonly id: Id
+  readonly type: CaseType = CaseType.Undefined
 
-  selected: boolean = false
-  correct: boolean = false
-  incorrect: boolean = false
+  selected = false
+  correct = false
+  incorrect = false
+  result = 0
+  title: MaybeString
+  error: MaybeString;
 
-  result: number = 0
-
-  title = undefined
-  ordinal = undefined
-
-  get id(): string {
-    return this._caseId
-  }
-
-  set id(caseId: string) {
-    this._caseId = caseId
-  }
-
-  get page(): Page {
-    return this._page
-  }
-
-  constructor(page: Page, data: any) {
-    this._caseId = data._id
-    this._page = page
+  protected constructor(public readonly page: Page, {_id}: WithId) {
+    this.id = _id
   }
 
   /**
@@ -47,8 +34,8 @@ export default class Case implements CaseProperties {
    * @returns {boolean} Should the indicator be shown?
    */
   shouldShowIndicator(): boolean {
-    return !this._page.engageform.isSummaryMode() && !this._page.engageform.isResultsMode()
-      && this._page.settings.showCorrectAnswer && (this.selected || (this._page.filled && this.correct))
+    return !this.page.engageform.isSummaryMode() && !this.page.engageform.isResultsMode()
+      && this.page.settings.showCorrectAnswer && (this.selected || (this.page.filled && this.correct))
   }
 
   /**
@@ -56,8 +43,8 @@ export default class Case implements CaseProperties {
    * @returns {boolean} Should result be shown.
    */
   shouldShowResults(): boolean {
-    return this._page.engageform.isSummaryMode() ||
-      this._page.settings.showResults && this._page.filled && !this._page.engageform.isResultsMode()
+    return this.page.engageform.isSummaryMode() ||
+      this.page.settings.showResults && this.page.filled && !this.page.engageform.isResultsMode()
   }
 
   /**
@@ -66,37 +53,37 @@ export default class Case implements CaseProperties {
    * @returns {IPromise<T>}
    */
   send(): ng.IPromise<PageSentProperties> {
-    var deferred = Bootstrap.$q.defer()
+    const deferred = Bootstrap.$q.defer<PageSentProperties>()
     deferred.resolve(<PageSentProperties>{})
     return deferred.promise
   }
 
-  makeSend(data: API.IQuizQuestionAnswer): ng.IPromise<QuizQuestionAnswer> {
-    var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.pageResponseUrl
+  makeSend(questionAnswer: QuizQuestionAnswer): angular.IPromise<QuizQuestionAnswer> {
+    let url = Bootstrap.getConfig('backend').domain + Bootstrap.getConfig('engageform').pageResponseUrl
     url = url.replace(':pageId', this.page.id)
 
     if (Bootstrap.mode !== EngageformMode.Default) {
       url += '?preview'
     }
 
-    data.quizQuestionId = this.page.id
-    data.userIdent = Bootstrap.user.sessionId
+    questionAnswer.quizQuestionId = this.page.id
+    questionAnswer.userIdent = Bootstrap.user.sessionId
 
-    const eventValies = {
-      questionId: this._page.id,
-      questionTitle: this._page.title,
+    const eventValues = {
+      questionId: this.page.id,
+      questionTitle: this.page.title,
       answerId: this.id,
-      answerValue: (data.inputs && data.inputs.map(function (input) {
+      answerValue: (questionAnswer.inputs && questionAnswer.inputs.map( (input) => {
         return input.value
-      })) || this.title || this.ordinal
+      })) || this.title || this.ordinal // TODO: Possibly create a method to extract this value from classes.
     }
 
-    return Bootstrap.$http.post(url, data).then((res: QuizQuestionAnswerResponse) => {
+    return Bootstrap.$http.post(url, questionAnswer).then((res: QuizQuestionAnswerResponse) => {
       if ([200, 304].indexOf(res.status) !== -1) {
-        if (!data.userIdent) {
+        if (!questionAnswer.userIdent && res.data.userIdent) {
           Bootstrap.user.sessionId = res.data.userIdent
         }
-        this._page._engageform.event.trigger('answer', eventValies)
+        this.page._engageform.event.trigger('answer', eventValues)
         return res.data
       } else {
         return Bootstrap.$q.reject(res.data || {})
@@ -107,7 +94,7 @@ export default class Case implements CaseProperties {
   }
 
   load(): PageSentProperties {
-    return <PageSentProperties>Bootstrap.localStorage.get('page.' + this.page.id) || <PageSentProperties>{}
+    return Bootstrap.localStorage.get<PageSentProperties>('page.' + this.page.id) || ({} as PageSentProperties)
   }
 
   save(data: PageSentProperties): void {

@@ -1,8 +1,8 @@
+import Case from '../case'
 import Page from '../page'
 import { PageType } from '../page-type.enum'
 import EngageformProperties from '../../engageform/engageform-properties'
 import QuizQuestion from '../../api/quiz-question.interface'
-import CaseProperties from '../case-properties'
 import ImageCase from '../case/image'
 import PageSentProperties from '../page-sent.interface'
 
@@ -27,7 +27,7 @@ export default class PictureChoice extends Page {
     }
   }
 
-  createCase(answer: any): CaseProperties {
+  createCase(answer: any): Case {
     return new ImageCase(this, answer)
   }
 
@@ -40,7 +40,7 @@ export default class PictureChoice extends Page {
   }
 
   selectAnswer(sent: any) {
-    this.cases.map((vcase: CaseProperties) => {
+    this.cases.map((vcase: Case) => {
       vcase.selected = false
       vcase.correct = false
       vcase.incorrect = false

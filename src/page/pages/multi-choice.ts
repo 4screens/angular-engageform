@@ -1,10 +1,10 @@
+import Case from '../case'
 import Page from '../page'
 import { PageType } from '../page-type.enum'
 import EngageformProperties from '../../engageform/engageform-properties'
 import QuizQuestion from '../../api/quiz-question.interface'
 import { TextCase } from '../case/text'
 import PageSentProperties from '../page-sent.interface'
-import CaseProperties from '../case-properties'
 
 export default class MultiChoice extends Page {
   type = PageType.MultiChoice
@@ -27,7 +27,7 @@ export default class MultiChoice extends Page {
     }
   }
 
-  createCase(answer: any): CaseProperties {
+  createCase(answer: any): Case {
     return new TextCase(this, answer)
   }
 
@@ -40,7 +40,7 @@ export default class MultiChoice extends Page {
   }
 
   selectAnswer(sent: any) {
-    this.cases.map((vcase: CaseProperties) => {
+    this.cases.map((vcase: Case) => {
       vcase.selected = false
       vcase.correct = false
       vcase.incorrect = false

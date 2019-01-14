@@ -1,9 +1,9 @@
 import Bootstrap from '../../bootstrap'
+import Case from '../case'
 import { PageType } from '../page-type.enum'
 import Page from '../page'
 import EngageformProperties from '../../engageform/engageform-properties'
 import QuizQuestion from '../../api/quiz-question.interface'
-import CaseProperties from '../case-properties'
 import InputCase from '../case/input'
 import PageSentProperties from '../page-sent.interface'
 import Result from '../../api/result.interface'
@@ -30,11 +30,11 @@ export default class Form extends Page {
     }
   }
 
-  createCase(input: any): CaseProperties {
+  createCase(input: any): Case {
     return new InputCase(this, input)
   }
 
-  send(vcase: CaseProperties): ng.IPromise<PageSentProperties> {
+  send(vcase: Case): ng.IPromise<PageSentProperties> {
     var deferred = Bootstrap.$q.defer()
     var validated = true
 
@@ -61,7 +61,7 @@ export default class Form extends Page {
   }
 
   selectAnswer(sent: any) {
-    this.cases.map((vcase: CaseProperties) => {
+    this.cases.map((vcase: Case) => {
       vcase.value = sent[vcase.id] || ''
 
       // In results mode, there might be data containing user inputs, so set it as the case value.

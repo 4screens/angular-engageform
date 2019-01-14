@@ -1,20 +1,17 @@
 import Bootstrap from '../../bootstrap'
+import { MaybeNumber, WithId } from '../../types'
 import Case from '../case'
 import { CaseType } from '../case-type.enum'
-import PageProperties from '../page-properties'
+import Page from '../page'
 import PageSentProperties from '../page-sent.interface'
 
 export default class IterationCase extends Case {
-  type = CaseType.Iteration
-
-  selected: boolean = false
-
-  ordinal: number
+  readonly type = CaseType.Iteration
   symbol: string
+  ordinal: number
 
-  constructor(page: PageProperties, data: any) {
+  constructor(page: Page, data: WithId & { ordinal: number, symbol: string }) {
     super(page, data)
-
     this.ordinal = data.ordinal
     this.symbol = data.symbol
   }
@@ -24,21 +21,22 @@ export default class IterationCase extends Case {
       return Bootstrap.$q.reject({textKey: 'CHANGING_NOT_ALLOWED', message: 'Changing answer is not allowed'})
     }
 
-    return super.makeSend({quizQuestionId: this.page.id, rateItValue: this.ordinal}).then((res) => {
-      var data: PageSentProperties = <PageSentProperties>{}
+    return super.makeSend({quizQuestionId: this.page.id, rateItValue: this.ordinal})
+      .then((res) => {
+        const data: PageSentProperties = {} as PageSentProperties
 
-      if (res.selectedValue) {
-        data.selectedValue = res.selectedValue
-      }
+        if (res.selectedValue) {
+          data.selectedValue = res.selectedValue
+        }
 
-      if (res.avgRateItValue) {
-        data.result = +res.avgRateItValue
-      }
+        if (res.avgRateItValue) {
+          data.result = +res.avgRateItValue
+        }
 
-      super.save(data)
-      this.page.selectAnswer(data)
+        super.save(data)
+        this.page.selectAnswer(data)
 
-      return data
-    })
+        return data
+      })
   }
 }

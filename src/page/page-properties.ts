@@ -2,7 +2,6 @@ import QuizQuestion from '../api/quiz-question.interface'
 import Result from '../api/result.interface'
 import EngageformProperties from '../engageform/engageform-properties'
 import Case from './case'
-import CaseProperties from './case-properties'
 import PageSentProperties from './page-sent.interface'
 import PageSettingsProperties from './page-settings-properties'
 import { PageType } from './page-type.enum'
@@ -19,7 +18,7 @@ export default interface PageProperties {
   mediaHeight: number;
   filled: boolean;
   settings: PageSettingsProperties;
-  cases: CaseProperties[];
+  cases: Case[];
 
   image?: string;
   outcome?: string;

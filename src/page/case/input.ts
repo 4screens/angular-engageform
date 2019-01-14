@@ -1,52 +1,48 @@
 import Bootstrap from '../../bootstrap'
+import { MaybeNumber, MaybeString, WithId } from '../../types'
 import Case from '../case'
 import { CaseType } from '../case-type.enum'
-import PageProperties from '../page-properties'
+import Page from '../page'
 import PageSentProperties from '../page-sent.interface'
 
 export default class InputCase extends Case {
-  type = CaseType.Input
+  readonly type = CaseType.Input
+  expectedValue: MaybeString;
+  value = '';
 
-  title: string
-  correct: boolean
-  incorrect: boolean
-  expectedValue: string
-  value: string
-  error: string
-
-  constructor(page: PageProperties, data: any) {
+  constructor(page: Page, data: WithId & { label: string, type: string }) {
     super(page, data)
-
     this.title = data.label
     this.expectedValue = data.type
-    this.value = ''
   }
 
   send() {
-    var data: PageSentProperties = <PageSentProperties>{}
-    data.inputs = []
-    var sent = this.load()
+    const data: PageSentProperties = {
+      inputs: []
+    } as PageSentProperties
+    const sent = this.load()
 
-    for (var sentId in sent) {
+    for (const sentId in sent) {
       if (sent.hasOwnProperty(sentId)) {
-        data.inputs.push({
+        data.inputs!.push({
           _id: sentId,
+          // @ts-ignore // FIXME: What's wrong here?
           value: sent[sentId]
         })
       }
     }
 
-    return super.makeSend(data).then(() => {
-      return data
-    }).catch((data) => {
-      if (data.code === 406) {
-        data.textKey = 'INCORRECT_INPUT'
-        data.message = 'Incorrect inputs sent. Try again.'
-        this.save(<PageSentProperties>{})
-      }
+    return super.makeSend(data)
+      .then(() => data)
+      .catch((data) => {
+        if (data.code === 406) {
+          data.textKey = 'INCORRECT_INPUT'
+          data.message = 'Incorrect inputs sent. Try again.'
+          this.save(<PageSentProperties>{})
+        }
 
-      return Bootstrap.$q.reject(data)
-    })
+        return Bootstrap.$q.reject(data)
+      })
   }
 
   validate(): boolean {
@@ -62,7 +58,8 @@ export default class InputCase extends Case {
     }
 
     if (this.correct) {
-      var sent = this.load()
+      const sent = this.load()
+      // @ts-ignore // FIXME: What's wrong here?
       sent[this.id] = this.value
       this.save(sent)
 
