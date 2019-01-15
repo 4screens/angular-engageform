@@ -1,12 +1,12 @@
-import Bootstrap from '../../bootstrap'
-import {defaults} from 'lodash'
-import { MaybeBoolean, MaybeNumber, MaybeString } from '../../types'
-import { PageType } from '../page-type.enum'
-import Page from '../page'
-import SocialData from '../social-data.interface'
-import EngageformProperties from '../../engageform/engageform-properties'
+import { defaults } from 'lodash'
 import QuizQuestion from '../../api/quiz-question.interface'
-import SettingsProperties from '../../engageform/settings-properties'
+import Bootstrap from '../../bootstrap'
+import Engageform from '../../engageform/engageform'
+import Settings from '../../engageform/settings'
+import { MaybeBoolean, MaybeNumber, MaybeString } from '../../types'
+import Page from '../page'
+import { PageType } from '../page-type.enum'
+import SocialData from '../social-data.interface'
 
 export class EndPage extends Page {
   readonly type = PageType.EndPage
@@ -26,7 +26,7 @@ export class EndPage extends Page {
   socialData: SocialData
 
 
-  constructor(engageform: EngageformProperties, data: QuizQuestion, settings: SettingsProperties) {
+  constructor(engageform: Engageform, data: QuizQuestion, settings: Settings) {
     super(engageform, data)
     const shareSettings: SocialData = defaults({}, settings.share, {
       title: '',

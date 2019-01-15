@@ -10,8 +10,8 @@ export default class IterationCase extends Case {
   symbol: string
   ordinal: number
 
-  constructor(page: Page, data: WithId & { ordinal: number, symbol: string }) {
-    super(page, data)
+  constructor(page: Page, data: { ordinal: number, symbol: string }) {
+    super(page, {...data, _id: ''})
     this.ordinal = data.ordinal
     this.symbol = data.symbol
   }

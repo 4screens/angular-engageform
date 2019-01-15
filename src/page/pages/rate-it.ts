@@ -1,14 +1,15 @@
-import Page from '../page'
-import { CaseType } from '../case-type.enum'
-import EngageformProperties from '../../engageform/engageform-properties'
 import QuizQuestion from '../../api/quiz-question.interface'
-import IterationCase from '../case/iteration'
 import Result from '../../api/result.interface'
+import Engageform from '../../engageform/engageform'
+import Case from '../case'
+import IterationCase from '../case/iteration'
+import Page from '../page'
+import { PageType } from '../page-type.enum'
 
 export default class RateIt extends Page {
-  readonly type = CaseType.Rateit
+  readonly type = PageType.Rateit
 
-  result: number
+  result = 0
   labelMin: string
   labelMax: string
 
@@ -23,7 +24,7 @@ export default class RateIt extends Page {
     return this.settings.showResults && this.result > 0
   }
 
-  constructor(engageform: EngageformProperties, data: QuizQuestion) {
+  constructor(engageform: Engageform, data: QuizQuestion) {
     super(engageform, data)
 
     this.labelMin = data.rateIt.minLabel
@@ -41,7 +42,7 @@ export default class RateIt extends Page {
     })
   }
 
-  createCase(ordinal: any, symbol: any): CaseProperties {
+  createCase(ordinal: number, symbol: string): Case {
     return new IterationCase(this, {ordinal, symbol})
   }
 
@@ -55,10 +56,10 @@ export default class RateIt extends Page {
       this.result = sent.result
     }
 
-    this.cases.map((vcase: CaseProperties) => {
-      vcase.selected = sent.selectedValue >= vcase.ordinal
+    this.cases.map((vcase: Case) => {
+      vcase.selected = sent.selectedValue >= (vcase as IterationCase).ordinal
 
-      if (sent.selectedValue === vcase.ordinal) {
+      if (sent.selectedValue === (vcase as IterationCase).ordinal) {
         this.engageform.sendAnswerCallback(this.engageform.title || this.engageform.id,
           this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
           vcase)
@@ -67,7 +68,7 @@ export default class RateIt extends Page {
   }
 
   setResults(results: Result) {
-    this.result = results.average
-    this.selectedValue = results.average
+    this.result = results.average || 0
+    this.selectedValue = results.average || 0
   }
 }

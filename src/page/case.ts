@@ -22,6 +22,7 @@ export default abstract class Case {
   result = 0
   title: MaybeString
   error: MaybeString;
+  value: MaybeString
 
   protected constructor(public readonly page: Page, {_id}: WithId) {
     this.id = _id
@@ -75,7 +76,9 @@ export default abstract class Case {
       answerId: this.id,
       answerValue: (questionAnswer.inputs && questionAnswer.inputs.map( (input) => {
         return input.value
-      })) || this.title || this.ordinal // TODO: Possibly create a method to extract this value from classes.
+      }))
+        // @ts-ignore
+        || this.title || this.ordinal
     }
 
     return Bootstrap.$http.post(url, questionAnswer).then((res: QuizQuestionAnswerResponse) => {
@@ -83,7 +86,7 @@ export default abstract class Case {
         if (!questionAnswer.userIdent && res.data.userIdent) {
           Bootstrap.user.sessionId = res.data.userIdent
         }
-        this.page._engageform.event.trigger('answer', eventValues)
+        this.page.engageform.event.trigger('answer', eventValues)
         return res.data
       } else {
         return Bootstrap.$q.reject(res.data || {})

@@ -1,8 +1,7 @@
 import Bootstrap from '../bootstrap'
-import TabsProperties from './tabs-properties'
 import Quiz from '../api/quiz.interface'
 
-export default class Tabs implements TabsProperties {
+export default class Tabs {
   liveTitle: string = 'Live'
   chatTitle: string = 'Chat'
   logoUrl: string = ''
@@ -20,7 +19,7 @@ export default class Tabs implements TabsProperties {
 
       if (data.tabs.logoUrl) {
         // The image's URL is a bit different if it is a default one, than when it is a custom.
-        this.logoUrl = Bootstrap.config.backend.api + Bootstrap.config.backend.imagesUrl + '/' + data.tabs.logoUrl
+        this.logoUrl = Bootstrap.getConfig('backend').api + Bootstrap.getConfig('backend').imagesUrl + '/' + data.tabs.logoUrl
       }
 
       if (data.tabs.headerText) {

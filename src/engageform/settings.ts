@@ -1,17 +1,17 @@
 import Bootstrap from '../bootstrap'
-import SettingsProperties from './settings-properties'
+import { Maybe } from '../types'
 import Quiz from '../api/quiz.interface'
 
-export default class Settings implements SettingsProperties {
+export default class Settings {
   allowAnswerChange: boolean = false
   hideMessageAfterDelay: number = 3000
-  share: {
+  share: Maybe<{
     title: string
     imageUrl: string
     link: string
     description: string
-  }
-  tracking = null
+  }>
+  tracking: Maybe<{gtm?: {id?: string}}>
 
   constructor(data: Quiz) {
     if (data.settings) {
@@ -26,8 +26,8 @@ export default class Settings implements SettingsProperties {
       if (data.settings.share) {
         this.share = data.settings.share
 
-        if (!this.share.imageUrl && Bootstrap.config.share && Bootstrap.config.share.defaultImgUrl) {
-          this.share.imageUrl = Bootstrap.config.share.defaultImgUrl
+        if (!this.share.imageUrl && Bootstrap.getConfig('share') && Bootstrap.getConfig('share').defaultImgUrl) {
+          this.share.imageUrl = Bootstrap.getConfig('share').defaultImgUrl
         }
       }
     }

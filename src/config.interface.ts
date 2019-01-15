@@ -6,6 +6,7 @@ export default interface AppConfig {
 }
 
 export interface EngageformConfig {
+  engageformFinishUrl: string
   pageResponseUrl: string
 }
 
@@ -30,5 +31,6 @@ export interface CloudinaryConfig {
 }
 
 export interface ShareConfiguration {
+  defaultImgUrl: string
   facebook?: string
 }

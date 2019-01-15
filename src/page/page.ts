@@ -1,23 +1,22 @@
 import angular from 'angular'
 import { isUndefined } from 'lodash'
+import QuizQuestion from '../api/quiz-question.interface'
 import Result from '../api/result.interface'
 import Bootstrap from '../bootstrap'
-import EngageformProperties from '../engageform/engageform-properties'
+import Engageform from '../engageform/engageform'
 import Case from './case'
 import { CaseType } from './case-type.enum'
-import PageProperties from './page-properties'
 import PageSentProperties from './page-sent.interface'
-import PageSettingsProperties from './page-settings-properties'
-import QuizQuestion from '../api/quiz-question.interface'
 import PageSettings from './page-settings'
+import PageSettingsProperties from './page-settings-properties'
 import { PageType } from './page-type.enum'
 
-export default abstract class Page implements PageProperties {
+export default abstract class Page {
   static Type = PageType
   static CaseType = CaseType
 
-  private _pageId: string
-  private _engageform: EngageformProperties
+  readonly id: string
+  readonly engageform: Engageform
 
   type: PageType = PageType.Undefined
   title = ''
@@ -29,17 +28,9 @@ export default abstract class Page implements PageProperties {
   settings: PageSettingsProperties
   cases: Case[] = []
 
-  get id(): string {
-    return this._pageId
-  }
-
-  get engageform(): EngageformProperties {
-    return this._engageform
-  }
-
-  constructor(engageform: EngageformProperties, data: QuizQuestion) {
-    this._pageId = data._id
-    this._engageform = engageform
+  protected constructor(engageform: Engageform, data: QuizQuestion) {
+    this.id = data._id
+    this.engageform = engageform
 
     this.settings = <PageSettingsProperties>new PageSettings(data)
     this.title = data.text || ''
@@ -64,7 +55,7 @@ export default abstract class Page implements PageProperties {
   }
 
   send(vcase: Case): ng.IPromise<PageSentProperties> {
-    if (this._engageform.enabled === false) {
+    if (this.engageform.enabled === false) {
       return Bootstrap.$q.reject('Engageform already ended.')
     }
 
@@ -118,7 +109,7 @@ export default abstract class Page implements PageProperties {
     let casesWithResults = this.cases.map((singleCase: Case) => {
       // Set's the result on the case. Side effect, but makes the whole method a bit faster. Otherwise there
       // would be a need for more loops when creating fake answers.
-      singleCase.result = Number(results.stats[singleCase.id]) || 0
+      singleCase.result = Number(results.stats && results.stats[singleCase.id]) || 0
 
       // Returns the ID of the case so there's no need to loop them later
       return singleCase.id

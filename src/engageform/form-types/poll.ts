@@ -4,7 +4,7 @@ import Engageform from '../engageform'
 import { EngageformType } from '../engageform-type.enum'
 
 export default class Poll extends Engageform {
-  type = EngageformType.Poll
+  readonly type = EngageformType.Poll
 
   setCurrentEndPage(): angular.IPromise<QuizFinish> {
     return super.setCurrentEndPage().then((data) => {

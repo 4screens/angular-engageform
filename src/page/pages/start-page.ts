@@ -1,16 +1,17 @@
+import QuizQuestion from '../../api/quiz-question.interface'
+import Engageform from '../../engageform/engageform'
+import { MaybeString } from '../../types'
 import Page from '../page'
 import { PageType } from '../page-type.enum'
-import EngageformProperties from '../../engageform/engageform-properties'
-import QuizQuestion from '../../api/quiz-question.interface'
 
 export default class StartPage extends Page {
   readonly type = PageType.StartPage
+  readonly isCoverPage = true
 
-  button: string
+  button: MaybeString
 
-  isCoverPage = true
 
-  constructor(engageform: EngageformProperties, data: QuizQuestion) {
+  constructor(engageform: Engageform, data: QuizQuestion) {
     super(engageform, data)
 
     if (data.coverPage && data.coverPage.buttonText !== undefined) {

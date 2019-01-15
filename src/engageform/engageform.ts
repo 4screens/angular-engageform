@@ -1,31 +1,37 @@
+import angular from 'angular'
 import Answer from '../api/answer.interface'
 import EmbedSettings from '../api/embed-settings.interface'
 import EndStats from '../api/end-stats.interface'
-import QuizFinishResponse from '../api/quiz-finish-response.interface'
 import QuizFinish from '../api/quiz-finish.interface'
 import QuizQuestion from '../api/quiz-question.interface'
 import Quiz from '../api/quiz.interface'
 import Result from '../api/result.interface'
 import Bootstrap from '../bootstrap'
 import Branding from '../branding/branding'
+import Event from '../event'
 import Meta from '../meta'
 import { Navigation } from '../navigation'
 import Page from '../page/page'
-import PageProperties from '../page/page-properties'
 import { PageType } from '../page/page-type.enum'
 import { Pages } from '../page/pages.interface'
+import { EndPage } from '../page/pages/end-page'
+import Form from '../page/pages/form'
+import MultiChoice from '../page/pages/multi-choice'
+import PictureChoice from '../page/pages/picture-choice'
+import Poster from '../page/pages/poster'
+import RateIt from '../page/pages/rate-it'
+import StartPage from '../page/pages/start-page'
 import SummaryPage from '../page/pages/summary-page'
-import Event from '../event'
 import { EngageformMode } from './engageform-mode.enum'
-import EngageformProperties from './engageform-properties'
 import { EngageformType } from './engageform-type.enum'
 import SendAnswerCallback from './send-answer-callback'
 import Settings from './settings'
 import Tabs from './tabs'
 import Texts from './texts'
 import { Theme } from './theme'
+import {extend} from 'lodash'
 
-export default class Engageform implements EngageformProperties {
+export default class Engageform {
   private _engageformId: string
   private _pages: Pages = {}
 
@@ -39,7 +45,7 @@ export default class Engageform implements EngageformProperties {
   enabled: boolean = true
   type = EngageformType.Undefined
   title: string
-  message: string
+  message!: string
   settings: Settings
   theme: Theme
   branding: Branding
@@ -49,15 +55,13 @@ export default class Engageform implements EngageformProperties {
 
   texts: Texts
 
-  current: PageProperties
+  current!: Page
   navigation: Navigation
   meta: Meta
 
   event: Event
 
   mode: EngageformMode
-
-  static pagesConsturctors: any
 
   get id(): string {
     return this._engageformId
@@ -142,21 +146,9 @@ export default class Engageform implements EngageformProperties {
     return Boolean(this.mode === EngageformMode.Preview)
   }
 
-  constructor(data: Quiz, mode: EngageformMode, pages: Pages, embedSettings: EmbedSettings,
+  constructor(data: Quiz, mode: EngageformMode, pages: QuizQuestion[], embedSettings: EmbedSettings,
               sendAnswerCallback: SendAnswerCallback = () => {
               }) {
-    // As always, due to the initialisation drama, those values are only available about now.
-    Engageform.pagesConsturctors = {
-      multiChoice: PageType.MultiChoice,
-      pictureChoice: PageType.PictureChoice,
-      rateIt: PageType.Rateit,
-      forms: PageType.Form,
-      startPage: PageType.StartPage,
-      endPage: PageType.EndPage,
-      buzzer: PageType.Buzzer,
-      poster: PageType.Poster
-    }
-
     this._engageformId = data._id
     this.mode = mode
     this.embedSettings = embedSettings
@@ -256,24 +248,24 @@ export default class Engageform implements EngageformProperties {
   }
 
   setCurrentEndPage(): angular.IPromise<QuizFinish> {
-    var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.engageformFinishUrl
+    var url = Bootstrap.config.backend.domain + Bootstrap.getConfig('engageform').engageformFinishUrl
     url = url.replace(':engageformId', this._engageformId)
 
     if (Bootstrap.mode !== EngageformMode.Default) {
       url += '?preview'
     }
 
-    return Bootstrap.$http.post(url, {
+    return Bootstrap.$http.post<QuizFinish>(url, {
       userIdent: Bootstrap.user.sessionId,
       globalUserIdent: Bootstrap.user.id
-    }).then(function (res: QuizFinishResponse) {
+    }).then((res: angular.IHttpResponse<QuizFinish>) => {
       if ([200, 304].indexOf(res.status) !== -1) {
         Bootstrap.localStorage.clearAll()
         Bootstrap.user.id = res.data.globalUserIdent
         return res.data
       }
 
-      return this.$q.reject(res)
+      return Bootstrap.$q.reject(res)
     })
   }
 
@@ -290,7 +282,7 @@ export default class Engageform implements EngageformProperties {
    * @param settings this.settings of the current quiz.
    * @returns {Page.Page[]} Array of pages.
    */
-  buildPages(pages: Page, settings: Settings): Page[] {
+  buildPages(pages: QuizQuestion[], settings: Settings): Page[] {
     return pages
 
     // Construct page instances.
@@ -308,8 +300,23 @@ export default class Engageform implements EngageformProperties {
    * @returns {Page.Page|void} Page instance or undefined if unsupported type.
    */
   createPage(page: QuizQuestion, settings: Settings): Page {
-    if (Engageform.pagesConsturctors[page.type]) {
-      return new Engageform.pagesConsturctors[page.type](this, page, settings)
+    switch (page.type) {
+      case PageType.EndPage:
+        return new EndPage(this, page, settings)
+      case PageType.Form:
+        return new Form(this, page, settings)
+      case PageType.MultiChoice:
+        return new MultiChoice(this, page, settings)
+      case PageType.PictureChoice:
+        return new PictureChoice(this, page, settings)
+      case PageType.Rateit:
+        return new RateIt(this, page, settings)
+      case PageType.StartPage:
+        return new StartPage(this, page, settings)
+      case PageType.Poster:
+        return new Poster(this, page, settings)
+      default:
+        throw new Error('Trying to construct an unknown page.')
     }
   }
 
@@ -319,7 +326,7 @@ export default class Engageform implements EngageformProperties {
    */
   setSummary(results: Result[]) {
     results.forEach((questionResults: Result) => {
-      if (this._pages[questionResults.stats.questionId]) {
+      if (questionResults.stats && this._pages[questionResults.stats.questionId]) {
         this._pages[questionResults.stats.questionId].setResults(questionResults)
       }
     })
@@ -343,16 +350,17 @@ export default class Engageform implements EngageformProperties {
   }
 
   setResultPage(stats: EndStats[]) {
-    let data = {
+    const data: QuizQuestion = {
       _id: 'summaryPage',
-      type: 'summaryPage',
+      type: PageType.SummaryPage,
+      // @ts-ignore
       settings: {
-        showCorrectAnswer: true
+        showCorrectAnswer: true,
       },
       stats
     }
 
-    let resultPage = new SummaryPage(this, <QuizQuestion>data)
+    const resultPage = new SummaryPage(this, data)
 
     this.storePage(resultPage)
   }
@@ -362,23 +370,25 @@ export default class Engageform implements EngageformProperties {
    * @param data
    */
   setUserResultPage(data: any) {
-    const pageData = {
+    const pageData: QuizQuestion = {
       _id: 'RESULT_PAGE',
+      // @ts-ignore
       type: 'summaryPage',
+      // @ts-ignore
       settings: {}
     }
 
     if (data.type === 'outcome') {
-      _.extend(pageData, {
+      extend(pageData, {
         text: 'User\'s outcome: ' + data.outcome
       })
     } else {
-      _.extend(pageData, {
+      extend(pageData, {
         text: 'User\'s score: ' + data.score + ' / ' + data.maxScore
       })
     }
 
-    let resultPage = new SummaryPage(this, <QuizQuestion>pageData)
+    const resultPage = new SummaryPage(this, pageData)
 
     this.storePage(resultPage)
   }
@@ -394,26 +404,33 @@ export default class Engageform implements EngageformProperties {
   }
 
   colorToRgb(color: any) {
-    let colorParts, temp, triplets
+    let triplets
     if (color[0] === '#') {
       color = color.substr(1)
     } else {
-      colorParts = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i)
+      const colorParts = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i)
       color = (colorParts && colorParts.length === 4) ? ('0' + parseInt(colorParts[1], 10).toString(16)).slice(-2) +
         ('0' + parseInt(colorParts[2], 10).toString(16)).slice(-2) +
         ('0' + parseInt(colorParts[3], 10).toString(16)).slice(-2) : ''
     }
 
     if (color.length === 3) {
-      temp = color
+      let temp = color
       color = ''
-      temp = /^([a-f0-9])([a-f0-9])([a-f0-9])$/i.exec(temp).slice(1)
+      temp = /^([a-f0-9])([a-f0-9])([a-f0-9])$/i.exec(temp)
+      temp = temp.slice(1)
       for (let i = 0; i < 3; i++) {
         color += temp[i] + temp[i]
       }
     }
 
-    triplets = /^([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i.exec(color).slice(1)
+    triplets = /^([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i.exec(color)
+
+    if (!triplets) {
+      throw new Error('Invalid color.')
+    }
+
+    triplets = triplets.slice(1)
 
     return {
       red: parseInt(triplets[0], 16),

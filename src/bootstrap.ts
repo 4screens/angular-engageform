@@ -12,7 +12,8 @@ import Outcome from './engageform/form-types/outcome'
 import Poll from './engageform/form-types/poll'
 import Score from './engageform/form-types/score'
 import Survey from './engageform/form-types/survey'
-import ThemeProperties from './engageform/theme-properties'
+import { Theme } from './engageform/theme'
+import Meta from './meta'
 import { Navigation } from './navigation'
 import PageProperties from './page/page-properties'
 import { Maybe, MaybeString } from './types'
@@ -33,7 +34,7 @@ export default class Bootstrap {
   static config: AppConfig
   static mode = EngageformMode.Undefined
 
-  private _engageform: Engageform
+  private _engageform!: Engageform
   private _event: Event
 
   private static _instances: EngageformInstances = {}
@@ -100,7 +101,7 @@ export default class Bootstrap {
     }
   }
 
-  get theme(): Maybe<ThemeProperties> {
+  get theme(): Maybe<Theme> {
     if (this._engageform) {
       return this._engageform.theme
     }
@@ -130,7 +131,7 @@ export default class Bootstrap {
     }
   }
 
-  get meta(): Maybe<MetaProperties> {
+  get meta(): Maybe<Meta> {
     if (this._engageform) {
       return this._engageform.meta
     }

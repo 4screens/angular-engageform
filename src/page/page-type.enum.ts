@@ -6,7 +6,6 @@ export enum PageType {
   PictureChoice,
   Rateit,
   StartPage,
-  Buzzer,
   Poster,
   SummaryPage
 }

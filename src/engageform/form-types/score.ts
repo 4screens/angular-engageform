@@ -1,16 +1,16 @@
 import angular from 'angular'
 import QuizFinish from '../../api/quiz-finish.interface'
-import PageProperties from '../../page/page-properties'
+import { EndPage } from '../../page/pages/end-page'
 import Engageform from '../engageform'
 import { EngageformType } from '../engageform-type.enum'
 
 export default class Score extends Engageform {
-  type = EngageformType.Score
+  readonly type = EngageformType.Score
 
   setCurrentEndPage(): angular.IPromise<QuizFinish> {
     return super.setCurrentEndPage().then((data) => {
-      var score = 100
-      var hasEndPage = false
+      let score = 100
+      let hasEndPage = false
 
       // Error divide by zero...
       if (data.maxScore > 0) {
@@ -18,10 +18,11 @@ export default class Score extends Engageform {
       }
 
       this.endPages.map((pageId) => {
-        var page: PageProperties = <PageProperties>this.pages[pageId]
-        if (page.rangeMin <= score && page.rangeMax >= score) {
+        const page = this.pages[pageId] as EndPage
+        const {rangeMin = 0, rangeMax = 0} = page
+        if (rangeMin <= score && rangeMax >= score) {
           hasEndPage = true
-          this.pages[pageId].score = score
+          page.score = score
           this.setCurrent(pageId)
         }
       })

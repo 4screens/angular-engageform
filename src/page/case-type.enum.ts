@@ -4,5 +4,4 @@ export enum CaseType {
   Input,
   Iteration,
   Text,
-  Buzz
 }

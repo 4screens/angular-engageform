@@ -1,8 +1,8 @@
 import Bootstrap from '../../bootstrap'
+import Engageform from '../../engageform/engageform'
 import Case from '../case'
 import { PageType } from '../page-type.enum'
 import Page from '../page'
-import EngageformProperties from '../../engageform/engageform-properties'
 import QuizQuestion from '../../api/quiz-question.interface'
 import InputCase from '../case/input'
 import PageSentProperties from '../page-sent.interface'
@@ -12,7 +12,7 @@ export default class Form extends Page {
   readonly type = PageType.Form
   count = 0
 
-  constructor(engageform: EngageformProperties, data: QuizQuestion) {
+  constructor(engageform: Engageform, data: QuizQuestion) {
     super(engageform, data)
 
     if (!data.forms) {
@@ -76,6 +76,6 @@ export default class Form extends Page {
   }
 
   setResults(results: Result) {
-    this.count = results.count
+    this.count = results.count || 0
   }
 }

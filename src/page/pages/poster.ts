@@ -1,15 +1,16 @@
+import QuizQuestion from '../../api/quiz-question.interface'
+import Engageform from '../../engageform/engageform'
+import { MaybeBoolean, MaybeString } from '../../types'
 import Page from '../page'
 import { PageType } from '../page-type.enum'
-import EngageformProperties from '../../engageform/engageform-properties'
-import QuizQuestion from '../../api/quiz-question.interface'
 
 export default class Poster extends Page {
   readonly type = PageType.Poster
-  private button: string
-  private exitLink: boolean
-  private link: string
+  private button: MaybeString
+  private exitLink: MaybeBoolean
+  private link: MaybeString
 
-  constructor(engageform: EngageformProperties, data: QuizQuestion) {
+  constructor(engageform: Engageform, data: QuizQuestion) {
     super(engageform, data)
     if (data.coverPage) {
       this.button = data.coverPage.buttonText

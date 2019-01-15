@@ -1,15 +1,15 @@
-import Case from '../case'
-import Page from '../page'
-import { PageType } from '../page-type.enum'
-import EngageformProperties from '../../engageform/engageform-properties'
 import QuizQuestion from '../../api/quiz-question.interface'
+import Engageform from '../../engageform/engageform'
+import Case from '../case'
 import ImageCase from '../case/image'
+import Page from '../page'
 import PageSentProperties from '../page-sent.interface'
+import { PageType } from '../page-type.enum'
 
 export default class PictureChoice extends Page {
   readonly type = PageType.PictureChoice
 
-  constructor(engageform: EngageformProperties, data: QuizQuestion) {
+  constructor(engageform: Engageform, data: QuizQuestion) {
     super(engageform, data)
 
     if (!data.answers) {
@@ -33,7 +33,9 @@ export default class PictureChoice extends Page {
 
   refreshAnswer(sent: PageSentProperties, question: QuizQuestion): PageSentProperties {
     question.answers.map((answer: any) => {
-      sent.results[answer._id] = answer.percent
+      if (sent.results) {
+        sent.results[answer._id] = answer.percent
+      }
     })
 
     return sent

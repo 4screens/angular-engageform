@@ -1,8 +1,9 @@
+import { PageType } from '../page/page-type.enum'
 import EndStats from './end-stats.interface'
 
 export default interface QuizQuestion {
   _id: string
-  type: string
+  type: PageType
   text: string
   description: string
   coverPage: {
