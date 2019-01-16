@@ -1,11 +1,13 @@
-import angular from 'angular'
+import angular, { IPromise } from 'angular'
+import {defaults, values, includes} from 'lodash'
 import Embed from './api/embed.interface'
+import Quiz from './api/quiz.interface'
 import app from './app'
 import Branding from './branding/branding'
 import AppConfig from './config.interface'
+import { EmbedMode } from './embed-mode.enum'
 import Engageform from './engageform/engageform'
 import EngageformInstances from './engageform/engageform-instances'
-import { EngageformMode } from './engageform/engageform-mode.enum'
 import { EngageformType } from './engageform/engageform-type.enum'
 import Live from './engageform/form-types/live'
 import Outcome from './engageform/form-types/outcome'
@@ -13,10 +15,12 @@ import Poll from './engageform/form-types/poll'
 import Score from './engageform/form-types/score'
 import Survey from './engageform/form-types/survey'
 import { Theme } from './engageform/theme'
+import isInEnum from './in-enum.util'
 import Meta from './meta'
 import { Navigation } from './navigation'
 import PageProperties from './page/page-properties'
-import { Maybe, MaybeString } from './types'
+import { Pages } from './page/pages.interface'
+import { Maybe, MaybeString, Nullable } from './types'
 import User from './user'
 import Event from './event'
 
@@ -32,7 +36,7 @@ export default class Bootstrap {
   static cloudinary: any
   static localStorage: ng.local.storage.ILocalStorageService
   static config: AppConfig
-  static mode = EngageformMode.Undefined
+  static mode = EmbedMode.Undefined
 
   private _engageform!: Engageform
   private _event: Event
@@ -47,15 +51,6 @@ export default class Bootstrap {
     score: Score,
     survey: Survey,
     live: Live
-  }
-
-  // Modes the library can operates in. Values assigned later due to the spaghetti.
-  static modes = {
-    preview: EngageformMode.Preview,
-    summary: EngageformMode.Summary,
-    results: EngageformMode.Result,
-    'default': EngageformMode.Default,
-    '': EngageformMode.Default
   }
 
   constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, cloudinary: any,
@@ -87,12 +82,12 @@ export default class Bootstrap {
     return EngageformType
   }
 
-  get mode(): EngageformMode {
+  get mode(): EmbedMode {
     return Bootstrap.mode
   }
 
   get Mode() {
-    return EngageformMode
+    return EmbedMode
   }
 
   get title(): MaybeString {
@@ -143,71 +138,65 @@ export default class Bootstrap {
     }
   }
 
-  init(opts: Embed): angular.IPromise<Engageform> {
+  init(embedOptions: Embed): angular.IPromise<Engageform> {
+    const options = defaults({}, embedOptions, {mode: EmbedMode.Default})
+
     // Options are required and need to have a quiz ID.
-    if (!opts || !opts.id) {
+    if (!options || !options.id) {
       return Bootstrap.$q.reject({
         status: 'error',
         error: {
           code: 406,
           message: 'The required id property does not exist.'
         },
-        data: opts
+        data: options
       })
     }
 
     // Return already initialised instance if already exists.
-    if (Bootstrap._instances[opts.id]) {
-      return Bootstrap._instances[opts.id]
-    }
-
-    // When mode is not provided, set id to default.
-    if (typeof opts.mode === 'undefined') {
-      opts.mode = 'default'
+    if (Bootstrap._instances[options.id]) {
+      return Bootstrap._instances[options.id]
     }
 
     // If the requested mode is not supported, reject the initialisation.
-    if (!Bootstrap.modes[opts.mode]) {
+    if (!isInEnum(EmbedMode, options.mode)) {
       return Bootstrap.$q.reject({
         status: 'error',
         error: {
           code: 406,
           message: 'Mode property not supported.'
         },
-        data: opts
+        data: options
       })
     }
 
     // Set the mode in which the whole library operates.
-    Bootstrap.mode = Bootstrap.modes[opts.mode]
+    Bootstrap.mode = options.mode
 
     // Create the promises map that will have to resolve before the quiz is initialised.
-    let initializationPromises: { [index: string]: any; quizData: ng.IPromise<API.IQuiz>; pages?: ng.IPromise<API.IPages> } = {
-      quizData: Bootstrap.getData('quiz', opts.id)
-    }
-
-    // If the quiz is not live get the pages before initialising it.
-    if (!opts.live) {
-      initializationPromises.pages = Bootstrap.getData('pages', opts.id)
-    }
+    let initializationPromises: [angular.IPromise<Quiz>, angular.IPromise<Nullable<Pages>>] = [
+      Bootstrap.getData<Quiz>('quiz', options.id),
+      // If the quiz is not live get the pages before initialising it.
+      !options.live ? Bootstrap.getData<Pages>('pages', options.id) : Bootstrap.$q.resolve(null)
+    ]
 
     // Initialize the quiz.
-    return Bootstrap.$q.all(initializationPromises).then((data: API.IQuizAndPagesInit) => {
+    return Bootstrap.$q.all<Quiz, Nullable<Pages>>(initializationPromises).then(([quizData, pages]) => {
       // If the quiz doesn't have a supported constructor, reject the promise with error.
-      if (!Bootstrap.quizzesConstructors[data.quizData.type]) {
+      if (!Bootstrap.quizzesConstructors[quizData.type]) {
         return Bootstrap.$q.reject({
           status: 'error',
           error: {
             code: 406,
             message: 'Type property not supported.'
           },
-          data: data.quizData
+          data: quizData
         })
       }
 
       // Create the Engageform's instance.
-      this._engageform = new Bootstrap.quizzesConstructors[data.quizData.type](data.quizData,
-        Bootstrap.mode, data.pages, opts.embedSettings, opts.callback ? opts.callback.sendAnswerCallback : () => {
+      this._engageform = new Bootstrap.quizzesConstructors[quizData.type](quizData,
+        Bootstrap.mode, pages, options.embedSettings, options.callback ? options.callback.sendAnswerCallback : () => {
         })
 
       return this._engageform
@@ -220,7 +209,7 @@ export default class Bootstrap {
    * @param id ID of the quiz.
    * @returns {IPromise<API.IQuizQuestion[]|API.IQuiz>}
    */
-  static getData(type: string, id: string): ng.IPromise<API.IQuizQuestion[] | API.IQuiz> {
+  static getData<T>(type: string, id: string): angular.IPromise<T> {
     const resourcesPaths = {
       quiz: 'engageformUrl',
       pages: 'engageformPagesUrl'
@@ -232,14 +221,14 @@ export default class Bootstrap {
     }
 
     // Decide the data URL depending on the type.
-    let url = Bootstrap.config.backend.domain +
-      Bootstrap.config.engageform[type === 'quiz' ? 'engageformUrl' : 'engageformPagesUrl']
+    let url = Bootstrap.getConfig('backend').domain +
+      type === 'quiz' ? Bootstrap.getConfig('engageform').engageformUrl : Bootstrap.getConfig('engageform').engageformPagesUrl
 
     // Valid ID required.
     url = url.replace(':engageformId', id)
 
     // Inform the backend it shouldn't store statistics when a quiz is not in a default mode.
-    if (Bootstrap.mode !== EngageformMode.Default) {
+    if (Bootstrap.mode !== Mode.Default) {
       url += '?preview'
     }
 

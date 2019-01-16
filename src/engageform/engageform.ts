@@ -22,7 +22,7 @@ import Poster from '../page/pages/poster'
 import RateIt from '../page/pages/rate-it'
 import StartPage from '../page/pages/start-page'
 import SummaryPage from '../page/pages/summary-page'
-import { EngageformMode } from './engageform-mode.enum'
+import { Mode } from '../embed-mode.enum'
 import { EngageformType } from './engageform-type.enum'
 import SendAnswerCallback from './send-answer-callback'
 import Settings from './settings'
@@ -61,7 +61,7 @@ export default class Engageform {
 
   event: Event
 
-  mode: EngageformMode
+  mode: Mode
 
   get id(): string {
     return this._engageformId
@@ -119,7 +119,7 @@ export default class Engageform {
    * @returns {Boolean}
    */
   isNormalMode(): boolean {
-    return Boolean(this.mode === EngageformMode.Default || this.mode === EngageformMode.Preview)
+    return Boolean(this.mode === Mode.Default || this.mode === Mode.Preview)
   }
 
   /**
@@ -127,7 +127,7 @@ export default class Engageform {
    * @returns {Boolean} Is summary mode?
    */
   isSummaryMode(): boolean {
-    return Boolean(this.mode === EngageformMode.Summary)
+    return Boolean(this.mode === Mode.Summary)
   }
 
   /**
@@ -135,7 +135,7 @@ export default class Engageform {
    * @returns {Boolean} Is results mode?
    */
   isResultsMode(): boolean {
-    return Boolean(this.mode === EngageformMode.Result)
+    return Boolean(this.mode === Mode.Result)
   }
 
   /**
@@ -143,10 +143,10 @@ export default class Engageform {
    * @returns {Boolean} Is preview mode?
    */
   isPreviewMode(): boolean {
-    return Boolean(this.mode === EngageformMode.Preview)
+    return Boolean(this.mode === Mode.Preview)
   }
 
-  constructor(data: Quiz, mode: EngageformMode, pages: QuizQuestion[], embedSettings: EmbedSettings,
+  constructor(data: Quiz, mode: Mode, pages: QuizQuestion[], embedSettings: EmbedSettings,
               sendAnswerCallback: SendAnswerCallback = () => {
               }) {
     this._engageformId = data._id
@@ -251,7 +251,7 @@ export default class Engageform {
     var url = Bootstrap.config.backend.domain + Bootstrap.getConfig('engageform').engageformFinishUrl
     url = url.replace(':engageformId', this._engageformId)
 
-    if (Bootstrap.mode !== EngageformMode.Default) {
+    if (Bootstrap.mode !== Mode.Default) {
       url += '?preview'
     }
 

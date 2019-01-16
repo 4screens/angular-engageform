@@ -1,7 +1,7 @@
 import QuizQuestionAnswerResponse from '../api/quiz-question-answer-response.interface'
 import QuizQuestionAnswer from '../api/quiz-question-answer.interface'
 import Bootstrap from '../bootstrap'
-import { EngageformMode } from '../engageform/engageform-mode.enum'
+import { Mode } from '../embed-mode.enum'
 import { Id, MaybeNumber, MaybeString, WithId } from '../types'
 import { CaseType } from './case-type.enum'
 import Page from './page'
@@ -63,7 +63,7 @@ export default abstract class Case {
     let url = Bootstrap.getConfig('backend').domain + Bootstrap.getConfig('engageform').pageResponseUrl
     url = url.replace(':pageId', this.page.id)
 
-    if (Bootstrap.mode !== EngageformMode.Default) {
+    if (Bootstrap.mode !== Mode.Default) {
       url += '?preview'
     }
 
