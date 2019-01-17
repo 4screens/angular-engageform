@@ -1,6 +1,8 @@
-import angular, { IPromise } from 'angular'
-import {defaults, values, includes} from 'lodash'
+import angular from 'angular'
+import { defaults } from 'lodash'
 import Embed from './api/embed.interface'
+import QuizQuestion from './api/quiz-question.interface'
+import { QuizType } from './api/quiz-type.enum'
 import Quiz from './api/quiz.interface'
 import app from './app'
 import Branding from './branding/branding'
@@ -15,14 +17,13 @@ import Poll from './engageform/form-types/poll'
 import Score from './engageform/form-types/score'
 import Survey from './engageform/form-types/survey'
 import { Theme } from './engageform/theme'
+import Event from './event'
 import isInEnum from './in-enum.util'
 import Meta from './meta'
 import { Navigation } from './navigation'
 import PageProperties from './page/page-properties'
-import { Pages } from './page/pages.interface'
-import { Maybe, MaybeString, Nullable } from './types'
+import { Maybe, MaybeString } from './types'
 import User from './user'
-import Event from './event'
 
 export default class Bootstrap {
   static getConfig<K extends keyof AppConfig>(key: K): AppConfig[K] {
@@ -174,16 +175,16 @@ export default class Bootstrap {
     Bootstrap.mode = options.mode
 
     // Create the promises map that will have to resolve before the quiz is initialised.
-    let initializationPromises: [angular.IPromise<Quiz>, angular.IPromise<Nullable<Pages>>] = [
+    let initializationPromises: [angular.IPromise<Quiz>, angular.IPromise<QuizQuestion[]>] = [
       Bootstrap.getData<Quiz>('quiz', options.id),
       // If the quiz is not live get the pages before initialising it.
-      !options.live ? Bootstrap.getData<Pages>('pages', options.id) : Bootstrap.$q.resolve(null)
+      !options.live ? Bootstrap.getData<QuizQuestion[]>('pages', options.id) : Bootstrap.$q.resolve([])
     ]
 
     // Initialize the quiz.
-    return Bootstrap.$q.all<Quiz, Nullable<Pages>>(initializationPromises).then(([quizData, pages]) => {
+    return Bootstrap.$q.all<Quiz, QuizQuestion[]>(initializationPromises).then(([quizData, questions]) => {
       // If the quiz doesn't have a supported constructor, reject the promise with error.
-      if (!Bootstrap.quizzesConstructors[quizData.type]) {
+      if (!isInEnum(QuizType, quizData.type)) {
         return Bootstrap.$q.reject({
           status: 'error',
           error: {
@@ -196,8 +197,7 @@ export default class Bootstrap {
 
       // Create the Engageform's instance.
       this._engageform = new Bootstrap.quizzesConstructors[quizData.type](quizData,
-        Bootstrap.mode, pages, options.embedSettings, options.callback ? options.callback.sendAnswerCallback : () => {
-        })
+        Bootstrap.mode, questions, options.embedSettings, options.callback ? options.callback.sendAnswerCallback : () => {})
 
       return this._engageform
     })
@@ -205,40 +205,31 @@ export default class Bootstrap {
 
   /**
    * Fetches the two types of data from the API: quiz data and pages data.
-   * @param type Resource type: quiz or pages.
-   * @param id ID of the quiz.
-   * @returns {IPromise<API.IQuizQuestion[]|API.IQuiz>}
    */
-  static getData<T>(type: string, id: string): angular.IPromise<T> {
-    const resourcesPaths = {
-      quiz: 'engageformUrl',
-      pages: 'engageformPagesUrl'
-    }
-
+  static getData<T extends object>(type: 'quiz' | 'pages', id: string): angular.IPromise<T> {
     // Basic validation.
-    if (!resourcesPaths[type]) {
+    if (type !== 'quiz' && type !== 'pages') {
       throw new Error(`Resource path for ${type} type of data is unknown.`)
     }
 
     // Decide the data URL depending on the type.
-    let url = Bootstrap.getConfig('backend').domain +
-      type === 'quiz' ? Bootstrap.getConfig('engageform').engageformUrl : Bootstrap.getConfig('engageform').engageformPagesUrl
+    let url = Bootstrap.getConfig('backend').domain + type === 'quiz' ? Bootstrap.getConfig('engageform').engageformUrl : Bootstrap.getConfig('engageform').engageformPagesUrl
 
     // Valid ID required.
     url = url.replace(':engageformId', id)
 
     // Inform the backend it shouldn't store statistics when a quiz is not in a default mode.
-    if (Bootstrap.mode !== Mode.Default) {
+    if (Bootstrap.mode !== EmbedMode.Default) {
       url += '?preview'
     }
 
     // Go, fetch the data.
-    return Bootstrap.$http.get(url).then(function (res) {
+    return Bootstrap.$http.get<T>(url).then((res: angular.IHttpResponse<T>) => {
       if ([200, 304].indexOf(res.status) !== -1) {
         return res.data
+      } else {
+        return Bootstrap.$q.reject(res)
       }
-
-      Bootstrap.$q.reject(res)
     })
   }
 

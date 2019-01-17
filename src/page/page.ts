@@ -4,8 +4,8 @@ import QuizQuestion from '../api/quiz-question.interface'
 import Result from '../api/result.interface'
 import Bootstrap from '../bootstrap'
 import Engageform from '../engageform/engageform'
+import { MaybeNumber } from '../types'
 import Case from './case'
-import { CaseType } from './case-type.enum'
 import PageSentProperties from './page-sent.interface'
 import PageSettings from './page-settings'
 import PageSettingsProperties from './page-settings-properties'
@@ -13,7 +13,6 @@ import { PageType } from './page-type.enum'
 
 export default abstract class Page {
   static Type = PageType
-  static CaseType = CaseType
 
   readonly id: string
   readonly engageform: Engageform
@@ -27,6 +26,7 @@ export default abstract class Page {
   filled = false
   settings: PageSettingsProperties
   cases: Case[] = []
+  result: MaybeNumber
 
   protected constructor(engageform: Engageform, data: QuizQuestion) {
     this.id = data._id
@@ -69,8 +69,8 @@ export default abstract class Page {
   }
 
   sent(): ng.IPromise<PageSentProperties> {
-    var deferred = Bootstrap.$q.defer()
-    var sent = <PageSentProperties>{}
+    const deferred = Bootstrap.$q.defer()
+    let sent = <PageSentProperties>{}
 
     sent = <PageSentProperties>(Bootstrap.localStorage.get('page.' + this.id) || {})
 
@@ -155,7 +155,7 @@ export default abstract class Page {
     Bootstrap.$timeout(() => {
       this.cases.map((vcase: Case) => {
         if (!isUndefined(data[vcase.id])) {
-          var loaded = vcase.load()
+          const loaded = vcase.load()
           if (loaded.results) {
             loaded.results[vcase.id] = data[vcase.id]
             vcase.save(loaded)
@@ -168,15 +168,15 @@ export default abstract class Page {
   }
 
   private getStatsById(pageId: any): angular.IPromise<QuizQuestion> {
-    var url = Bootstrap.config.backend.domain + Bootstrap.config.engageform.pageStatsUrl
+    let url = Bootstrap.config.backend.domain + Bootstrap.getConfig('engageform').pageStatsUrl
     url = url.replace(':pageId', pageId)
 
-    return Bootstrap.$http.get(url).then((res) => {
+    return Bootstrap.$http.get<QuizQuestion>(url).then((res) => {
       if ([200, 304].indexOf(res.status) !== -1) {
         return res.data
+      } else {
+        return Bootstrap.$q.reject(res)
       }
-
-      return Bootstrap.$q.reject(res)
     })
   }
 }

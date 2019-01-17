@@ -6,6 +6,9 @@ export default interface AppConfig {
 }
 
 export interface EngageformConfig {
+  pageStatsUrl: string
+  engageformPagesUrl: string
+  engageformUrl: string
   engageformFinishUrl: string
   pageResponseUrl: string
 }

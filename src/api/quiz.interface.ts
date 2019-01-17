@@ -1,10 +1,11 @@
+import Branding from '../branding/branding'
 import Texts from '../engageform/texts'
-import BrandingValues from '../branding/branding-values.interface'
+import { QuizType } from './quiz-type.enum'
 
 export default interface Quiz {
   _id: string
   title: string
-  type: string
+  type: QuizType
 
   tabs: {
     chatTitle: string
@@ -18,7 +19,7 @@ export default interface Quiz {
 
   settings: {
     allowAnswerChange: boolean
-    branding?: BrandingValues,
+    branding?: Branding,
     hideMessageAfterDelay: number
     share?: {
       title: string

@@ -1,4 +1,5 @@
 import angular from 'angular'
+import { extend } from 'lodash'
 import Answer from '../api/answer.interface'
 import EmbedSettings from '../api/embed-settings.interface'
 import EndStats from '../api/end-stats.interface'
@@ -8,6 +9,7 @@ import Quiz from '../api/quiz.interface'
 import Result from '../api/result.interface'
 import Bootstrap from '../bootstrap'
 import Branding from '../branding/branding'
+import { EmbedMode } from '../embed-mode.enum'
 import Event from '../event'
 import Meta from '../meta'
 import { Navigation } from '../navigation'
@@ -22,14 +24,12 @@ import Poster from '../page/pages/poster'
 import RateIt from '../page/pages/rate-it'
 import StartPage from '../page/pages/start-page'
 import SummaryPage from '../page/pages/summary-page'
-import { Mode } from '../embed-mode.enum'
 import { EngageformType } from './engageform-type.enum'
 import SendAnswerCallback from './send-answer-callback'
 import Settings from './settings'
 import Tabs from './tabs'
 import Texts from './texts'
 import { Theme } from './theme'
-import {extend} from 'lodash'
 
 export default class Engageform {
   private _engageformId: string
@@ -61,7 +61,7 @@ export default class Engageform {
 
   event: Event
 
-  mode: Mode
+  mode: EmbedMode
 
   get id(): string {
     return this._engageformId
@@ -119,7 +119,7 @@ export default class Engageform {
    * @returns {Boolean}
    */
   isNormalMode(): boolean {
-    return Boolean(this.mode === Mode.Default || this.mode === Mode.Preview)
+    return Boolean(this.mode === EmbedMode.Default || this.mode === EmbedMode.Preview)
   }
 
   /**
@@ -127,7 +127,7 @@ export default class Engageform {
    * @returns {Boolean} Is summary mode?
    */
   isSummaryMode(): boolean {
-    return Boolean(this.mode === Mode.Summary)
+    return Boolean(this.mode === EmbedMode.Summary)
   }
 
   /**
@@ -135,7 +135,7 @@ export default class Engageform {
    * @returns {Boolean} Is results mode?
    */
   isResultsMode(): boolean {
-    return Boolean(this.mode === Mode.Result)
+    return Boolean(this.mode === EmbedMode.Result)
   }
 
   /**
@@ -143,10 +143,10 @@ export default class Engageform {
    * @returns {Boolean} Is preview mode?
    */
   isPreviewMode(): boolean {
-    return Boolean(this.mode === Mode.Preview)
+    return Boolean(this.mode === EmbedMode.Preview)
   }
 
-  constructor(data: Quiz, mode: Mode, pages: QuizQuestion[], embedSettings: EmbedSettings,
+  constructor(data: Quiz, mode: EmbedMode, pages: QuizQuestion[], embedSettings: EmbedSettings,
               sendAnswerCallback: SendAnswerCallback = () => {
               }) {
     this._engageformId = data._id
@@ -251,7 +251,7 @@ export default class Engageform {
     var url = Bootstrap.config.backend.domain + Bootstrap.getConfig('engageform').engageformFinishUrl
     url = url.replace(':engageformId', this._engageformId)
 
-    if (Bootstrap.mode !== Mode.Default) {
+    if (Bootstrap.mode !== EmbedMode.Default) {
       url += '?preview'
     }
 
@@ -304,17 +304,17 @@ export default class Engageform {
       case PageType.EndPage:
         return new EndPage(this, page, settings)
       case PageType.Form:
-        return new Form(this, page, settings)
+        return new Form(this, page)
       case PageType.MultiChoice:
-        return new MultiChoice(this, page, settings)
+        return new MultiChoice(this, page)
       case PageType.PictureChoice:
-        return new PictureChoice(this, page, settings)
+        return new PictureChoice(this, page)
       case PageType.Rateit:
-        return new RateIt(this, page, settings)
+        return new RateIt(this, page)
       case PageType.StartPage:
-        return new StartPage(this, page, settings)
+        return new StartPage(this, page)
       case PageType.Poster:
-        return new Poster(this, page, settings)
+        return new Poster(this, page)
       default:
         throw new Error('Trying to construct an unknown page.')
     }
