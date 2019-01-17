@@ -5,7 +5,7 @@
 
 ## Installation
 
-Use node@11.0.0+ and npm@6+.
+Use node@10.5.0+ and npm@6+.
 
 ```
 npm install
