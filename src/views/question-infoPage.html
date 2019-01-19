@@ -1,0 +1,36 @@
+<div class="swiper">
+  <a class="swiper swiper-arrow swiper-arrow__left" data-ng-click="swipePrev()"></a> 
+  <a class="swiper swiper-arrow swiper-arrow__right" data-ng-click="swipeNext()"></a>
+  <div class="swiper-container engageform-swiper-directive">
+    <div class="swiper-wrapper">
+      <article class="swiper-slide" data-ng-repeat="page in question.infoPages">
+        <a data-ng-href="{{ page.url }}" target="_blank" data-ng-class="{'disabled': !page.url}">
+          <h2 class="theme-question-color" data-ng-bind-html="page.title | nl2br"></h2>
+          <figure>
+            <div class="wrapper ir-16-10" data-ng-if="(!!page.imageFile && !!mainMediaImg()) || !!page.youTubeId">
+              <picture class="main-media-image"
+                data-ng-class="{'no-transform': !question.imageData, 'transform': question.imageData}"
+                data-ng-style="{'padding-bottom': mainMediaImg().paddingBottom + '%'}"
+                data-ng-if="!!page.imageFile && !!mainMediaImg()"
+              >
+                <img data-ng-style="{
+                    'width': mainMediaImg().width + '%',
+                    'left' : (question.imageData.left > 0 ? question.imageData.left : 0) + '%',
+                    'top'  : (question.imageData.top  > 0 ? question.imageData.top  : 0) + '%'
+                  }"
+                  data-ng-src="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }}" 
+                  data-ng-srcset="{{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.0' ) }},
+                                  {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '1.5' ) }} 1.5x,
+                                  {{ getMainImgUrl( currentQuestion.mainMedia().src, 680, '2.0' ) }} 2.0x"
+                >
+              </picture>
+              <div data-ng-if="!!page.youTubeId" data-youtube-video data-video-id="page.youTubeId"></div>
+            </div>
+          </figure>
+          <p class="swiper-slide__description theme-answer-color theme-answer-background-color" data-ng-if="!!page.description" data-ng-bind-html="page.description | nl2br"></p>
+        </a>
+      </article>
+    </div>
+  </div>
+  <div class="pagination-swiper"></div>
+</div>
