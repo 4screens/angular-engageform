@@ -1,5 +1,5 @@
-import Bootstrap from '../bootstrap'
-import { BrandingConfig } from '../config.interface'
+import Bootstrap from './bootstrap'
+import { BrandingConfig } from './config.interface'
 
 type BrandingCreationProperties = Partial<BrandingConfig>
 

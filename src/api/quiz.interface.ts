@@ -1,4 +1,4 @@
-import Branding from '../branding/branding'
+import Branding from '../branding'
 import Texts from '../engageform/texts'
 import { QuizType } from './quiz-type.enum'
 

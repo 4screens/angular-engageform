@@ -2,7 +2,7 @@ import QuizQuestionAnswerResponse from '../api/quiz-question-answer-response.int
 import QuizQuestionAnswer from '../api/quiz-question-answer.interface'
 import Bootstrap from '../bootstrap'
 import { EmbedMode } from '../embed-mode.enum'
-import { Id, MaybeNumber, MaybeString, WithId } from '../types'
+import { Id, MaybeString, WithId } from '../types'
 import { CaseType } from './case-type.enum'
 import Page from './page'
 import PageSentProperties from './page-sent.interface'
@@ -21,7 +21,7 @@ export default abstract class Case {
   incorrect = false
   result = 0
   title: MaybeString
-  error: MaybeString;
+  error: MaybeString
   value: MaybeString
 
   protected constructor(public readonly page: Page, {_id}: WithId) {
@@ -74,9 +74,9 @@ export default abstract class Case {
       questionId: this.page.id,
       questionTitle: this.page.title,
       answerId: this.id,
-      answerValue: (questionAnswer.inputs && questionAnswer.inputs.map( (input) => {
-        return input.value
-      }))
+      answerValue: (questionAnswer.inputs && questionAnswer.inputs.map((input) => {
+          return input.value
+        }))
         // @ts-ignore
         || this.title || this.ordinal
     }
