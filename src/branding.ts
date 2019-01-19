@@ -27,6 +27,7 @@ export default class Branding {
   private _imageUrl: string
   private _isCustomLogo = false
   private _enabled: boolean
+  private _custom: boolean
 
   public get isCustom(): boolean {
     return this._custom
@@ -56,7 +57,8 @@ export default class Branding {
     return this._enabled
   }
 
-  private constructor({state, text, link, imageUrl}: BrandingCreationProperties = {}, private _custom: boolean) {
+  private constructor({state, text, link, imageUrl}: BrandingCreationProperties = {}, _custom: boolean) {
+    this._custom = _custom
     // State of the enabled branding is false, so negating that.
     this._enabled = !state
 
