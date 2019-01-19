@@ -21,7 +21,7 @@ import Event from './event'
 import isInEnum from './in-enum.util'
 import Meta from './meta'
 import { Navigation } from './navigation'
-import PageProperties from './page/page-properties'
+import Page from './page/page'
 import { Maybe, MaybeString } from './types'
 import User from './user'
 
@@ -103,7 +103,7 @@ export default class Bootstrap {
     }
   }
 
-  get current(): Maybe<PageProperties> {
+  get current(): Maybe<Page> {
     if (this._engageform) {
       return this._engageform.current
     }

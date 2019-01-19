@@ -1,4 +1,5 @@
 import { find } from 'lodash'
+import Pages from './api/pages.interface'
 import Engageform from './engageform/engageform'
 
 export default class Meta {
@@ -18,6 +19,7 @@ export default class Meta {
       this.globalDescription = share.description || ''
     }
 
+    // @ts-ignore
     if (endPages.length < 1 || !find(pages, {social: true})) {
       if (startPages.length && pages[startPages[0]].title) {
         this.globalTitle = pages[startPages[0]].title

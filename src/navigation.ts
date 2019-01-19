@@ -2,6 +2,7 @@ import angular from 'angular'
 import Bootstrap from './bootstrap'
 import Engageform from './engageform/engageform'
 import { EngageformType } from './engageform/engageform-type.enum'
+import Texts from './engageform/texts'
 import Case from './page/case'
 import { Nullable } from './types'
 
@@ -43,7 +44,7 @@ export class Navigation {
       this._engageform.setCurrent(engageform.startPages[0])
     } else {
       this.enabled = true
-      this.move(null)
+      this.move()
       this.hasPrev = false
     }
   }
@@ -61,7 +62,7 @@ export class Navigation {
     // FIXME: Why would you do that? щ(°Д°щ) But I'm not removing it. Hell knows what depends on this stupidity.
     this.hasStart = false
 
-    this.move(null)
+    this.move()
     this.hasPrev = true
   }
 
@@ -149,7 +150,7 @@ export class Navigation {
       }
     }).catch(data => {
       if (!opts.quiet) {
-        this.sendMessage(this._engageform.texts[data.textKey] || data.message)
+        this.sendMessage(this._engageform.texts[data.textKey as keyof Texts] || data.message)
       }
 
       return data
@@ -159,7 +160,7 @@ export class Navigation {
   next = this.pick
   finish = this.pick
 
-  private move(vcase: Case): void {
+  private move(vcase?: Case): void {
     this._engageform.event.trigger('form::pageWillChange', {
       currentPosition: this.position,
 

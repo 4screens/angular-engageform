@@ -1,6 +1,6 @@
 import angular from 'angular'
 import QuizFinish from '../../api/quiz-finish.interface'
-import PageProperties from '../../page/page-properties'
+import { EndPage } from '../../page/pages/end-page'
 import Engageform from '../engageform'
 import { EngageformType } from '../engageform-type.enum'
 
@@ -12,7 +12,7 @@ export default class Outcome extends Engageform {
       let hasEndPage = false
 
       this.endPages.map((pageId) => {
-        const page: PageProperties = <PageProperties>this.pages[pageId]
+        const page = this.pages[pageId] as EndPage
         if (page.outcome === data.outcome) {
           hasEndPage = true
           this.setCurrent(pageId)
