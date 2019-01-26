@@ -17,10 +17,12 @@ export default class Branding {
   }
 
   private static isImageCustom(imageUrl?: string): boolean {
-    return typeof imageUrl !== 'undefined' && imageUrl !== Branding.default.imageUrl
+    return typeof imageUrl !== 'undefined' && imageUrl !== Branding.defaultBranding.imageUrl
   }
 
-  private static default = Bootstrap.getConfig('backend').branding
+  private static get defaultBranding() {
+    return Bootstrap.getConfig('backend').branding
+  }
 
   private _text: string
   private _link: string
@@ -62,8 +64,8 @@ export default class Branding {
     // State of the enabled branding is false, so negating that.
     this._enabled = !state
 
-    this._text = Branding.isTextCustom(text) ? text : Branding.default.text
-    this._link = link || Branding.default.link
+    this._text = Branding.isTextCustom(text) ? text : Branding.defaultBranding.text
+    this._link = link || Branding.defaultBranding.link
 
     if (Branding.isImageCustom(imageUrl)) {
       this._imageUrl = imageUrl ? `${Bootstrap.getConfig('backend').api + Bootstrap.getConfig('backend').imagesUrl}/${imageUrl}` : ''
