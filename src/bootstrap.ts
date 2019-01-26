@@ -238,5 +238,5 @@ export default class Bootstrap {
   }
 }
 
-Bootstrap.$inject = ['$http', '$q', '$timeout', 'cloudinary', 'localStorageService', 'AppConfig']
+Bootstrap.$inject = ['$http', '$q', '$timeout', 'cloudinary', 'localStorageService', 'ApiConfig']
 app.service('Engageform', Bootstrap)
