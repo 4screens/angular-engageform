@@ -27,7 +27,7 @@ export default class Event {
   trigger<T>(event: string, ...data: T[]): void {
     const listeners = this._listener[event]
     if (listeners) {
-      listeners.forEach(listener => listener.apply(data))
+      listeners.forEach(listener => listener.apply(listener, data as []))
     }
   }
 }
