@@ -1,11 +1,11 @@
 export enum PageType {
   Undefined,
-  EndPage,
-  Form,
-  MultiChoice,
-  PictureChoice,
-  Rateit,
-  StartPage,
-  Poster,
-  SummaryPage
+  EndPage = 'endPage',
+  Form = 'forms',
+  MultiChoice = 'multiChoice',
+  PictureChoice = 'pictureChoice',
+  Rateit = 'rateIt',
+  StartPage = 'startPage',
+  Poster = 'poster',
+  SummaryPage = 'summaryPage'
 }
