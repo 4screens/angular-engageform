@@ -213,7 +213,8 @@ export default class Bootstrap {
     }
 
     // Decide the data URL depending on the type.
-    let url = Bootstrap.getConfig('backend').domain + type === 'quiz' ? Bootstrap.getConfig('engageform').engageformUrl : Bootstrap.getConfig('engageform').engageformPagesUrl
+    let url = Bootstrap.getConfig('backend').domain +
+      (type === 'quiz' ? Bootstrap.getConfig('engageform').engageformUrl : Bootstrap.getConfig('engageform').engageformPagesUrl)
 
     // Valid ID required.
     url = url.replace(':engageformId', id)
