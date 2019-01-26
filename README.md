@@ -13,8 +13,16 @@ npm install
 
 ## Development
 
-TODO
+In order to check for type errors, use the task below.
+```
+npm run check
+```
 
 ## Distribute
 
-TODO
+First, build the files using the task below.
+```
+npm run build
+```
+
+Commit the outcome and push it to the master branch.
