@@ -1,11 +1,13 @@
 const path = require('path')
-const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: './bootstrap.ts',
   context: path.resolve(__dirname, 'src'),
-  target: 'node',
-  externals: [nodeExternals()],
+  target: 'web',
+  externals: {
+    angular: 'angular',
+    lodash: '_'
+  },
   mode: 'production',
   output: {
     filename: 'main.js',

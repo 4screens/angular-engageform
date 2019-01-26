@@ -9,7 +9,7 @@ const presets = [
         chrome: '67',
         safari: '11.1',
       },
-      useBuiltIns: 'usage',
+      useBuiltIns: false, // FIXME: the build throws errors when `usage` is set.
     },
   ],
 ]
