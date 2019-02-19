@@ -187,6 +187,10 @@ export class Navigation {
         this.hasFinish = this._engageform.isNormalMode() &&
           !(this._engageform.isType(EngageformType.Poll) && !this._engageform.hasForms)
       }
+      this._engageform.event.trigger('form::pageDidChange', {
+        currentPosition: this.position,
+        isEndPage: false
+      });
 
     } else {
       this.position = this._engageform.availablePages.length
@@ -196,6 +200,10 @@ export class Navigation {
           this.hasPrev = false
           this.hasNext = false
           this.hasFinish = false
+          this._engageform.event.trigger('form::pageDidChange', {
+            currentPosition: this.position,
+            isEndPage: true
+          });
         }).catch((err) => {
           if (err.data.msg) {
             this.sendMessage(err.data.msg)
