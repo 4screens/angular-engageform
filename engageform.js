@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.3.4
+ * 4screens-angular-engageform v0.3.5
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -209,6 +209,10 @@ var Navigation;
                     this.hasFinish = this._engageform.isNormalMode() &&
                         !(this._engageform.isType(Engageform.Type.Poll) && !this._engageform.hasForms);
                 }
+                this._engageform.event.trigger('form::pageDidChange', {
+                    currentPosition: this.position,
+                    isEndPage: false
+                });
             }
             else {
                 this.position = this._engageform.availablePages.length;
@@ -218,6 +222,10 @@ var Navigation;
                         _this.hasPrev = false;
                         _this.hasNext = false;
                         _this.hasFinish = false;
+                        _this._engageform.event.trigger('form::pageDidChange', {
+                            currentPosition: _this.position,
+                            isEndPage: true
+                        });
                     }).catch(function (err) {
                         if (err.data.msg) {
                             _this.sendMessage(err.data.msg);
