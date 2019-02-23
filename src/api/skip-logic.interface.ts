@@ -1,3 +1,51 @@
+/**
+ * Demo implementation for a MultiChoice question.
+ *
+ * @example
+ * const schema: QuestionLogic = {
+ *   _id: "object_id",
+ *   questionId: 'question_id',
+ *   rules: [
+ *     {
+ *       type: "default",
+ *       destination: 'last_page'
+ *     },
+ *     {
+ *       type: "entry",
+ *       destination: "question_4",
+ *       conditionsConnection: "and",
+ *       conditions: [
+ *         {
+ *           // When "answer" to "question_1" is "eq" the value of "response".
+ *           when: "answer",
+ *           to: "question_1",
+ *           is: "eq",
+ *           value: 'response'
+ *         },
+ *         {
+ *           when: "answer",
+ *           to: "question 2",
+ *           is: "blank",
+ *         }
+ *       ],
+ *     },
+ *     {
+ *       type: "exit",
+ *       destination: "end_page",
+ *       conditionsConnection: "or",
+ *       conditions: [
+ *         {
+ *           when: "answer",
+ *           to: "question_3",
+ *           is: "eq",
+ *           value: "another_resposne",
+ *         }
+ *       ],
+ *     }
+ *   ]
+ * }
+ */
+
 export interface QuestionLogic {
   // Object's ID.
   _id: string
@@ -96,48 +144,4 @@ interface ContainmentCondition extends BaseCondition {
 
   // The string that must (not to) be included in an answer.
   value: string
-}
-
-// Demo implementation for a MultiChoice question.
-const schema: QuestionLogic = {
-  _id: "object_id",
-  questionId: 'question_id',
-  rules: [
-    {
-      type: "default",
-      destination: 'last_page'
-    },
-    {
-      type: "entry",
-      destination: "question_4",
-      conditionsConnection: "and",
-      conditions: [
-        {
-          // When "answer" to "question_1" is "eq" the value of "response".
-          when: "answer",
-          to: "question_1",
-          is: "eq",
-          value: 'response'
-        },
-        {
-          when: "answer",
-          to: "question 2",
-          is: "blank",
-        }
-      ],
-    },
-    {
-      type: "exit",
-      destination: "end_page",
-      conditionsConnection: "or",
-      conditions: [
-        {
-          when: "answer",
-          to: "question_3",
-          is: "eq",
-          value: "another_resposne",
-        }
-      ],
-    }
-  ]
 }
