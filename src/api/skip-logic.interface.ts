@@ -1,4 +1,4 @@
-export interface QuestionLogic<ConditionType extends BaseCondition> {
+export interface QuestionLogic {
   // Object's ID.
   _id: string
 
@@ -6,7 +6,7 @@ export interface QuestionLogic<ConditionType extends BaseCondition> {
   questionId: string
 
   // List of all rules managing to this condition object.
-  rules: Array<DefaultRule | EntryRule<ConditionType> | ExitRule<ConditionType>>
+  rules: Array<DefaultRule | EntryRule | ExitRule>
 }
 
 interface BaseRule {
@@ -19,23 +19,32 @@ interface DefaultRule extends BaseRule {
   type: 'default'
 }
 
-interface ConditionalRule<ConditionTypes> extends BaseRule {
-  // How conditions are connected with each other.
-  conditionsConnection: 'and' | 'or'
-
-  // List of conditions. Order matter. First matching condition gets executed.
-  conditions: Array<ConditionTypes>
-}
-
 // Rule triggered on the question entry.
-interface EntryRule<ConditionTypes> extends ConditionalRule<ConditionTypes> {
+interface EntryRule extends BaseRule, ConditionalRule {
   type: 'entry'
 }
 
 // Rule triggered on the question exit.
-interface ExitRule<ConditionTypes> extends ConditionalRule<ConditionTypes> {
+interface ExitRule extends BaseRule, ConditionalRule {
   type: 'exit'
 }
+
+interface ConditionalRule {
+  // How conditions are connected with each other.
+  conditionsConnection: 'and' | 'or'
+
+  // List of conditions. Order matter. First matching condition gets executed.
+  conditions: Array<CommonConditions | RatingConditions | FormConditions>
+}
+
+// Conditions allowed on picture and multiple choice questions.
+type CommonConditions = EqualityCondition | BlankCondition
+
+// Conditions allowed on ratings questions.
+type RatingConditions = CommonConditions | ComparableCondition | RangeCondition
+
+// Conditions allowed on forms questions.
+type FormConditions = (CommonConditions | ContainmentCondition) & WithField
 
 interface BaseCondition {
   // "IF" part of the condition. For now the only allowed value is "answer"
@@ -50,15 +59,6 @@ interface WithField {
   // ID of the field from which the value will be taken.
   field: string
 }
-
-// Conditions allowed on picture and multiple choice questions.
-type ChoiceConditions = EqualityCondition | BlankCondition
-
-// Conditions allowed on ratings questions.
-type RatingConditions = EqualityCondition | BlankCondition | ComparableCondition | RangeCondition
-
-// Conditions allowed on forms questions.
-type FormConditions = (EqualityCondition | BlankCondition | ContainmentCondition) & WithField
 
 // Tests a value equality.
 interface EqualityCondition extends BaseCondition {
@@ -94,12 +94,12 @@ interface RangeCondition extends BaseCondition {
 interface ContainmentCondition extends BaseCondition {
   is: 'contain' | 'ncontain'
 
-  // The string that must (not to) be included in an anwser.
+  // The string that must (not to) be included in an answer.
   value: string
 }
 
-// Demo implemnetation for a MultiChoice question.
-const schema: QuestionLogic<ChoiceConditions> = {
+// Demo implementation for a MultiChoice question.
+const schema: QuestionLogic = {
   _id: "object_id",
   questionId: 'question_id',
   rules: [
