@@ -162,8 +162,6 @@ export class Navigation {
 
   private move(vcase?: Case): void {
     this._engageform.event.trigger('form::pageWillChange', {
-      currentPosition: this.position,
-
       // You might wonder why I'm not using this.hasStart. Well, that's because some genius decided to
       // make it false on the navigation start so it can't be used.
       isStartPage: Boolean(this.position === 0 && this._engageform.startPages.length)
