@@ -32,7 +32,7 @@ export class Navigation {
 
   waitingForPageChange: Nullable<angular.IPromise<Case>> = null
 
-  private constructor(engageform: Engageform) {
+  constructor(engageform: Engageform) {
     this._engageform = engageform
 
     this.size = engageform.availablePages.length

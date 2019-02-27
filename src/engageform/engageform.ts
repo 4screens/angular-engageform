@@ -1,5 +1,6 @@
 import angular from 'angular'
 import { extend } from 'lodash'
+import ConditionalNavigation from '../../conditional-navigation'
 import Answer from '../api/answer.interface'
 import EmbedSettings from '../api/embed-settings.interface'
 import EndStats from '../api/end-stats.interface'
@@ -181,7 +182,12 @@ export default class Engageform {
     this._hasForms = builtPages.some(page => page.type === PageType.Form)
 
     // Create meta objects.
-    this.navigation = Navigation.fromEnageform(this)
+    const withLogic = Boolean((data as any)._logic)
+    if (withLogic) {
+      this.navigation = ConditionalNavigation.fromEnageformAndData(this, data)
+    } else {
+      this.navigation = Navigation.fromEnageform(this)
+    }
     this.meta = Meta.fromEngageform(this)
   }
 
