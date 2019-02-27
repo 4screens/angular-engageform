@@ -73,6 +73,7 @@ export default abstract class Page {
     let sent = <PageSentProperties>{}
 
     sent = <PageSentProperties>(Bootstrap.localStorage.get('page.' + this.id) || {})
+    this.engageform.setAnswer(this.id, sent as any)
 
     if (this.settings.showResults && sent.results) {
       this.getStatsById(this.id).then((data: QuizQuestion) => {

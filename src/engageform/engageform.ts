@@ -13,6 +13,7 @@ import { EmbedMode } from '../embed-mode.enum'
 import Event from '../event'
 import Meta from '../meta'
 import { Navigation } from '../navigation'
+import Case from '../page/case'
 import Page from '../page/page'
 import { PageType } from '../page/page-type.enum'
 import { Pages } from '../page/pages.interface'
@@ -58,6 +59,8 @@ export default class Engageform {
   current!: Page
   navigation: Navigation
   meta: Meta
+
+  answers = new Map<string, string | number | {[key: string]: string}>()
 
   event: Event
 
@@ -391,6 +394,10 @@ export default class Engageform {
     const resultPage = new SummaryPage(this, pageData)
 
     this.storePage(resultPage)
+  }
+
+  setAnswer(pageId: string, answerValue: string | number | {[key: string]: string}) {
+    this.answers.set(pageId, answerValue)
   }
 
   getThemeType(color: any) {
