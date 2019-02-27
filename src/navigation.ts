@@ -11,7 +11,7 @@ export class Navigation {
     return new Navigation(engageform)
   }
 
-  private _engageform: Engageform
+  protected _engageform: Engageform
 
   enabled: boolean = false
   position: number = 0
