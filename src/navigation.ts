@@ -75,7 +75,7 @@ export class Navigation {
     }
   }
 
-  prev($event: any): void {
+  prev($event: any, step = 1): void {
     this.disableDefaultAction($event)
     this.stopPageChange()
     this.animate = 'swipePrev'
@@ -84,7 +84,7 @@ export class Navigation {
       this._engageform.message = ''
     }
 
-    this.position--
+    this.position -= step
     this.updateDistance()
 
     this.hasNext = true
@@ -160,14 +160,14 @@ export class Navigation {
   next = this.pick
   finish = this.pick
 
-  private move(vcase?: Case): void {
+  protected move(vcase?: Case, step = 1): void {
     this._engageform.event.trigger('form::pageWillChange', {
       // You might wonder why I'm not using this.hasStart. Well, that's because some genius decided to
       // make it false on the navigation start so it can't be used.
       isStartPage: Boolean(this.position === 0 && this._engageform.startPages.length)
     })
 
-    this.position++
+    this.position += step
 
     if (this._engageform.availablePages.length >= this.position) {
       this.updateDistance()
