@@ -57,29 +57,53 @@ export interface QuestionLogic {
   rules: Array<DefaultRule | EntryRule | ExitRule>
 }
 
+export enum RuleType {
+  Default = 'default',
+  Entry = 'entry',
+  Exit = 'exit',
+}
+
+export enum ConditionConnection {
+  And = 'and',
+  Or = 'or',
+}
+
+export enum ConditionIs {
+  Equal = 'eq',
+  NotEqual = 'neq',
+  Blank = 'blank',
+  NotBlank = 'nblank',
+  GreaterThan = 'gt',
+  GreaterThanOrEqual = 'gte',
+  LessThan = 'lt',
+  LessThanOrEqual = 'lte',
+  Between = 'between',
+  Contain = 'contain',
+  NotContain = 'ncontain',
+}
 interface BaseRule {
   // ID of the question the rule will forward to.
   destination: string
 }
 
 // "Otherwise" rule executed when no other rule matches.
-interface DefaultRule extends BaseRule {
-  type: 'default'
+export interface DefaultRule extends BaseRule {
+  type: RuleType.Default
 }
 
 // Rule triggered on the question entry.
-interface EntryRule extends BaseRule, ConditionalRule {
-  type: 'entry'
+export interface EntryRule extends BaseRule, ConditionalRule {
+  type: RuleType.Entry
 }
 
 // Rule triggered on the question exit.
-interface ExitRule extends BaseRule, ConditionalRule {
-  type: 'exit'
+export interface ExitRule extends BaseRule, ConditionalRule {
+  type: RuleType.Exit
 }
 
 interface ConditionalRule {
   // How conditions are connected with each other.
-  conditionsConnection: 'and' | 'or'
+  conditionsConnection: ConditionConnection.And | ConditionConnection.Or
 
   // List of conditions. Order matter. First matching condition gets executed.
   conditions: Array<CommonConditions | RatingConditions | FormConditions>
@@ -92,7 +116,7 @@ type CommonConditions = EqualityCondition | BlankCondition
 type RatingConditions = CommonConditions | ComparableCondition | RangeCondition
 
 // Conditions allowed on forms questions.
-type FormConditions = (CommonConditions | ContainmentCondition) & WithField
+export type FormConditions = (CommonConditions | ContainmentCondition) & WithField
 
 interface BaseCondition {
   // "IF" part of the condition. For now the only allowed value is "answer"
@@ -111,7 +135,7 @@ interface WithField {
 // Tests a value equality.
 interface EqualityCondition extends BaseCondition {
   // What kind of condition this one is.
-  is: 'eq' | 'neq'
+  is: ConditionIs.Equal | ConditionIs.NotEqual
 
   // ID of the answer of which value will be used for comparison.
   value: string
@@ -119,12 +143,12 @@ interface EqualityCondition extends BaseCondition {
 
 // Tests the existence (or lack) of an answer.
 interface BlankCondition extends BaseCondition {
-  is: 'blank' | 'nblank'
+  is: ConditionIs.Blank | ConditionIs.NotBlank
 }
 
 // Tests comparison between values.
 interface ComparableCondition extends BaseCondition {
-  is: 'gt' | 'gte' | 'lt' | 'lte'
+  is: ConditionIs.GreaterThan | ConditionIs.GreaterThanOrEqual | ConditionIs.LessThan | ConditionIs.LessThanOrEqual
 
   // An value used for comparision.
   value: number
@@ -132,7 +156,7 @@ interface ComparableCondition extends BaseCondition {
 
 // Tests if the value is in a range.
 interface RangeCondition extends BaseCondition {
-  is: 'between',
+  is: ConditionIs.Between,
 
   // A tuple of inclusive values to compare the question's value to.
   value: [number, number]
@@ -140,7 +164,7 @@ interface RangeCondition extends BaseCondition {
 
 // Tests if the answer contains a specific string.
 interface ContainmentCondition extends BaseCondition {
-  is: 'contain' | 'ncontain'
+  is: ConditionIs.Contain | ConditionIs.NotContain
 
   // The string that must (not to) be included in an answer.
   value: string
