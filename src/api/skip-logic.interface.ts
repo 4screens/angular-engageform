@@ -46,17 +46,6 @@
  * }
  */
 
-export interface QuestionLogic {
-  // Object's ID.
-  _id: string
-
-  // ID of the question this logic object belongs to.
-  questionId: string
-
-  // List of all rules managing to this condition object.
-  rules: Array<DefaultRule | EntryRule | ExitRule>
-}
-
 export enum RuleType {
   Default = 'default',
   Entry = 'entry',
@@ -82,11 +71,27 @@ export enum ConditionIs {
   NotContain = 'ncontain',
 }
 
-export const isFormCondition = (condition: any): condition is FormConditions => {
-  return Boolean((condition as any).field)
+// Guards.
+export const isEntryRule = (rule: BaseRule): rule is EntryRule => rule.type === RuleType.Entry
+export const isExitRule = (rule: BaseRule): rule is ExitRule => rule.type === RuleType.Exit
+export const isDefaultRule = (rule: BaseRule): rule is DefaultRule => rule.type === RuleType.Default
+export const isFormCondition = (condition: BaseCondition): condition is FormConditions => Boolean((condition as FormConditions).field)
+
+export interface QuestionLogic {
+  // Object's ID.
+  _id: string
+
+  // ID of the question this logic object belongs to.
+  questionId: string
+
+  // List of all rules managing to this condition object.
+  rules: Array<DefaultRule | EntryRule | ExitRule>
 }
 
 interface BaseRule {
+  // Rule's type.
+  type: RuleType
+
   // ID of the question the rule will forward to.
   destination: string
 }
