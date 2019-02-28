@@ -81,6 +81,11 @@ export enum ConditionIs {
   Contain = 'contain',
   NotContain = 'ncontain',
 }
+
+export const isFormCondition = (condition: any): condition is FormConditions => {
+  return Boolean((condition as any).field)
+}
+
 interface BaseRule {
   // ID of the question the rule will forward to.
   destination: string
