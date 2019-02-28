@@ -1,12 +1,14 @@
+import { head } from 'lodash'
 import Quiz from './src/api/quiz.interface'
 import {
   ConditionConnection,
   ConditionIs,
   DefaultRule,
-  EntryRule,
-  ExitRule, FormConditions, isFormCondition,
-  QuestionLogic,
-  RuleType
+  isDefaultRule,
+  isEntryRule,
+  isExitRule,
+  isFormCondition,
+  QuestionLogic
 } from './src/api/skip-logic.interface'
 import Engageform from './src/engageform/engageform'
 import { Navigation } from './src/navigation'
@@ -17,15 +19,11 @@ import { PageType } from './src/page/page-type.enum'
 type AnswersTypes = string | number | { [key: string]: string } | null
 
 class Logic {
-  private entryRules: EntryRule[]
-  private exitRules: ExitRule[]
-  private defaultRule: DefaultRule
+  private entryRules = this.logic.rules.filter(isEntryRule)
+  private exitRules = this.logic.rules.filter(isExitRule)
+  private defaultRule = head<DefaultRule>(this.logic.rules.filter(isDefaultRule))!
 
-  constructor(private logic: QuestionLogic, private answers: Map<string, string | number | { [key: string]: string }>) {
-    this.entryRules = logic.rules.filter(rule => rule.type === RuleType.Entry) as EntryRule[]
-    this.exitRules = this.logic.rules.filter(rule => rule.type === RuleType.Exit) as ExitRule[]
-    this.defaultRule = this.logic.rules.filter(rule => rule.type === RuleType.Default)[0] as DefaultRule
-  }
+  constructor(private logic: QuestionLogic, private answers: Map<string, AnswersTypes>) {}
 
   hasExitRules() {
     return this.exitRules.length > 0
@@ -41,7 +39,7 @@ class Logic {
               return false
             }
             if (isFormCondition(condition)) {
-              answer = (answer as {[index: string]: string})[condition.field]
+              answer = (answer as { [index: string]: string })[condition.field]
             }
             switch (condition.is) {
               case ConditionIs.Equal:
@@ -70,11 +68,8 @@ class Logic {
                 return false
             }
           })
-          if (conditionsConnection === ConditionConnection.Or) {
-            return passedConditions.some(v => v) ? destination : null
-          } else {
-            return passedConditions.every(v => v) ? destination : null
-          }
+          const combinator = conditionsConnection === ConditionConnection.Or ? 'some' : 'every'
+          return passedConditions[combinator](v => v) ? destination : null
         })
         .filter(Boolean)[0]
     return destination || this.defaultRule.destination
