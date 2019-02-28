@@ -1,5 +1,5 @@
 import angular from 'angular'
-import { extend } from 'lodash'
+import { extend, get } from 'lodash'
 import ConditionalNavigation from '../../conditional-navigation'
 import Answer from '../api/answer.interface'
 import EmbedSettings from '../api/embed-settings.interface'
@@ -402,8 +402,12 @@ export default class Engageform {
     this.storePage(resultPage)
   }
 
-  setAnswer(pageId: string, answerValue: string | number | {[key: string]: string}) {
-    this.answers.set(pageId, answerValue)
+  setAnswer(pageId: string, answerValue: {[key: string]: string | number | {[key: string]: string}}) {
+    const value =
+      get(answerValue, 'selectedCaseId') as string ||
+      get(answerValue, 'selectedValue') as number ||
+      answerValue as {[key: string]: string}
+    this.answers.set(pageId, value)
   }
 
   getThemeType(color: any) {
