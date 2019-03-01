@@ -3,7 +3,7 @@ import Quiz from './src/api/quiz.interface'
 import {
   ConditionConnection,
   ConditionIs,
-  DefaultRule,
+  DefaultRule, EntryRule, ExitRule,
   isDefaultRule,
   isEntryRule,
   isExitRule,
@@ -15,6 +15,7 @@ import { Navigation } from './src/navigation'
 import Case from './src/page/case'
 import Page from './src/page/page'
 import { PageType } from './src/page/page-type.enum'
+import { Maybe } from './src/types'
 
 type AnswersTypes = string | number | { [key: string]: string } | null
 
@@ -25,13 +26,24 @@ class Logic {
 
   constructor(private logic: QuestionLogic, private answers: Map<string, AnswersTypes>) {}
 
+  hasEntryRules() {
+    return this.entryRules.length > 0
+  }
+
   hasExitRules() {
     return this.exitRules.length > 0
   }
 
-  resolveExitDestinationFor(answer: AnswersTypes): string {
+  resolveEntryDestination(): string {
+    return this.resolveDestination(this.entryRules)
+  }
+  resolveExitDestination(): string {
+    return this.resolveDestination(this.exitRules)
+  }
+
+  private resolveDestination(rules: Array<EntryRule | ExitRule>): string {
     const destination =
-      this.exitRules
+      rules
         .map(({destination, conditionsConnection, conditions}) => {
           const passedConditions = conditions.map((condition) => {
             let answer = this.answers.get(condition.to)
@@ -93,42 +105,42 @@ export default class ConditionalNavigation extends Navigation {
 
   protected move(vcase?: Case) {
     const page = this._engageform.current
-
-    // FIXME: there might be an entry condition for the first question so it needs to be handled.
-    if (!this.isPossiblyConditionalPage(page)) {
-      return super.move(vcase)
-    }
-
     const currentLogic = this.logic[page.id]
+    let step: Maybe<number>
+    let nextPage: Maybe<Page>
 
-    if (!currentLogic) {
-      return super.move(vcase, 1)
+    if (!this.isPossiblyConditionalPage(page)) {
+      nextPage = this._engageform.getPageByIndex(0)
+    } else if (!currentLogic || !currentLogic.hasExitRules()) {
+      nextPage = this._engageform.getPageByIndex(this.position + 1)
+    } else {
+      nextPage = this._engageform.getPageById(currentLogic.resolveExitDestination())
     }
 
-    if (currentLogic.hasExitRules()) {
-      const currentAnswer = this.extractAnswerFromPage(page)
-      const nextPageId = currentLogic.resolveExitDestinationFor(currentAnswer)
-      console.log('RESOLVED', nextPageId)
+    if (nextPage) {
+      nextPage = this.checkEntryConditionForPage(nextPage)
     }
 
-    return super.move(vcase, 1)
+    // Checking again, since the page might become empty after checking the entry rules.
+    if (nextPage) {
+      step = this._engageform.getPageIndex(nextPage) - this._engageform.getPageIndex(page)
+    }
+
+    return super.move(vcase, step)
   }
 
-  private extractAnswerFromPage(page: Page): AnswersTypes {
-    const answer: any = this._engageform.answers.get(page.id)
-    if (!answer) {
-      return null
-    } else switch (page.type) {
-      case PageType.Rateit:
-        return answer.selectedValue
-      case PageType.PictureChoice:
-      case PageType.MultiChoice:
-        return answer.selectedCaseId!
-      case PageType.Form:
-        return answer
-      default:
-        return null
+  private checkEntryConditionForPage(page: Page): Maybe<Page> {
+    const nextLogic = this.logic[page.id]
+    if (nextLogic && nextLogic.hasEntryRules()) {
+      const nextId = nextLogic.resolveEntryDestination()
+      const next = this._engageform.getPageById(nextId)
+      if (next) {
+        return this.checkEntryConditionForPage(next)
+      } else {
+        return next
+      }
     }
+    return page
   }
 
   private isPossiblyConditionalPage(page: Page): boolean {
