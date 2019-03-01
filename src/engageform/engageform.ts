@@ -26,6 +26,7 @@ import Poster from '../page/pages/poster'
 import RateIt from '../page/pages/rate-it'
 import StartPage from '../page/pages/start-page'
 import SummaryPage from '../page/pages/summary-page'
+import { Maybe } from '../types'
 import { EngageformType } from './engageform-type.enum'
 import SendAnswerCallback from './send-answer-callback'
 import Settings from './settings'
@@ -100,6 +101,18 @@ export default class Engageform {
    */
   get hasForms(): boolean {
     return this._hasForms
+  }
+
+  getPageById(id: string): Maybe<Page> {
+    return this.pages[id]
+  }
+
+  getPageByIndex(index: number): Maybe<Page> {
+    return this.pages[this.availablePages[index]]
+  }
+
+  getPageIndex(page: Page): number {
+    return this.availablePages.indexOf(page.id)
   }
 
   /**
