@@ -1,4 +1,4 @@
-import { head } from 'lodash'
+import { head, last } from 'lodash'
 import Quiz from './src/api/quiz.interface'
 import {
   ConditionConnection,
@@ -101,6 +101,12 @@ export default class ConditionalNavigation extends Navigation {
     parsedLogic.forEach((logic: QuestionLogic) => {
       this.logic[logic.questionId] = new Logic(logic, this._engageform.answers)
     })
+  }
+
+  prev($event: any) {
+    const previousPage = this.visitedPages.pop()
+    const step = this._engageform.getPageIndex(this._engageform.current) - this._engageform.getPageIndex(previousPage!)
+    super.prev($event, step)
   }
 
   protected move(vcase?: Case) {

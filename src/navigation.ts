@@ -4,6 +4,7 @@ import Engageform from './engageform/engageform'
 import { EngageformType } from './engageform/engageform-type.enum'
 import Texts from './engageform/texts'
 import Case from './page/case'
+import Page from './page/page'
 import { Nullable } from './types'
 
 export class Navigation {
@@ -12,6 +13,7 @@ export class Navigation {
   }
 
   protected _engageform: Engageform
+  protected visitedPages: Page[] = []
 
   enabled: boolean = false
   position: number = 0
@@ -167,6 +169,7 @@ export class Navigation {
       isStartPage: Boolean(this.position === 0 && this._engageform.startPages.length)
     })
 
+    this.visitedPages.push(this._engageform.current)
     this.position += step
 
     if (this._engageform.availablePages.length >= this.position) {
