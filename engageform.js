@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.3.5
+ * 4screens-angular-engageform v0.3.6
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -217,7 +217,10 @@ var Navigation;
             else {
                 this.position = this._engageform.availablePages.length;
                 if (!vcase) {
-                    this._engageform.setCurrentEndPage().then(function () {
+                    this._engageform.setCurrentEndPage().then(function (data) {
+                        if (data.totalScore || data.outcome) {
+                            this._engageform.event.trigger('finish', data.totalScore || data.outcome, data.maxScore)
+                        }
                         _this.enabled = false;
                         _this.hasPrev = false;
                         _this.hasNext = false;
