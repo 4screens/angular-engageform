@@ -196,7 +196,10 @@ export class Navigation {
     } else {
       this.position = this._engageform.availablePages.length
       if (!vcase) {
-        this._engageform.setCurrentEndPage().then(() => {
+        this._engageform.setCurrentEndPage().then((data: any) => {
+          if (this._engageform.type === EngageformType.Score || this._engageform.type === EngageformType.Outcome) {
+            this._engageform.event.trigger('finish', data.totalScore || data.outcome, data.maxScore)
+          }
           this.enabled = false
           this.hasPrev = false
           this.hasNext = false
