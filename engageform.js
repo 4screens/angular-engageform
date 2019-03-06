@@ -1,6 +1,6 @@
 (function(angular) {
 /*!
- * 4screens-angular-engageform v0.3.6
+ * 4screens-angular-engageform v0.3.7
  * (c) 2015 Nopattern sp. z o.o.
  * License: proprietary
  */
@@ -219,7 +219,7 @@ var Navigation;
                 if (!vcase) {
                     this._engageform.setCurrentEndPage().then(function (data) {
                         if (data.totalScore || data.outcome) {
-                            this._engageform.event.trigger('finish', data.totalScore || data.outcome, data.maxScore)
+                            _this._engageform.event.trigger('finish', data.totalScore || data.outcome, data.maxScore)
                         }
                         _this.enabled = false;
                         _this.hasPrev = false;
