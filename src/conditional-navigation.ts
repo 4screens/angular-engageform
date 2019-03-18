@@ -1,5 +1,5 @@
 import { head, last } from 'lodash'
-import Quiz from './src/api/quiz.interface'
+import Quiz from './api/quiz.interface'
 import {
   ConditionConnection,
   ConditionIs,
@@ -9,13 +9,13 @@ import {
   isExitRule,
   isFormCondition,
   QuestionLogic
-} from './src/api/skip-logic.interface'
-import Engageform from './src/engageform/engageform'
-import { Navigation } from './src/navigation'
-import Case from './src/page/case'
-import Page from './src/page/page'
-import { PageType } from './src/page/page-type.enum'
-import { Maybe } from './src/types'
+} from './api/skip-logic.interface'
+import Engageform from './engageform/engageform'
+import { Navigation } from './navigation'
+import Case from './page/case'
+import Page from './page/page'
+import { PageType } from './page/page-type.enum'
+import { Maybe } from './types'
 
 type AnswersTypes = string | number | { [key: string]: string } | null
 
@@ -110,7 +110,13 @@ export default class ConditionalNavigation extends Navigation {
   }
 
   protected move(vcase?: Case) {
+    console.log('SWAG')
     const page = this._engageform.current
+
+    if (!page) {
+      return super.move(vcase)
+    }
+
     const currentLogic = this.logic[page.id]
     let step: Maybe<number>
     let nextPage: Maybe<Page>
