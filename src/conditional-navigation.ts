@@ -1,9 +1,11 @@
-import { head, last } from 'lodash'
+import { head } from 'lodash'
 import Quiz from './api/quiz.interface'
 import {
   ConditionConnection,
   ConditionIs,
-  DefaultRule, EntryRule, ExitRule,
+  DefaultRule,
+  EntryRule,
+  ExitRule,
   isDefaultRule,
   isEntryRule,
   isExitRule,
@@ -43,6 +45,7 @@ class Logic {
   resolveEntryDestination(): string {
     return this.resolveDestination(this.entryRules)
   }
+
   resolveExitDestination(): string {
     return this.resolveDestination(this.exitRules)
   }
