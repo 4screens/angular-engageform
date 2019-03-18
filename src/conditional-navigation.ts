@@ -20,11 +20,17 @@ import { Maybe } from './types'
 type AnswersTypes = string | number | { [key: string]: string } | null
 
 class Logic {
-  private entryRules = this.logic.rules.filter(isEntryRule)
-  private exitRules = this.logic.rules.filter(isExitRule)
-  private defaultRule = head<DefaultRule>(this.logic.rules.filter(isDefaultRule))!
+  private readonly entryRules: Array<EntryRule>
+  private readonly exitRules: Array<ExitRule>
+  private readonly defaultRule: DefaultRule
+  private readonly answers: Map<string, AnswersTypes>
 
-  constructor(private logic: QuestionLogic, private answers: Map<string, AnswersTypes>) {}
+  constructor(private logic: QuestionLogic, answers: Map<string, AnswersTypes>) {
+    this.entryRules = logic.rules.filter(isEntryRule)
+    this.exitRules = logic.rules.filter(isExitRule)
+    this.defaultRule = head<DefaultRule>(logic.rules.filter(isDefaultRule))!
+    this.answers = answers
+  }
 
   hasEntryRules() {
     return this.entryRules.length > 0
@@ -110,13 +116,7 @@ export default class ConditionalNavigation extends Navigation {
   }
 
   protected move(vcase?: Case) {
-    console.log('SWAG')
     const page = this._engageform.current
-
-    if (!page) {
-      return super.move(vcase)
-    }
-
     const currentLogic = this.logic[page.id]
     let step: Maybe<number>
     let nextPage: Maybe<Page>
