@@ -15,6 +15,7 @@ export default abstract class Case {
 
   readonly id: Id
   readonly type: CaseType = CaseType.Undefined
+  readonly page: Page
 
   selected = false
   correct = false
@@ -24,7 +25,8 @@ export default abstract class Case {
   error: MaybeString
   value: MaybeString
 
-  protected constructor(public readonly page: Page, {_id}: WithId) {
+  protected constructor(page: Page, {_id}: WithId) {
+    this.page = page
     this.id = _id
   }
 
