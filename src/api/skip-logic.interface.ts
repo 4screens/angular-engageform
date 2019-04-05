@@ -88,7 +88,7 @@ export interface QuestionLogic {
   rules: Array<DefaultRule | EntryRule | ExitRule>
 }
 
-interface BaseRule {
+export interface BaseRule {
   // Rule's type.
   type: RuleType
 

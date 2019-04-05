@@ -1,6 +1,7 @@
 import { head } from 'lodash'
 import Quiz from './api/quiz.interface'
 import {
+  BaseRule,
   ConditionConnection,
   ConditionIs,
   DefaultRule,
@@ -28,8 +29,8 @@ class Logic {
   private readonly answers: Map<string, AnswersTypes>
 
   constructor(private logic: QuestionLogic, answers: Map<string, AnswersTypes>) {
-    this.entryRules = logic.rules.filter(isEntryRule)
-    this.exitRules = logic.rules.filter(isExitRule)
+    this.entryRules = this.processNonDefaultRules(logic.rules, isEntryRule)
+    this.exitRules = this.processNonDefaultRules(logic.rules, isExitRule)
     this.defaultRule = head<DefaultRule>(logic.rules.filter(isDefaultRule))!
     this.answers = answers
   }
@@ -48,6 +49,24 @@ class Logic {
 
   resolveExitDestination(): string {
     return this.resolveDestination(this.exitRules)
+  }
+
+  private processNonDefaultRules<T extends EntryRule | ExitRule>(rules: BaseRule[], predicate: (rule: BaseRule) => rule is T): T[] {
+    return rules
+      .filter(predicate)
+      .map(this.dropEmptyConditions)
+      .filter(this.hasConditions)
+  }
+
+  private dropEmptyConditions<R extends EntryRule | ExitRule>(rule: R): R {
+    return {
+      ...rule,
+      conditions: rule.conditions.filter(condition => Boolean(condition.to))
+    }
+  }
+
+  private hasConditions({conditions}: EntryRule | ExitRule): boolean {
+    return conditions.length > 0
   }
 
   private resolveDestination(rules: Array<EntryRule | ExitRule>): string {
