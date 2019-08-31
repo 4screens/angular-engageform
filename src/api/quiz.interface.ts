@@ -50,4 +50,5 @@ export default interface Quiz {
     tabFontColor: string
     tabBorderColor: string
   }
+  showGoogleAds: boolean
 }

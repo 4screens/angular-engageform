@@ -67,6 +67,8 @@ export default class Engageform {
 
   mode: EmbedMode
 
+  showGoogleAds: boolean
+
   get id(): string {
     return this._engageformId
   }
@@ -183,6 +185,8 @@ export default class Engageform {
     this.event = new Event()
 
     this.branding = Branding.create(data.settings && data.settings.branding)
+
+    this.showGoogleAds = data.showGoogleAds
 
     // Handle pages creation.
     let builtPages = this.buildPages(pages || [], this.settings)
