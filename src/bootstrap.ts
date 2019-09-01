@@ -193,6 +193,7 @@ export default class Bootstrap {
     // Initialize the quiz.
     return Bootstrap.$q.all<Quiz, QuizQuestion[]>(initializationPromises).then(([quizData, questions]) => {
       // If the quiz doesn't have a supported constructor, reject the promise with error.
+
       if (!isInEnum(QuizType, quizData.type)) {
         return Bootstrap.$q.reject({
           status: 'error',
@@ -236,6 +237,7 @@ export default class Bootstrap {
     // Go, fetch the data.
     return Bootstrap.$http.get<T>(url).then((res: angular.IHttpResponse<T>) => {
       if ([200, 304].indexOf(res.status) !== -1) {
+        console.log(JSON.stringify(res.data))
         return res.data
       } else {
         return Bootstrap.$q.reject(res)
