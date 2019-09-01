@@ -205,6 +205,8 @@ export default class Bootstrap {
         })
       }
 
+      console.log(quizData)
+
       // Create the Engageform's instance.
       this._engageform = new Bootstrap.quizzesConstructors[quizData.type](quizData,
         Bootstrap.mode, questions, options.embedSettings, options.callback ? options.callback.sendAnswerCallback : () => {})
@@ -237,7 +239,6 @@ export default class Bootstrap {
     // Go, fetch the data.
     return Bootstrap.$http.get<T>(url).then((res: angular.IHttpResponse<T>) => {
       if ([200, 304].indexOf(res.status) !== -1) {
-        console.log(JSON.stringify(res.data))
         return res.data
       } else {
         return Bootstrap.$q.reject(res)
