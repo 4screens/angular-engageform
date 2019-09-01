@@ -139,6 +139,15 @@ export default class Bootstrap {
     }
   }
 
+  get showGoogleAds(): Maybe<boolean> {
+    if (this._engageform) {
+      return this._engageform.showGoogleAds
+    }else{
+      return false
+    }
+  }
+
+
   init(embedOptions: Embed): angular.IPromise<Engageform> {
     const options = defaults({}, embedOptions, {mode: EmbedMode.Default})
 
