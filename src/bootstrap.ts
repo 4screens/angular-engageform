@@ -1,3 +1,4 @@
+// tslint:disable:no-console
 import angular from 'angular'
 import { defaults } from 'lodash'
 import Embed from './api/embed.interface'
@@ -205,7 +206,10 @@ export default class Bootstrap {
         })
       }
 
-      console.log(quizData)
+      console.log('quizData:',quizData);
+      console.log('questions:',questions);
+      console.log('options:',options);
+      console.log('Bootstrap.mode:',Bootstrap.mode);
 
       // Create the Engageform's instance.
       this._engageform = new Bootstrap.quizzesConstructors[quizData.type](quizData,
