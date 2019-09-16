@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import angular from 'angular'
 import { defaults } from 'lodash'
 import Embed from './api/embed.interface'
