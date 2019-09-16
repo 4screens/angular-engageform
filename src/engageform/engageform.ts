@@ -167,6 +167,9 @@ export default class Engageform {
   constructor(data: Quiz, mode: EmbedMode, pages: QuizQuestion[], embedSettings: EmbedSettings,
               sendAnswerCallback: SendAnswerCallback = () => {
               }) {
+
+    console.log('Quiz:',data);
+
     this._engageformId = data._id
     this.mode = mode
     this.embedSettings = embedSettings
