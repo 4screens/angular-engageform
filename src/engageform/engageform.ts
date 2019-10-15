@@ -168,8 +168,6 @@ export default class Engageform {
               sendAnswerCallback: SendAnswerCallback = () => {
               }) {
 
-    console.log('Quiz:',data);
-
     this._engageformId = data._id
     this.mode = mode
     this.embedSettings = embedSettings
