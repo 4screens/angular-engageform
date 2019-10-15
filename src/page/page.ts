@@ -9,11 +9,10 @@ import Case from './case'
 import PageSentProperties from './page-sent.interface'
 import PageSettings from './page-settings'
 import PageSettingsProperties from './page-settings-properties'
-import {PageTemplate, PageType} from './page-type.enum'
+import { PageType } from './page-type.enum'
 
 export default abstract class Page {
   static Type = PageType
-  static Template = PageTemplate
 
   readonly id: string
   readonly engageform: Engageform
