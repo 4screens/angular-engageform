@@ -5,7 +5,7 @@ import Page from '../page'
 import { PageType } from '../page-type.enum'
 
 export default class Poster extends Page {
-  readonly type = PageType.Poster
+  readonly type = PageType.poster
   private button: MaybeString
   private exitLink: MaybeBoolean
   private link: MaybeString

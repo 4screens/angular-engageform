@@ -9,7 +9,7 @@ import { PageType } from '../page-type.enum'
 import SocialData from '../social-data.interface'
 
 export class EndPage extends Page {
-  readonly type = PageType.EndPage
+  readonly type = PageType.endPage
   readonly isCoverPage = true
 
   /* outcome */

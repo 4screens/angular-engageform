@@ -5,7 +5,7 @@ import Page from '../page'
 import { PageType } from '../page-type.enum'
 
 export default class StartPage extends Page {
-  readonly type = PageType.StartPage
+  readonly type = PageType.startPage
   readonly isCoverPage = true
 
   button: MaybeString

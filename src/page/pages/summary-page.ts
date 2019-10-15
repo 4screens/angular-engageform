@@ -6,7 +6,7 @@ import Page from '../page'
 import { PageType } from '../page-type.enum'
 
 export default class SummaryPage extends Page {
-  readonly type = PageType.SummaryPage
+  readonly type = PageType.summaryPage
   stats: EndStats[]
 
   constructor(engageform: Engageform, data: QuizQuestion) {

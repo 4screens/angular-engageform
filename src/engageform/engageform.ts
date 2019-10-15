@@ -168,8 +168,6 @@ export default class Engageform {
               sendAnswerCallback: SendAnswerCallback = () => {
               }) {
 
-    console.log('Quiz:',data);
-
     this._engageformId = data._id
     this.mode = mode
     this.embedSettings = embedSettings
@@ -198,7 +196,7 @@ export default class Engageform {
     builtPages.forEach(page => this.storePage(page))
 
     // Does the quiz have any form-type pages?
-    this._hasForms = builtPages.some(page => page.type === PageType.Form)
+    this._hasForms = builtPages.some(page => page.type === PageType.forms)
 
     // Create meta objects. // TODO: this is based on the temporary logic implementation in Suros.
     const withLogic = ((data as any)._logic) && ((data as any)._logic) !== '[]'
@@ -232,11 +230,11 @@ export default class Engageform {
    * @returns {Page.Page} The same page.
    */
   storePage(page: Page): Page {
-    if (page.type === PageType.StartPage) {
+    if (page.type === PageType.startPage) {
       if (this.isNormalMode()) {
         this._startPages.push(page.id)
       }
-    } else if (page.type === PageType.EndPage) {
+    } else if (page.type === PageType.endPage) {
       if (this.isNormalMode()) {
         this._endPages.push(page.id)
       }
@@ -329,19 +327,19 @@ export default class Engageform {
    */
   createPage(page: QuizQuestion, settings: Settings): Page {
     switch (page.type) {
-      case PageType.EndPage:
+      case PageType.endPage:
         return new EndPage(this, page, settings)
-      case PageType.Form:
+      case PageType.forms:
         return new Form(this, page)
-      case PageType.MultiChoice:
+      case PageType.multiChoice:
         return new MultiChoice(this, page)
-      case PageType.PictureChoice:
+      case PageType.pictureChoice:
         return new PictureChoice(this, page)
-      case PageType.Rateit:
+      case PageType.rateIt:
         return new RateIt(this, page)
-      case PageType.StartPage:
+      case PageType.startPage:
         return new StartPage(this, page)
-      case PageType.Poster:
+      case PageType.poster:
         return new Poster(this, page)
       default:
         throw new Error('Trying to construct an unknown page.')
@@ -380,7 +378,7 @@ export default class Engageform {
   setResultPage(stats: EndStats[]) {
     const data: QuizQuestion = {
       _id: 'summaryPage',
-      type: PageType.SummaryPage,
+      type: PageType.summaryPage,
       // @ts-ignore
       settings: {
         showCorrectAnswer: true,

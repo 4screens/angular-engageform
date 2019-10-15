@@ -7,7 +7,7 @@ import Page from '../page'
 import { PageType } from '../page-type.enum'
 
 export default class RateIt extends Page {
-  readonly type = PageType.Rateit
+  readonly type = PageType.rateIt
 
   result = 0
   labelMin: string
