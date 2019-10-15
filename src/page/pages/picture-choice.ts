@@ -7,7 +7,7 @@ import PageSentProperties from '../page-sent.interface'
 import { PageType } from '../page-type.enum'
 
 export default class PictureChoice extends Page {
-  readonly type = PageType.pictureChoice
+  readonly type = PageType.PictureChoice
 
   constructor(engageform: Engageform, data: QuizQuestion) {
     super(engageform, data)

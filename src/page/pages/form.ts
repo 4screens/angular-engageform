@@ -9,7 +9,7 @@ import PageSentProperties from '../page-sent.interface'
 import Result from '../../api/result.interface'
 
 export default class Form extends Page {
-  readonly type = PageType.forms
+  readonly type = PageType.Form
   count = 0
 
   constructor(engageform: Engageform, data: QuizQuestion) {

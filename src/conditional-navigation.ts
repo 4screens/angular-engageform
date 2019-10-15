@@ -178,6 +178,6 @@ export default class ConditionalNavigation extends Navigation {
   }
 
   private isPossiblyConditionalPage(page: Page): boolean {
-    return [PageType.forms, PageType.multiChoice, PageType.pictureChoice, PageType.rateIt].includes(page.type)
+    return [PageType.Form, PageType.MultiChoice, PageType.PictureChoice, PageType.Rateit].includes(page.type)
   }
 }

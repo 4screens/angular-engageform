@@ -123,7 +123,7 @@ export default abstract class Page {
         && k !== 'questionId'
 
         // Don't create the case for rateits.
-        && this.type !== PageType.rateIt) {
+        && this.type !== PageType.Rateit) {
 
         // Create the fake answer to show results…
         let fakeCase: Case = <Case>this.createCase({
