@@ -11,7 +11,7 @@ import {
   isEntryRule,
   isExitRule,
   isFormCondition,
-  QuestionLogic
+  QuestionLogic, RuleType
 } from './api/skip-logic.interface'
 import Engageform from './engageform/engageform'
 import { Navigation } from './navigation'
@@ -29,9 +29,9 @@ class Logic {
   private readonly answers: Map<string, AnswersTypes>
 
   constructor(private logic: QuestionLogic, answers: Map<string, AnswersTypes>) {
-    this.entryRules = this.processNonDefaultRules(logic.rules, isEntryRule)
-    this.exitRules = this.processNonDefaultRules(logic.rules, isExitRule)
-    this.defaultRule = head<DefaultRule>(logic.rules.filter(isDefaultRule))!
+    this.entryRules = this.processNonDefaultRules(logic.rules[RuleType.Entry], isEntryRule)
+    this.exitRules = this.processNonDefaultRules(logic.rules[RuleType.Exit], isExitRule)
+    this.defaultRule = head<DefaultRule>(logic.rules[RuleType.Default].filter(isDefaultRule))!
     this.answers = answers
   }
 
@@ -52,10 +52,10 @@ class Logic {
   }
 
   private processNonDefaultRules<T extends EntryRule | ExitRule>(rules: BaseRule[], predicate: (rule: BaseRule) => rule is T): T[] {
-    return rules
+    return rules ? rules
       .filter(predicate)
       .map(this.dropEmptyConditions)
-      .filter(this.hasConditions)
+      .filter(this.hasConditions) : []
   }
 
   private dropEmptyConditions<R extends EntryRule | ExitRule>(rule: R): R {
@@ -125,9 +125,10 @@ export default class ConditionalNavigation extends Navigation {
 
   constructor(engageform: Engageform, data: Quiz) {
     super(engageform)
-    const parsedLogic = (JSON.parse((data as any)._logic) || [])
-    parsedLogic.forEach((logic: QuestionLogic) => {
-      this.logic[logic.questionId] = new Logic(logic, this._engageform.answers)
+    console.log(data);
+    const parsedLogic = (data as any).skipLogic || {};
+    Object.keys(parsedLogic).forEach((logic: string) => {
+      this.logic[logic] = new Logic(parsedLogic[logic], this._engageform.answers)
     })
   }
 

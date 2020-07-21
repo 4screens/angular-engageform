@@ -198,8 +198,8 @@ export default class Engageform {
     // Does the quiz have any form-type pages?
     this._hasForms = builtPages.some(page => page.type === PageType.Form)
 
-    // Create meta objects. // TODO: this is based on the temporary logic implementation in Suros.
-    const withLogic = ((data as any)._logic) && ((data as any)._logic) !== '[]'
+    // Create meta objects.
+    const withLogic = ((data as any).skipLogic) && ((data as any).skipLogic) !== '{}'
     if (withLogic) {
       this.navigation = ConditionalNavigation.fromEnageformAndData(this, data)
     } else {

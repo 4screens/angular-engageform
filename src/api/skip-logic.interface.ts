@@ -5,51 +5,56 @@
  * const schema: QuestionLogic = {
  *   _id: "object_id",
  *   questionId: 'question_id',
- *   rules: [
- *     {
- *       type: "default",
- *       destination: 'last_page'
- *     },
- *     {
- *       type: "entry",
- *       destination: "question_4",
- *       conditionsConnection: "and",
- *       conditions: [
- *         {
- *           // When "answer" to "question_1" is "eq" the value of "response".
- *           when: "answer",
- *           to: "question_1",
- *           is: "eq",
- *           value: 'response'
- *         },
- *         {
- *           when: "answer",
- *           to: "question 2",
- *           is: "blank",
- *         }
- *       ],
- *     },
- *     {
- *       type: "exit",
- *       destination: "end_page",
- *       conditionsConnection: "or",
- *       conditions: [
- *         {
- *           when: "answer",
- *           to: "question_3",
- *           is: "eq",
- *           value: "another_resposne",
- *         }
- *       ],
- *     }
- *   ]
+ *   rules: {
+ *     "defaultRule": [
+ *        {
+ *           type: "default",
+ *           destination: 'last_page'
+ *        }
+ *     ],
+ *     "entryRule": [
+ *       {
+ *         type: "entryRule",
+ *         destination: "question_4",
+ *         conditionsConnection: "and",
+ *         conditions: [
+ *           {
+ *             // When "answer" to "question_1" is "eq" the value of "response".
+ *             when: "answer",
+ *             to: "question_1",
+ *             is: "eq",
+ *             value: 'response'
+ *           }, {
+ *              when: "answer",
+ *              to: "question 2",
+ *              is: "blank",
+ *           }
+ *         ]
+ *       }
+ *     ],
+ *     "exitRule": [
+ *       {
+ *         type: "exit",
+ *         destination: "end_page",
+ *         conditionsConnection: "or",
+ *         conditions: [
+ *           {
+ *             when: "answer",
+ *             to: "question_3",
+ *             is: "eq",
+ *             value: "another_resposne",
+ *           }
+ *         ]
+ *       }
+ *     ]
+ *   }
  * }
  */
 
 export enum RuleType {
-  Default = 'default',
-  Entry = 'entry',
-  Exit = 'exit',
+  Default = 'defaultRule',
+  Entry = 'entryRule',
+  Exit = 'exitRule',
 }
 
 export enum ConditionConnection {
@@ -85,7 +90,13 @@ export interface QuestionLogic {
   questionId: string
 
   // List of all rules managing to this condition object.
-  rules: Array<DefaultRule | EntryRule | ExitRule>
+  rules: QuestionLogicRules
+}
+
+export interface QuestionLogicRules {
+  [RuleType.Default]: Array<DefaultRule>
+  [RuleType.Entry]: Array<EntryRule>
+  [RuleType.Exit]: Array<ExitRule>
 }
 
 export interface BaseRule {
