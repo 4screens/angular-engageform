@@ -112,7 +112,8 @@ class Logic {
           return passedConditions[combinator](v => v) ? destination : null
         })
         .filter(Boolean)[0]
-    return destination || this.defaultRule.destination
+    // return destination || this.defaultRule.destination
+    return destination || ''
   }
 }
 
@@ -125,7 +126,6 @@ export default class ConditionalNavigation extends Navigation {
 
   constructor(engageform: Engageform, data: Quiz) {
     super(engageform)
-    console.log(data);
     const parsedLogic = (data as any).skipLogic || {};
     Object.keys(parsedLogic).forEach((logic: string) => {
       this.logic[logic] = new Logic(parsedLogic[logic], this._engageform.answers)
