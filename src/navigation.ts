@@ -171,8 +171,7 @@ export class Navigation {
 
     this.visitedPages.push(this._engageform.current)
     this.position += step
-
-    if (this._engageform.availablePages.length >= this.position) {
+    if (step > -1 && this._engageform.availablePages.length >= this.position) {
       this.updateDistance()
       this._engageform.setCurrent(this._engageform.availablePages[this.position - 1])
 
