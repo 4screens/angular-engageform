@@ -1,4 +1,4 @@
-import { head } from 'lodash'
+import {head} from 'lodash'
 import Quiz from './api/quiz.interface'
 import {
   BaseRule,
@@ -14,11 +14,11 @@ import {
   QuestionLogic, RuleType
 } from './api/skip-logic.interface'
 import Engageform from './engageform/engageform'
-import { Navigation } from './navigation'
+import {Navigation} from './navigation'
 import Case from './page/case'
 import Page from './page/page'
-import { PageType } from './page/page-type.enum'
-import { Maybe } from './types'
+import {PageType} from './page/page-type.enum'
+import {Maybe} from './types'
 
 type AnswersTypes = string | number | { [key: string]: string } | null
 
@@ -144,12 +144,17 @@ export default class ConditionalNavigation extends Navigation {
     let step: Maybe<number>
     let nextPage: Maybe<Page>
 
-    if (!this.isPossiblyConditionalPage(page)) {
-      nextPage = this._engageform.getPageByIndex(0)
-    } else if (!currentLogic || !currentLogic.hasExitRules()) {
-      nextPage = this._engageform.getPageByIndex(this.position + 1)
-    } else {
-      nextPage = this._engageform.getPageById(currentLogic.resolveExitDestination())
+    //by default we want to go next page
+    nextPage = this._engageform.getPageByIndex(this.position)
+
+    //if exitrule is set then we want to to the pointed by exit rule
+    if (currentLogic && currentLogic.hasExitRules()) {
+      let possibleNextPage = this._engageform.getPageById(currentLogic.resolveExitDestination())
+
+      //if exitrule points to next page then we override default next page
+      if (possibleNextPage) {
+        nextPage = possibleNextPage
+      }
     }
 
     if (nextPage) {
@@ -158,10 +163,16 @@ export default class ConditionalNavigation extends Navigation {
 
     // Checking again, since the page might become empty after checking the entry rules.
     if (nextPage) {
-      step = this._engageform.getPageIndex(nextPage) - this._engageform.getPageIndex(page)
+      let nextIdx = this._engageform.getPageIndex(nextPage)
+      if (nextIdx < 0) {
+        return super.move( undefined,-1)
+      } else {
+        return super.move(vcase, (nextIdx - this._engageform.getPageIndex(page)))
+      }
     }
 
-    return super.move(vcase, step)
+    //by default we want to go next page - but we never should go here!
+    return super.move(vcase, 1)
   }
 
   private checkEntryConditionForPage(page: Page): Maybe<Page> {
