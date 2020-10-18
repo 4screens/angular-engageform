@@ -231,11 +231,11 @@ export default class Engageform {
    */
   storePage(page: Page): Page {
     if (page.type === PageType.StartPage) {
-      if (this.isNormalMode()) {
+      if (this.isNormalMode() || this.isSummaryMode()) {
         this._startPages.push(page.id)
       }
     } else if (page.type === PageType.EndPage) {
-      if (this.isNormalMode()) {
+      if (this.isNormalMode() || this.isSummaryMode()) {
         this._endPages.push(page.id)
       }
     } else {
