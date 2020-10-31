@@ -9,13 +9,8 @@ export default class Score extends Engageform {
 
   setCurrentEndPage(): angular.IPromise<QuizFinish> {
     return super.setCurrentEndPage().then((data) => {
-      let score = 100
+      let score = data.totalScore
       let hasEndPage = false
-
-      // Error divide by zero...
-      if (data.maxScore > 0) {
-        score = Math.round(data.totalScore / data.maxScore * 100)
-      }
 
       this.endPages.map((pageId) => {
         const page = this.pages[pageId] as EndPage
