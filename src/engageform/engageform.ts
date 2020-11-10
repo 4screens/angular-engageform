@@ -408,6 +408,10 @@ export default class Engageform {
       extend(pageData, {
         text: 'User\'s outcome: ' + data.outcome
       })
+    } else if (data.type === 'calculator') {
+        extend(pageData, {
+          text: 'User\'s score: ' + data.score
+        })
     } else {
       extend(pageData, {
         text: 'User\'s score: ' + data.score + ' / ' + data.maxScore
