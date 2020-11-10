@@ -4,5 +4,6 @@ export enum EngageformType {
   Outcome,
   Poll,
   Score,
-  Survey
+  Survey,
+  Calculator
 }

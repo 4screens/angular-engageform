@@ -15,6 +15,7 @@ import Live from './engageform/form-types/live'
 import Outcome from './engageform/form-types/outcome'
 import Poll from './engageform/form-types/poll'
 import Score from './engageform/form-types/score'
+import Calculator from './engageform/form-types/calculator'
 import Survey from './engageform/form-types/survey'
 import { Theme } from './engageform/theme'
 import Event from './event'
@@ -51,7 +52,8 @@ export default class Bootstrap {
     poll: Poll,
     score: Score,
     survey: Survey,
-    live: Live
+    live: Live,
+    calculator: Calculator,
   }
 
   constructor($http: ng.IHttpService, $q: ng.IQService, $timeout: ng.ITimeoutService, cloudinary: any,
