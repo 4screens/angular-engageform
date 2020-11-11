@@ -35,6 +35,10 @@ class Logic {
     this.answers = answers
   }
 
+  get defaultRuleValue() {
+    return this.defaultRule
+  }
+
   hasEntryRules() {
     return this.entryRules.length > 0
   }
@@ -112,8 +116,7 @@ class Logic {
           return passedConditions[combinator](v => v) ? destination : null
         })
         .filter(Boolean)[0]
-    // return destination || this.defaultRule.destination
-    return destination || ''
+    return destination || this.defaultRule.destination
   }
 }
 
