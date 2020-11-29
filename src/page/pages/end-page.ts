@@ -23,6 +23,8 @@ export class EndPage extends Page {
   rangeMax: MaybeNumber
   exitLink: MaybeBoolean
   link: MaybeString
+  redirect: MaybeBoolean
+  redirectLink: MaybeString
   socialData: SocialData
 
 
@@ -45,6 +47,9 @@ export class EndPage extends Page {
       this.social = data.coverPage.showSocialShares
       this.exitLink = data.coverPage.exitLink
       this.link = data.coverPage.link
+      this.redirect = data.coverPage.redirect
+      this.redirectLink = data.coverPage.redirectLink
+
 
       if (data.coverPage.scoreRange) {
         this.rangeMax = data.coverPage.scoreRange.max

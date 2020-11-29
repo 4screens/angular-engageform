@@ -16,6 +16,8 @@ export default interface QuizQuestion {
     showSocialShares: boolean
     exitLink: boolean
     link: string
+    redirect: boolean
+    redirectLink: string
   }
   imageData: {
     containerHeight: number
