@@ -1,6 +1,8 @@
 import { PageType } from '../page/page-type.enum'
 import EndStats from './end-stats.interface'
 
+export type MediaPosition = 'stack' | 'float' | 'split' | 'background'
+
 export default interface QuizQuestion {
   _id: string
   type: PageType
@@ -50,6 +52,7 @@ export default interface QuizQuestion {
       link: string
       description: string
     }
+    mediaPosition: MediaPosition
   }
   buzzerTheme: {
     imgIdleSrc: string,
