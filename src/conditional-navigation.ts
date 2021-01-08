@@ -143,7 +143,7 @@ export default class ConditionalNavigation extends Navigation {
 
   protected move(vcase?: Case) {
     const page = this._engageform.current
-    const currentLogic = page? this.logic[page.id]: undefined
+    const currentLogic = this.logic && page ? this.logic[page.id]: undefined
 
     let step: Maybe<number>
     let nextPage: Maybe<Page>
@@ -167,7 +167,7 @@ export default class ConditionalNavigation extends Navigation {
 
     // Checking again, since the page might become empty after checking the entry rules.
     if (nextPage) {
-      let nextIdx = this._engageform.getPageIndex(nextPage)
+      let nextIdx = page ? this._engageform.getPageIndex(nextPage) : 1
       if (nextIdx < 0) {
         return super.move( undefined,-1)
       } else {
@@ -180,7 +180,7 @@ export default class ConditionalNavigation extends Navigation {
   }
 
   private checkEntryConditionForPage(page: Page): Maybe<Page> {
-    const nextLogic = this.logic ? this.logic[page.id] : undefined
+    const nextLogic = this.logic && page ? this.logic[page.id] : undefined
 
     if (nextLogic && nextLogic.hasEntryRules()) {
       const nextId = nextLogic.resolveEntryDestination()
