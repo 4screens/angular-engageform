@@ -113,7 +113,7 @@ export default class Engageform {
   }
 
   getPageIndex(page: Page): number {
-    return this.availablePages.indexOf(page.id)
+    return page ? this.availablePages.indexOf(page.id) : 0
   }
 
   /**
