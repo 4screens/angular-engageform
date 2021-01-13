@@ -199,6 +199,7 @@ export class Navigation {
           if (this._engageform.type === EngageformType.Score || this._engageform.type === EngageformType.Outcome) {
             this._engageform.event.trigger('finish', data.totalScore || data.outcome, data.maxScore)
           }
+          this._engageform.event.trigger('finish::endPage')
           this.enabled = false
           this.hasPrev = false
           this.hasNext = false
