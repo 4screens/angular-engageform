@@ -13,7 +13,6 @@ export default class PageSettings implements PageSettingsProperties {
     this.requiredAnswer = !!data.requiredAnswer
 
     if (data.settings) {
-      console.log('data.settings: ', data.settings);
       this.showResults = !!data.settings.showAnswers
       this.showCorrectAnswer = !!data.settings.showCorrectAnswer
       this.showMainMedia = !!data.settings.showMainMedia
