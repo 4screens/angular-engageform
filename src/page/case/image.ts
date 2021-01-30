@@ -9,11 +9,12 @@ import PageSentProperties from '../page-sent.interface'
 export default class ImageCase extends Case {
   private static mediaWidth = 300
   readonly type = CaseType.Image
-  media: MaybeString
+  media: MaybeString;
   mediaWidth: MaybeNumber;
   mediaHeight: MaybeNumber;
+  mediaUrl: MaybeString;
 
-  constructor(page: Page, data: WithId & {text: string, imageFile: string, imageData: {containerRatio: number, containerHeight: number}}) {
+  constructor(page: Page, data: WithId & {text: string, imageFile: string, imageData: {containerRatio: number, containerHeight: number}, imageFileUrl: string}) {
     super(page, data)
 
     this.title = data.text
@@ -22,6 +23,7 @@ export default class ImageCase extends Case {
       ImageCase.mediaWidth,
       data.imageData
     )
+    this.mediaUrl = data.imageFileUrl;
     this.mediaWidth = ImageCase.mediaWidth
     if (data.imageData && data.imageData.containerRatio) {
       this.mediaHeight = Math.round(ImageCase.mediaWidth * data.imageData.containerRatio)

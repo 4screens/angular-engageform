@@ -23,6 +23,7 @@ export default abstract class Page {
   media = ''
   mediaWidth = 0
   mediaHeight = 0
+  mediaUrl = ''
   filled = false
   settings: PageSettingsProperties
   cases: Case[] = []
@@ -45,6 +46,7 @@ export default abstract class Page {
         680, // zakładamy że media zawsze ma taką szerokość (MUST BE FIXXXXXED!!!!!)
         data.imageData
       )
+      this.mediaUrl = data.imageFileUrl;
       this.mediaWidth = 680
       if (data.imageData.containerRatio) {
         this.mediaHeight = Math.round(680 * data.imageData.containerRatio)
