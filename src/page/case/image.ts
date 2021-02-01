@@ -13,8 +13,10 @@ export default class ImageCase extends Case {
   mediaWidth: MaybeNumber;
   mediaHeight: MaybeNumber;
   mediaUrl: MaybeString;
+  mediaFileWidth: MaybeNumber;
+  mediaFileHeight: MaybeNumber;
 
-  constructor(page: Page, data: WithId & {text: string, imageFile: string, imageData: {containerRatio: number, containerHeight: number}, imageFileUrl: string}) {
+  constructor(page: Page, data: WithId & {text: string, imageFile: string, imageData: {containerRatio: number, containerHeight: number}, imageFileUrl: string, imageFileData: {width: number, height: number}}) {
     super(page, data)
 
     this.title = data.text
@@ -23,6 +25,10 @@ export default class ImageCase extends Case {
       ImageCase.mediaWidth,
       data.imageData
     )
+    if (data.imageFileData) {
+      this.mediaFileWidth = data.imageFileData.width;
+      this.mediaFileHeight = data.imageFileData.height;
+    }
     this.mediaUrl = data.imageFileUrl;
     this.mediaWidth = ImageCase.mediaWidth
     if (data.imageData && data.imageData.containerRatio) {

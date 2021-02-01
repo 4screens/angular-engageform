@@ -29,6 +29,10 @@ export default interface QuizQuestion {
     width: number
     height: number
   }
+  imageFileData: {
+    width: number
+    height: number
+  }
   imageFileUrl: string
   imageFile: string
   requiredAnswer: boolean
