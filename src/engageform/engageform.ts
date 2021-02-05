@@ -185,7 +185,7 @@ export default class Engageform {
 
     this.event = new Event()
 
-    this.branding = Branding.create(data.settings && data.settings.branding)
+    this.branding = Branding.create(data.type, data.settings && data.settings.branding)
 
     this.showGoogleAds = data.showGoogleAds
 

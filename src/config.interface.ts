@@ -22,7 +22,8 @@ export interface BackendConfig {
 
 export interface BrandingConfig {
   imageUrl: string
-  link: string
+  link_project: string
+  link_event: string
   text: string
   state: boolean
 }

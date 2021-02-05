@@ -1,11 +1,12 @@
 import Bootstrap from './bootstrap'
-import { BrandingConfig } from './config.interface'
+import {BrandingConfig} from './config.interface'
+import {QuizType} from "./api/quiz-type.enum";
 
 type BrandingCreationProperties = Partial<BrandingConfig>
 
 export default class Branding {
-  static create(brandingProperties: BrandingCreationProperties = {}): Branding {
-    return new Branding(brandingProperties, Branding.arePropertiesCustom(brandingProperties))
+  static create(quizType: QuizType, brandingProperties: BrandingCreationProperties = {}): Branding {
+    return new Branding(quizType, brandingProperties, Branding.arePropertiesCustom(brandingProperties))
   }
 
   private static arePropertiesCustom({text, link, imageUrl}: BrandingCreationProperties): boolean {
@@ -59,13 +60,18 @@ export default class Branding {
     return this._enabled
   }
 
-  private constructor({state, text, link, imageUrl}: BrandingCreationProperties = {}, _custom: boolean) {
+  private constructor(quizType:QuizType, {state, text, link, imageUrl}: BrandingCreationProperties = {}, _custom: boolean) {
     this._custom = _custom
     // State of the enabled branding is false, so negating that.
     this._enabled = !state
 
     this._text = Branding.isTextCustom(text) ? text : Branding.defaultBranding.text
-    this._link = link || Branding.defaultBranding.link
+
+    if (quizType == QuizType.Live ){
+      this._link = link || Branding.defaultBranding.link_event;
+    }else{
+      this._link = link || Branding.defaultBranding.link_project;
+    }
 
     if (Branding.isImageCustom(imageUrl)) {
       this._imageUrl = imageUrl ? `${Bootstrap.getConfig('backend').api + Bootstrap.getConfig('backend').imagesUrl}/${imageUrl}` : ''
