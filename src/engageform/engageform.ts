@@ -193,8 +193,6 @@ export default class Engageform {
     this.showGoogleAds = data.showGoogleAds
 
     this.integrations = data.integrations;
-    console.log('data: ', data);
-    console.log('data.integrations: ', data.integrations);
 
     // Handle pages creation.
     let builtPages = this.buildPages(pages || [], this.settings)
