@@ -25,6 +25,7 @@ import { Navigation } from './navigation'
 import Page from './page/page'
 import { Maybe, MaybeString } from './types'
 import User from './user'
+import Integration from "./api/integration.interface";
 
 export default class Bootstrap {
   static getConfig<K extends keyof AppConfig>(key: K): AppConfig[K] {
@@ -146,6 +147,12 @@ export default class Bootstrap {
       return this._engageform.showGoogleAds
     }else{
       return false
+    }
+  }
+
+  get integrations(): Maybe<Integration> {
+    if (this._engageform) {
+      return this._engageform.integrations
     }
   }
 

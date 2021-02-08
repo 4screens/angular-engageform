@@ -32,6 +32,7 @@ import Settings from './settings'
 import Tabs from './tabs'
 import Texts from './texts'
 import { Theme } from './theme'
+import Integration from "../api/integration.interface";
 
 export default class Engageform {
   private _engageformId: string
@@ -68,6 +69,8 @@ export default class Engageform {
   mode: EmbedMode
 
   showGoogleAds: boolean
+
+  integrations?: Integration
 
   get id(): string {
     return this._engageformId
@@ -188,6 +191,10 @@ export default class Engageform {
     this.branding = Branding.create(data.type, data.settings && data.settings.branding)
 
     this.showGoogleAds = data.showGoogleAds
+
+    this.integrations = data.integrations;
+    console.log('data: ', data);
+    console.log('data.integrations: ', data.integrations);
 
     // Handle pages creation.
     let builtPages = this.buildPages(pages || [], this.settings)

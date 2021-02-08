@@ -1,6 +1,7 @@
 import Branding from '../branding'
 import Texts from '../engageform/texts'
 import { QuizType } from './quiz-type.enum'
+import Integration from "./integration.interface";
 
 export default interface Quiz {
   _id: string
@@ -51,4 +52,5 @@ export default interface Quiz {
     tabBorderColor: string
   }
   showGoogleAds: boolean
+  integrations?: Integration
 }
