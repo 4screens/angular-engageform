@@ -91,7 +91,7 @@ export class EndPage extends Page {
     if (this.socialData && this.socialData.title && this.socialData.link) {
       this.personalizeShares()
       return 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(this.socialData.title)
-        + ' ' + this.socialData.link + ' via @4screens'
+        + ' ' + this.socialData.link + ' via @youengageme'
     }
     return null
   }
