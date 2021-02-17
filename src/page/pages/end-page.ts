@@ -31,8 +31,8 @@ export class EndPage extends Page {
   constructor(engageform: Engageform, data: QuizQuestion, settings: Settings) {
     super(engageform, data)
     const shareSettings: SocialData = defaults({}, settings.share, {
-      title: '',
-      description: '',
+      title: 'title1',
+      description: 'desc1',
       link: '',
       imageUrl: ''
     })
@@ -74,10 +74,9 @@ export class EndPage extends Page {
 
   get fbLink() {
     if (
-      Bootstrap.getConfig('backend') && Bootstrap.getConfig('backend').api &&
+      Bootstrap.getConfig('backend') && Bootstrap.getConfig('backend').domain &&
       Bootstrap.getConfig('share') && Bootstrap.getConfig('share').facebook &&
-      this.socialData && this.socialData.title && this.socialData.description &&
-      this.socialData.imageUrl && this.engageform && this.engageform.id
+      this.engageform && this.engageform.id
     ) {
       this.personalizeShares()
       return Bootstrap.getConfig('backend').domain + Bootstrap.getConfig('share').facebook + '?quizId=' + this.engageform.id +
