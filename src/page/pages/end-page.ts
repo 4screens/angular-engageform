@@ -74,7 +74,7 @@ export class EndPage extends Page {
 
   get fbLink() {
     if (
-      Bootstrap.getConfig('backend') && Bootstrap.getConfig('backend').domain &&
+      Bootstrap.getConfig('backend') && Bootstrap.getConfig('backend').api &&
       Bootstrap.getConfig('share') && Bootstrap.getConfig('share').facebook &&
       this.socialData && this.socialData.title && this.socialData.description &&
       this.socialData.imageUrl && this.engageform && this.engageform.id
