@@ -23,8 +23,8 @@ export default class Project extends Page {
       return this.createCase(answer)
     })
 
-    var project: ProjectQuestion = data.answers[0] as ProjectQuestion;
-    this.projectId = project._id;
+    var project: ProjectQuestion|null = data.answers.length ? data.answers[0] as ProjectQuestion : null;
+    this.projectId = project ? project._id : null;
   }
 
   createCase(answer: any): Case {
