@@ -1,5 +1,5 @@
 import angular from 'angular'
-import { extend, get } from 'lodash'
+import {extend, get} from 'lodash'
 import ConditionalNavigation from '../conditional-navigation'
 import Answer from '../api/answer.interface'
 import EmbedSettings from '../api/embed-settings.interface'
@@ -10,14 +10,14 @@ import Quiz from '../api/quiz.interface'
 import Result from '../api/result.interface'
 import Bootstrap from '../bootstrap'
 import Branding from '../branding'
-import { EmbedMode } from '../embed-mode.enum'
+import {EmbedMode} from '../embed-mode.enum'
 import Event from '../event'
 import Meta from '../meta'
-import { Navigation } from '../navigation'
+import {Navigation} from '../navigation'
 import Page from '../page/page'
-import { PageType } from '../page/page-type.enum'
-import { Pages } from '../page/pages.interface'
-import { EndPage } from '../page/pages/end-page'
+import {PageType} from '../page/page-type.enum'
+import {Pages} from '../page/pages.interface'
+import {EndPage} from '../page/pages/end-page'
 import Form from '../page/pages/form'
 import MultiChoice from '../page/pages/multi-choice'
 import PictureChoice from '../page/pages/picture-choice'
@@ -25,13 +25,14 @@ import Poster from '../page/pages/poster'
 import RateIt from '../page/pages/rate-it'
 import StartPage from '../page/pages/start-page'
 import SummaryPage from '../page/pages/summary-page'
-import { Maybe } from '../types'
-import { EngageformType } from './engageform-type.enum'
+import Project from "../page/pages/project";
+import {Maybe} from '../types'
+import {EngageformType} from './engageform-type.enum'
 import SendAnswerCallback from './send-answer-callback'
 import Settings from './settings'
 import Tabs from './tabs'
 import Texts from './texts'
-import { Theme } from './theme'
+import {Theme} from './theme'
 import Integration from "../api/integration.interface";
 
 export default class Engageform {
@@ -346,6 +347,8 @@ export default class Engageform {
         return new StartPage(this, page)
       case PageType.Poster:
         return new Poster(this, page)
+      case PageType.Project:
+        return new Project(this, page);
       default:
         throw new Error('Trying to construct an unknown page.')
     }

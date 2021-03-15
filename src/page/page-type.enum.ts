@@ -7,5 +7,6 @@ export enum PageType {
   Rateit = 'rateIt',
   StartPage = 'startPage',
   Poster = 'poster',
-  SummaryPage = 'summaryPage'
+  SummaryPage = 'summaryPage',
+  Project = 'project'
 }

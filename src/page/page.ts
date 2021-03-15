@@ -29,6 +29,7 @@ export default abstract class Page {
   filled = false
   settings: PageSettingsProperties
   cases: Case[] = []
+  projectId?: string
   result: MaybeNumber
 
   protected constructor(engageform: Engageform, data: QuizQuestion) {
