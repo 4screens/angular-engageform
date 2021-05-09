@@ -63,7 +63,7 @@ export default class Engageform {
   navigation: Navigation
   meta: Meta
 
-  answers = new Map<string, string | number | {[key: string]: string}>()
+  answers = new Map<string, string[] | number | {[key: string]: string}>()
 
   event: Event
 
@@ -433,7 +433,7 @@ export default class Engageform {
 
   setAnswer(pageId: string, answerValue: {[key: string]: string | number | {[key: string]: string}}) {
     const value =
-      get(answerValue, 'selectedCaseId') as string ||
+      get(answerValue, 'selectedCaseIds') as string[] ||
       get(answerValue, 'selectedValue') as number ||
       answerValue as {[key: string]: string}
     this.answers.set(pageId, value)

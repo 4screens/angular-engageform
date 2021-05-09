@@ -18,15 +18,15 @@ export class TextCase extends Case {
       return Bootstrap.$q.reject({textKey: 'CHANGING_NOT_ALLOWED', message: 'Changing answer is not allowed'})
     }
 
-    return super.makeSend({selectedAnswerId: this.id}).then((res) => {
+    return super.makeSend({selectedAnswerIds: [this.id]}).then((res) => {
       const data: PageSentProperties = <PageSentProperties>{}
 
-      if (res.selectedAnswerId) {
-        data.selectedCaseId = res.selectedAnswerId
+      if (res.selectedAnswerIds) {
+        data.selectedCaseIds = res.selectedAnswerIds
       }
 
-      if (res.correctAnswerId) {
-        data.correctCaseId = res.correctAnswerId
+      if (res.correctAnswerIds) {
+        data.correctCaseIds = res.correctAnswerIds
       }
 
       for (const caseId in res.stats) {

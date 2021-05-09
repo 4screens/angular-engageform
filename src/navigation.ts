@@ -6,6 +6,8 @@ import Texts from './engageform/texts'
 import Case from './page/case'
 import Page from './page/page'
 import { Nullable } from './types'
+import {PageType} from "./page/page-type.enum";
+import MultiChoice from "./page/pages/multi-choice";
 
 export class Navigation {
   static fromEnageform(engageform: Engageform): Navigation {
@@ -119,15 +121,28 @@ export class Navigation {
     // Made by Masters
     // (Mat fixed a bug: was `current._engageform.settings` the `current` doesn't have a `settings` property.
     // Check answer.
-    if (vcase && (this._engageform.settings.allowAnswerChange || !current.filled)) {
-      vcase.selected = true
-      // Made by Masters
-      vcase.incorrect = false
+
+    if(vcase && (current.settings.allowMultipleChoice || !current.filled)){
+        for (var c of current.cases){
+          if(vcase.id === c.id){
+            c.selected = !c.selected;
+            vcase.selected = c.selected;
+            break;
+          }
+        }
+
+        vcase.incorrect = false;
     }
 
     // Send the answer.
     return current.send(vcase).then(() => {
       this.sendMessage()
+
+      var multichoice = undefined
+
+      if(current.type === PageType.MultiChoice){
+        multichoice = current as MultiChoice
+      }
 
       // Prevent the question change when there's no answer selected and the page requires it.
       if (!current.filled && current.settings.requiredAnswer) {
@@ -136,7 +151,20 @@ export class Navigation {
         }
 
         return vcase
+      }else if(vcase && current.settings.allowMultipleChoice){
+        //if selected any answer then we do not move to next question
+        return vcase
+
       } else {
+        //for allowMultipleChoice=true we want to move to next page only when min and max answers limits are satisfied
+        //otherwise we want to stay on the same page
+        if(multichoice && current.settings.allowMultipleChoice && (
+          (current.settings.minAnswersCount && multichoice.selectedItemsCount < current.settings.minAnswersCount)
+          || (current.settings.maxAnswersCount && multichoice.selectedItemsCount > current.settings.maxAnswersCount)
+        )){
+          return vcase
+        }
+
         // Change the page with a slight delay, or do it instantly.
         // Made by Masters (only the timeout change from 2000 to 1000).
         let pageChangeDelay = vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 1000 : 200) : 0

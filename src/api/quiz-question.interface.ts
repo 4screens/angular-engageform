@@ -51,6 +51,11 @@ export default interface QuizQuestion {
     showCorrectAnswer: boolean
     showMainMedia: boolean
     showDescription: boolean
+    allowMultipleChoice: boolean
+    multipleChoice: {
+      minAnswersCount: number
+      maxAnswersCount: number
+    }
     share: {
       title: string
       imageUrl: string

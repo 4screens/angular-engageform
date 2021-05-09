@@ -7,4 +7,7 @@ export default interface PageSettingsProperties {
   showDescription: boolean
   requiredAnswer: boolean
   mediaPosition: MediaPosition
+  allowMultipleChoice: boolean
+  minAnswersCount: number
+  maxAnswersCount: number
 }

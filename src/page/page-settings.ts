@@ -8,6 +8,10 @@ export default class PageSettings implements PageSettingsProperties {
   showDescription: boolean = false
   requiredAnswer: boolean = false
   mediaPosition: MediaPosition = 'stack'
+  allowMultipleChoice: boolean = false
+  minAnswersCount: number = 0
+  maxAnswersCount: number = 0
+
 
   constructor(data: QuizQuestion) {
     this.requiredAnswer = !!data.requiredAnswer
@@ -17,7 +21,9 @@ export default class PageSettings implements PageSettingsProperties {
       this.showCorrectAnswer = !!data.settings.showCorrectAnswer
       this.showMainMedia = !!data.settings.showMainMedia
       this.showDescription = !!data.settings.showDescription
-      this.mediaPosition = data.settings.mediaPosition || 'stack'
+      this.allowMultipleChoice = data.settings.allowMultipleChoice || false
+      this.minAnswersCount = data.settings.multipleChoice.minAnswersCount || 0
+      this.maxAnswersCount = data.settings.multipleChoice.maxAnswersCount || 0
     }
   }
 }

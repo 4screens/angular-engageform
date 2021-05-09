@@ -12,7 +12,7 @@ export class ProjectCase extends Case {
   }
 
   send() {
-    return super.makeSend({selectedAnswerId: this.id}).then((res) => {
+    return super.makeSend({selectedAnswerIds: [this.id]}).then((res) => {
       const data: PageSentProperties = <PageSentProperties>{}
 
       super.save(data)

@@ -8,6 +8,8 @@ import PageSentProperties from '../page-sent.interface'
 
 export default class MultiChoice extends Page {
   readonly type = PageType.MultiChoice
+  selectedItemsCount = 0
+
 
   constructor(engageform: Engageform, data: QuizQuestion) {
     super(engageform, data)
@@ -47,7 +49,15 @@ export default class MultiChoice extends Page {
       vcase.correct = false
       vcase.incorrect = false
 
-      if (vcase.id === sent.selectedCaseId) {
+      var selected = undefined;
+
+      if(sent.selectedCaseIds){
+        selected = sent.selectedCaseIds.filter(function(val){
+          return vcase.id === val;
+        })
+      }
+
+      if (selected && selected.length > 0) {
         this.engageform.sendAnswerCallback(
           this.engageform.title || this.engageform.id,
           this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
@@ -62,11 +72,24 @@ export default class MultiChoice extends Page {
       }
 
       // Mark case as correct or incorrect.
-      if (vcase.id === sent.correctCaseId) {
+      var correct = undefined;
+
+      if(sent.correctCaseIds){
+        correct = sent.correctCaseIds.filter(function(val){
+          return vcase.id === val;
+        })
+      }
+
+      if (correct) {
         vcase.correct = true
       } else {
         vcase.incorrect = true
       }
     })
+
+    this.selectedItemsCount = this.cases.filter(function(val){
+      return val.selected;
+    }).length
+
   }
 }

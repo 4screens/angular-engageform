@@ -3,9 +3,10 @@ import { Nullable } from '../types'
 export default interface QuizQuestionAnswer {
   quizQuestionId?: string
   userIdent?: Nullable<string>
-  selectedAnswerId?: string
-  correctAnswerId?: string
+  selectedAnswerIds?: string[]
+  correctAnswerIds?: string[]
   selectedValue?: number
+  selected?: boolean
   points?: number
   avgRateItValue?: string
   rateItValue?: number

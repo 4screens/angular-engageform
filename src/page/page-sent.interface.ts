@@ -1,6 +1,6 @@
 export default interface PageSentProperties {
-  selectedCaseId?: string
-  correctCaseId?: string
+  selectedCaseIds?: string[]
+  correctCaseIds?: string[]
   selectedValue?: number
   result?: number
   results?: {

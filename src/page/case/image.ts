@@ -43,10 +43,10 @@ export default class ImageCase extends Case {
       return Bootstrap.$q.reject({textKey: 'CHANGING_NOT_ALLOWED', message: 'Changing answer is not allowed'})
     }
 
-    return super.makeSend({selectedAnswerId: this.id}).then((res: QuizQuestionAnswer) => {
+    return super.makeSend({selectedAnswerIds: [this.id]}).then((res: QuizQuestionAnswer) => {
       const data: PageSentProperties = {
-        selectedCaseId: res.selectedAnswerId,
-        correctCaseId: res.correctAnswerId
+        selectedCaseIds: res.selectedAnswerIds,
+        correctCaseIds: res.correctAnswerIds
       }
 
       for (const caseId in res.stats) {
