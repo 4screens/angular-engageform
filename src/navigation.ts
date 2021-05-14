@@ -122,18 +122,6 @@ export class Navigation {
     // (Mat fixed a bug: was `current._engageform.settings` the `current` doesn't have a `settings` property.
     // Check answer.
 
-    if(vcase && (current.settings.allowMultipleChoice || !current.filled)){
-        for (var c of current.cases){
-          if(vcase.id === c.id){
-            c.selected = !c.selected;
-            vcase.selected = c.selected;
-            break;
-          }
-        }
-
-        vcase.incorrect = false;
-    }
-
     // Send the answer.
     return current.send(vcase).then(() => {
       this.sendMessage()
@@ -145,7 +133,7 @@ export class Navigation {
       }
 
       // Prevent the question change when there's no answer selected and the page requires it.
-      if (!current.filled && current.settings.requiredAnswer) {
+      if (current.requireResponse()) {
         if (!opts.quiet) {
           this.sendMessage(this._engageform.texts.ANSWER_REQUIRED_TO_PROCEED)
         }

@@ -103,7 +103,7 @@ export default abstract class Case {
   }
 
   save(data: PageSentProperties): void {
-    this.page.engageform.setAnswer(this.page.id, data as any)
+    this.page.engageform.setAnswer(this.page.id, data)
     Bootstrap.localStorage.set('page.' + this.page.id, data)
   }
 

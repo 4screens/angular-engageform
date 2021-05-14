@@ -20,7 +20,7 @@ import Page from './page/page'
 import {PageType} from './page/page-type.enum'
 import {Maybe} from './types'
 
-type AnswersTypes = string | number | { [key: string]: string } | null
+type AnswersTypes = string | string[] | number | { [key: string]: string } | null
 
 class Logic {
   private readonly entryRules: Array<EntryRule>
@@ -78,39 +78,64 @@ class Logic {
       rules
         .map(({destination, conditionsConnection, conditions}) => {
           const passedConditions = conditions.map((condition) => {
-            let answer = this.answers.get(condition.to)
-            if (!answer) {
+            let answers = this.answers.get(condition.to)
+            if (!answers) {
               return false
             }
             if (isFormCondition(condition)) {
-              answer = (answer as { [index: string]: string })[condition.field]
+              answers = (answers as { [index: string]: string })[condition.field]
             }
-            switch (condition.is) {
-              case ConditionIs.Equal:
-                return answer === condition.value
-              case ConditionIs.NotEqual:
-                return answer !== condition.value
-              case ConditionIs.GreaterThan:
-                return answer > condition.value
-              case ConditionIs.GreaterThanOrEqual:
-                return answer >= condition.value
-              case ConditionIs.LessThan:
-                return answer < condition.value
-              case ConditionIs.LessThanOrEqual:
-                return answer <= condition.value
-              case ConditionIs.Between:
-                return condition.value[0] >= answer && answer <= condition.value[1]
-              case ConditionIs.Blank:
-                return !Boolean(answer)
-              case ConditionIs.NotBlank:
-                return Boolean(answer)
-              case ConditionIs.Contain:
-                return (answer as string).indexOf(condition.value) >= 0
-              case ConditionIs.NotContain:
-                return (answer as string).indexOf(condition.value) === -1
-              default:
-                return false
+
+            if (Array.isArray(answers)) {
+
+              for(var ans of answers) {
+                switch (condition.is) {
+                  case ConditionIs.Equal:
+                    return ans === condition.value
+                  case ConditionIs.NotEqual:
+                    return ans !== condition.value
+                  case ConditionIs.Blank:
+                    return !Boolean(ans)
+                  case ConditionIs.NotBlank:
+                    return Boolean(ans)
+                  case ConditionIs.Contain:
+                    return (ans as string).indexOf(condition.value) >= 0
+                  case ConditionIs.NotContain:
+                    return (ans as string).indexOf(condition.value) === -1
+                }
+              }
+
+              return false;
+
+            }else{
+              switch (condition.is) {
+                case ConditionIs.Equal:
+                  return answers === condition.value
+                case ConditionIs.NotEqual:
+                  return answers !== condition.value
+                case ConditionIs.GreaterThan:
+                  return answers > condition.value
+                case ConditionIs.GreaterThanOrEqual:
+                  return answers >= condition.value
+                case ConditionIs.LessThan:
+                  return answers < condition.value
+                case ConditionIs.LessThanOrEqual:
+                  return answers <= condition.value
+                case ConditionIs.Between:
+                  return condition.value[0] >= answers && answers <= condition.value[1]
+                case ConditionIs.Blank:
+                  return !Boolean(answers)
+                case ConditionIs.NotBlank:
+                  return Boolean(answers)
+                case ConditionIs.Contain:
+                  return (answers as string).indexOf(condition.value) >= 0
+                case ConditionIs.NotContain:
+                  return (answers as string).indexOf(condition.value) === -1
+                default:
+                  return false
+              }
             }
+
           })
           const combinator = conditionsConnection === ConditionConnection.Or ? 'some' : 'every'
           return passedConditions[combinator](v => v) ? destination : null

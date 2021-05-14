@@ -82,7 +82,7 @@ export default abstract class Page {
     let sent = <PageSentProperties>{}
 
     sent = <PageSentProperties>(Bootstrap.localStorage.get('page.' + this.id) || {})
-    this.engageform.setAnswer(this.id, sent as any)
+    this.engageform.setAnswer(this.id, sent)
 
     if (this.settings.showResults && sent.results) {
       this.getStatsById(this.id).then((data: QuizQuestion) => {
@@ -95,6 +95,11 @@ export default abstract class Page {
     }
 
     return deferred.promise
+  }
+
+  requireResponse(){
+    //can be overwritten in subclasses
+    return this.filled && this.settings.requiredAnswer;
   }
 
   refreshAnswer(sent: PageSentProperties, question: QuizQuestion): PageSentProperties {

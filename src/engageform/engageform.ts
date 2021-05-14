@@ -34,6 +34,7 @@ import Tabs from './tabs'
 import Texts from './texts'
 import {Theme} from './theme'
 import Integration from "../api/integration.interface";
+import PageSentProperties from "../page/page-sent.interface";
 
 export default class Engageform {
   private _engageformId: string
@@ -63,7 +64,7 @@ export default class Engageform {
   navigation: Navigation
   meta: Meta
 
-  answers = new Map<string, string[] | number | {[key: string]: string}>()
+  answers = new Map<string, string | string[] | number | {[key: string]: string}>()
 
   event: Event
 
@@ -431,7 +432,7 @@ export default class Engageform {
     this.storePage(resultPage)
   }
 
-  setAnswer(pageId: string, answerValue: {[key: string]: string | number | {[key: string]: string}}) {
+  setAnswer(pageId: string, answerValue: PageSentProperties) {
     const value =
       get(answerValue, 'selectedCaseIds') as string[] ||
       get(answerValue, 'selectedValue') as number ||

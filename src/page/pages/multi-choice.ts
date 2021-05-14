@@ -9,7 +9,7 @@ import PageSentProperties from '../page-sent.interface'
 export default class MultiChoice extends Page {
   readonly type = PageType.MultiChoice
   selectedItemsCount = 0
-
+  selectedItemsIds: string[] = []
 
   constructor(engageform: Engageform, data: QuizQuestion) {
     super(engageform, data)
@@ -52,7 +52,7 @@ export default class MultiChoice extends Page {
       var selected = undefined;
 
       if(sent.selectedCaseIds){
-        selected = sent.selectedCaseIds.filter(function(val){
+        selected = sent.selectedCaseIds.filter(function(val: string){
           return vcase.id === val;
         })
       }
@@ -75,7 +75,7 @@ export default class MultiChoice extends Page {
       var correct = undefined;
 
       if(sent.correctCaseIds){
-        correct = sent.correctCaseIds.filter(function(val){
+        correct = sent.correctCaseIds.filter(function(val: string){
           return vcase.id === val;
         })
       }
@@ -87,9 +87,13 @@ export default class MultiChoice extends Page {
       }
     })
 
-    this.selectedItemsCount = this.cases.filter(function(val){
-      return val.selected;
-    }).length
+    this.selectedItemsIds =  this.cases
+      .filter(function(val){
+        return val.selected;
+      })
+      .map(c => c.id);
+
+    this.selectedItemsCount = this.selectedItemsIds.length
 
   }
 }
