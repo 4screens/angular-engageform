@@ -8,6 +8,8 @@ import { PageType } from '../page-type.enum'
 
 export default class PictureChoice extends Page {
   readonly type = PageType.PictureChoice
+  selectedItemsCount = 0
+  selectedItemsIds: string[] = []
 
   constructor(engageform: Engageform, data: QuizQuestion) {
     super(engageform, data)
@@ -47,7 +49,15 @@ export default class PictureChoice extends Page {
       vcase.correct = false
       vcase.incorrect = false
 
-      if (vcase.id === sent.selectedCaseId) {
+      var selected = undefined;
+
+      if(sent.selectedCaseIds){
+        selected = sent.selectedCaseIds.filter(function(val: string){
+          return vcase.id === val;
+        })
+      }
+
+      if (selected && selected.length > 0) {
         this.engageform.sendAnswerCallback(
           this.engageform.title || this.engageform.id,
           this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,
@@ -62,12 +72,28 @@ export default class PictureChoice extends Page {
       }
 
       // Mark case as correct or incorrect.
-      if (vcase.id === sent.correctCaseId) {
+      var correct = undefined;
+
+      if(sent.correctCaseIds){
+        correct = sent.correctCaseIds.filter(function(val: string){
+          return vcase.id === val;
+        })
+      }
+
+      if (correct) {
         vcase.correct = true
       } else {
         vcase.incorrect = true
       }
     })
+
+    this.selectedItemsIds =  this.cases
+      .filter(function(val){
+        return val.selected;
+      })
+      .map(c => c.id);
+
+    this.selectedItemsCount = this.selectedItemsIds.length
+
   }
 }
-
