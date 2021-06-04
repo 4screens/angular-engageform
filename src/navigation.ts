@@ -8,6 +8,7 @@ import Page from './page/page'
 import { Nullable } from './types'
 import {PageType} from "./page/page-type.enum";
 import MultiChoice from "./page/pages/multi-choice";
+import PictureChoice from "./page/pages/picture-choice";
 
 export class Navigation {
   static fromEnageform(engageform: Engageform): Navigation {
@@ -130,6 +131,10 @@ export class Navigation {
 
       if(current.type === PageType.MultiChoice){
         multichoice = current as MultiChoice
+      }
+
+      if(current.type === PageType.PictureChoice){
+        multichoice = current as PictureChoice
       }
 
       // Prevent the question change when there's no answer selected and the page requires it.
