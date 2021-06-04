@@ -7,6 +7,7 @@ import Page from '../page'
 import PageSentProperties from '../page-sent.interface'
 import {PageType} from "../page-type.enum";
 import MultiChoice from "../pages/multi-choice";
+import PictureChoice from "../pages/picture-choice";
 
 export default class ImageCase extends Case {
   private static mediaWidth = 300
@@ -44,8 +45,8 @@ export default class ImageCase extends Case {
 
     var multichoice = undefined
 
-    if(this.page.type === PageType.MultiChoice){
-      multichoice = this.page as MultiChoice
+    if(this.page.type === PageType.PictureChoice){
+      multichoice = this.page as PictureChoice
     }
 
     if(this.page.settings.allowMultipleChoice && multichoice){
