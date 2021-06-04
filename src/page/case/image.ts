@@ -5,6 +5,8 @@ import Case from '../case'
 import { CaseType } from '../case-type.enum'
 import Page from '../page'
 import PageSentProperties from '../page-sent.interface'
+import {PageType} from "../page-type.enum";
+import MultiChoice from "../pages/multi-choice";
 
 export default class ImageCase extends Case {
   private static mediaWidth = 300
@@ -39,6 +41,42 @@ export default class ImageCase extends Case {
   }
 
   send() {
+
+    var multichoice = undefined
+
+    if(this.page.type === PageType.MultiChoice){
+      multichoice = this.page as MultiChoice
+    }
+
+    if(this.page.settings.allowMultipleChoice && multichoice){
+
+      var selected = false;
+
+      //checking if answer is already selected
+      for(var selectedItem of multichoice.selectedItemsIds){
+        if(selectedItem == this.id){
+          selected = true;
+          break;
+        }
+      }
+
+      //here we check if we can unset given answer (if we resend the same answer then it will be unset if allowed)
+      if(selected && !this.page.engageform.settings.allowAnswerChange){
+        return Bootstrap.$q.reject({textKey: 'CHANGING_NOT_ALLOWED', message: 'Changing answer is not allowed'})
+      }
+
+      //here we will check if there is max answers limit exceeded
+      if(!selected && this.page.settings.maxAnswersCount && multichoice.selectedItemsCount >= this.page.settings.maxAnswersCount){
+        return Bootstrap.$q.reject({textKey: 'NO_MORE_NOT_ALLOWED', message: 'No more answers is allowed'})
+      }
+
+
+    }else if ((!this.page.settings.allowMultipleChoice || !multichoice)
+      && !this.page.engageform.settings.allowAnswerChange
+      && this.page.filled) {
+      return Bootstrap.$q.reject({textKey: 'CHANGING_NOT_ALLOWED', message: 'Changing answer is not allowed'})
+    }
+
     if (!this.page.engageform.settings.allowAnswerChange && this.page.filled) {
       return Bootstrap.$q.reject({textKey: 'CHANGING_NOT_ALLOWED', message: 'Changing answer is not allowed'})
     }
@@ -63,5 +101,6 @@ export default class ImageCase extends Case {
 
       return data
     })
+
   }
 }
