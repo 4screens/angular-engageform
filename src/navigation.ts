@@ -138,14 +138,11 @@ export class Navigation {
       }
 
       // Prevent the question change when there's no answer selected and the page requires it.
-      if (current.requireResponse()) {
+      if ( !current.filled && current.requireResponse()) {
         if (!opts.quiet) {
           this.sendMessage(this._engageform.texts.ANSWER_REQUIRED_TO_PROCEED)
         }
 
-        return vcase
-      }else if(vcase && current.settings.allowMultipleChoice){
-        //if selected any answer then we do not move to next question
         return vcase
 
       } else {
