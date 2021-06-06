@@ -144,6 +144,9 @@ export class Navigation {
         }
 
         return vcase
+      }else if(vcase && current.settings.allowMultipleChoice){
+        //if selected any answer then we do not move to next question
+        return vcase
 
       } else {
         //for allowMultipleChoice=true we want to move to next page only when min and max answers limits are satisfied
