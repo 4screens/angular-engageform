@@ -23,8 +23,8 @@ export default class PageSettings implements PageSettingsProperties {
       this.showDescription = !!data.settings.showDescription
       this.mediaPosition = data.settings.mediaPosition || 'stack'
       this.allowMultipleChoice = data.settings.allowMultipleChoice || false
-      this.minAnswersCount = data.settings.multipleChoice.minAnswersCount || 0
-      this.maxAnswersCount = data.settings.multipleChoice.maxAnswersCount || 0
+      this.minAnswersCount = (data.settings.multipleChoice && data.settings.multipleChoice.minAnswersCount) || 0
+      this.maxAnswersCount = (data.settings.multipleChoice && data.settings.multipleChoice.maxAnswersCount) || 0
     }
   }
 }
