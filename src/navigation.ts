@@ -145,7 +145,7 @@ export class Navigation {
 
         return vcase
       }else
-        if(!current.filled && !current.requireResponse()) {
+        if(multichoice && multichoice.selectedItemsCount===0 && !current.requireResponse()) {
           this.move(vcase)
           return vcase
       }else
