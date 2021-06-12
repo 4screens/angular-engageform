@@ -3,6 +3,7 @@ export default interface Answer {
   quizQuestionId: string
   time: string
   selectedAnswerId?: string
+  selectedAnswerIds?: [string]
   inputs?: [{ _id: string, value: string }]
   rateItValue?: number
 }
