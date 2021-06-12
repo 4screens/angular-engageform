@@ -146,6 +146,7 @@ export class Navigation {
         return vcase
       }else
         if(!current.filled && !current.requireResponse()) {
+          this.move(vcase)
           return vcase
       }else
         if(vcase && current.settings.allowMultipleChoice){
