@@ -134,7 +134,7 @@ export class Navigation {
       }
 
       //Answer is required, so at least 1 answer should be selected or filled flag has be set to true
-      if ( !vcase && (!current.filled || current.settings.allowMultipleChoice && multichoice.selectedItemsCount === 0) && current.settings.requiredAnswer) {
+      if ( !vcase && (!current.filled || (current.settings.allowMultipleChoice && multichoice && multichoice.selectedItemsCount === 0)) && current.settings.requiredAnswer) {
         if (!opts.quiet) {
           this.sendMessage(this._engageform.texts.ANSWER_REQUIRED_TO_PROCEED)
         }
