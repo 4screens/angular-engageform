@@ -97,11 +97,6 @@ export default abstract class Page {
     return deferred.promise
   }
 
-  requireResponse(){
-    //can be overwritten in subclasses
-    return this.filled && this.settings.requiredAnswer;
-  }
-
   refreshAnswer(sent: PageSentProperties, question: QuizQuestion): PageSentProperties {
     // "abstract"
     return sent

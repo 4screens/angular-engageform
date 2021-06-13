@@ -119,10 +119,6 @@ export class Navigation {
 
     let current = this._engageform.current
 
-    // Made by Masters
-    // (Mat fixed a bug: was `current._engageform.settings` the `current` doesn't have a `settings` property.
-    // Check answer.
-
     // Send the answer.
     return current.send(vcase).then(() => {
       this.sendMessage()
@@ -137,46 +133,60 @@ export class Navigation {
         multichoice = current as PictureChoice
       }
 
-      // Prevent the question change when there's no answer selected and the page requires it.
-      if ( !current.filled && current.requireResponse()) {
+      //Answer is required, so at least 1 answer should be selected or filled flag has be set to true
+      if ( !vcase && (!current.filled || current.settings.allowMultipleChoice && multichoice.selectedItemsCount === 0) && current.settings.requiredAnswer) {
         if (!opts.quiet) {
           this.sendMessage(this._engageform.texts.ANSWER_REQUIRED_TO_PROCEED)
         }
-
         return vcase
-      }else
-        if(multichoice && multichoice.selectedItemsCount===0 && !current.requireResponse()) {
-          this.move(vcase)
-          return vcase
-      }else
-        if(vcase && current.settings.allowMultipleChoice){
+      }
+
+      //If user unselect all answers than we need to stay on the same question
+      if(vcase && current.filled && multichoice && multichoice.selectedItemsCount===0 && !current.settings.requiredAnswer) {
+        //do nothing because user has unselected all previously selected answers
+        return vcase
+      }
+
+      //If user selected answer and allowMultipleChoice=true than we want to stay on the same page until OK is clicked
+      if(vcase && current.settings.allowMultipleChoice){
         //if selected any answer then we do not move to next question
         return vcase
-
-      } else {
-
-        //for allowMultipleChoice=true we want to move to next page when min and max answers limits are satisfied
-        //otherwise we want to stay on the same page
-        if(multichoice && current.settings.allowMultipleChoice && (
-          (current.settings.minAnswersCount && multichoice.selectedItemsCount < current.settings.minAnswersCount)
-          || (current.settings.maxAnswersCount && multichoice.selectedItemsCount > current.settings.maxAnswersCount)
-        )){
-          return vcase
-        }
-
-        // Change the page with a slight delay, or do it instantly.
-        // Made by Masters (only the timeout change from 2000 to 1000).
-        let pageChangeDelay = vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 1000 : 200) : 0
-
-        // Schedule the page change.
-        this.waitingForPageChange = Bootstrap.$timeout(() => {
-          this.waitingForPageChange = null
-          this.move(vcase)
-          return vcase
-        }, pageChangeDelay)
-
-        return this.waitingForPageChange
       }
+
+      //Answer is not required and allowMultipleChoice=false and user use arrow on the right side to navigate do next question
+      if(!vcase && !current.settings.requiredAnswer && !current.settings.allowMultipleChoice) {
+        this.move(vcase)
+        return vcase
+      }
+
+      //Answer is not required and allowMultipleChoice=true and there is zero selected answers and user use arrow on the right side to navigate do next question
+      if(!vcase && !current.settings.requiredAnswer && current.settings.allowMultipleChoice && multichoice && multichoice.selectedItemsCount === 0) {
+        this.move(vcase)
+        return vcase
+      }
+
+      //if allowMultipleChoice=true and user selected some answers and user click OK(or right arrow) and there is less
+      // answers selected than minAnswersCount then we want to print error message
+      if (!vcase && current.settings.allowMultipleChoice && multichoice && multichoice.selectedItemsCount < current.settings.minAnswersCount ) {
+        if (!opts.quiet) {
+          this.sendMessage(this._engageform.texts.MORE_ANSWERS_REQUIRED_TO_PROCEED)
+        }
+        return vcase
+      }
+
+      // Made by Masters (only the timeout change from 2000 to 1000).
+      // Change the page with a slight delay, or do it instantly.
+      let pageChangeDelay = vcase ? (current.settings.showCorrectAnswer || current.settings.showResults ? 1000 : 200) : 0
+
+      // Schedule the page change.
+      this.waitingForPageChange = Bootstrap.$timeout(() => {
+        this.waitingForPageChange = null
+        this.move(vcase)
+        return vcase
+      }, pageChangeDelay)
+
+      return this.waitingForPageChange
+
     }).catch(data => {
       if (!opts.quiet) {
         this.sendMessage(this._engageform.texts[data.textKey as keyof Texts] || data.message)
