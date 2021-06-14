@@ -376,22 +376,11 @@ export default class Engageform {
       if (this._pages[questionId]) {
         let props = questions[questionId]
 
-        if(props.selectedAnswerIds) {
-          for (let selectedAnswerId of props.selectedAnswerIds) {
-            this._pages[questionId].selectAnswer({
-              selectedCaseId: selectedAnswerId,
-              inputs: props.inputs,
-              selectedValue: props.rateItValue
-            })
-          }
-        }
-        else if(props.selectedAnswerId) {
-            this._pages[questionId].selectAnswer({
-              selectedCaseId: props.selectedAnswerId,
-              inputs: props.inputs,
-              selectedValue: props.rateItValue
-            })
-        }
+        this._pages[questionId].selectAnswer({
+          selectedCaseIds: props.selectedAnswerIds,
+          inputs: props.inputs,
+          selectedValue: props.rateItValue
+        })
 
       }
     }
