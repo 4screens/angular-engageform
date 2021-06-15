@@ -88,24 +88,32 @@ class Logic {
 
             if (Array.isArray(answers)) {
 
+              let result = false;
+
               for(var ans of answers) {
                 switch (condition.is) {
                   case ConditionIs.Equal:
-                    return ans === condition.value
+                    result = result || (ans === condition.value)
+                    break
                   case ConditionIs.NotEqual:
-                    return ans !== condition.value
+                    result = result || (ans !== condition.value)
+                    break
                   case ConditionIs.Blank:
-                    return !Boolean(ans)
+                    result = result || (!Boolean(ans))
+                    break
                   case ConditionIs.NotBlank:
-                    return Boolean(ans)
+                    result = result || (Boolean(ans))
+                    break
                   case ConditionIs.Contain:
-                    return (ans as string).indexOf(condition.value) >= 0
+                    result = result || ( (ans as string).indexOf(condition.value) >= 0 )
+                    break
                   case ConditionIs.NotContain:
-                    return (ans as string).indexOf(condition.value) === -1
+                    result = result || ( (ans as string).indexOf(condition.value) === -1 )
+                    break
                 }
               }
 
-              return false;
+              return result;
 
             }else{
               switch (condition.is) {
@@ -137,8 +145,10 @@ class Logic {
             }
 
           })
+
           const combinator = conditionsConnection === ConditionConnection.Or ? 'some' : 'every'
           return passedConditions[combinator](v => v) ? destination : null
+
         })
         .filter(Boolean)[0]
     return destination || this.defaultRule.destination
@@ -179,7 +189,6 @@ export default class ConditionalNavigation extends Navigation {
     //if exitrule is set then we want to to the pointed by exit rule
     if (currentLogic && currentLogic.hasExitRules()) {
       let possibleNextPage = this._engageform.getPageById(currentLogic.resolveExitDestination())
-
       //if exitrule points to next page then we override default next page
       if (possibleNextPage) {
         nextPage = possibleNextPage
