@@ -68,7 +68,7 @@ export default class ImageCase extends Case {
 
       //here we will check if there is max answers limit exceeded
       if(!selected && this.page.settings.maxAnswersCount && multichoice.selectedItemsCount >= this.page.settings.maxAnswersCount){
-        return Bootstrap.$q.reject({textKey: 'NO_MORE_NOT_ALLOWED', message: 'No more answers allowed'})
+        return Bootstrap.$q.reject({textKey: 'NO_MORE_CHOICES_ALLOWED', message: 'No more choices is allowed'})
       }
 
     } else if ((!this.page.settings.allowMultipleChoice || !multichoice) && !this.page.engageform.settings.allowAnswerChange

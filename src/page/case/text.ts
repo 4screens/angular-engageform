@@ -42,7 +42,7 @@ export class TextCase extends Case {
 
       //here we will check if there is max answers limit exceeded
       if(!selected && this.page.settings.maxAnswersCount && multichoice.selectedItemsCount >= this.page.settings.maxAnswersCount){
-        return Bootstrap.$q.reject({textKey: 'NO_MORE_NOT_ALLOWED', message: 'No more answers is allowed'})
+        return Bootstrap.$q.reject({textKey: 'NO_MORE_CHOICES_ALLOWED', message: 'No more choices is allowed'})
       }
 
 
