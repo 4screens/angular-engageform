@@ -5,6 +5,7 @@ export enum PageType {
   MultiChoice = 'multiChoice',
   PictureChoice = 'pictureChoice',
   Rateit = 'rateIt',
+  Slider = 'slider',
   StartPage = 'startPage',
   Poster = 'poster',
   SummaryPage = 'summaryPage',

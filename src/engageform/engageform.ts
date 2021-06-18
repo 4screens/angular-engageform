@@ -23,6 +23,7 @@ import MultiChoice from '../page/pages/multi-choice'
 import PictureChoice from '../page/pages/picture-choice'
 import Poster from '../page/pages/poster'
 import RateIt from '../page/pages/rate-it'
+import Slider from "../page/pages/slider";
 import StartPage from '../page/pages/start-page'
 import SummaryPage from '../page/pages/summary-page'
 import Project from "../page/pages/project";
@@ -344,6 +345,8 @@ export default class Engageform {
         return new PictureChoice(this, page)
       case PageType.Rateit:
         return new RateIt(this, page)
+      case PageType.Slider:
+        return new Slider(this, page)
       case PageType.StartPage:
         return new StartPage(this, page)
       case PageType.Poster:
