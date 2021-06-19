@@ -17,6 +17,7 @@ import Poll from './engageform/form-types/poll'
 import Score from './engageform/form-types/score'
 import Calculator from './engageform/form-types/calculator'
 import Survey from './engageform/form-types/survey'
+import Form from './engageform/form-types/form'
 import { Theme } from './engageform/theme'
 import Event from './event'
 import isInEnum from './in-enum.util'
@@ -53,6 +54,7 @@ export default class Bootstrap {
     poll: Poll,
     score: Score,
     survey: Survey,
+    form: Form,
     live: Live,
     calculator: Calculator,
   }

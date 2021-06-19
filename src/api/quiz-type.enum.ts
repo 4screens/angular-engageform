@@ -3,6 +3,7 @@ export enum QuizType {
   Poll = 'poll',
   Score = 'score',
   Survey = 'survey',
+  Form = 'form',
   Live = 'live',
   Calculator = 'calculator'
 }

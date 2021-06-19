@@ -5,5 +5,6 @@ export enum EngageformType {
   Poll,
   Score,
   Survey,
+  Form,
   Calculator
 }
