@@ -32,6 +32,21 @@ export default interface Quiz {
       gtm?: {
         id?: string
       }
+    },
+    slider?: {
+      minValue: number
+      maxValue: number
+      startValue: number
+      step: number
+      valueLabel: string
+      valueLabelOption: string
+      labelTypeOption: string
+      color: string
+      highlightColor: string
+      barColor: string
+      minLabel: string
+      midLabel: string
+      maxLabel: string
     }
   }
   theme: {

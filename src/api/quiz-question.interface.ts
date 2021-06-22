@@ -72,6 +72,7 @@ export default interface QuizQuestion {
       valueLabelOption: string,
       labelTypeOption: string,
       color: string,
+      barColor: string,
       highlightColor: string,
       minLabel: string,
       midLabel: string,

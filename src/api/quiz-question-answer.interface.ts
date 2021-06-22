@@ -10,6 +10,7 @@ export default interface QuizQuestionAnswer {
   points?: number
   avgRateItValue?: string
   rateItValue?: number
+  sliderValue?: number
   stats?: {
     [index: string]: number
   }
