@@ -63,6 +63,21 @@ export default interface QuizQuestion {
       description: string
     }
     mediaPosition: MediaPosition
+    slider: {
+      minValue: number,
+      maxValue: number,
+      startValue: number,
+      step: number,
+      valueLabel: string,
+      valueLabelOption: string,
+      labelTypeOption: string,
+      color: string,
+      barColor: string,
+      highlightColor: string,
+      minLabel: string,
+      midLabel: string,
+      maxLabel: string
+    }
   }
   buzzerTheme: {
     imgIdleSrc: string,

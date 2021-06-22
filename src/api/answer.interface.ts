@@ -6,4 +6,5 @@ export default interface Answer {
   selectedAnswerIds?: [string]
   inputs?: [{ _id: string, value: string }]
   rateItValue?: number
+  sliderValue?: number
 }

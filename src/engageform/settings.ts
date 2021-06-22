@@ -12,6 +12,21 @@ export default class Settings {
     description: string
   }>
   tracking: Maybe<{gtm?: {id?: string}}>
+  slider: Maybe<{
+    minValue: number
+    maxValue: number
+    startValue: number
+    step: number
+    valueLabel: string
+    valueLabelOption: string
+    labelTypeOption: string
+    color: string
+    highlightColor: string
+    barColor: string
+    minLabel: string
+    midLabel: string
+    maxLabel: string
+  }>
 
   constructor(data: Quiz) {
     if (data.settings) {
@@ -29,6 +44,10 @@ export default class Settings {
         if (!this.share.imageUrl && Bootstrap.getConfig('share') && Bootstrap.getConfig('share').defaultImgUrl) {
           this.share.imageUrl = Bootstrap.getConfig('share').defaultImgUrl
         }
+      }
+
+      if (data.settings.slider) {
+        this.slider = data.settings.slider
       }
     }
   }

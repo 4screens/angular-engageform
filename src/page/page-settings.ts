@@ -11,6 +11,7 @@ export default class PageSettings implements PageSettingsProperties {
   allowMultipleChoice: boolean = false
   minAnswersCount: number = 0
   maxAnswersCount: number = 0
+  slider: any
 
 
   constructor(data: QuizQuestion) {
@@ -25,6 +26,7 @@ export default class PageSettings implements PageSettingsProperties {
       this.allowMultipleChoice = data.settings.allowMultipleChoice || false
       this.minAnswersCount = (data.settings.multipleChoice && data.settings.multipleChoice.minAnswersCount) || 0
       this.maxAnswersCount = (data.settings.multipleChoice && data.settings.multipleChoice.maxAnswersCount) || 0
+      this.slider = data.settings.slider || {}
     }
   }
 }

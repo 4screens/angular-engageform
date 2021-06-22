@@ -4,5 +4,6 @@ export enum CaseType {
   Input,
   Iteration,
   Text,
-  Project
+  Project,
+  Slider
 }
