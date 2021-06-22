@@ -35,7 +35,7 @@ export default class Form extends Page {
   }
 
   send(vcase: Case): ng.IPromise<PageSentProperties> {
-    var deferred = Bootstrap.$q.defer()
+    var deferred = Bootstrap.$q.defer<PageSentProperties>()
     var validated = true
 
     this.cases.map((input) => {

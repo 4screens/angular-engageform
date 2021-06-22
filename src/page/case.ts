@@ -6,6 +6,7 @@ import { Id, MaybeString, WithId } from '../types'
 import { CaseType } from './case-type.enum'
 import Page from './page'
 import PageSentProperties from './page-sent.interface'
+import angular from "angular";
 
 export default abstract class Case {
   // TODO: how to type this?
@@ -83,7 +84,7 @@ export default abstract class Case {
         || this.title || this.ordinal
     }
 
-    return Bootstrap.$http.post(url, questionAnswer).then((res: QuizQuestionAnswerResponse) => {
+    return Bootstrap.$http.post<QuizQuestionAnswer>(url, questionAnswer).then((res: angular.IHttpResponse<QuizQuestionAnswer>) => {
       if ([200, 304].indexOf(res.status) !== -1) {
         if (!questionAnswer.userIdent && res.data.userIdent) {
           Bootstrap.user.sessionId = res.data.userIdent

@@ -71,14 +71,14 @@ export default abstract class Page {
     if (vcase) {
       return vcase.send()
     } else {
-      let deferred = Bootstrap.$q.defer()
+      let deferred = Bootstrap.$q.defer<PageSentProperties>()
       deferred.resolve()
       return deferred.promise
     }
   }
 
   sent(): ng.IPromise<PageSentProperties> {
-    const deferred = Bootstrap.$q.defer()
+    const deferred = Bootstrap.$q.defer<PageSentProperties>()
     let sent = <PageSentProperties>{}
 
     sent = <PageSentProperties>(Bootstrap.localStorage.get('page.' + this.id) || {})
