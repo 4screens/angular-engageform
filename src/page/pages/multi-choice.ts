@@ -72,15 +72,17 @@ export default class MultiChoice extends Page {
       }
 
       // Mark case as correct or incorrect.
-      var correct = undefined;
+      var correct = [];
 
       if(sent.correctCaseIds){
         correct = sent.correctCaseIds.filter(function(val: string){
-          return vcase.id === val;
+          return vcase.id === val && vcase.selected ;
         })
       }
 
-      if (correct) {
+      console.log('correct: ', correct)
+
+      if (correct && correct.length >0) {
         vcase.correct = true
       } else {
         vcase.incorrect = true
