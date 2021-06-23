@@ -21,13 +21,12 @@ export default class SliderCase extends Case {
     return super.makeSend({quizQuestionId: this.page.id, sliderValue: this.ordinal})
       .then((res) => {
         const data: PageSentProperties = {} as PageSentProperties
-
         if (res.selectedValue) {
           data.selectedValue = res.selectedValue
         }
 
-        if (res.avgRateItValue) {
-          data.result = +res.avgRateItValue
+        if (res.avgSliderValue) {
+          data.result = +res.avgSliderValue
         }
 
         super.save(data)

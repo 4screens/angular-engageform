@@ -26,6 +26,10 @@ export default class Slider extends Page {
 
   selectedValue: number = 0
 
+  shouldShowResults(): boolean {
+    return this.settings.showResults && this.result > 0
+  }
+
   constructor(engageform: Engageform, data: QuizQuestion) {
     super(engageform, data)
 

@@ -9,6 +9,7 @@ export default interface QuizQuestionAnswer {
   selected?: boolean
   points?: number
   avgRateItValue?: string
+  avgSliderValue? :string
   rateItValue?: number
   sliderValue?: number
   stats?: {
