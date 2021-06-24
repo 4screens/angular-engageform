@@ -60,6 +60,7 @@ export default interface Quiz {
     backgroundImagePosition: string
     buttonColor: string
     font: string
+    fontUrl: string
     questionColor: string
     customThemeCssFile: string
     tabColor: string
