@@ -219,10 +219,8 @@ export class Navigation {
       if (this._engageform.availablePages.length > this.position) {
         this.hasNext = true
       } else if (this._engageform.availablePages.length === this.position) {
-        // Finisher is not available when the engageform is of a type "poll" and doesn't have any form-type question.
-        // Also when it's not working in normal mode (ie. summary doesn't submit).
-        this.hasFinish = this._engageform.isNormalMode() &&
-          !(this._engageform.isType(EngageformType.Poll) && !this._engageform.hasForms)
+        // Finisher is not available when engageform is not working in normal mode (ie. summary doesn't submit).
+        this.hasFinish = this._engageform.isNormalMode()
       }
       this._engageform.event.trigger('form::pageDidChange', {
         currentPosition: this.position,
