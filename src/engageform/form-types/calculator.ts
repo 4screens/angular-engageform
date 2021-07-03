@@ -9,7 +9,27 @@ export default class Score extends Engageform {
 
   setCurrentEndPage(): angular.IPromise<QuizFinish> {
     return super.setCurrentEndPage().then((data) => {
-      if (this.endPages.length) {
+      if (this.endPages.length > 1) {
+
+        let hasEndPage = false
+
+        this.endPages.map((pageId) => {
+          const page = this.pages[pageId] as EndPage
+          const {rangeMin = 0, rangeMax = 0} = page
+          if (rangeMin <= data.totalScore && rangeMax >= data.totalScore) {
+            hasEndPage = true
+            page.score = data.totalScore
+            this.setCurrent(pageId)
+          }
+        })
+
+        if (!hasEndPage) {
+          this.enabled = false
+          this.message = 'Thank you!'
+        }
+
+
+      } else if (this.endPages.length === 1) {
         const pageId =this.endPages[0]
         const page = this.pages[pageId] as EndPage
         page.score = data.totalScore
