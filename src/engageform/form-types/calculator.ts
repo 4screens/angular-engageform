@@ -15,8 +15,8 @@ export default class Score extends Engageform {
 
         this.endPages.map((pageId) => {
           const page = this.pages[pageId] as EndPage
-          const {rangeMin = 0, rangeMax = 0} = page
-          if (rangeMin <= data.totalScore && rangeMax >= data.totalScore) {
+          const {rangeMin = undefined, rangeMax = undefined} = page
+          if ((!rangeMin || rangeMin <= data.totalScore) && (!rangeMax || rangeMax >= data.totalScore)) {
             hasEndPage = true
             page.score = data.totalScore
             this.setCurrent(pageId)
@@ -27,7 +27,6 @@ export default class Score extends Engageform {
           this.enabled = false
           this.message = 'Thank you!'
         }
-
 
       } else if (this.endPages.length === 1) {
         const pageId =this.endPages[0]
