@@ -61,6 +61,8 @@ export default class Engageform {
 
   texts: Texts
 
+  skipLogicSelectedEndPage: Number = 0
+
   current!: Page
   navigation: Navigation
   meta: Meta
@@ -120,6 +122,10 @@ export default class Engageform {
 
   getPageIndex(page: Page): number {
     return page ? this.availablePages.indexOf(page.id) : 0
+  }
+
+  getEndPageIndex(page: Page): number {
+    return page ? this.endPages.indexOf(page.id) : 0
   }
 
   /**
