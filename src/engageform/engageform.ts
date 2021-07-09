@@ -61,7 +61,7 @@ export default class Engageform {
 
   texts: Texts
 
-  skipLogicSelectedEndPage: Number = 0
+  skipLogicSelectedEndPage = 0
 
   current!: Page
   navigation: Navigation
