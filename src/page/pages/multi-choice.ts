@@ -80,8 +80,6 @@ export default class MultiChoice extends Page {
         })
       }
 
-      console.log('correct: ', correct)
-
       if (correct && correct.length >0) {
         vcase.correct = true
       } else {
