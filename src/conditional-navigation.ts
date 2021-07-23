@@ -105,10 +105,10 @@ class Logic {
                     result = result || (Boolean(ans))
                     break
                   case ConditionIs.Contain:
-                    result = result || ( (ans as string).indexOf(condition.value) >= 0 )
+                    result = result || ( (ans.toString() as string).indexOf(condition.value) >= 0 )
                     break
                   case ConditionIs.NotContain:
-                    result = result || ( (ans as string).indexOf(condition.value) === -1 )
+                    result = result || ( (ans.toString() as string).indexOf(condition.value) === -1 )
                     break
                 }
               }
@@ -136,9 +136,9 @@ class Logic {
                 case ConditionIs.NotBlank:
                   return Boolean(answers)
                 case ConditionIs.Contain:
-                  return (answers as string).indexOf(condition.value) >= 0
+                  return (answers.toString() as string).indexOf(condition.value) >= 0
                 case ConditionIs.NotContain:
-                  return (answers as string).indexOf(condition.value) === -1
+                  return (answers.toString() as string).indexOf(condition.value) === -1
                 default:
                   return false
               }
