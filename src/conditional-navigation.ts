@@ -93,7 +93,7 @@ class Logic {
               for(var ans of answers) {
                 switch (condition.is) {
                   case ConditionIs.Equal:
-                    result = result || (ans.toString() === condition.value)
+                    result = result || (ans.toString() === condition.value.toString())
                     break
                   case ConditionIs.NotEqual:
                     result = result || (ans.toString() !== condition.value)
@@ -118,9 +118,9 @@ class Logic {
             }else{
               switch (condition.is) {
                 case ConditionIs.Equal:
-                  return answers.toString() === condition.value
+                  return answers.toString() === condition.value.toString()
                 case ConditionIs.NotEqual:
-                  return answers.toString() !== condition.value
+                  return answers.toString() !== condition.value.toString()
                 case ConditionIs.GreaterThan:
                   return answers > condition.value
                 case ConditionIs.GreaterThanOrEqual:
