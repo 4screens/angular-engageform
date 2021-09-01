@@ -20,6 +20,7 @@ export default abstract class Page {
   type: PageType = PageType.Undefined
   title = ''
   description = ''
+  resultTitle = ''
   media = ''
   mediaWidth = 0
   mediaHeight = 0

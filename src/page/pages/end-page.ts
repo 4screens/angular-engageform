@@ -40,6 +40,9 @@ export class EndPage extends Page {
       shareSettings.imageUrl = Bootstrap.cloudinary.preparePreviewImageUrl(shareSettings.imageUrl, 680)
     }
     this.socialData = shareSettings
+    console.log('data: ', data)
+    console.log('resultTitle: ', data.resultTitle)
+    this.resultTitle = data.resultTitle || ''
 
     if (data.coverPage) {
       this.button = data.coverPage.buttonText

@@ -8,6 +8,7 @@ export default interface QuizQuestion {
   type: PageType
   text: string
   description: string
+  resultTitle: string
   coverPage: {
     buttonText: string
     outcome: string
