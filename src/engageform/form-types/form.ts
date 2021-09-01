@@ -9,7 +9,8 @@ export default class Form extends Engageform {
   setCurrentEndPage(): angular.IPromise<QuizFinish> {
     return super.setCurrentEndPage().then((data) => {
       if (this.endPages.length) {
-        this.setCurrent(this.endPages[0])
+        var endPageIdx = this.skipLogicSelectedEndPage
+        this.setCurrent(this.endPages[endPageIdx])
       } else {
         this.enabled = false
         this.message = 'Thank you!'
