@@ -1,5 +1,6 @@
 import { PageType } from '../page/page-type.enum'
 import EndStats from './end-stats.interface'
+import {Maybe} from "../types";
 
 export type MediaPosition = 'stack' | 'float' | 'split' | 'background'
 
@@ -8,7 +9,7 @@ export default interface QuizQuestion {
   type: PageType
   text: string
   description: string
-  resultTitle: string
+  resultTitle: Maybe<string>
   coverPage: {
     buttonText: string
     outcome: string

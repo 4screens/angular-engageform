@@ -4,7 +4,7 @@ import QuizQuestion from '../api/quiz-question.interface'
 import Result from '../api/result.interface'
 import Bootstrap from '../bootstrap'
 import Engageform from '../engageform/engageform'
-import { MaybeNumber } from '../types'
+import {Maybe, MaybeNumber} from '../types'
 import Case from './case'
 import PageSentProperties from './page-sent.interface'
 import PageSettings from './page-settings'
@@ -20,7 +20,7 @@ export default abstract class Page {
   type: PageType = PageType.Undefined
   title = ''
   description = ''
-  resultTitle = ''
+  resultTitle: Maybe<string> = ''
   media = ''
   mediaWidth = 0
   mediaHeight = 0
