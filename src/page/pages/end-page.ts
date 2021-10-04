@@ -22,6 +22,7 @@ export class EndPage extends Page {
   rangeMin: MaybeNumber
   rangeMax: MaybeNumber
   exitLink: MaybeBoolean
+  exitLinkNewWindow: MaybeBoolean
   link: MaybeString
   redirect: MaybeBoolean
   redirectLink: MaybeString
@@ -47,6 +48,7 @@ export class EndPage extends Page {
       this.outcome = data.coverPage.outcome
       this.social = data.coverPage.showSocialShares
       this.exitLink = data.coverPage.exitLink
+      this.exitLinkNewWindow = data.coverPage.exitLinkNewWindow
       this.link = data.coverPage.link
       this.redirect = data.coverPage.redirect
       this.redirectLink = data.coverPage.redirectLink

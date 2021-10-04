@@ -19,6 +19,7 @@ export default interface QuizQuestion {
     }
     showSocialShares: boolean
     exitLink: boolean
+    exitLinkNewWindow: boolean
     link: string
     redirect: boolean
     redirectLink: string
