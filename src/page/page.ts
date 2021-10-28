@@ -32,6 +32,10 @@ export default abstract class Page {
   cases: Case[] = []
   projectId?: string|null
   result: MaybeNumber
+  numbers?: Maybe<{
+    [index: string]: number
+    all: number
+  }>
 
   protected constructor(engageform: Engageform, data: QuizQuestion) {
     this.id = data._id
@@ -161,6 +165,10 @@ export default abstract class Page {
 
     if (this.engageform.current && !isUndefined(data.avg)) {
       this.engageform.current.result = data.avg
+    }
+
+    if (data.numbers) {
+      this.engageform.current.numbers = data.numbers;
     }
 
     Bootstrap.$timeout(() => {
