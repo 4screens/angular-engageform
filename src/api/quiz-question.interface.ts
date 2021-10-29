@@ -44,6 +44,10 @@ export default interface QuizQuestion {
     minLabel: string
     maxRateItValue: number
     rateType: string
+    linearScale: {
+      minValue: number
+      maxValue: number
+    }
   }
   answers: {}[]
   forms: {

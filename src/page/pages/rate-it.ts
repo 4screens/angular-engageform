@@ -30,8 +30,11 @@ export default class RateIt extends Page {
     this.labelMin = data.rateIt.minLabel
     this.labelMax = data.rateIt.maxLabel
 
-    this.cases = Array.apply(null, Array(data.rateIt.maxRateItValue)).map((value, index) => {
-      return this.createCase(index + 1, data.rateIt.rateType)
+    const isNumberRateType = data.rateIt.rateType === 'number'
+    const values = isNumberRateType ? this.range(data.rateIt.linearScale.minValue, (data.rateIt.linearScale.maxValue + 1)) : Array(data.rateIt.maxRateItValue)
+
+    this.cases = Array.apply(null, values).map((value, index) => {
+      return this.createCase(isNumberRateType ? (value as number) : index + 1, data.rateIt.rateType)
     })
 
     this.sent().then(sent => {
@@ -42,12 +45,16 @@ export default class RateIt extends Page {
     })
   }
 
+  range(start: number, stop: number, step = 1): number[] {
+    return Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
+  }
+
   createCase(ordinal: number, symbol: string): Case {
     return new IterationCase(this, {ordinal, symbol})
   }
 
   selectAnswer(sent: any) {
-    if (sent.selectedValue) {
+    if (sent.selectedValue !== null && sent.selectedValue !== undefined) {
       this.filled = true
       this.selectedValue = sent.selectedValue
     }
@@ -58,7 +65,6 @@ export default class RateIt extends Page {
 
     this.cases.map((vcase: Case) => {
       vcase.selected = sent.selectedValue >= (vcase as IterationCase).ordinal
-
       if (sent.selectedValue === (vcase as IterationCase).ordinal) {
         this.engageform.sendAnswerCallback(this.engageform.title || this.engageform.id,
           this.engageform.current ? this.engageform.current.title || this.engageform.current.id : null,

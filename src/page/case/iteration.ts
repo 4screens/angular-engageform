@@ -24,8 +24,7 @@ export default class IterationCase extends Case {
     return super.makeSend({quizQuestionId: this.page.id, rateItValue: this.ordinal})
       .then((res) => {
         const data: PageSentProperties = {} as PageSentProperties
-
-        if (res.selectedValue) {
+        if (res.selectedValue !== null && res.selectedValue !== undefined) {
           data.selectedValue = res.selectedValue
         }
 
