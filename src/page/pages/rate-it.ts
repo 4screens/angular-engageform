@@ -13,7 +13,7 @@ export default class RateIt extends Page {
   labelMin: string
   labelMax: string
 
-  selectedValue: number = 0
+  selectedValue: number | undefined = undefined
 
   /**
    * Rateit is unique in a way it shows results. Typically it's the cases matter to show them, but here it's
