@@ -25,6 +25,7 @@ export class EndPage extends Page {
   exitLinkNewWindow: MaybeBoolean
   link: MaybeString
   redirect: MaybeBoolean
+  redirectNewWindow: MaybeBoolean
   redirectLink: MaybeString
   socialData: SocialData
 
@@ -51,6 +52,7 @@ export class EndPage extends Page {
       this.exitLinkNewWindow = data.coverPage.exitLinkNewWindow
       this.link = data.coverPage.link
       this.redirect = data.coverPage.redirect
+      this.redirectNewWindow = data.coverPage.redirectNewWindow
       this.redirectLink = data.coverPage.redirectLink
 
 

@@ -22,6 +22,7 @@ export default interface QuizQuestion {
     exitLinkNewWindow: boolean
     link: string
     redirect: boolean
+    redirectNewWindow: boolean
     redirectLink: string
   }
   imageData: {
