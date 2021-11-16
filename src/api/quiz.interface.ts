@@ -53,6 +53,7 @@ export default interface Quiz {
     answerBackgroundColor: string
     answerBorderColor: string
     answerColor: string
+    answerRadius: string
     backgroundBrightness: string
     backgroundColor: string
     backgroundImageBlur: string
