@@ -31,7 +31,7 @@ export default class RateIt extends Page {
     this.labelMax = data.rateIt.maxLabel
 
     const isNumberRateType = data.rateIt.rateType === 'number'
-    const hasLinearScaleValues = isNumberRateType && data.rateIt.linearScale && data.rateIt.linearScale.minValue && data.rateIt.linearScale.maxValue;
+    const hasLinearScaleValues = isNumberRateType && data.rateIt.linearScale && data.rateIt.linearScale.maxValue;
     const values = hasLinearScaleValues ? this.range(data.rateIt.linearScale.minValue, (data.rateIt.linearScale.maxValue + 1)) : Array(data.rateIt.maxRateItValue)
 
     this.cases = Array.apply(null, values).map((value, index) => {
