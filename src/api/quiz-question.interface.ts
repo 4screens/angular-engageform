@@ -2,7 +2,7 @@ import { PageType } from '../page/page-type.enum'
 import EndStats from './end-stats.interface'
 import {Maybe} from "../types";
 
-export type MediaPosition = 'stack' | 'float' | 'split' | 'background'
+export type MediaPosition = 'stack' | 'float' | 'float--left' | 'split' | 'split--left' | 'background'
 
 export default interface QuizQuestion {
   _id: string
