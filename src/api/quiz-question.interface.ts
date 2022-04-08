@@ -10,6 +10,7 @@ export default interface QuizQuestion {
   text: string
   description: string
   resultTitle: Maybe<string>
+  responseCount: Maybe<number>
   coverPage: {
     buttonText: string
     outcome: string

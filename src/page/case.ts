@@ -22,6 +22,7 @@ export default abstract class Case {
   correct = false
   incorrect = false
   result = 0
+  responseCount = 0
   title: MaybeString
   error: MaybeString
   value: MaybeString

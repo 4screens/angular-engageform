@@ -32,6 +32,7 @@ export default abstract class Page {
   cases: Case[] = []
   projectId?: string|null
   result: MaybeNumber
+  responseCount: MaybeNumber
   numbers?: Maybe<{
     [index: string]: number
     all: number
@@ -43,6 +44,10 @@ export default abstract class Page {
 
     this.settings = <PageSettingsProperties>new PageSettings(data)
     this.title = data.text || ''
+
+    if (data.responseCount) {
+      this.responseCount = data.responseCount;
+    }
 
     if (this.settings.showDescription) {
       this.description = data.description || ''
@@ -158,17 +163,13 @@ export default abstract class Page {
     }
   }
 
-  updateAnswers(data: any): void {
+  updateAnswers(data: any, count: any): void {
     if (this.id !== data.questionId) {
       return
     }
 
     if (this.engageform.current && !isUndefined(data.avg)) {
       this.engageform.current.result = data.avg
-    }
-
-    if (data.numbers) {
-      this.engageform.current.numbers = data.numbers;
     }
 
     Bootstrap.$timeout(() => {
@@ -181,6 +182,13 @@ export default abstract class Page {
           }
 
           vcase.result = data[vcase.id] || 0
+          if (count) {
+            vcase.responseCount = count[vcase.id] || 0
+          }
+
+          if (data.numbers) {
+            vcase.responseCount = data.numbers[vcase.id] || 0
+          }
         }
       })
     })

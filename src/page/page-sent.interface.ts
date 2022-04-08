@@ -3,6 +3,7 @@ export default interface PageSentProperties {
   correctCaseIds?: string[]
   selectedValue?: number
   result?: number
+  responseCount?: number
   results?: {
     [index: string]: number
   }
