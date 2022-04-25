@@ -232,6 +232,14 @@ export default class Engageform {
     return Bootstrap.user.sessionId
   }
 
+  setEventUserId(id: any) {
+    Bootstrap.user.eventUserId = id
+  }
+
+  getEventUserId(id: any) {
+    return Bootstrap.user.eventUserId
+  }
+
   /**
    * Stores a single page on the quiz instance.
    *

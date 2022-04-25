@@ -8,6 +8,7 @@ export default class User {
 
   private static idKey = 'userIdent'
   private static sessionIdKey = 'sessionIdent'
+  private static eventUserIdKey = 'eventUserIdent'
 
   private _id: NullableString = null
   private _sessionId: NullableString = null
@@ -33,6 +34,18 @@ export default class User {
 
   set sessionId(sessionId: NullableString) {
     Bootstrap.localStorage.set(User.sessionIdKey, sessionId)
+    this._sessionId = sessionId
+  }
+
+  get eventUserId(): NullableString {
+    if (!this._sessionId) {
+      this._sessionId = Bootstrap.localStorage.get<NullableString>(User.eventUserIdKey)
+    }
+    return this._sessionId
+  }
+
+  set eventUserId(sessionId: NullableString) {
+    Bootstrap.localStorage.set(User.eventUserIdKey, sessionId)
     this._sessionId = sessionId
   }
 
