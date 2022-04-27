@@ -232,12 +232,12 @@ export default class Engageform {
     return Bootstrap.user.sessionId
   }
 
-  setEventUserId(quizId: any, id: any) {
-    Bootstrap.user["eventUserId_"+quizId] = id
+  setEventUserId(quizId: string, id: any) {
+    Bootstrap.user.setEventUserId(quizId,id)
   }
 
   getEventUserId(quizId: any) {
-    return Bootstrap.user["eventUserId_"+quizId]
+    return Bootstrap.user.getEventUserId(quizId)
   }
 
   /**

@@ -8,10 +8,10 @@ export default class User {
 
   private static idKey = 'userIdent'
   private static sessionIdKey = 'sessionIdent'
-  private static eventUserIdKey = 'eventUserIdent'
 
   private _id: NullableString = null
   private _sessionId: NullableString = null
+  private _eventUserIds: Object = {}
 
   get id(): NullableString {
     if (!this._id) {
@@ -37,16 +37,20 @@ export default class User {
     this._sessionId = sessionId
   }
 
-  get eventUserId(): NullableString {
-    if (!this._sessionId) {
-      this._sessionId = Bootstrap.localStorage.get<NullableString>(User.eventUserIdKey)
+  public getEventUserId(quizId: String): NullableString {
+    let localEventUserId = this._eventUserIds[quizId]
+    if (!localEventUserId) {
+      let eventUserIdKey = 'eventUserIdent_'+quizId
+      this._sessionId = Bootstrap.localStorage.get<NullableString>(eventUserIdKey)
+    } else {
+      return localEventUserId
     }
-    return this._sessionId
   }
 
-  set eventUserId(sessionId: NullableString) {
-    Bootstrap.localStorage.set(User.eventUserIdKey, sessionId)
-    this._sessionId = sessionId
+  public setEventUserId(quizId: String, eventUserId: String) {
+    let eventUserIdKey = 'eventUserIdent_'+quizId
+    Bootstrap.localStorage.set(eventUserIdKey, eventUserId)
+    this._eventUserIds[quizId] = eventUserId
   }
 
   private constructor() {}
