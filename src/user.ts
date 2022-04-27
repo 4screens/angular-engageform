@@ -11,7 +11,7 @@ export default class User {
 
   private _id: NullableString = null
   private _sessionId: NullableString = null
-  private _eventUserIds: Object = {}
+  private _eventUserIds: { [key: string]: NullableString } = {}
 
   get id(): NullableString {
     if (!this._id) {
@@ -37,17 +37,16 @@ export default class User {
     this._sessionId = sessionId
   }
 
-  public getEventUserId(quizId: String): NullableString {
+  public getEventUserId(quizId: string): NullableString {
     let localEventUserId = this._eventUserIds[quizId]
     if (!localEventUserId) {
       let eventUserIdKey = 'eventUserIdent_'+quizId
       this._sessionId = Bootstrap.localStorage.get<NullableString>(eventUserIdKey)
-    } else {
-      return localEventUserId
     }
+    return localEventUserId
   }
 
-  public setEventUserId(quizId: String, eventUserId: String) {
+  public setEventUserId(quizId: string, eventUserId: string) {
     let eventUserIdKey = 'eventUserIdent_'+quizId
     Bootstrap.localStorage.set(eventUserIdKey, eventUserId)
     this._eventUserIds[quizId] = eventUserId
