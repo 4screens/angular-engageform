@@ -93,6 +93,9 @@ export default abstract class Case {
         if (!questionAnswer.userIdent && res.data.userIdent) {
           Bootstrap.user.sessionId = res.data.userIdent
         }
+        if (!questionAnswer.eventUserId && res.data.eventUserId) {
+          Bootstrap.user.setEventUserId(this.page.engageform.id, res.data.eventUserId)
+        }
         this.page.engageform.event.trigger('answer', eventValues)
         return res.data
       } else {
