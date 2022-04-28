@@ -41,7 +41,7 @@ export default class User {
     let localEventUserId = this._eventUserIds[quizId]
     if (!localEventUserId) {
       let eventUserIdKey = 'eventUserIdent_'+quizId
-      this._sessionId = Bootstrap.localStorage.get<NullableString>(eventUserIdKey)
+      localEventUserId = Bootstrap.localStorage.get<NullableString>(eventUserIdKey)
     }
     return localEventUserId
   }
