@@ -75,7 +75,9 @@ export default abstract class Case {
     questionAnswer.userIdent = Bootstrap.user.sessionId
     questionAnswer.eventUserId = Bootstrap.user.getEventUserId(this.page.engageform.id)
 
-    console.log('questionAnswer.eventUserId: ',questionAnswer.eventUserId)
+    if(!questionAnswer.eventUserId && questionAnswer.userIdent){
+      questionAnswer.eventUserId = questionAnswer.userIdent
+    }
 
     const eventValues = {
       questionId: this.page.id,
