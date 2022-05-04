@@ -33,7 +33,7 @@
     "@types/angular-local-storage": "^0.6.1",
     "@types/jquery": "^3.3.29",
     "@types/lodash": "^4.14.119",
-    "angular": "~1.7.9",
+    "angular": "~1.8.3",
     "angular-local-storage": "~0.7.1",
     "angular-sanitize": "~1.7.5",
     "babel-loader": "^8.0.5",
