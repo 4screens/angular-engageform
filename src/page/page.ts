@@ -80,9 +80,6 @@ export default abstract class Page {
         this.videoType = data.videoData.type
       }
     }
-
-    console.log('this.videoUrl', this.videoUrl)
-    console.log('this.videoType', this.videoType)
   }
 
   send(vcase: Case): ng.IPromise<PageSentProperties> {
