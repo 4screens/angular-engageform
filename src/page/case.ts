@@ -73,6 +73,7 @@ export default abstract class Case {
 
     questionAnswer.quizQuestionId = this.page.id
     questionAnswer.userIdent = Bootstrap.user.sessionId
+    questionAnswer.eventUserId = Bootstrap.user.getEventUserId(this.page.engageform.id)
 
     const eventValues = {
       questionId: this.page.id,
@@ -89,6 +90,9 @@ export default abstract class Case {
       if ([200, 304].indexOf(res.status) !== -1) {
         if (!questionAnswer.userIdent && res.data.userIdent) {
           Bootstrap.user.sessionId = res.data.userIdent
+        }
+        if (!questionAnswer.eventUserId && res.data.eventUserId) {
+          Bootstrap.user.setEventUserId(this.page.engageform.id, res.data.eventUserId)
         }
         this.page.engageform.event.trigger('answer', eventValues)
         return res.data
