@@ -34,6 +34,10 @@ export default interface QuizQuestion {
     width: number
     height: number
   }
+  videoData: {
+    type: string
+    url: string
+  }
   imageFileData: {
     width: number
     height: number

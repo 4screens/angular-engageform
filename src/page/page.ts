@@ -22,6 +22,8 @@ export default abstract class Page {
   description = ''
   resultTitle: Maybe<string> = ''
   media = ''
+  videoUrl = ''
+  videoType = ''
   mediaWidth = 0
   mediaHeight = 0
   mediaUrl = ''
@@ -53,24 +55,34 @@ export default abstract class Page {
       this.description = data.description || ''
     }
 
-    if (this.settings.showMainMedia && data.imageData) {
-      this.media = Bootstrap.cloudinary.prepareImageUrl(
-        data.imageFile,
-        680, // zakładamy że media zawsze ma taką szerokość (MUST BE FIXXXXXED!!!!!)
-        data.imageData
-      )
-      this.mediaUrl = data.imageFileUrl;
-      this.mediaWidth = 680
-      if (data.imageFileData) {
-        this.mediaFileWidth = data.imageFileData.width;
-        this.mediaFileHeight = data.imageFileData.height;
+    if (this.settings.showMainMedia) {
+      if (data.imageData) {
+        this.media = Bootstrap.cloudinary.prepareImageUrl(
+          data.imageFile,
+          680, // zakładamy że media zawsze ma taką szerokość (MUST BE FIXXXXXED!!!!!)
+          data.imageData
+        )
+        this.mediaUrl = data.imageFileUrl;
+        this.mediaWidth = 680
+        if (data.imageFileData) {
+          this.mediaFileWidth = data.imageFileData.width;
+          this.mediaFileHeight = data.imageFileData.height;
+        }
+        if (data.imageData.containerRatio) {
+          this.mediaHeight = Math.round(680 * data.imageData.containerRatio)
+        } else {
+          this.mediaHeight = Math.round(data.imageData.containerHeight || 0)
+        }
       }
-      if (data.imageData.containerRatio) {
-        this.mediaHeight = Math.round(680 * data.imageData.containerRatio)
-      } else {
-        this.mediaHeight = Math.round(data.imageData.containerHeight || 0)
+
+      if (data.videoData) {
+        this.videoUrl = data.videoData.url
+        this.videoType = data.videoData.type
       }
     }
+
+    console.log('this.videoUrl', this.videoUrl)
+    console.log('this.videoType', this.videoType)
   }
 
   send(vcase: Case): ng.IPromise<PageSentProperties> {
