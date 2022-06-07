@@ -24,6 +24,7 @@ export default abstract class Page {
   media = ''
   videoUrl = ''
   videoType = ''
+  embedCode = ''
   mediaWidth = 0
   mediaHeight = 0
   mediaUrl = ''
@@ -78,6 +79,10 @@ export default abstract class Page {
       if (data.videoData) {
         this.videoUrl = data.videoData.url
         this.videoType = data.videoData.type
+      }
+
+      if (data.embedData) {
+        this.embedCode = data.embedData.code
       }
     }
   }

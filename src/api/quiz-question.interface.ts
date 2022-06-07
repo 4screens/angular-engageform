@@ -38,6 +38,9 @@ export default interface QuizQuestion {
     type: string
     url: string
   }
+  embedData: {
+    code: string
+  }
   imageFileData: {
     width: number
     height: number
