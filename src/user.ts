@@ -61,14 +61,14 @@ export default class User {
     let localUserId = this.id;
     if (isLive) {
       if (!localEventUserId || !localUserId) {
-        Bootstrap.$http.get<UserIdent>(url).then((res) => {
+        Bootstrap.$http.post<UserIdent>(url, {}).then((res) => {
           this.setEventUserId(quizId, res.data.eventUserId);
           this.id = res.data.userIdent;
         });
       }
     } else {
       if (!localUserId) {
-        Bootstrap.$http.get<UserIdent>(url).then((res) => {
+        Bootstrap.$http.post<UserIdent>(url, {}).then((res) => {
           this.id = res.data.userIdent;
         });
       }
