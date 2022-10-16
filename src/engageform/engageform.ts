@@ -36,6 +36,7 @@ import Texts from './texts'
 import {Theme} from './theme'
 import Integration from "../api/integration.interface";
 import PageSentProperties from "../page/page-sent.interface";
+import {QuizType} from "../api/quiz-type.enum";
 
 export default class Engageform {
   private _engageformId: string
@@ -183,6 +184,7 @@ export default class Engageform {
     this._engageformId = data._id
     this.mode = mode
     this.embedSettings = embedSettings
+    this.initUserId(this._engageformId, data.type === QuizType.Live);
 
     this.sendAnswerCallback = sendAnswerCallback
 
@@ -238,6 +240,10 @@ export default class Engageform {
 
   getEventUserId(quizId: any) {
     return Bootstrap.user.getEventUserId(quizId)
+  }
+
+  initUserId(quizId: string, isLive: boolean) {
+    return Bootstrap.user.initUserId(quizId, isLive);
   }
 
   /**

@@ -1,5 +1,6 @@
 import Bootstrap from './bootstrap'
 import { NullableString } from './types'
+import UserIdent from "./api/user-ident.interface";
 
 export default class User {
   static create() {
@@ -52,5 +53,29 @@ export default class User {
     this._eventUserIds[quizId] = eventUserId
   }
 
+  public initUserId(quizId: string, isLive: boolean) {
+    let url = Bootstrap.getConfig('backend').domain + Bootstrap.getConfig('engageform').userIdentInitUrl;
+    url = url.replace(':quizId', quizId);
+
+    let localEventUserId = this.getEventUserId(quizId);
+    let localUserId = this.id;
+    if (isLive) {
+      if (!localEventUserId || !localUserId) {
+        Bootstrap.$http.get<UserIdent>(url).then((res) => {
+          this.setEventUserId(quizId, res.data.eventUserId);
+          this.id = res.data.userIdent;
+        });
+      }
+    } else {
+      if (!localUserId) {
+        Bootstrap.$http.get<UserIdent>(url).then((res) => {
+          this.id = res.data.userIdent;
+        });
+      }
+    }
+  }
+
   private constructor() {}
 }
+
+User.$inject = ['$http']

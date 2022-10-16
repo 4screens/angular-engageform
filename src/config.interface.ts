@@ -11,6 +11,7 @@ export interface EngageformConfig {
   engageformUrl: string
   engageformFinishUrl: string
   pageResponseUrl: string
+  userIdentInitUrl: string
 }
 
 export interface BackendConfig {
