@@ -1,5 +1,5 @@
 import Bootstrap from '../../bootstrap'
-import { MaybeNumber, MaybeString, WithId } from '../../types'
+import {MaybeBoolean, MaybeNumber, MaybeString, WithId} from '../../types'
 import Case from '../case'
 import { CaseType } from '../case-type.enum'
 import Page from '../page'
@@ -9,11 +9,13 @@ export default class InputCase extends Case {
   readonly type = CaseType.Input
   expectedValue: MaybeString;
   value = '';
+  required: MaybeBoolean;
 
-  constructor(page: Page, data: WithId & { label: string, type: string }) {
+  constructor(page: Page, data: WithId & { label: string, type: string, required: boolean }) {
     super(page, data)
     this.title = data.label
     this.expectedValue = data.type
+    this.required = data.required
   }
 
   send() {
