@@ -9,6 +9,7 @@ import { Nullable } from './types'
 import {PageType} from "./page/page-type.enum";
 import MultiChoice from "./page/pages/multi-choice";
 import PictureChoice from "./page/pages/picture-choice";
+import InputCase from "./page/case/input";
 
 export class Navigation {
   static fromEnageform(engageform: Engageform): Navigation {
@@ -131,6 +132,17 @@ export class Navigation {
 
       if(current.type === PageType.PictureChoice){
         multichoice = current as PictureChoice
+      }
+
+      var hasRequiredCheckboxes = current.type === PageType.Form && current.cases.some((input) => (input as InputCase).expectedValue === "checkbox" && !!(input as InputCase).required);
+      if (!vcase && hasRequiredCheckboxes) {
+        var hasValidCheckboxValue = current.cases.filter((input) => (input as InputCase).expectedValue === "checkbox" && !!(input as InputCase).required).every((input) => !!input.value);
+        if (!hasValidCheckboxValue) {
+          if (!opts.quiet) {
+            this.sendMessage(this._engageform.texts.ANSWER_REQUIRED_TO_PROCEED)
+          }
+          return vcase
+        }
       }
 
       //Answer is required, so at least 1 answer should be selected or filled flag has be set to true
