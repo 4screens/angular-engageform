@@ -134,10 +134,9 @@ export class Navigation {
         multichoice = current as PictureChoice
       }
 
-      var hasRequiredCheckboxes = current.type === PageType.Form && current.cases.some((input) => (input as InputCase).expectedValue === "checkbox" && !!(input as InputCase).required);
-      if (!vcase && hasRequiredCheckboxes) {
-        var hasValidCheckboxValue = current.cases.filter((input) => (input as InputCase).expectedValue === "checkbox" && !!(input as InputCase).required).every((input) => !!input.value);
-        if (!hasValidCheckboxValue) {
+      if (!vcase && current.type === PageType.Form) {
+        var hasValidValueOnRequiredInput = current.cases.filter((input) => !!(input as InputCase).required).every((input) => !!input.value);
+        if (!hasValidValueOnRequiredInput) {
           if (!opts.quiet) {
             this.sendMessage(this._engageform.texts.ANSWER_REQUIRED_TO_PROCEED)
           }
