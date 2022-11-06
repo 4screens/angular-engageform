@@ -51,7 +51,7 @@ export default class InputCase extends Case {
     this.correct = false
     this.incorrect = false
 
-    if (this.page.settings.requiredAnswer && (this.value == undefined || this.value === '')) {
+    if (this.required && (this.value == undefined || this.value === '')) {
       this.error = 'Answer is required'
       this.incorrect = true
     } else {
