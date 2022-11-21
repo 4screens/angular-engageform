@@ -8,6 +8,7 @@ export default interface QuizQuestion {
   _id: string
   type: PageType
   text: string
+  textHTML: string
   description: string
   resultTitle: Maybe<string>
   responseCount: Maybe<number>

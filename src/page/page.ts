@@ -19,6 +19,7 @@ export default abstract class Page {
 
   type: PageType = PageType.Undefined
   title = ''
+  titleHTML = ''
   description = ''
   resultTitle: Maybe<string> = ''
   media = ''
@@ -47,6 +48,7 @@ export default abstract class Page {
 
     this.settings = <PageSettingsProperties>new PageSettings(data)
     this.title = data.text || ''
+    this.titleHTML = data.textHTML || data.text || ''
 
     if (data.responseCount) {
       this.responseCount = data.responseCount;
