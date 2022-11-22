@@ -226,12 +226,12 @@ export default class Engageform {
 
   // Made by Masters
   setUserIdent(id: any) {
-    Bootstrap.user.sessionId = id
+    Bootstrap.user.id = id
   }
 
   // Made by Masters
   getUserIdent(id: any) {
-    return Bootstrap.user.sessionId
+    return Bootstrap.user.id
   }
 
   setEventUserId(quizId: string, id: any) {

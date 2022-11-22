@@ -57,8 +57,8 @@ export default class User {
     let url = Bootstrap.getConfig('backend').domain + Bootstrap.getConfig('engageform').userIdentInitUrl;
     url = url.replace(':quizId', quizId);
 
-    let localEventUserId = this.getEventUserId(quizId);
-    let localUserId = this.id;
+    const localEventUserId = this.getEventUserId(quizId);
+    const localUserId = this.id;
     if (isLive) {
       if (!localEventUserId || !localUserId) {
         Bootstrap.$http.post<UserIdent>(url, {}).then((res) => {

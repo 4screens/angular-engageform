@@ -72,7 +72,7 @@ export default abstract class Case {
     }
 
     questionAnswer.quizQuestionId = this.page.id
-    questionAnswer.userIdent = Bootstrap.user.sessionId
+    questionAnswer.userIdent = Bootstrap.user.id
     questionAnswer.eventUserId = Bootstrap.user.getEventUserId(this.page.engageform.id)
 
     const eventValues = {
@@ -89,7 +89,7 @@ export default abstract class Case {
     return Bootstrap.$http.post<QuizQuestionAnswer>(url, questionAnswer).then((res: angular.IHttpResponse<QuizQuestionAnswer>) => {
       if ([200, 304].indexOf(res.status) !== -1) {
         if (!questionAnswer.userIdent && res.data.userIdent) {
-          Bootstrap.user.sessionId = res.data.userIdent
+          Bootstrap.user.id = res.data.userIdent
         }
         if (!questionAnswer.eventUserId && res.data.eventUserId) {
           Bootstrap.user.setEventUserId(this.page.engageform.id, res.data.eventUserId)
