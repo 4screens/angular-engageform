@@ -58,7 +58,7 @@ export default class User {
     url = url.replace(':quizId', quizId);
 
     const localEventUserId = this.getEventUserId(quizId);
-    const localUserId = this.id;
+    const localUserId = this.sessionId;
     if (isLive) {
       if (!localEventUserId || !localUserId) {
         Bootstrap.$http.post<UserIdent>(url, {}).then((res) => {
@@ -66,14 +66,14 @@ export default class User {
             this.setEventUserId(quizId, res.data.eventUserId);
           }
           if (!localUserId) {
-            this.id = res.data.userIdent;
+            this.sessionId = res.data.userIdent;
           }
         });
       }
     } else {
       if (!localUserId) {
         Bootstrap.$http.post<UserIdent>(url, {}).then((res) => {
-          this.id = res.data.userIdent;
+          this.sessionId = res.data.userIdent;
         });
       }
     }
