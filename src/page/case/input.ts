@@ -11,9 +11,9 @@ export default class InputCase extends Case {
   value = '';
   required: MaybeBoolean;
 
-  constructor(page: Page, data: WithId & { label: string, type: string, required: boolean }) {
+  constructor(page: Page, data: WithId & { label: string, labelHTML: string, type: string, required: boolean }) {
     super(page, data)
-    this.title = data.label
+    this.title = data.labelHTML || data.label
     this.expectedValue = data.type
     this.required = data.required
   }
