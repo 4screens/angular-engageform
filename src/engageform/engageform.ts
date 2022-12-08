@@ -184,7 +184,6 @@ export default class Engageform {
     this._engageformId = data._id
     this.mode = mode
     this.embedSettings = embedSettings
-    this.initUserId(this._engageformId, data.type === QuizType.Live);
 
     this.sendAnswerCallback = sendAnswerCallback
 

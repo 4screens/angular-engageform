@@ -195,14 +195,15 @@ export default class Bootstrap {
     Bootstrap.mode = options.mode
 
     // Create the promises map that will have to resolve before the quiz is initialised.
-    let initializationPromises: [angular.IPromise<Quiz>, angular.IPromise<QuizQuestion[]>] = [
+    let initializationPromises: [angular.IPromise<Quiz>, angular.IPromise<QuizQuestion[]>, angular.IPromise<void>] = [
       Bootstrap.getData<Quiz>('quiz', options.id),
       // If the quiz is not live get the pages before initialising it.
-      !options.live ? Bootstrap.getData<QuizQuestion[]>('pages', options.id) : Bootstrap.$q.resolve([])
+      !options.live ? Bootstrap.getData<QuizQuestion[]>('pages', options.id) : Bootstrap.$q.resolve([]),
+      Bootstrap.user.initUserId(options.id, options.live)
     ]
 
     // Initialize the quiz.
-    return Bootstrap.$q.all<Quiz, QuizQuestion[]>(initializationPromises).then(([quizData, questions]) => {
+    return Bootstrap.$q.all<Quiz, QuizQuestion[], void>(initializationPromises).then(([quizData, questions]) => {
       // If the quiz doesn't have a supported constructor, reject the promise with error.
 
       if (!isInEnum(QuizType, quizData.type)) {

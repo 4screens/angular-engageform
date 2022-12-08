@@ -1,6 +1,8 @@
 import Bootstrap from './bootstrap'
 import { NullableString } from './types'
 import UserIdent from "./api/user-ident.interface";
+import angular from "angular";
+import PageSentProperties from "./page/page-sent.interface";
 
 export default class User {
   static create() {
@@ -53,7 +55,7 @@ export default class User {
     this._eventUserIds[quizId] = eventUserId
   }
 
-  public initUserId(quizId: string, isLive: boolean) {
+  public getUserId(quizId: string, isLive: boolean): angular.IPromise<void> | void {
     let url = Bootstrap.getConfig('backend').domain + Bootstrap.getConfig('engageform').userIdentInitUrl;
     url = url.replace(':quizId', quizId);
 
@@ -61,7 +63,7 @@ export default class User {
     const localUserId = this.sessionId;
     if (isLive) {
       if (!localEventUserId || !localUserId) {
-        Bootstrap.$http.post<UserIdent>(url, {}).then((res) => {
+        return Bootstrap.$http.post<UserIdent>(url, {}).then((res) => {
           if (!localEventUserId) {
             this.setEventUserId(quizId, res.data.eventUserId);
           }
@@ -72,11 +74,17 @@ export default class User {
       }
     } else {
       if (!localUserId) {
-        Bootstrap.$http.post<UserIdent>(url, {}).then((res) => {
+        return Bootstrap.$http.post<UserIdent>(url, {}).then((res) => {
           this.sessionId = res.data.userIdent;
         });
       }
     }
+  }
+
+  public initUserId(quizId: string, isLive: boolean): angular.IPromise<void> {
+    const deferred = Bootstrap.$q.defer<void>()
+    deferred.resolve(this.getUserId(quizId, isLive))
+    return deferred.promise;
   }
 
   private constructor() {}
