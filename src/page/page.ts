@@ -180,7 +180,7 @@ export default abstract class Page {
   }
 
   updateAnswers(data: any, count: any): void {
-    if (this.id !== data.questionId) {
+    if ((data.hasOwnProperty('questionId') && this.id !== data.questionId) || (data.hasOwnProperty('QuestionId') && this.id !== data.QuestionId)) {
       return
     }
 
@@ -204,6 +204,8 @@ export default abstract class Page {
 
           if (data.numbers) {
             vcase.responseCount = data.numbers[vcase.id] || 0
+          } else if (data.Numbers) {
+            vcase.responseCount = data.Numbers[vcase.id] || 0
           }
         }
       })
