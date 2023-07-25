@@ -34,8 +34,6 @@ export default class PictureChoice extends Page {
   }
 
   refreshAnswer(sent: PageSentProperties, question: QuizQuestion): PageSentProperties {
-    console.log('sent: ', sent)
-    console.log('question: ', question)
     question.answers.map((answer: any) => {
       if (sent.results) {
         sent.results[answer._id] = answer.percent
@@ -55,7 +53,6 @@ export default class PictureChoice extends Page {
 
       if(sent.selectedCaseIds){
         selected = sent.selectedCaseIds.filter(function(val: string){
-          console.log('isSelected: ', vcase.id === val, vcase.id, val)
           return vcase.id === val;
         })
       }
