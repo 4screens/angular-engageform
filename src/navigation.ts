@@ -210,7 +210,7 @@ export class Navigation {
   next = this.pick
   finish = this.pick
 
-  protected move(vcase?: Case, step = 1): void {
+  protected move(vcase?: Case, step = 1, goBack?: boolean): void {
     this._engageform.event.trigger('form::pageWillChange', {
       // You might wonder why I'm not using this.hasStart. Well, that's because some genius decided to
       // make it false on the navigation start so it can't be used.
@@ -218,7 +218,11 @@ export class Navigation {
     })
 
     this.visitedPages.push(this._engageform.current)
-    this.position += step
+    if (goBack) {
+      this.position = step
+    } else {
+      this.position += step
+    }
     if (step > -1 && this._engageform.availablePages.length >= this.position) {
       this.updateDistance()
       this._engageform.setCurrent(this._engageform.availablePages[this.position - 1])

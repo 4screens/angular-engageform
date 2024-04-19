@@ -207,7 +207,8 @@ export default class ConditionalNavigation extends Navigation {
         this._engageform.skipLogicSelectedEndPage = endPageIdx
         return super.move( undefined,-1)
       } else {
-        return super.move(vcase, (nextIdx - this._engageform.getPageIndex(page)))
+        let currentPageIndex = this._engageform.getPageIndex(page)
+        return super.move(vcase, currentPageIndex > nextIdx ? nextIdx + 1 : (nextIdx - currentPageIndex), currentPageIndex > nextIdx)
       }
     }
 
